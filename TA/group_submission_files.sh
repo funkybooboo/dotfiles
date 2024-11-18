@@ -16,5 +16,11 @@ for file in *; do
 
     # Move the file into the corresponding directory
     mv "$file" "$prefix/"
+
+    # If the file is a zip file, unzip it
+    if [[ "$file" == *.zip ]]; then
+        echo "Unzipping $file in $prefix/"
+        unzip "$prefix/$file" -d "$prefix/"
+    fi
 done
 
