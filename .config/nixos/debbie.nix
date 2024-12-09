@@ -137,6 +137,7 @@
       lynx
       gh
       todo
+      vscode
     ];
   };
 
