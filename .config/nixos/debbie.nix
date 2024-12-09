@@ -190,6 +190,8 @@
     dotnetCorePackages.sdk_9_0
     libnotify
     ffmpeg
+    nasm
+    nasmfmt
 
     wofi
   ];
