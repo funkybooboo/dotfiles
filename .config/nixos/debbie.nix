@@ -192,6 +192,7 @@
     ffmpeg
     nasm
     nasmfmt
+    jwasm
 
     wofi
   ];
