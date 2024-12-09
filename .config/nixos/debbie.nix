@@ -157,7 +157,9 @@
     firefox
     git
     gnat14
-    libgccjit
+    libgcc
+    gdb
+    gdbgui
     zig
     cargo
     rustc
