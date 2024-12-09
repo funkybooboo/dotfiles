@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Check if ~/.bashrc exists and source it, or panic if it's missing
+if [ ! -f "$HOME/.bashrc" ]; then
+  echo "Error: ~/.bashrc not found!"
+  exit 1 # Exit with a non-zero status to indicate failure
+else
+  source "$HOME/.bashrc"
+fi
+
 # A rebuild script that commits on a successful build
 set -e
 
