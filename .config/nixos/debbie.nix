@@ -213,7 +213,9 @@ in {
     ffmpeg
     nasm
     nasmfmt
-    jwasm
+    asmrepl
+    asmjit
+    uasm
 
     wofi
   ];
