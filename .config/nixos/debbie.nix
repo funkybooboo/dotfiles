@@ -179,6 +179,10 @@ in {
     rustc
     rustfmt
     nodejs_23
+    deno
+    dbeaver-bin
+    bruno-cli
+    bruno
     rocmPackages_5.llvm.clang-unwrapped
     python313
     python312Packages.pip
