@@ -12,5 +12,4 @@ in {
     /etc/nixos/hardware-configuration.nix
     (/home/nate/.config/nixos + "/${hostname}.nix")
   ];
-
 }

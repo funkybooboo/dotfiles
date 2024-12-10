@@ -153,6 +153,7 @@ in {
       gh
       todo
       vscode
+      pomodoro-gtk
     ];
   };
 
