@@ -154,6 +154,7 @@ in {
       todo
       vscode
       pomodoro-gtk
+      jq
     ];
   };
 
