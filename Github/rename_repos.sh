@@ -10,7 +10,7 @@ repos=$(gh repo list --json name -L 1000 --jq '.[].name')
 for repo in $repos; do
     # Check if the repository name starts with 'cs' followed by 4 digits and an underscore
     # or starts with 'math_' followed by 4 digits
-    if [[ "$repo" =~ ^cs[0-9]{4}_ || "$repo" =~ ^math_[0-9]{4} ]]; then
+    if [[ "$repo" =~ ^cs[0-9]{4}_ || "$repo" =~ ^math[0-9]{4}_ ]]; then
         # Prepend 'usu_' to the repo name before applying other transformations
         new_name="usu_$repo"
     else
