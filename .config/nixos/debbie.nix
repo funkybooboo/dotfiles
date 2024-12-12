@@ -217,6 +217,7 @@ in {
     asmjit
     uasm
     gnupg
+    nix-init
 
     wofi
   ];
