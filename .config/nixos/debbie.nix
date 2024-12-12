@@ -216,6 +216,7 @@ in {
     asmrepl
     asmjit
     uasm
+    gnupg
 
     wofi
   ];
