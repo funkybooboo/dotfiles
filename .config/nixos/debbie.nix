@@ -154,6 +154,7 @@ in {
       vscode
       pomodoro-gtk
       jq
+      unetbootin
     ];
   };
 
