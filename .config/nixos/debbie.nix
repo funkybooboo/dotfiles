@@ -154,8 +154,6 @@ in {
       vscode
       pomodoro-gtk
       jq
-      mokutil
-      ladybird
     ];
   };
 
