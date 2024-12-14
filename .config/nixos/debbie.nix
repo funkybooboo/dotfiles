@@ -51,6 +51,13 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = ["nate"];
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
+
   # Configure X11
   services.xserver = {
     enable = true;
@@ -123,7 +130,6 @@ in {
       postman
       zoom-us
       alpaca
-      virtualbox
       obsidian
       chromium
       blanket
