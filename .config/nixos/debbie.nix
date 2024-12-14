@@ -188,7 +188,7 @@ in {
     dbeaver-bin
     bruno-cli
     bruno
-    rocmPackages_5.llvm.clang-unwrapped
+    clang-tools
     python313
     python312Packages.pip
     python312Packages.meson
