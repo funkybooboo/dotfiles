@@ -155,7 +155,6 @@ in {
       pomodoro-gtk
       jq
       unetbootin
-      steam
     ];
   };
 
