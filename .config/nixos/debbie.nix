@@ -155,6 +155,7 @@ in {
       pomodoro-gtk
       jq
       unetbootin
+      deskreen
     ];
   };
 
