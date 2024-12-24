@@ -245,7 +245,7 @@ in {
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
