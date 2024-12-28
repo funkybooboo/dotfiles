@@ -192,7 +192,7 @@ in {
     cargo
     rustc
     rustfmt
-    nodejs_23
+    fnm
     deno
     dbeaver-bin
     bruno-cli
