@@ -130,7 +130,6 @@ in {
       drawing
       musicpod
       vlc
-      jetbrains-toolbox
       ladybird
       lazygit
       lazydocker
@@ -156,6 +155,14 @@ in {
       jq
       unetbootin
       deskreen
+
+      jetbrains.webstorm
+      jetbrains.rust-rover
+      jetbrains.rider
+      jetbrains.pycharm-professional
+      jetbrains.idea-ultimate
+      jetbrains.goland
+      jetbrains.clion
     ];
   };
 
