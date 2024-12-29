@@ -155,8 +155,10 @@ in {
       jq
       unetbootin
       deskreen
-      celeste
+      rclone
+      rclone-browser
       signal-desktop
+      faircamp
 
       jetbrains.webstorm
       jetbrains.rust-rover
