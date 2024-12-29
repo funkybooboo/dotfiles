@@ -156,6 +156,7 @@ in {
       unetbootin
       deskreen
       celeste
+      signal-desktop
 
       jetbrains.webstorm
       jetbrains.rust-rover
