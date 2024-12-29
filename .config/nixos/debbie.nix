@@ -155,6 +155,7 @@ in {
       jq
       unetbootin
       deskreen
+      celeste
 
       jetbrains.webstorm
       jetbrains.rust-rover
