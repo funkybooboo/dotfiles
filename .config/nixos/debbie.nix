@@ -193,6 +193,7 @@ in {
     rustc
     rustfmt
     fnm
+    typescript
     deno
     dbeaver-bin
     bruno-cli
