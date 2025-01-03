@@ -159,6 +159,7 @@ in {
       rclone-browser
       signal-desktop
       faircamp
+      pandoc
 
       jetbrains.webstorm
       jetbrains.rust-rover
