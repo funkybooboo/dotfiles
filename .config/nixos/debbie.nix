@@ -160,6 +160,7 @@ in {
       signal-desktop
       faircamp
       pandoc
+      texliveTeTeX
 
       jetbrains.webstorm
       jetbrains.rust-rover
