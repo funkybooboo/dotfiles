@@ -162,6 +162,7 @@ in {
       pandoc
       texliveTeTeX
       unixtools.xxd
+      black
 
       jetbrains.webstorm
       jetbrains.rust-rover
