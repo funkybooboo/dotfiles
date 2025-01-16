@@ -163,6 +163,7 @@ in {
       texliveTeTeX
       unixtools.xxd
       black
+      sbcl
 
       jetbrains.webstorm
       jetbrains.rust-rover
