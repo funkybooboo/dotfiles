@@ -164,6 +164,7 @@ in {
       black # Python code formatter
       sbcl # Steel Bank Common Lisp compiler
       gfortran # GNU Fortran compiler
+      gitbutler # git gui and manager
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
