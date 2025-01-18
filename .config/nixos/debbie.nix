@@ -163,6 +163,7 @@ in {
       unixtools.xxd # Hexdump tool for examining binary files
       black # Python code formatter
       sbcl # Steel Bank Common Lisp compiler
+      gfortran # GNU Fortran compiler
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
