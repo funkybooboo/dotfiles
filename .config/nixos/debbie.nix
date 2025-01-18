@@ -103,75 +103,74 @@ in {
     extraGroups = ["networkmanager" "wheel" "wireshark"];
     shell = pkgs.fish;
     packages = with pkgs; [
-      neovim
-      tree-sitter
-      lazygit
-      luajitPackages.luarocks-nix
-      fd
-      go
-      fish
-      kitty
-      discord
-      cloc
-      lsd
-      bat
-      tldr
-      unstable.wikiman
-      fzf
-      docker
-      wireshark
-      postman
-      zoom-us
-      alpaca
-      obsidian
-      chromium
-      blanket
-      drawio
-      drawing
-      musicpod
-      vlc
-      ladybird
-      lazygit
-      lazydocker
-      proton-pass
-      protonmail-desktop
-      protonmail-bridge-gui
-      protonvpn-gui
-      discordo
-      yazi
-      timg
-      asciinema
-      cmatrix
-      aalib
-      oneko
-      espeak
-      asciiquarium
-      nix-tour
-      lynx
-      gh
-      todo
-      vscode
-      pomodoro-gtk
-      jq
-      unetbootin
-      deskreen
-      rclone
-      rclone-browser
-      signal-desktop
-      faircamp
-      pandoc
-      texliveTeTeX
-      unixtools.xxd
-      black
-      sbcl
+      neovim # Highly extensible text editor for coding
+      tree-sitter # Parser generator for syntax highlighting and code analysis
+      lazygit # Simple terminal UI for git commands
+      luajitPackages.luarocks-nix # LuaJIT support for LuaRocks package manager
+      fd # Fast and user-friendly alternative to 'find'
+      go # Go programming language
+      fish # User-friendly command-line shell
+      kitty # Fast, feature-rich, GPU-based terminal emulator
+      discord # Communication platform for gamers
+      cloc # Counts lines of code in programming projects
+      lsd # Modern alternative to 'ls' with better formatting
+      bat # 'cat' command with syntax highlighting and Git integration
+      tldr # Simplified and community-contributed man pages
+      unstable.wikiman # Wiki-based markdown documentation viewer
+      fzf # Command-line fuzzy finder
+      docker # Platform for developing, shipping, and running apps in containers
+      wireshark # Network protocol analyzer
+      postman # API development and testing tool
+      zoom-us # Video conferencing tool
+      alpaca # Simple CLI for working with large codebases
+      obsidian # Knowledge management and note-taking application
+      chromium # Open-source version of the Chrome web browser
+      blanket # Minimalistic note-taking app for programmers
+      drawio # Diagramming tool for creating flowcharts and UML diagrams
+      drawing # Simple drawing tool
+      musicpod # Podcast client for managing and listening to podcasts
+      vlc # Open-source media player supporting many formats
+      ladybird # Lightweight web browser for Linux
+      lazydocker # Terminal UI for managing Docker containers
+      proton-pass # Password manager integrated with Proton services
+      protonmail-desktop # Desktop client for ProtonMail secure email
+      protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
+      protonvpn-gui # GUI for ProtonVPN for secure internet connections
+      discordo # Open-source Discord client
+      yazi # Markdown-based personal wiki
+      timg # Image viewer for the terminal
+      asciinema # Record and share terminal sessions
+      cmatrix # Matrix-like animation in the terminal
+      aalib # ASCII art library for image and video rendering
+      oneko # Classic Japanese cat chasing a mouse on the screen
+      espeak # Compact open-source software speech synthesizer
+      asciiquarium # Fun aquarium screensaver in ASCII art
+      nix-tour # Educational tour through Nix and NixOS
+      lynx # Text-based web browser
+      gh # GitHub CLI tool for managing GitHub repositories
+      todo # Simple CLI tool for managing to-do lists
+      vscode # Visual Studio Code, popular code editor
+      pomodoro-gtk # Pomodoro technique timer for productivity
+      jq # Command-line JSON processor
+      unetbootin # Tool for creating bootable USB drives
+      deskreen # Share your desktop to any device over the network
+      rclone # Command-line program for managing cloud storage
+      rclone-browser # GUI for managing cloud storage with Rclone
+      signal-desktop # Secure messaging app for desktop
+      faircamp # Fairly new community platform with media sharing features
+      pandoc # Universal document converter
+      texliveTeTeX # TeXLive distribution for typesetting documents
+      unixtools.xxd # Hexdump tool for examining binary files
+      black # Python code formatter
+      sbcl # Steel Bank Common Lisp compiler
 
-      jetbrains.webstorm
-      jetbrains.rust-rover
-      jetbrains.rider
-      jetbrains.pycharm-professional
-      jetbrains.idea-ultimate
-      jetbrains.goland
-      jetbrains.clion
+      jetbrains.webstorm # JetBrains IDE for JavaScript and web development
+      jetbrains.rust-rover # JetBrains IDE for Rust development
+      jetbrains.rider # JetBrains IDE for .NET development
+      jetbrains.pycharm-professional # Professional IDE for Python development
+      jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
+      jetbrains.goland # JetBrains IDE for Go programming language
+      jetbrains.clion # JetBrains IDE for C and C++ development
     ];
   };
 
@@ -187,63 +186,63 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    libreoffice
-    vim
-    wget
-    curl
-    firefox
-    git
-    gnat14
-    libgcc
-    gdb
-    gdbgui
-    zig
-    cargo
-    rustc
-    rustfmt
-    fnm
-    typescript
-    deno
-    dbeaver-bin
-    bruno-cli
-    bruno
-    clang-tools
-    python313
-    python312Packages.pip
-    python312Packages.meson
-    php
-    php84Packages.composer
-    poetry
-    zulu23
-    gradle
-    cmake
-    gnumake
-    alejandra
-    zip
-    unzip
-    tmux
-    sqlite
-    tree
-    htop-vim
-    fastfetch
-    lua51Packages.lua
-    julia
-    batmon
-    xclip
-    ripgrep
-    nerdfonts
-    dotnetCorePackages.sdk_9_0
-    libnotify
-    ffmpeg
-    nasm
-    nasmfmt
-    asmrepl
-    asmjit
-    uasm
-    gnupg
-    nix-init
+    libreoffice # Full-featured open-source office suite
+    vim # Highly configurable text editor
+    wget # Command-line utility for downloading files from the web
+    curl # Command-line tool for transferring data with URLs
+    firefox # Popular open-source web browser
+    git # Distributed version control system
+    gnat14 # GNAT compiler for Ada and other languages
+    libgcc # GCC runtime library for C and C++ programs
+    gdb # GNU Debugger for debugging applications
+    gdbgui # Web-based interface for GDB
+    zig # Programming language for general-purpose programming
+    cargo # Rust package manager and build system
+    rustc # Rust compiler
+    rustfmt # Rust code formatter
+    fnm # Fast Node Manager for managing Node.js versions
+    typescript # JavaScript superset for adding static types
+    deno # Secure runtime for JavaScript and TypeScript
+    dbeaver-bin # Universal database tool for developers
+    bruno-cli # Command-line interface for managing databases with Bruno
+    bruno # Open-source database client and management tool
+    clang-tools # Tools for working with Clang compiler and LLVM
+    python313 # Python 3.13 interpreter
+    python312Packages.pip # Python package installer for Python 3.12
+    python312Packages.meson # Python package for the Meson build system for Python 3.12
+    php # PHP programming language interpreter
+    php84Packages.composer # Dependency manager for PHP 8.4
+    poetry # Python dependency manager and packaging tool
+    zulu23 # OpenJDK 23 distribution from Azul
+    gradle # Build automation system for Java projects
+    cmake # Build system and compiler configuration tool
+    gnumake # GNU version of the 'make' utility
+    alejandra # JSON and YAML configuration parser for Haskell
+    zip # Compression and file packaging utility
+    unzip # Utility for extracting compressed ZIP files
+    tmux # Terminal multiplexer for managing multiple terminal sessions
+    sqlite # Lightweight relational database management system
+    tree # Command-line utility for displaying directory trees
+    htop-vim # Interactive process viewer with Vim-like keybindings
+    fastfetch # A simple and fast system information tool
+    lua51Packages.lua # Lua programming language interpreter (version 5.1)
+    julia # High-level, high-performance dynamic programming language for technical computing
+    batmon # Battery monitor for Linux
+    xclip # Command-line interface to the X11 clipboard
+    ripgrep # Fast text searching tool
+    nerdfonts # Icon collection for programming nerds
+    dotnetCorePackages.sdk_9_0 # .NET Core SDK for building cross-platform applications
+    libnotify # Library for sending desktop notifications
+    ffmpeg # Command-line tool for handling multimedia files
+    nasm # Netwide Assembler, a popular assembler for x86 architectures
+    nasmfmt # Formatter for NASM source code
+    asmrepl # Interactive REPL for assembly language
+    asmjit # Library for machine code generation in assembly language
+    uasm # UASM assembler for x86 and x64 architectures
+    gnupg # GNU Privacy Guard for secure communication and file encryption
+    nix-init # NixOS system initialization tool
 
-    wofi
+    wofi # Lightweight Wayland application launcher
   ];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
