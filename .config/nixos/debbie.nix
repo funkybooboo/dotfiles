@@ -163,8 +163,9 @@ in {
       unixtools.xxd # Hexdump tool for examining binary files
       black # Python code formatter
       sbcl # Steel Bank Common Lisp compiler
-      gfortran # GNU Fortran compiler
-      gitbutler # git gui and manager
+      gfortran # GNU Fortran compiler for compiling Fortran programs.
+      gitbutler # Git GUI for managing repositories and version control.
+      codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
