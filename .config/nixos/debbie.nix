@@ -166,6 +166,7 @@ in {
       gfortran # GNU Fortran compiler for compiling Fortran programs.
       gitbutler # Git GUI for managing repositories and version control.
       codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
+      git-filter-repo
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
