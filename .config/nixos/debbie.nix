@@ -120,7 +120,7 @@ in {
       fzf # Command-line fuzzy finder
       docker # Platform for developing, shipping, and running apps in containers
       wireshark # Network protocol analyzer
-      postman # API development and testing tool
+      # postman # API development and testing tool
       zoom-us # Video conferencing tool
       alpaca # Simple CLI for working with large codebases
       obsidian # Knowledge management and note-taking application
@@ -130,26 +130,27 @@ in {
       drawing # Simple drawing tool
       musicpod # Podcast client for managing and listening to podcasts
       vlc # Open-source media player supporting many formats
-      ladybird # Lightweight web browser for Linux
+      # ladybird # Lightweight web browser for Linux
       lazydocker # Terminal UI for managing Docker containers
-      proton-pass # Password manager integrated with Proton services
-      protonmail-desktop # Desktop client for ProtonMail secure email
-      protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
-      protonvpn-gui # GUI for ProtonVPN for secure internet connections
-      discordo # Open-source Discord client
+      # proton-pass # Password manager integrated with Proton services
+      # protonmail-desktop # Desktop client for ProtonMail secure email
+      # protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
+      # protonvpn-gui # GUI for ProtonVPN for secure internet connections
+      # discordo # Open-source Discord client
       yazi # Markdown-based personal wiki
       timg # Image viewer for the terminal
       asciinema # Record and share terminal sessions
-      cmatrix # Matrix-like animation in the terminal
-      aalib # ASCII art library for image and video rendering
-      oneko # Classic Japanese cat chasing a mouse on the screen
+      # cmatrix # Matrix-like animation in the terminal
+      # aalib # ASCII art library for image and video rendering
+      # oneko # Classic Japanese cat chasing a mouse on the screen
       espeak # Compact open-source software speech synthesizer
       asciiquarium # Fun aquarium screensaver in ASCII art
       nix-tour # Educational tour through Nix and NixOS
       lynx # Text-based web browser
       gh # GitHub CLI tool for managing GitHub repositories
-      todo # Simple CLI tool for managing to-do lists
-      vscode # Visual Studio Code, popular code editor
+      # todo # Simple CLI tool for managing to-do lists
+      # vscode # Visual Studio Code, popular code editor
+      vscodium
       pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
       unetbootin # Tool for creating bootable USB drives
@@ -157,16 +158,23 @@ in {
       rclone # Command-line program for managing cloud storage
       rclone-browser # GUI for managing cloud storage with Rclone
       signal-desktop # Secure messaging app for desktop
-      faircamp # Fairly new community platform with media sharing features
+      # faircamp # Fairly new community platform with media sharing features
       pandoc # Universal document converter
       texliveTeTeX # TeXLive distribution for typesetting documents
       unixtools.xxd # Hexdump tool for examining binary files
       black # Python code formatter
-      sbcl # Steel Bank Common Lisp compiler
-      gfortran # GNU Fortran compiler for compiling Fortran programs.
-      gitbutler # Git GUI for managing repositories and version control.
-      codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
+      # sbcl # Steel Bank Common Lisp compiler
+      # gfortran # GNU Fortran compiler for compiling Fortran programs.
+      # gitbutler # Git GUI for managing repositories and version control.
+      # codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
       git-filter-repo
+      ascii
+      mpv
+      glow
+      # tor-browser
+      # deluge
+      # dumptorrent
+      # buildtorrent
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
@@ -213,7 +221,6 @@ in {
     clang-tools # Tools for working with Clang compiler and LLVM
     python313 # Python 3.13 interpreter
     python312Packages.pip # Python package installer for Python 3.12
-    python312Packages.meson # Python package for the Meson build system for Python 3.12
     php # PHP programming language interpreter
     php84Packages.composer # Dependency manager for PHP 8.4
     poetry # Python dependency manager and packaging tool
