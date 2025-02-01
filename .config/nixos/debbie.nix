@@ -209,9 +209,7 @@ in {
     gdb # GNU Debugger for debugging applications
     gdbgui # Web-based interface for GDB
     zig # Programming language for general-purpose programming
-    cargo # Rust package manager and build system
     rustup
-    rustc # Rust compiler
     rustfmt # Rust code formatter
     fnm # Fast Node Manager for managing Node.js versions
     typescript # JavaScript superset for adding static types
