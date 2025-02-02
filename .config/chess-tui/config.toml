@@ -1,0 +1,8 @@
+# Path to the chess engine binary
+engine_path = "/nix/store/1f6x4br58dlncaa3nrywjjk24bcvrfqs-user-environment/bin/stockfish"
+
+# Display mode: "DEFAULT" or "ASCII"
+display_mode = "DEFAULT"
+
+# Logging level: "Off", "Error", "Warn", "Info", "Debug", "Trace"
+log_level = "Off"
