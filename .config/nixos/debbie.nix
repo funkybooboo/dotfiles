@@ -173,6 +173,7 @@ in {
       mpv
       glow
       chess-tui
+      stockfish
       # tor-browser
       # deluge
       # dumptorrent
