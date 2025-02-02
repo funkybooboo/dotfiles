@@ -108,6 +108,7 @@ in {
       lazygit # Simple terminal UI for git commands
       luajitPackages.luarocks-nix # LuaJIT support for LuaRocks package manager
       fd # Fast and user-friendly alternative to 'find'
+      lsof
       go # Go programming language
       fish # User-friendly command-line shell
       kitty # Fast, feature-rich, GPU-based terminal emulator
@@ -163,14 +164,15 @@ in {
       texliveTeTeX # TeXLive distribution for typesetting documents
       unixtools.xxd # Hexdump tool for examining binary files
       black # Python code formatter
-      # sbcl # Steel Bank Common Lisp compiler
-      # gfortran # GNU Fortran compiler for compiling Fortran programs.
+      sbcl # Steel Bank Common Lisp compiler
+      gfortran # GNU Fortran compiler for compiling Fortran programs.
       # gitbutler # Git GUI for managing repositories and version control.
       # codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
       git-filter-repo
       ascii
       mpv
       glow
+      chess-tui
       # tor-browser
       # deluge
       # dumptorrent
