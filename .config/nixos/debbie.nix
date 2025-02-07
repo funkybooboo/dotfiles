@@ -175,6 +175,7 @@ in {
       glow
       chess-tui
       stockfish
+      poppler_utils
       # tor-browser
       # deluge
       # dumptorrent
