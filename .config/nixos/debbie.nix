@@ -194,6 +194,10 @@ in {
       chess-tui
       stockfish
       poppler_utils
+      file
+      zoxide
+      ripgrep
+      imagemagick
       # tor-browser
       # deluge
       # dumptorrent
