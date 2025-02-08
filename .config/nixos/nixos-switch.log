@@ -1,460 +1,492 @@
 building Nix...
 building the system configuration...
 unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
-these 48 derivations will be built:
-  /nix/store/1bkx6mnv15g1gyvsgw1dx4aml1lw7mxl-unit-virtualboxClientVmsvga.service.drv
-  /nix/store/1f27j1v593y4nwx3rhm6761b3533c3hc-VirtualBox-GuestAdditions-7.1.6a-6.6.75_fish-completions.drv
-  /nix/store/hwnnsv79njnyhcjdz9pkszzrhw63sxwp-etc-os-release.drv
-  /nix/store/1nmjrj368cilv7lfabipbvs8i5ks7j42-shutdown-ramfs-contents.json.drv
-  /nix/store/c60gy2r6lypchrfrpix09gxcg14pcp8h-nixos-version.drv
-  /nix/store/sambnswvr6f0zhy8askq057rlx231jc1-mount.vboxsf.drv
-  /nix/store/sz1zyknk0a9iwrwnb5pib8m7gigh315b-nixos-manual-html.drv
-  /nix/store/59vd9acaq2pji8q4g3m3rdslsxplp1pn-nixos-help.drv
-  /nix/store/ydbvf9cp3qcvqznpdkr3zfb3w3inbjp7-nixos-help.drv
-  /nix/store/26awhmvm76ma41iwa1ahvn1z9bid71k6-system-path.drv
-  /nix/store/27zd83wym469gfdcc8xnkvg72si2nxvy-unit-virtualboxClientClipboard.service.drv
-  /nix/store/2d5fwk5fabbr775v0gbryqbhxwarz220-nixos-manual-html_fish-completions.drv
-  /nix/store/76j7mpcmnhp100p98bc4jjidns754p3x-discord-0.0.83.tar.gz.drv
-  /nix/store/35bxns18068j0iavs5ivn669cj1gil6d-discord-0.0.83.drv
-  /nix/store/4w7q0hcjjpc9dznhh5h1dsjymy7nivy0-nixos-version_fish-completions.drv
-  /nix/store/5hs8884lgic6hrngl36y4xc5jaw0skv4-unit-virtualbox.service.drv
-  /nix/store/hv0gzm56c2813h7xb9rj4czln3a7x2x7-mount.vboxsf_fish-completions.drv
-  /nix/store/kfmd3nzhl5sj93kxdwrbw1i0bbv9qrg5-nixos-configuration-reference-manpage_fish-completions.drv
-  /nix/store/ll22h5sspmkv9kvyz2fliaxbxk6c84j8-nixos-help_fish-completions.drv
-  /nix/store/64sp5bf5dqy8a0fyfdkzky2p3450z1hd-system_fish-completions.drv
-  /nix/store/6lzhj63acqm0kw70idnv91mri1cbip42-etc-systemd-system.conf.drv
-  /nix/store/76xf7p218f5y40mwhbsfrivg5jv0dk49-man-paths.drv
-  /nix/store/6njwp1h6v45rrwyyr50sq4qfz2vz2wq0-man-cache.drv
-  /nix/store/76jg9f12nfddasvak2dya2d7mv1q50g1-unit-virtualboxClientSeamless.service.drv
-  /nix/store/c8kcxxq0r04zrypk6mdmv3vy3z6fghqi-dbus-1.drv
-  /nix/store/pgl9y7886blaasibcag4gsip8p8l81pd-X-Restart-Triggers-dbus.drv
-  /nix/store/9m9ncfi98v19iq6bfzxjpscxafwgrw6f-unit-dbus.service.drv
-  /nix/store/a552m33n1jji1ribkrka51dbflm5dygw-unit-systemd-makefs-.service.drv
-  /nix/store/y2aiis18zfc21w79y2f56xhk5r4nrg8j-uname.drv
-  /nix/store/b5n0ss790dnpw1a6jrrpf1c8x44kxca6-virtualbox-modules-7.1.6a-6.6.75.drv
-  /nix/store/c3hssg0vaj7c8029xk2523bah8vfsgbw-issue.drv
-  /nix/store/y35p379qks4lbqya4cg6dv8d28v9hnax-linux-6.6.75-modules.drv
-  /nix/store/wiili8qha1bkbjchmdn2dzfp5r7813cf-linux-6.6.75-modules-shrunk.drv
-  /nix/store/r8rhshrwyrhl0klgqfijdx89w891nvrx-initrd-linux-6.6.75.drv
-  /nix/store/mgb163fwnl71mm6rvx9l834ycd2f8fi5-boot.json.drv
-  /nix/store/g363bndxf0i5ayimyhr4kx89rb4mskhj-etc-man_db.conf.drv
-  /nix/store/m51dcig6c1f4idrq8xzgdc51rddrmhca-unit-virtualboxClientDragAndDrop.service.drv
-  /nix/store/vk52b5krdiwqdmicn2mnd81q6q63nmjf-user-units.drv
-  /nix/store/ya565hnakmzqglhggypbc6b0zd245yan-user-environment.drv
-  /nix/store/q1wk1y4bis40cmsinrgizi4l20avc16q-X-Restart-Triggers-polkit.drv
-  /nix/store/ijbd6wzq04lg9wgfdlz3znlnc3id8n6m-unit-polkit.service.drv
-  /nix/store/j7x8s517ril8rbl33k07790z98npyxlm-unit-generate-shutdown-ramfs.service.drv
-  /nix/store/n7nl1nr8n9k2x684jnv1xb8rci2wn214-unit-dbus.service.drv
-  /nix/store/s6mfy9q0dp1j6pfsszlki41fbd5a9dfs-unit-accounts-daemon.service.drv
-  /nix/store/zqssvyslqnc96yl94p36syc0a27li36d-unit-systemd-fsck-.service.drv
-  /nix/store/z1cb17v5imwc7y2agjg2m9alizdyq2pb-system-units.drv
-  /nix/store/xl1p47jsjww070062q3z5h2g9x46dnq3-etc.drv
-  /nix/store/fsk1hwkn20xhbwcwdi36g7ikv2cfkdmd-nixos-system-debbie-24.11.714101.030ba1976b7c.drv
-these 13 paths will be fetched (316.85 MiB download, 962.64 MiB unpacked):
-  /nix/store/jmdf2qi2c389s71kh21gj0yfs4b865az-VirtualBox-GuestAdditions-7.1.6a-6.6.75
-  /nix/store/1hdzn73hfcwjkyzvj5pnz7fb04p64fl9-librsvg-2.58.3-dev
-  /nix/store/pwfjx1j1is41m5pmzkg49sabfl2bjc9m-libxshmfence-1.3.2-dev
-  /nix/store/l1jixgwfsgc5ivg881vgixwmh5hrvvy1-linux-6.6.75
-  /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev
-  /nix/store/2p65kxc74bs8g6hh20if757a7mg36snq-mesa-24.2.8-dev
-  /nix/store/b0csgw1rv4nskn9wi2s9cwlx6wg2j228-nixos-configuration-reference-manpage
-  /nix/store/z5mb24wx99yrzj1i25l97hy4hphadjz8-nspr-4.36-dev
-  /nix/store/cl0yjjpzp93k43jpqli5p303dpdmxypq-nss-3.101.2-dev
-  /nix/store/d2diqi3v98cypws3k6jch6n0njp0v4m6-options.json
-  /nix/store/ffg96gfqcsx2n6x57d9xa4j8ch47n5yg-signal-desktop-7.40.0
-  /nix/store/3xcdg792jg5fdncjy3ggajjdg229qghj-util-linux-minimal-2.39.4-dev
-  /nix/store/hynav3ph5f1j2r70p82z21p5912b3kmk-wrap-gapps-hook
-copying path '/nix/store/l1jixgwfsgc5ivg881vgixwmh5hrvvy1-linux-6.6.75' from 'https://cache.nixos.org'...
-copying path '/nix/store/b0csgw1rv4nskn9wi2s9cwlx6wg2j228-nixos-configuration-reference-manpage' from 'https://cache.nixos.org'...
-copying path '/nix/store/jmdf2qi2c389s71kh21gj0yfs4b865az-VirtualBox-GuestAdditions-7.1.6a-6.6.75' from 'https://cache.nixos.org'...
-building '/nix/store/hwnnsv79njnyhcjdz9pkszzrhw63sxwp-etc-os-release.drv'...
-building '/nix/store/c3hssg0vaj7c8029xk2523bah8vfsgbw-issue.drv'...
-building '/nix/store/c60gy2r6lypchrfrpix09gxcg14pcp8h-nixos-version.drv'...
-copying path '/nix/store/d2diqi3v98cypws3k6jch6n0njp0v4m6-options.json' from 'https://cache.nixos.org'...
-copying path '/nix/store/ffg96gfqcsx2n6x57d9xa4j8ch47n5yg-signal-desktop-7.40.0' from 'https://cache.nixos.org'...
-building '/nix/store/y2aiis18zfc21w79y2f56xhk5r4nrg8j-uname.drv'...
-copying path '/nix/store/pwfjx1j1is41m5pmzkg49sabfl2bjc9m-libxshmfence-1.3.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/2p65kxc74bs8g6hh20if757a7mg36snq-mesa-24.2.8-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/3xcdg792jg5fdncjy3ggajjdg229qghj-util-linux-minimal-2.39.4-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/1hdzn73hfcwjkyzvj5pnz7fb04p64fl9-librsvg-2.58.3-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/z5mb24wx99yrzj1i25l97hy4hphadjz8-nspr-4.36-dev' from 'https://cache.nixos.org'...
-building '/nix/store/76j7mpcmnhp100p98bc4jjidns754p3x-discord-0.0.83.tar.gz.drv'...
-building '/nix/store/4w7q0hcjjpc9dznhh5h1dsjymy7nivy0-nixos-version_fish-completions.drv'...
-building '/nix/store/1nmjrj368cilv7lfabipbvs8i5ks7j42-shutdown-ramfs-contents.json.drv'...
-building '/nix/store/1f27j1v593y4nwx3rhm6761b3533c3hc-VirtualBox-GuestAdditions-7.1.6a-6.6.75_fish-completions.drv'...
-building '/nix/store/sambnswvr6f0zhy8askq057rlx231jc1-mount.vboxsf.drv'...
-building '/nix/store/kfmd3nzhl5sj93kxdwrbw1i0bbv9qrg5-nixos-configuration-reference-manpage_fish-completions.drv'...
-building '/nix/store/5hs8884lgic6hrngl36y4xc5jaw0skv4-unit-virtualbox.service.drv'...
-building '/nix/store/27zd83wym469gfdcc8xnkvg72si2nxvy-unit-virtualboxClientClipboard.service.drv'...
-copying path '/nix/store/cl0yjjpzp93k43jpqli5p303dpdmxypq-nss-3.101.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/hynav3ph5f1j2r70p82z21p5912b3kmk-wrap-gapps-hook' from 'https://cache.nixos.org'...
-building '/nix/store/m51dcig6c1f4idrq8xzgdc51rddrmhca-unit-virtualboxClientDragAndDrop.service.drv'...
-building '/nix/store/76jg9f12nfddasvak2dya2d7mv1q50g1-unit-virtualboxClientSeamless.service.drv'...
-building '/nix/store/1bkx6mnv15g1gyvsgw1dx4aml1lw7mxl-unit-virtualboxClientVmsvga.service.drv'...
-building '/nix/store/6lzhj63acqm0kw70idnv91mri1cbip42-etc-systemd-system.conf.drv'...
-building '/nix/store/hv0gzm56c2813h7xb9rj4czln3a7x2x7-mount.vboxsf_fish-completions.drv'...
-
-trying https://stable.dl2.discordapp.net/apps/linux/0.0.83/discord-0.0.83.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-building '/nix/store/sz1zyknk0a9iwrwnb5pib8m7gigh315b-nixos-manual-html.drv'...
-building '/nix/store/j7x8s517ril8rbl33k07790z98npyxlm-unit-generate-shutdown-ramfs.service.drv'...
-building '/nix/store/zqssvyslqnc96yl94p36syc0a27li36d-unit-systemd-fsck-.service.drv'...
-building '/nix/store/a552m33n1jji1ribkrka51dbflm5dygw-unit-systemd-makefs-.service.drv'...
-100 97.1M  100 97.1M    0     0  22.9M      0  0:00:04  0:00:04 --:--:-- 22.9M
-building '/nix/store/35bxns18068j0iavs5ivn669cj1gil6d-discord-0.0.83.drv'...
-building '/nix/store/59vd9acaq2pji8q4g3m3rdslsxplp1pn-nixos-help.drv'...
-building '/nix/store/2d5fwk5fabbr775v0gbryqbhxwarz220-nixos-manual-html_fish-completions.drv'...
-building '/nix/store/ydbvf9cp3qcvqznpdkr3zfb3w3inbjp7-nixos-help.drv'...
-copying path '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev' from 'https://cache.nixos.org'...
-building '/nix/store/76xf7p218f5y40mwhbsfrivg5jv0dk49-man-paths.drv'...
-building '/nix/store/ll22h5sspmkv9kvyz2fliaxbxk6c84j8-nixos-help_fish-completions.drv'...
-building '/nix/store/26awhmvm76ma41iwa1ahvn1z9bid71k6-system-path.drv'...
-Running phase: unpackPhase
-unpacking source archive /nix/store/1di4vp5f29v1cs40qny46v0kpv5kfw7b-discord-0.0.83.tar.gz
-warning: collision between `/nix/store/xn49v7k6f6bwl4d55dqcxhiirm7ps5lv-xwayland-24.1.4/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
+these 70 derivations will be built:
+  /nix/store/xn68q09dgmjxhizhjcksgjbkvcblxhss-nixos-version.drv
+  /nix/store/0gps8gs0f8al01cwjskv4aajzwc43bxr-nixos-version_fish-completions.drv
+  /nix/store/1wsziaizwh5yqw29y1dny9mqwsqqz39x-pavucontrol-6.1_fish-completions.drv
+  /nix/store/ppzbnyk5r18naxvmg6pqzl6i3c9a4x90-nixos-manual-html.drv
+  /nix/store/v54g1b63a4badr3d7lba8j30d1a5amhg-nixos-help.drv
+  /nix/store/f75j26d73g8yncc29z4vsjvjj28njha1-nixos-help.drv
+  /nix/store/7rgwy1grzwj2f98akvlnwm9r57m137j1-system-path.drv
+  /nix/store/2dm3561aw5khgyzc9zzb97h2cam38rfm-unit-accounts-daemon.service.drv
+  /nix/store/3qjg8f0nf4y831lk4c95mg4k8738khnw-system-shutdown.drv
+  /nix/store/4gcdm27x77d71s1g57d0f68229rxlpsq-xfce4-settings-4.18.6_fish-completions.drv
+  /nix/store/4gk4fm71l60j4rhbj034zp0gb4r7iz8v-xsession.drv
+  /nix/store/4xjpxchkbkn7r5sqj8r2x3wjxwzavzql-xwayland-24.1.5_fish-completions.drv
+  /nix/store/51a6x1q8p5czh4psjk8gk9w8k6khyqxn-xfconf-4.18.3_fish-completions.drv
+  /nix/store/5nmn69sbbf3pfxxxlr9fz6cans3sv2ca-xfce4-session-4.18.4_fish-completions.drv
+  /nix/store/64jzc7qdvhf8kngzn3gvfwnm9ja26dd5-boot.json.drv
+  /nix/store/syi2m6m81mmzp30nrcgx1gvmslpbymjw-xfce-xsession.drv
+  /nix/store/8fhnlddm9d1mrrdhjaclxsmzsw4nv32i-desktops.drv
+  /nix/store/llnylmvbq4m42y2s1ky33slpvyn3yvr0-set-environment.drv
+  /nix/store/65fy157fq35mwmly9aq9pq342gzajfyd-etc-fish-nixos-env-preinit.fish.drv
+  /nix/store/s8rza7plkw3mdwq6pvfbr48v4p13dmvw-man-paths.drv
+  /nix/store/gnvajiizbqkzghia5mdggdakg0988asp-man-cache.drv
+  /nix/store/6dyaq0mqhsvwkfvgmh6w3m5l9zll933c-etc-man_db.conf.drv
+  /nix/store/6jy3jiss2q712w3l4ciwvb2892nvr4dv-xfce4-screenshooter-1.11.1_fish-completions.drv
+  /nix/store/xcqlqban3rlvdflskd1hi7rnr2ky1hrk-X-Restart-Triggers-polkit.drv
+  /nix/store/6kvn3zz8q8h97bl7958g5gjw3p7g5szh-unit-polkit.service.drv
+  /nix/store/6ymvxs0w518pn5h7xvv6baghr83myyg7-system-generators.drv
+  /nix/store/8q6nzfnq524lyhmv860krbwnrjpg56ss-xfce4-icon-theme-4.4.3_fish-completions.drv
+  /nix/store/8w1nyl8zd405v9nlcf5fk7igq7xrwifp-xserver-wrapper.drv
+  /nix/store/9h1yyhijfzsjw4gx1695y6mh52mc7y4y-user-environment.drv
+  /nix/store/9m34ikxqaj8aczyad4h49av6p6kqmnll-xfwm4-4.18.0_fish-completions.drv
+  /nix/store/iblb23rm9qslddv3xd2bawpnwnvmvfwv-dbus-1.drv
+  /nix/store/l65fv1n5cs5rf8kbgq8ch1jmc6y9q325-X-Restart-Triggers-dbus.drv
+  /nix/store/9rj483jwpqapnl35j0vy7hqx5b6bqg8q-unit-dbus.service.drv
+  /nix/store/9vzbn5q9vhdfq0yqva30jbmvfzn9j618-etc-profile.drv
+  /nix/store/a03lfj9rqiz02v9xllirsdih2q6cmsni-hyprland-0.45.2_fish-completions.drv
+  /nix/store/a5mcqcjkvcrxv88yszs8m68b6vha7pv7-cinnamon-screensaver-6.2.1_fish-completions.drv
+  /nix/store/apkpbqsj9qhqhgmb3hfaj97i1hr092l6-xfce4-pulseaudio-plugin-0.4.8_fish-completions.drv
+  /nix/store/d74m47s2q9av2b6x6rh70imddbcyhshf-libxfce4ui-4.18.6_fish-completions.drv
+  /nix/store/gjhd3rjbwphzq493wzgjwk11i21qa7bf-firefox-135.0_fish-completions.drv
+  /nix/store/h8gigq0d5lspq1z69w8hwrj36g0vdskv-xfdesktop-4.18.1_fish-completions.drv
+  /nix/store/hkg1plikrg8j2jj2x4qnir5rcs7g1hva-exo-4.18.0_fish-completions.drv
+  /nix/store/jjl1mj8cyrpsi7gfb7n6x4jczacrbzcs-tango-icon-theme-0.8.90_fish-completions.drv
+  /nix/store/mli5i4hil79kchwgkcf55jzapjy2gxsr-xfce4-screensaver-4.18.3_fish-completions.drv
+  /nix/store/n80hpkxpcfjk1ngh3b0ipycqhsw4j1gh-tumbler-4.18.2_fish-completions.drv
+  /nix/store/p1la0ppq0n0nn4v1wws8rldr9yzwcm3r-cinnamon-common-6.2.9_fish-completions.drv
+  /nix/store/pm9561hb4y6wxq390vfm316q9cqdxid3-xfwm4-themes-4.10.0_fish-completions.drv
+  /nix/store/pp7id57dhbfw613rakx120fa701336b6-xfce4-panel-4.18.6_fish-completions.drv
+  /nix/store/qlmb3k0n2sgjwzsx93zw3j96ak792har-xfce4-power-manager-4.18.4_fish-completions.drv
+  /nix/store/smdiaxkis91jrpk0a8i91xndxzgj506d-nixos-manual-html_fish-completions.drv
+  /nix/store/wjhskdy24gc8b5s8gzwcp12slcrciq58-garcon-4.18.2_fish-completions.drv
+  /nix/store/wy628m87ii5fgcqrhfv77wyvjmrgjzmp-thunar-4.18.11_fish-completions.drv
+  /nix/store/x8xddhbzdm3mmi317v6116fzq96hx20n-nixos-help_fish-completions.drv
+  /nix/store/xvzrb88km6nplp7ckj95pbfi2acb8sfw-xdg-desktop-portal-hyprland-1.3.6_fish-completions.drv
+  /nix/store/yav6wq0531yrqacmxbbbx323bp597s3f-xfce4-notifyd-0.9.6_fish-completions.drv
+  /nix/store/z3p6ayhh4jnx9wwfl44i925wa9l7f4hx-xfce4-appfinder-4.18.1_fish-completions.drv
+  /nix/store/c6y78x83kgm90agjhcfd8qsyd7f551rv-system_fish-completions.drv
+  /nix/store/crac1g5pwhz4zpn5hvhwm89nz0lnm2hp-lightdm.conf.drv
+  /nix/store/hrf1wd6ba2aa92f09m48j1blrba9ca34-issue.drv
+  /nix/store/hfyrgw00rkbhki8dl8w38lwm61d49mj3-unit-dbus.service.drv
+  /nix/store/k6lhkaifja5qq3f7yx1py341iwaqyf9c-user-units.drv
+  /nix/store/l3zwa1lygg82arn3a00cqgaskdfmgkl8-xfce4-screensaver.pam.drv
+  /nix/store/ncaqxj1j4vfgran3792gn3gdr7zk2694-etc-pam-environment.drv
+  /nix/store/slqf59wg1rpvggcd9hziwacnchrwi482-etc-os-release.drv
+  /nix/store/dxyz2m3qzd923j5qara1jyg1sk5m39kc-shutdown-ramfs-contents.json.drv
+  /nix/store/maa9qg7kb3449m2vdq5w1md3c0r3ph0j-unit-generate-shutdown-ramfs.service.drv
+  /nix/store/p2f2sdfbrllw39dyxmb62jsc54szvqcx-unit-display-manager.service.drv
+  /nix/store/ysfwv6mcfgj2s8vjd28nrd09zaxcj1nc-system-units.drv
+  /nix/store/zr3jwcm8z2d8dmz3w09dirniac6q5z1c-user-generators.drv
+  /nix/store/acnbqfh2fd3gmhcn9vhxrdiwhizw9c9v-etc.drv
+  /nix/store/g3qdd0hrq7f8va6ydma6f53grgbrbbp9-nixos-system-debbie-24.11.714127.f5a32fa27df9.drv
+these 171 paths will be fetched (324.63 MiB download, 1334.04 MiB unpacked):
+  /nix/store/81bvbv58jrjdcd11m3iv0dk9xf01l48c-acl-2.3.2
+  /nix/store/718q5lcpvbk3s8i9pqr19c20n9ma91v7-attr-2.5.2
+  /nix/store/szgafsljf7gvp4wm02nj9lxjx6ilv31a-audit-4.0.2-lib
+  /nix/store/fd118hwh7d1ncib4mdw56ylv3g9k0iyj-bash-5.2p37
+  /nix/store/6vpzxqaqvwiyqywssfavs1s51b4cgsin-bash-interactive-5.2p37
+  /nix/store/4bfbksfiy1b6r6yna9hh39qv8jfi33n7-bc-1.07.1
+  /nix/store/9m58k55m7kk7vzy2v1ih73srgh3y2and-boehm-gc-8.2.8
+  /nix/store/6h75nd43hbzp7pcan8w5bmqrq33lvhs2-brotli-1.1.0-lib
+  /nix/store/vv1w45nb0rfqc6n76s11ip085kg1js86-bzip2-1.0.8
+  /nix/store/hpppxlcfvjzrvvcvhcm47divp65gbwq1-bzip2-1.0.8-bin
+  /nix/store/lrfl6j2svi56lg44xjs6bps38kxnyxwf-cairomm-1.18.0
+  /nix/store/faxrw4wnvydgv4d1x2s87f9lixbz644n-chromium-133.0.6943.53
+  /nix/store/z84jklzs6rlpkx7s00vap8b3wiqvlcla-chromium-133.0.6943.53-sandbox
+  /nix/store/r002igsavnpbrcma5vp309hvh500m5jq-chromium-unwrapped-133.0.6943.53
+  /nix/store/inc11wv90wslzd6shfh4ig7v836g1s48-chromium-unwrapped-133.0.6943.53-sandbox
+  /nix/store/r8fxf3lgm5jcszwldcxwlpv8xwhm3sdn-cinnamon-common-6.2.9
+  /nix/store/3v941p2x6fiaxr228gkn6qwdnazsj6fq-cinnamon-gsettings-overrides
+  /nix/store/8zfjdxhr1ywl1azarx4rgqwccq0clyk0-cinnamon-screensaver-6.2.1
+  /nix/store/wdap4cr3bnm685f27y9bb6q5b6q18msl-coreutils-9.5
+  /nix/store/dsj5293gmill50aw8f2zs3xr3qcpb9pj-cracklib-2.10.0
+  /nix/store/c0jfwr6sc4nz3ns4mzk5bsw6gqv8q836-cryptsetup-2.7.5
+  /nix/store/a6lkdradawy6ybr5kv9lh5x5rwa2aa30-curl-8.11.1
+  /nix/store/ripl42bx5vs9561f6ah5zm5mwi8rc6h3-db-4.8.30
+  /nix/store/nf08grliapxna95qzhq2q3hjrkw6iw6b-db-5.3.28
+  /nix/store/j0jxixl7h3w786accas310cj7n3zri5n-dns-root-data-2024-06-20
+  /nix/store/qsfx2pvlcapk6aiw3jf21crdx82izd6r-elfutils-0.192
+  /nix/store/nggx10banfvyahj36iflsnhizc0fh1dn-exo-4.18.0
+  /nix/store/0jkgykmcfny1i12pqcf3nilr21dgq0wk-firefox-135.0
+  /nix/store/kiv0sdd4ph5gdharx7flasfx1pl3y071-firefox-unwrapped-135.0
+  /nix/store/4wv9v4iqai3hmycw9y5iv49bgfcdc6ya-freetype-2.13.3
+  /nix/store/m0f18wgfz8yffsl09lciwiazgic3lsnm-fzf-0.59.0
+  /nix/store/3r8i3qg2c0983faywrnam91cnrk9nxqj-garcon-4.18.2
+  /nix/store/xpzl2sf58fqfpl64b1fy1ihxay7k71li-gawk-5.3.1
+  /nix/store/ggqfrwgzpr3v3dkvh4cnmhymnvf6cqja-gcc-14-20241116-lib
+  /nix/store/qjg34af79vcz9k2x386wjg6pk905cs42-gcc-14-20241116-libgcc
+  /nix/store/40xd8rfz21ls152sgaam36vmkpi3vqhk-gdk-pixbuf-loaders.cache
+  /nix/store/lv8klvf4lbg6n4v6aqpf7wy5chg8hxdr-getent-glibc-2.40-66
+  /nix/store/a07jacbl29lb4d48mf4qz6a88imfl1zb-giflib-5.2.2
+  /nix/store/81mi7m3k3wsiz9rrrg636sx21psj20hc-glibc-2.40-66
+  /nix/store/9lcg6rsqbmx6s35jzy86b86pkj0qhxjl-glibc-2.40-66-bin
+  /nix/store/b8k1qkmfw1vk075zj8yzpl3b4y82si1g-glibc-2.40-66-getent
+  /nix/store/10i4ms4q3rd9lrnavr7yrkjlfv2i1z6b-glibmm-2.82.0
+  /nix/store/jq8xwsvpc3rdkrcybdpm5vzznw2ki4sq-gmp-with-cxx-6.3.0
+  /nix/store/lcrd60rf8r80qicpsmdp3s1k1k81qnlp-gmp-with-cxx-6.3.0
+  /nix/store/4lbfasv335vpk8rbcf3pgkag4rhg8jx8-gnugrep-3.11
+  /nix/store/51xlf5j5wjxijwcm7msiwwb8gq9bdy39-gnupg-2.4.7
+  /nix/store/zlmk040fc3jax9s3gldwp5rfwc1hhajc-gnutar-1.35
+  /nix/store/f2syfm792b4gfmmjbdqshbymm8paniq5-gnutls-3.8.6
+  /nix/store/n6gzarfxkflf6qcqj08biqggwn2ynraj-gpm-unstable-2020-06-17
+  /nix/store/wa60d97kpd0hpwjrnqrvijh2f0qfa37b-groff-1.23.0
+  /nix/store/w1wd315ngsaqaplbrzjmxgkdiili4xz2-gtkmm-4.16.0
+  /nix/store/chwdy9qaxd13q8zvl0zd5r7ql2q116di-gzip-1.13
+  /nix/store/cs16iixybn5w4s8x7rk0ffwl4nwv51ha-hyprland-0.45.2
+  /nix/store/gcyjbcma36cn6k0mx15xipyjlrl5rz14-hyprland-0.45.2-man
+  /nix/store/ay29x12v4hpnhyk48f22h70dvq4l00zn-iana-etc-20240318
+  /nix/store/n7v8wpczzgcrinp534dpzbyw2ngwxzgi-imlib2-1.12.3
+  /nix/store/vjwfi2hq2qcrzzamxhlwx0kyvssv1cz7-iptables-1.8.11
+  /nix/store/4mkrgh9hmq44yzx2ssm604lcp5fm3i1j-json-c-0.18
+  /nix/store/0wj3dk4phaw5vf95mr7srpq7nxp25rh5-kbd-2.7.1
+  /nix/store/fy6jkbap0qpkgggy4sivgql9gadxy3a0-kexec-tools-2.0.29
+  /nix/store/c8n566488azxaqjsms2dhjpvzl1w90zv-keyutils-1.6.3-lib
+  /nix/store/4hj1j105qdjdghjp35kh9n33bqgsig2y-kmod-31
+  /nix/store/pvd92pzl0cgxsq0ghsdai148v32km6ka-kmod-31-lib
+  /nix/store/vjvzk9ifx05pwznia9kvbajbh08k4k8a-krb5-1.21.3-lib
+  /nix/store/wmw5kf68adg07531vbfagl8n1qq6mxcv-lerc-4.0.0
+  /nix/store/80r6vnyb23f84b4jx3qdb9spy3f02akk-libX11-1.8.10
+  /nix/store/pjn9a9zvdcdjx08ahvxl0a116d2d6q32-libXau-1.0.12
+  /nix/store/ip40w780270janfx2cqh6m815ag1y5s1-libXdmcp-1.1.5
+  /nix/store/n3d6zzfmfy6s36s9hadwrp56gvxpiy8g-libXext-1.3.6
+  /nix/store/ch75l6c5g2p9h624kxic90gshf6wynpi-libapparmor-4.0.3
+  /nix/store/wg8a1qh0lcy84l44h5zvza8d2k3hyxg1-libarchive-3.7.7-lib
+  /nix/store/7vrj4p5n2h4r3klxg9cgwkxfqdqfw67x-libassuan-2.5.7
+  /nix/store/nzfxyx5cg9mcdm233rnzzjbnbk44b6gy-libbpf-1.5.0
+  /nix/store/g0gd956a0921wqbfmn0wl4a57yhgfxzj-libbsd-0.12.2
+  /nix/store/3q2lmaad00r4f3a3n3f20h0lhmyzqq6g-libcap-2.73-lib
+  /nix/store/ra193k16k1fny1jc3a8qpazm5f7bw1pr-libcap-ng-0.8.5
+  /nix/store/81h16073hw5kxspghn1aw3dpb0qghhz1-libcbor-0.11.0
+  /nix/store/cz61q4fa4wz6pdqyda97yjlh72729mb9-libdeflate-1.23
+  /nix/store/dn6fly6c7k84zndvrqhv674d4x7g54jp-libevent-2.1.12
+  /nix/store/38q0ckkjzqfghf7ri1906zsl2pbi0bnj-libffi-3.4.6
+  /nix/store/rdwnacy0a7h07ixmy8fs43qiwns8s488-libfido2-1.15.0
+  /nix/store/ii7ibnqmg74ba7wq1qr07yh25i1mls8k-libgcrypt-1.10.3-lib
+  /nix/store/iq8ss1qv4aaagbl1madvsiy6gll6hcgb-libgepub-0.7.1
+  /nix/store/6slnzkmxwy2v4zfczg5gwpc75hdqrydi-libgpg-error-1.51
+  /nix/store/ylbi1rs259hn3klz1a06v4yq221hzryb-libid3tag-0.15.1b
+  /nix/store/pyy5hx150l4m9grcm7k8p0rg863lllgb-libidn2-2.3.7
+  /nix/store/r8wi7x5qmr3ld2jj4bqk11gwf585z10a-libjpeg-turbo-3.0.4
+  /nix/store/k7vn0h76r8r30p119khksw8099i04kx0-libmd-1.1.0
+  /nix/store/xycfk5rzzhn8n0m39i6isksr9ii64x4s-libmicrohttpd-1.0.1
+  /nix/store/6sllvrn4dxszb57w69xlqvqinm4p01qn-libmnl-1.0.5
+  /nix/store/6f4wxw904f57c1vpgaax2qrpwqmnh6dc-libnetfilter_conntrack-1.1.0
+  /nix/store/n0r7319xx6px3y3sbz5skdsl4xsp2x2c-libnfnetlink-1.0.2
+  /nix/store/k76y12p0rhrkzggrrf9pig4fipg1qbn7-libnftnl-1.2.8
+  /nix/store/8lpfk6125r7hzbjw1lh6sg06nz840yhd-libnl-3.11.0
+  /nix/store/8m4carf64i2wmm1av5rkn1k2lj78p4rh-libpcap-1.10.5
+  /nix/store/zr22jmis92nr08bpjwxbawlf94fs187h-libpipeline-1.5.8
+  /nix/store/s4lrk22m2jp6symmx9kk7pcvbim1awq4-libpng-apng-1.6.43
+  /nix/store/njkj1ayhqlnw2msla0b3iknq908274w8-libpsl-0.21.5
+  /nix/store/3y4c9dkqayb0g1vc1ghdh1nrscz6sjkp-libpwquality-1.4.5-lib
+  /nix/store/g1fj8fw9clr3xnwkppgwdv985hwi8m30-libseccomp-2.5.5-lib
+  /nix/store/sm3kmghhym2qlnb0dmz7jgqljd0na8jh-libsigc++-3.6.0
+  /nix/store/qpzb764s6v2mpbjh66d3jx7g0qzrd1az-libssh2-1.11.1
+  /nix/store/angg0lzvy3p7qs8kv27c7x79k41sv1hv-libtasn1-4.19.0
+  /nix/store/5flsv148b6p305i6dcs4w2rldmcw5ada-libtiff-4.7.0
+  /nix/store/qc4q793cca7fnlhry1m1ql5xj86hpbgq-libtpms-0.10.0
+  /nix/store/08p73d581f4iagpdx93n3rbk1b03qpbb-libunistring-1.3
+  /nix/store/5cvdw61bmh4vzxssqs2s2whsrrm5kpsa-libwebp-1.5.0
+  /nix/store/9r75y0673s5h26q5ibhavvw0mxpzpz39-libxcb-1.17.0
+  /nix/store/d550hx0zzirlbww967k0d0xs8asrb3ia-libxcrypt-4.4.38
+  /nix/store/zkf2cdhwh14skch0rbk3363v81qbcipg-libxfce4ui-4.18.6
+  /nix/store/g092gwqmc4l4qk8i4ry4lyglzfxlhr73-libxml2-2.13.5
+  /nix/store/a28kg6w5n0wa0n1pgiz2m12j9kswfqmg-linux-pam-1.6.1
+  /nix/store/9aww4sp6jzrgfyiwndhza536dj43fn8l-lvm2-2.03.29-lib
+  /nix/store/drkxr334migjnf1rhgyw1c62h27irklj-lz4-1.10.0-lib
+  /nix/store/mq9hdmv0na30dl6jkcincj9v0l9myjlm-man-db-2.13.0
+  /nix/store/mvxbk7p9wkrwq4jbv566wqc96lnc18xa-muffin-6.2.0
+  /nix/store/x9lgx9pd242kw0sdvdmwvmgj6igw8h8k-ncurses-6.4.20221231
+  /nix/store/q9mi1i4j97lfyzj4mxxakil23m9akcmv-nettle-3.10.1
+  /nix/store/1f1ja61ch7s7qzx1qcag0a0dlfsai15d-nghttp2-1.64.0-lib
+  /nix/store/v8chwf4hc4a6b3bij952sw6jwxhxi6xh-npth-1.7
+  /nix/store/f1nih7ybzfmpgspzp6ixfh9vibdbkygh-openssl-3.3.2
+  /nix/store/qgc65g6awir2p888bw5nmmfslcrzb4hj-p11-kit-0.25.5
+  /nix/store/hsjmkmrjdsk6ngwlxy7p7fa0z0a7ag32-pangomm-2.54.0
+  /nix/store/3mks5gczcwmi2bzklk075zkfvyjpxapp-parallel-20250122
+  /nix/store/zizz6q2x75in398ks22jg36anrkc8cp2-pavucontrol-6.1
+  /nix/store/xlxqgm56nx8b1b20lbk05pd0ndmg3jbn-pcre2-10.44
+  /nix/store/6znpp1y6497jqc4lh3i1pqn78bwz2dx5-pcsclite-2.3.0-lib
+  /nix/store/gndky4p2sjhsh0zdlqs3dnyzyslccxha-perl-5.40.0
+  /nix/store/nyqwmqlnnhq3x5718309wrkif0wrppvp-procps-4.0.4
+  /nix/store/3wqqd0s4k0pq357q1sljz11iy6r7jd4r-publicsuffix-list-0-unstable-2025-01-16
+  /nix/store/b1pfm8f7hrrmxgfrq76laqypy5q8g2ss-qrencode-4.1.1
+  /nix/store/hnnmxmq0dypban4ygm9xbd5d033nvgs1-readline-8.2p13
+  /nix/store/r16zs84i0hqdbz4lijjwxxl21c2j9zid-ripgrep-14.1.1
+  /nix/store/w78a59rlmzpqam3awhx9fnc5rv6xwys9-shadow-4.17.2
+  /nix/store/3x67153zchawpzm78wrxd96lni3nf3sj-systemd-257.2
+  /nix/store/9xan7wh7ggxhgnlw8fhv89vab3bbcxa9-systemd-minimal-libs-257.2
+  /nix/store/fnp91v470w6n1pfysp8riaiibis76v5h-tango-icon-theme-0.8.90
+  /nix/store/dlhpg7pngvbzhklq21lcgvfb44hic13z-tcb-1.2
+  /nix/store/jwpyyh551f9cp6vxnjp464ncmklb161j-thunar-4.18.11
+  /nix/store/w9d88bdyd5pxgd1m3dg7xwpb95d5f33i-tpm2-tss-4.1.3
+  /nix/store/8h97dyrdagy4r9l3wkzi2viq171n3lw5-tumbler-4.18.2
+  /nix/store/9bx2dwaq5z46s7x0gc9hzrk5paf67mks-tzdata-2025a
+  /nix/store/yf2jdg0435gjqkz8walq0823yxqis076-unbound-1.22.0-lib
+  /nix/store/gdgpwhjscyy33zpyaaj97dnxkqqcdgkj-util-linux-minimal-2.39.4-bin
+  /nix/store/8h9qgd6yp7ld34q6vh1waz5df0d7z3s2-util-linux-minimal-2.39.4-lib
+  /nix/store/d0m7y5qrgvmnwwyx3qz3ff3y7dybsq5y-util-linux-minimal-2.39.4-login
+  /nix/store/956k3cv230x3066yqlcv7q74xszq6x82-util-linux-minimal-2.39.4-mount
+  /nix/store/nlhn3x342xxzrnxicnsvpahicraf98j9-util-linux-minimal-2.39.4-swap
+  /nix/store/9jdxm3c5q6j6ssvc97h65j3vnk08dmr5-w3m-0.5.3+git20230121
+  /nix/store/yy4hjdp2rwhh01jdc58hvcmid89w8zm7-wikiman-2.13.2
+  /nix/store/78l6l1l6x36dfvxpijilc5ijn8yv34bl-xdg-desktop-portal-hyprland-1.3.6
+  /nix/store/r1h0gdjg5bzr21aw4sw2znhqzgxl55k1-xfce4-appfinder-4.18.1
+  /nix/store/xd7f7szi1i4fb57kr7mg9nf55jy8lpb5-xfce4-icon-theme-4.4.3
+  /nix/store/v429i7l6mgikv0r870gs1b94lzhbnj5q-xfce4-notifyd-0.9.6
+  /nix/store/0q6877vcsvfn6rn28y2hzc1wlzy052fy-xfce4-panel-4.18.6
+  /nix/store/g1c2a2g1zkwh94fnw2f2kqj1sxihbm6k-xfce4-power-manager-4.18.4
+  /nix/store/r7nwkhx67by6qa1a19pg1j96d4szl7jy-xfce4-pulseaudio-plugin-0.4.8
+  /nix/store/1sdlgx79m5m3vrzvnwiv9crc407n788c-xfce4-screensaver-4.18.3
+  /nix/store/029v4q9hpjwzhqxv71mdiw87r5a4ahg6-xfce4-screenshooter-1.11.1
+  /nix/store/6vhsb05562njmayv1sf6icmzh2qb5sq0-xfce4-session-4.18.4
+  /nix/store/5dgy3nc127q10hvk9l7g27g31y29h366-xfce4-settings-4.18.6
+  /nix/store/cmf8iyhryl9r6z0bmj93vvnzb1z9k66n-xfdesktop-4.18.1
+  /nix/store/sb3diqdapf215jghbi41qnwxf6b0bnp0-xfwm4-4.18.0
+  /nix/store/9w6h45jrkx47csywb3d8qbj6kphjzgyd-xfwm4-themes-4.10.0
+  /nix/store/v5h01qmqjbhj3ysrd1li9364fcnlap2k-xgcc-14-20241116-libgcc
+  /nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5
+  /nix/store/s9qwscklmg3a6r5mda34f8iyrv8dmail-xz-5.6.3
+  /nix/store/rrv4bd5i7rp2m7j8ix4kl8bzijhh8gd3-xz-5.6.3-bin
+  /nix/store/jb442jir0a2x7zsk0d63xb6rh8p280ai-zlib-1.3.1
+  /nix/store/b2sdg3i6z4llcfmz1wm246hvjbns5ljk-zstd-1.5.6
+  /nix/store/41ahrjgcrncfknqj1kzzhyqg2s7sagcm-zstd-1.5.6-bin
+copying path '/nix/store/gcyjbcma36cn6k0mx15xipyjlrl5rz14-hyprland-0.45.2-man' from 'https://cache.nixos.org'...
+copying path '/nix/store/9w6h45jrkx47csywb3d8qbj6kphjzgyd-xfwm4-themes-4.10.0' from 'https://cache.nixos.org'...
+building '/nix/store/64jzc7qdvhf8kngzn3gvfwnm9ja26dd5-boot.json.drv'...
+copying path '/nix/store/cs16iixybn5w4s8x7rk0ffwl4nwv51ha-hyprland-0.45.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/zkf2cdhwh14skch0rbk3363v81qbcipg-libxfce4ui-4.18.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/fnp91v470w6n1pfysp8riaiibis76v5h-tango-icon-theme-0.8.90' from 'https://cache.nixos.org'...
+copying path '/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5' from 'https://cache.nixos.org'...
+building '/nix/store/slqf59wg1rpvggcd9hziwacnchrwi482-etc-os-release.drv'...
+building '/nix/store/hrf1wd6ba2aa92f09m48j1blrba9ca34-issue.drv'...
+building '/nix/store/xn68q09dgmjxhizhjcksgjbkvcblxhss-nixos-version.drv'...
+building '/nix/store/l3zwa1lygg82arn3a00cqgaskdfmgkl8-xfce4-screensaver.pam.drv'...
+copying path '/nix/store/3v941p2x6fiaxr228gkn6qwdnazsj6fq-cinnamon-gsettings-overrides' from 'https://cache.nixos.org'...
+copying path '/nix/store/kiv0sdd4ph5gdharx7flasfx1pl3y071-firefox-unwrapped-135.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/40xd8rfz21ls152sgaam36vmkpi3vqhk-gdk-pixbuf-loaders.cache' from 'https://cache.nixos.org'...
+copying path '/nix/store/ay29x12v4hpnhyk48f22h70dvq4l00zn-iana-etc-20240318' from 'https://cache.nixos.org'...
+copying path '/nix/store/iq8ss1qv4aaagbl1madvsiy6gll6hcgb-libgepub-0.7.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/sm3kmghhym2qlnb0dmz7jgqljd0na8jh-libsigc++-3.6.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/9bx2dwaq5z46s7x0gc9hzrk5paf67mks-tzdata-2025a' from 'https://cache.nixos.org'...
+building '/nix/store/51a6x1q8p5czh4psjk8gk9w8k6khyqxn-xfconf-4.18.3_fish-completions.drv'...
+copying path '/nix/store/r002igsavnpbrcma5vp309hvh500m5jq-chromium-unwrapped-133.0.6943.53' from 'https://cache.nixos.org'...
+copying path '/nix/store/inc11wv90wslzd6shfh4ig7v836g1s48-chromium-unwrapped-133.0.6943.53-sandbox' from 'https://cache.nixos.org'...
+copying path '/nix/store/qjg34af79vcz9k2x386wjg6pk905cs42-gcc-14-20241116-libgcc' from 'https://cache.nixos.org'...
+building '/nix/store/ppzbnyk5r18naxvmg6pqzl6i3c9a4x90-nixos-manual-html.drv'...
+copying path '/nix/store/j0jxixl7h3w786accas310cj7n3zri5n-dns-root-data-2024-06-20' from 'https://cache.nixos.org'...
+copying path '/nix/store/08p73d581f4iagpdx93n3rbk1b03qpbb-libunistring-1.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/3wqqd0s4k0pq357q1sljz11iy6r7jd4r-publicsuffix-list-0-unstable-2025-01-16' from 'https://cache.nixos.org'...
+copying path '/nix/store/v5h01qmqjbhj3ysrd1li9364fcnlap2k-xgcc-14-20241116-libgcc' from 'https://cache.nixos.org'...
+copying path '/nix/store/lrfl6j2svi56lg44xjs6bps38kxnyxwf-cairomm-1.18.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/3r8i3qg2c0983faywrnam91cnrk9nxqj-garcon-4.18.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/10i4ms4q3rd9lrnavr7yrkjlfv2i1z6b-glibmm-2.82.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/8h97dyrdagy4r9l3wkzi2viq171n3lw5-tumbler-4.18.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/nggx10banfvyahj36iflsnhizc0fh1dn-exo-4.18.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/mvxbk7p9wkrwq4jbv566wqc96lnc18xa-muffin-6.2.0' from 'https://cache.nixos.org'...
+building '/nix/store/0gps8gs0f8al01cwjskv4aajzwc43bxr-nixos-version_fish-completions.drv'...
+building '/nix/store/dxyz2m3qzd923j5qara1jyg1sk5m39kc-shutdown-ramfs-contents.json.drv'...
+building '/nix/store/d74m47s2q9av2b6x6rh70imddbcyhshf-libxfce4ui-4.18.6_fish-completions.drv'...
+building '/nix/store/pm9561hb4y6wxq390vfm316q9cqdxid3-xfwm4-themes-4.10.0_fish-completions.drv'...
+building '/nix/store/4xjpxchkbkn7r5sqj8r2x3wjxwzavzql-xwayland-24.1.5_fish-completions.drv'...
+copying path '/nix/store/6vhsb05562njmayv1sf6icmzh2qb5sq0-xfce4-session-4.18.4' from 'https://cache.nixos.org'...
+copying path '/nix/store/sb3diqdapf215jghbi41qnwxf6b0bnp0-xfwm4-4.18.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/z84jklzs6rlpkx7s00vap8b3wiqvlcla-chromium-133.0.6943.53-sandbox' from 'https://cache.nixos.org'...
+copying path '/nix/store/pyy5hx150l4m9grcm7k8p0rg863lllgb-libidn2-2.3.7' from 'https://cache.nixos.org'...
+copying path '/nix/store/hsjmkmrjdsk6ngwlxy7p7fa0z0a7ag32-pangomm-2.54.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/5dgy3nc127q10hvk9l7g27g31y29h366-xfce4-settings-4.18.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/r1h0gdjg5bzr21aw4sw2znhqzgxl55k1-xfce4-appfinder-4.18.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/0q6877vcsvfn6rn28y2hzc1wlzy052fy-xfce4-panel-4.18.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/1sdlgx79m5m3vrzvnwiv9crc407n788c-xfce4-screensaver-4.18.3' from 'https://cache.nixos.org'...
+building '/nix/store/maa9qg7kb3449m2vdq5w1md3c0r3ph0j-unit-generate-shutdown-ramfs.service.drv'...
+building '/nix/store/hkg1plikrg8j2jj2x4qnir5rcs7g1hva-exo-4.18.0_fish-completions.drv'...
+building '/nix/store/wjhskdy24gc8b5s8gzwcp12slcrciq58-garcon-4.18.2_fish-completions.drv'...
+building '/nix/store/n80hpkxpcfjk1ngh3b0ipycqhsw4j1gh-tumbler-4.18.2_fish-completions.drv'...
+copying path '/nix/store/r8fxf3lgm5jcszwldcxwlpv8xwhm3sdn-cinnamon-common-6.2.9' from 'https://cache.nixos.org'...
+copying path '/nix/store/81mi7m3k3wsiz9rrrg636sx21psj20hc-glibc-2.40-66' from 'https://cache.nixos.org'...
+copying path '/nix/store/w1wd315ngsaqaplbrzjmxgkdiili4xz2-gtkmm-4.16.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/xd7f7szi1i4fb57kr7mg9nf55jy8lpb5-xfce4-icon-theme-4.4.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/v429i7l6mgikv0r870gs1b94lzhbnj5q-xfce4-notifyd-0.9.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/r7nwkhx67by6qa1a19pg1j96d4szl7jy-xfce4-pulseaudio-plugin-0.4.8' from 'https://cache.nixos.org'...
+copying path '/nix/store/029v4q9hpjwzhqxv71mdiw87r5a4ahg6-xfce4-screenshooter-1.11.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/g1c2a2g1zkwh94fnw2f2kqj1sxihbm6k-xfce4-power-manager-4.18.4' from 'https://cache.nixos.org'...
+copying path '/nix/store/jwpyyh551f9cp6vxnjp464ncmklb161j-thunar-4.18.11' from 'https://cache.nixos.org'...
+building '/nix/store/jjl1mj8cyrpsi7gfb7n6x4jczacrbzcs-tango-icon-theme-0.8.90_fish-completions.drv'...
+building '/nix/store/z3p6ayhh4jnx9wwfl44i925wa9l7f4hx-xfce4-appfinder-4.18.1_fish-completions.drv'...
+building '/nix/store/pp7id57dhbfw613rakx120fa701336b6-xfce4-panel-4.18.6_fish-completions.drv'...
+building '/nix/store/mli5i4hil79kchwgkcf55jzapjy2gxsr-xfce4-screensaver-4.18.3_fish-completions.drv'...
+building '/nix/store/5nmn69sbbf3pfxxxlr9fz6cans3sv2ca-xfce4-session-4.18.4_fish-completions.drv'...
+building '/nix/store/4gcdm27x77d71s1g57d0f68229rxlpsq-xfce4-settings-4.18.6_fish-completions.drv'...
+copying path '/nix/store/8zfjdxhr1ywl1azarx4rgqwccq0clyk0-cinnamon-screensaver-6.2.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/cmf8iyhryl9r6z0bmj93vvnzb1z9k66n-xfdesktop-4.18.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/zizz6q2x75in398ks22jg36anrkc8cp2-pavucontrol-6.1' from 'https://cache.nixos.org'...
+building '/nix/store/9m34ikxqaj8aczyad4h49av6p6kqmnll-xfwm4-4.18.0_fish-completions.drv'...
+building '/nix/store/4gk4fm71l60j4rhbj034zp0gb4r7iz8v-xsession.drv'...
+building '/nix/store/p1la0ppq0n0nn4v1wws8rldr9yzwcm3r-cinnamon-common-6.2.9_fish-completions.drv'...
+building '/nix/store/wy628m87ii5fgcqrhfv77wyvjmrgjzmp-thunar-4.18.11_fish-completions.drv'...
+building '/nix/store/8q6nzfnq524lyhmv860krbwnrjpg56ss-xfce4-icon-theme-4.4.3_fish-completions.drv'...
+copying path '/nix/store/fd118hwh7d1ncib4mdw56ylv3g9k0iyj-bash-5.2p37' from 'https://cache.nixos.org'...
+copying path '/nix/store/vv1w45nb0rfqc6n76s11ip085kg1js86-bzip2-1.0.8' from 'https://cache.nixos.org'...
+copying path '/nix/store/6h75nd43hbzp7pcan8w5bmqrq33lvhs2-brotli-1.1.0-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/xpzl2sf58fqfpl64b1fy1ihxay7k71li-gawk-5.3.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/718q5lcpvbk3s8i9pqr19c20n9ma91v7-attr-2.5.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/4mkrgh9hmq44yzx2ssm604lcp5fm3i1j-json-c-0.18' from 'https://cache.nixos.org'...
+copying path '/nix/store/b8k1qkmfw1vk075zj8yzpl3b4y82si1g-glibc-2.40-66-getent' from 'https://cache.nixos.org'...
+copying path '/nix/store/ggqfrwgzpr3v3dkvh4cnmhymnvf6cqja-gcc-14-20241116-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/ip40w780270janfx2cqh6m815ag1y5s1-libXdmcp-1.1.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/a07jacbl29lb4d48mf4qz6a88imfl1zb-giflib-5.2.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/c8n566488azxaqjsms2dhjpvzl1w90zv-keyutils-1.6.3-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/pjn9a9zvdcdjx08ahvxl0a116d2d6q32-libXau-1.0.12' from 'https://cache.nixos.org'...
+copying path '/nix/store/9lcg6rsqbmx6s35jzy86b86pkj0qhxjl-glibc-2.40-66-bin' from 'https://cache.nixos.org'...
+building '/nix/store/yav6wq0531yrqacmxbbbx323bp597s3f-xfce4-notifyd-0.9.6_fish-completions.drv'...
+building '/nix/store/qlmb3k0n2sgjwzsx93zw3j96ak792har-xfce4-power-manager-4.18.4_fish-completions.drv'...
+building '/nix/store/apkpbqsj9qhqhgmb3hfaj97i1hr092l6-xfce4-pulseaudio-plugin-0.4.8_fish-completions.drv'...
+building '/nix/store/6jy3jiss2q712w3l4ciwvb2892nvr4dv-xfce4-screenshooter-1.11.1_fish-completions.drv'...
+building '/nix/store/syi2m6m81mmzp30nrcgx1gvmslpbymjw-xfce-xsession.drv'...
+copying path '/nix/store/ch75l6c5g2p9h624kxic90gshf6wynpi-libapparmor-4.0.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/3q2lmaad00r4f3a3n3f20h0lhmyzqq6g-libcap-2.73-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/cz61q4fa4wz6pdqyda97yjlh72729mb9-libdeflate-1.23' from 'https://cache.nixos.org'...
+copying path '/nix/store/ra193k16k1fny1jc3a8qpazm5f7bw1pr-libcap-ng-0.8.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/6slnzkmxwy2v4zfczg5gwpc75hdqrydi-libgpg-error-1.51' from 'https://cache.nixos.org'...
+copying path '/nix/store/n0r7319xx6px3y3sbz5skdsl4xsp2x2c-libnfnetlink-1.0.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/6sllvrn4dxszb57w69xlqvqinm4p01qn-libmnl-1.0.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/81h16073hw5kxspghn1aw3dpb0qghhz1-libcbor-0.11.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/r8wi7x5qmr3ld2jj4bqk11gwf585z10a-libjpeg-turbo-3.0.4' from 'https://cache.nixos.org'...
+copying path '/nix/store/dn6fly6c7k84zndvrqhv674d4x7g54jp-libevent-2.1.12' from 'https://cache.nixos.org'...
+copying path '/nix/store/k7vn0h76r8r30p119khksw8099i04kx0-libmd-1.1.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/38q0ckkjzqfghf7ri1906zsl2pbi0bnj-libffi-3.4.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/8lpfk6125r7hzbjw1lh6sg06nz840yhd-libnl-3.11.0' from 'https://cache.nixos.org'...
+building '/nix/store/a5mcqcjkvcrxv88yszs8m68b6vha7pv7-cinnamon-screensaver-6.2.1_fish-completions.drv'...
+building '/nix/store/1wsziaizwh5yqw29y1dny9mqwsqqz39x-pavucontrol-6.1_fish-completions.drv'...
+building '/nix/store/h8gigq0d5lspq1z69w8hwrj36g0vdskv-xfdesktop-4.18.1_fish-completions.drv'...
+building '/nix/store/v54g1b63a4badr3d7lba8j30d1a5amhg-nixos-help.drv'...
+building '/nix/store/smdiaxkis91jrpk0a8i91xndxzgj506d-nixos-manual-html_fish-completions.drv'...
+copying path '/nix/store/szgafsljf7gvp4wm02nj9lxjx6ilv31a-audit-4.0.2-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/hpppxlcfvjzrvvcvhcm47divp65gbwq1-bzip2-1.0.8-bin' from 'https://cache.nixos.org'...
+copying path '/nix/store/9m58k55m7kk7vzy2v1ih73srgh3y2and-boehm-gc-8.2.8' from 'https://cache.nixos.org'...
+copying path '/nix/store/ripl42bx5vs9561f6ah5zm5mwi8rc6h3-db-4.8.30' from 'https://cache.nixos.org'...
+copying path '/nix/store/jq8xwsvpc3rdkrcybdpm5vzznw2ki4sq-gmp-with-cxx-6.3.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/81bvbv58jrjdcd11m3iv0dk9xf01l48c-acl-2.3.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/chwdy9qaxd13q8zvl0zd5r7ql2q116di-gzip-1.13' from 'https://cache.nixos.org'...
+copying path '/nix/store/lv8klvf4lbg6n4v6aqpf7wy5chg8hxdr-getent-glibc-2.40-66' from 'https://cache.nixos.org'...
+copying path '/nix/store/lcrd60rf8r80qicpsmdp3s1k1k81qnlp-gmp-with-cxx-6.3.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/nf08grliapxna95qzhq2q3hjrkw6iw6b-db-5.3.28' from 'https://cache.nixos.org'...
+copying path '/nix/store/njkj1ayhqlnw2msla0b3iknq908274w8-libpsl-0.21.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/zr22jmis92nr08bpjwxbawlf94fs187h-libpipeline-1.5.8' from 'https://cache.nixos.org'...
+copying path '/nix/store/wmw5kf68adg07531vbfagl8n1qq6mxcv-lerc-4.0.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/wa60d97kpd0hpwjrnqrvijh2f0qfa37b-groff-1.23.0' from 'https://cache.nixos.org'...
+building '/nix/store/f75j26d73g8yncc29z4vsjvjj28njha1-nixos-help.drv'...
+building '/nix/store/8fhnlddm9d1mrrdhjaclxsmzsw4nv32i-desktops.drv'...
+building '/nix/store/a03lfj9rqiz02v9xllirsdih2q6cmsni-hyprland-0.45.2_fish-completions.drv'...
+copying path '/nix/store/7vrj4p5n2h4r3klxg9cgwkxfqdqfw67x-libassuan-2.5.7' from 'https://cache.nixos.org'...
+copying path '/nix/store/g0gd956a0921wqbfmn0wl4a57yhgfxzj-libbsd-0.12.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/ii7ibnqmg74ba7wq1qr07yh25i1mls8k-libgcrypt-1.10.3-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/angg0lzvy3p7qs8kv27c7x79k41sv1hv-libtasn1-4.19.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/k76y12p0rhrkzggrrf9pig4fipg1qbn7-libnftnl-1.2.8' from 'https://cache.nixos.org'...
+copying path '/nix/store/6f4wxw904f57c1vpgaax2qrpwqmnh6dc-libnetfilter_conntrack-1.1.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/g1fj8fw9clr3xnwkppgwdv985hwi8m30-libseccomp-2.5.5-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/8m4carf64i2wmm1av5rkn1k2lj78p4rh-libpcap-1.10.5' from 'https://cache.nixos.org'...
+building '/nix/store/ncaqxj1j4vfgran3792gn3gdr7zk2694-etc-pam-environment.drv'...
+building '/nix/store/x8xddhbzdm3mmi317v6116fzq96hx20n-nixos-help_fish-completions.drv'...
+building '/nix/store/llnylmvbq4m42y2s1ky33slpvyn3yvr0-set-environment.drv'...
+building '/nix/store/p2f2sdfbrllw39dyxmb62jsc54szvqcx-unit-display-manager.service.drv'...
+building '/nix/store/8w1nyl8zd405v9nlcf5fk7igq7xrwifp-xserver-wrapper.drv'...
+copying path '/nix/store/9r75y0673s5h26q5ibhavvw0mxpzpz39-libxcb-1.17.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/g092gwqmc4l4qk8i4ry4lyglzfxlhr73-libxml2-2.13.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/d550hx0zzirlbww967k0d0xs8asrb3ia-libxcrypt-4.4.38' from 'https://cache.nixos.org'...
+copying path '/nix/store/zlmk040fc3jax9s3gldwp5rfwc1hhajc-gnutar-1.35' from 'https://cache.nixos.org'...
+copying path '/nix/store/f1nih7ybzfmpgspzp6ixfh9vibdbkygh-openssl-3.3.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/x9lgx9pd242kw0sdvdmwvmgj6igw8h8k-ncurses-6.4.20221231' from 'https://cache.nixos.org'...
+copying path '/nix/store/xlxqgm56nx8b1b20lbk05pd0ndmg3jbn-pcre2-10.44' from 'https://cache.nixos.org'...
+copying path '/nix/store/b1pfm8f7hrrmxgfrq76laqypy5q8g2ss-qrencode-4.1.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/6znpp1y6497jqc4lh3i1pqn78bwz2dx5-pcsclite-2.3.0-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/9xan7wh7ggxhgnlw8fhv89vab3bbcxa9-systemd-minimal-libs-257.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/1f1ja61ch7s7qzx1qcag0a0dlfsai15d-nghttp2-1.64.0-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/v8chwf4hc4a6b3bij952sw6jwxhxi6xh-npth-1.7' from 'https://cache.nixos.org'...
+copying path '/nix/store/drkxr334migjnf1rhgyw1c62h27irklj-lz4-1.10.0-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/8h9qgd6yp7ld34q6vh1waz5df0d7z3s2-util-linux-minimal-2.39.4-lib' from 'https://cache.nixos.org'...
+building '/nix/store/65fy157fq35mwmly9aq9pq342gzajfyd-etc-fish-nixos-env-preinit.fish.drv'...
+building '/nix/store/9vzbn5q9vhdfq0yqva30jbmvfzn9j618-etc-profile.drv'...
+copying path '/nix/store/wdap4cr3bnm685f27y9bb6q5b6q18msl-coreutils-9.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/vjwfi2hq2qcrzzamxhlwx0kyvssv1cz7-iptables-1.8.11' from 'https://cache.nixos.org'...
+copying path '/nix/store/q9mi1i4j97lfyzj4mxxakil23m9akcmv-nettle-3.10.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/qgc65g6awir2p888bw5nmmfslcrzb4hj-p11-kit-0.25.5' from 'https://cache.nixos.org'...
+building '/nix/store/crac1g5pwhz4zpn5hvhwm89nz0lnm2hp-lightdm.conf.drv'...
+copying path '/nix/store/51xlf5j5wjxijwcm7msiwwb8gq9bdy39-gnupg-2.4.7' from 'https://cache.nixos.org'...
+copying path '/nix/store/a28kg6w5n0wa0n1pgiz2m12j9kswfqmg-linux-pam-1.6.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/78l6l1l6x36dfvxpijilc5ijn8yv34bl-xdg-desktop-portal-hyprland-1.3.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/d0m7y5qrgvmnwwyx3qz3ff3y7dybsq5y-util-linux-minimal-2.39.4-login' from 'https://cache.nixos.org'...
+copying path '/nix/store/s9qwscklmg3a6r5mda34f8iyrv8dmail-xz-5.6.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/b2sdg3i6z4llcfmz1wm246hvjbns5ljk-zstd-1.5.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/0jkgykmcfny1i12pqcf3nilr21dgq0wk-firefox-135.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/jb442jir0a2x7zsk0d63xb6rh8p280ai-zlib-1.3.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/4lbfasv335vpk8rbcf3pgkag4rhg8jx8-gnugrep-3.11' from 'https://cache.nixos.org'...
+copying path '/nix/store/80r6vnyb23f84b4jx3qdb9spy3f02akk-libX11-1.8.10' from 'https://cache.nixos.org'...
+copying path '/nix/store/n6gzarfxkflf6qcqj08biqggwn2ynraj-gpm-unstable-2020-06-17' from 'https://cache.nixos.org'...
+copying path '/nix/store/vjvzk9ifx05pwznia9kvbajbh08k4k8a-krb5-1.21.3-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/qc4q793cca7fnlhry1m1ql5xj86hpbgq-libtpms-0.10.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/9aww4sp6jzrgfyiwndhza536dj43fn8l-lvm2-2.03.29-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/hnnmxmq0dypban4ygm9xbd5d033nvgs1-readline-8.2p13' from 'https://cache.nixos.org'...
+copying path '/nix/store/r16zs84i0hqdbz4lijjwxxl21c2j9zid-ripgrep-14.1.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/dsj5293gmill50aw8f2zs3xr3qcpb9pj-cracklib-2.10.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/fy6jkbap0qpkgggy4sivgql9gadxy3a0-kexec-tools-2.0.29' from 'https://cache.nixos.org'...
+building '/nix/store/gjhd3rjbwphzq493wzgjwk11i21qa7bf-firefox-135.0_fish-completions.drv'...
+copying path '/nix/store/rdwnacy0a7h07ixmy8fs43qiwns8s488-libfido2-1.15.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/ylbi1rs259hn3klz1a06v4yq221hzryb-libid3tag-0.15.1b' from 'https://cache.nixos.org'...
+copying path '/nix/store/s4lrk22m2jp6symmx9kk7pcvbim1awq4-libpng-apng-1.6.43' from 'https://cache.nixos.org'...
+copying path '/nix/store/gndky4p2sjhsh0zdlqs3dnyzyslccxha-perl-5.40.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/qpzb764s6v2mpbjh66d3jx7g0qzrd1az-libssh2-1.11.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/c0jfwr6sc4nz3ns4mzk5bsw6gqv8q836-cryptsetup-2.7.5' from 'https://cache.nixos.org'...
+copying path '/nix/store/956k3cv230x3066yqlcv7q74xszq6x82-util-linux-minimal-2.39.4-mount' from 'https://cache.nixos.org'...
+copying path '/nix/store/yf2jdg0435gjqkz8walq0823yxqis076-unbound-1.22.0-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/nlhn3x342xxzrnxicnsvpahicraf98j9-util-linux-minimal-2.39.4-swap' from 'https://cache.nixos.org'...
+building '/nix/store/s8rza7plkw3mdwq6pvfbr48v4p13dmvw-man-paths.drv'...
+building '/nix/store/6ymvxs0w518pn5h7xvv6baghr83myyg7-system-generators.drv'...
+building '/nix/store/7rgwy1grzwj2f98akvlnwm9r57m137j1-system-path.drv'...
+building '/nix/store/3qjg8f0nf4y831lk4c95mg4k8738khnw-system-shutdown.drv'...
+building '/nix/store/zr3jwcm8z2d8dmz3w09dirniac6q5z1c-user-generators.drv'...
+building '/nix/store/xvzrb88km6nplp7ckj95pbfi2acb8sfw-xdg-desktop-portal-hyprland-1.3.6_fish-completions.drv'...
+warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
+created 5509 symlinks in user environment
 warning: collision between `/nix/store/gavyqkxsdfm1nyzwjx5ic2q9mhg3i01z-rustfmt-1.82.0/bin/cargo-fmt' and `/nix/store/dyn2kdxcnhcjz13nqpdrpcgd3qj7996b-rustup-1.27.1/bin/cargo-fmt'
 warning: collision between `/nix/store/gavyqkxsdfm1nyzwjx5ic2q9mhg3i01z-rustfmt-1.82.0/bin/rustfmt' and `/nix/store/dyn2kdxcnhcjz13nqpdrpcgd3qj7996b-rustup-1.27.1/bin/rustfmt'
-created 5497 symlinks in user environment
-building '/nix/store/6njwp1h6v45rrwyyr50sq4qfz2vz2wq0-man-cache.drv'...
-warning: creating dangling symlink `/nix/store/g5y2yi6x53pawjwxncd92yciwla79cqh-system-path//etc/xdg/xdg-default' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/g5y2yi6x53pawjwxncd92yciwla79cqh-system-path//etc/xdg/xdg-xfce' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/g5y2yi6x53pawjwxncd92yciwla79cqh-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
+copying path '/nix/store/4hj1j105qdjdghjp35kh9n33bqgsig2y-kmod-31' from 'https://cache.nixos.org'...
+copying path '/nix/store/n3d6zzfmfy6s36s9hadwrp56gvxpiy8g-libXext-1.3.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/dlhpg7pngvbzhklq21lcgvfb44hic13z-tcb-1.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/rrv4bd5i7rp2m7j8ix4kl8bzijhh8gd3-xz-5.6.3-bin' from 'https://cache.nixos.org'...
+copying path '/nix/store/6vpzxqaqvwiyqywssfavs1s51b4cgsin-bash-interactive-5.2p37' from 'https://cache.nixos.org'...
+copying path '/nix/store/a6lkdradawy6ybr5kv9lh5x5rwa2aa30-curl-8.11.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/4wv9v4iqai3hmycw9y5iv49bgfcdc6ya-freetype-2.13.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/41ahrjgcrncfknqj1kzzhyqg2s7sagcm-zstd-1.5.6-bin' from 'https://cache.nixos.org'...
+copying path '/nix/store/3y4c9dkqayb0g1vc1ghdh1nrscz6sjkp-libpwquality-1.4.5-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/5cvdw61bmh4vzxssqs2s2whsrrm5kpsa-libwebp-1.5.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/pvd92pzl0cgxsq0ghsdai148v32km6ka-kmod-31-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/f2syfm792b4gfmmjbdqshbymm8paniq5-gnutls-3.8.6' from 'https://cache.nixos.org'...
+copying path '/nix/store/wg8a1qh0lcy84l44h5zvza8d2k3hyxg1-libarchive-3.7.7-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/4bfbksfiy1b6r6yna9hh39qv8jfi33n7-bc-1.07.1' from 'https://cache.nixos.org'...
+building '/nix/store/gnvajiizbqkzghia5mdggdakg0988asp-man-cache.drv'...
+building '/nix/store/c6y78x83kgm90agjhcfd8qsyd7f551rv-system_fish-completions.drv'...
+warning: creating dangling symlink `/nix/store/83vpiixaspki830r5zpn83r3avycklyi-system-path//etc/xdg/xdg-default' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/83vpiixaspki830r5zpn83r3avycklyi-system-path//etc/xdg/xdg-xfce' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/83vpiixaspki830r5zpn83r3avycklyi-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/dgpxkfdchyfm9hw1yhmav669afnk30jy-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
 warning: collision between `/nix/store/jmdf2qi2c389s71kh21gj0yfs4b865az-VirtualBox-GuestAdditions-7.1.6a-6.6.75/lib/modules' and `/nix/store/xfcg90q2khxr1x0hhdrlyz27il36x9ih-zulu-ca-jdk-23.0.0/lib/modules'
 warning: collision between `/nix/store/px10dfa4kqqbl5px1fxapijgkpkanrgk-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/jmdf2qi2c389s71kh21gj0yfs4b865az-VirtualBox-GuestAdditions-7.1.6a-6.6.75/bin/mount.vboxsf'
-source root is Discord
-setting SOURCE_DATE_EPOCH to timestamp 1738602962 of file Discord/postinst.sh
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-no configure script, doing nothing
-Running phase: buildPhase
-no Makefile or custom buildPhase, doing nothing
-Running phase: glibPreInstallPhase
-Running phase: glibPreInstallPhase
-Running phase: installPhase
-warning: collision between `/nix/store/xn49v7k6f6bwl4d55dqcxhiirm7ps5lv-xwayland-24.1.4/lib/xorg/protocol.txt' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/lib/xorg/protocol.txt'
-warning: collision between `/nix/store/xn49v7k6f6bwl4d55dqcxhiirm7ps5lv-xwayland-24.1.4/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
-Running phase: glibPreFixupPhase
-Running phase: glibPreFixupPhase
-Running phase: gappsWrapperArgsHook
-Running phase: dropIconThemeCache
-Running phase: dropIconThemeCache
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome_crashpad_handler
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libEGL.so
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/.Discord-wrapped
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libGLESv2.so
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libvk_swiftshader.so
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libvulkan.so.1
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libffmpeg.so
-shrinking /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome-sandbox
-checking for references to /build/ in /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83...
-patching script interpreter paths in /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-/nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/postinst.sh: interpreter directive changed from "#!/bin/sh" to "/nix/store/gwgqdl0242ymlikq9s9s62gkp5cvyal3-bash-5.2p37/bin/sh"
-stripping (with command strip and flags -S -p) in  /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/bin
-automatically fixing dependencies for ELF files
-{'append_rpaths': [],
- 'extra_args': [],
- 'ignore_missing': [],
- 'keep_libc': False,
- 'libs': [PosixPath('/nix/store/midcxccr0l1izcv48bpm4pj5wjgy34lc-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/p4mjdx6l2q4ff3ssjwh989rlw4xwljb7-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/3jzr6rnp46kscz7vxanjn5ri12q6hqcd-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/bxhckqxylrkykwbahjf57svssn3avdzk-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/wd1dlav3z5vwwv6yqj69xkzhldk5hpvb-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/jdgfa4j67zmzcys94cpd4w4sg9mnj2zb-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/awr474gcqxa74764fkx8yvljlp09xp12-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/cpyk8ksm7c79l0nabd576s80wngdzix5-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/31dwqk5iffa3za4jyzavck8rgdzi1fc7-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/06zcy9nwyg596hn3x65jbd1mbmyy3p9y-cups-2.4.11/lib'),
-          PosixPath('/nix/store/yq7i832byydy3nplap2krh6nbvrd5q3j-libdrm-2.4.123-dev/lib'),
-          PosixPath('/nix/store/6h80x85cfzan40ngkv7x0vf71rqa0i7k-libdrm-2.4.123-bin/lib'),
-          PosixPath('/nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib'),
-          PosixPath('/nix/store/3xcdg792jg5fdncjy3ggajjdg229qghj-util-linux-minimal-2.39.4-dev/lib'),
-          PosixPath('/nix/store/kqiznrjpaakanbrxhnq279slxxvawjzp-util-linux-minimal-2.39.4-bin/lib'),
-          PosixPath('/nix/store/qmn58s05ay763vzi7vxax0a6kw37gyjq-util-linux-minimal-2.39.4-lib/lib'),
-          PosixPath('/nix/store/rdiq2las0gswwsq2ww6m023r1dycwiws-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/gmnr6a33dbr978p4dzc8ck589z4ddwm2-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/ji427fnv38rcyh2m6z3hl3cc9ygmlhb0-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/m6r497vlxbki4fpivgzr3hpzhbc5hips-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/2nq19mwkgxmb9npqb4vb7gzs3inpvs3x-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/x79ks3lk3a6d4z6bsma21fx04vrp0nqd-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/94pix4pzamq3svx4jxjj2sgrvafn29b8-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/5d6m996mb176kn36a5qy8q5hlnf2j28j-libXScrnSaver-1.2.4/lib'),
-          PosixPath('/nix/store/pvyhq3ar7rg9wvc9j5mpw3a23d8i7fr5-libXtst-1.2.5/lib'),
-          PosixPath('/nix/store/pwfjx1j1is41m5pmzkg49sabfl2bjc9m-libxshmfence-1.3.2-dev/lib'),
-          PosixPath('/nix/store/qv14pgbg5gshfbfq5zqdn0ydh4bam59i-libxshmfence-1.3.2/lib'),
-          PosixPath('/nix/store/2p65kxc74bs8g6hh20if757a7mg36snq-mesa-24.2.8-dev/lib'),
-          PosixPath('/nix/store/83f8jlgdm6yqwxlmx7dlyjzkazfz73js-mesa-24.2.8/lib'),
-          PosixPath('/nix/store/cl0yjjpzp93k43jpqli5p303dpdmxypq-nss-3.101.2-dev/lib'),
-          PosixPath('/nix/store/z5mb24wx99yrzj1i25l97hy4hphadjz8-nspr-4.36-dev/lib'),
-          PosixPath('/nix/store/a2x0fabcvf03kjqrj6dxnnsy1dzv5sk0-nspr-4.36/lib'),
-          PosixPath('/nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib'),
-          PosixPath('/nix/store/hynav3ph5f1j2r70p82z21p5912b3kmk-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/vi2j2pqg0vcwrq9nv1lcxqr9czfbfza2-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/mxi53f9xhkshf3la64awqacfmx9ppkzw-die-hook/lib'),
-          PosixPath('/nix/store/aiqj94gcxjqdq8p172jvxkxwvqjljpg7-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/1bgsdxv3smy1nw5754pxrhn5dg2kdiwd-at-spi2-core-2.54.0-dev/lib'),
-          PosixPath('/nix/store/f285z91jd3k5cl64bca5vxxrfam67y9d-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/md2jp5g37y009lp72dg47cxaycdyff79-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/dl2q06nxjxz7b2dmpkrvjzdyk0plpxhs-expat-2.6.4/lib'),
-          PosixPath('/nix/store/la3w078ipfi6l985lrfrgckvx2c4lkff-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/af9ngaf6xzm44506ycw8fdnxkwib2s7p-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/xslbksjj97g6nagcx4n5maj9fpvnyhvs-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/06q0p7bhn2ffxxya20rrfqdib3h32csn-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/l5g2v1jgfyf3j0jp9iv5b79fi8yrwzpp-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/30gl46y1afg6crvcw9v3ipb6hmkmd7hj-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/6pak77li0iw9x0b3yhmbjvp846w3p6bx-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/7pls6w3nqphhg33sfwr8yipdf4wlr1mp-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/32mnhais5wq08yxzg7ppbm22isfhpy6y-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/c3zpspr0nip745xi4mayxjv4ykrx87yy-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib'),
-          PosixPath('/nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib'),
-          PosixPath('/nix/store/i0cscyjikhzvmjh8r4ccaw8d79ajim07-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/6539h3f4yxsz5h9h44dawahm90i8ajiz-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/8b0mc01h0flnpfc102g19xwx1ix97k42-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/bvf477jxly4jm91w0n7aggvd3fldg6cp-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/1yyryxp7mh7zsciapi8f1n0mnxkigmf8-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/cp24rhch20cbns9c9jsw7b6h78rlci3z-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/dm4fbs83adpy2k98cjwiaggwrjb3vq1w-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/m70hxn0ph0gc3gnvkpjb9631655nnw6z-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/cq1b3vjfyb5wq7ag0kv416cns6lqnp0v-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/rj95sph771w8mavzy4w5zcvhcfms16n9-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/1mldak8ls62za08yckviy3zfpzim4aiz-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/49i3byz2r6q1dw30byvhxr8lm5bix851-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/6zm19a1d8j9xc8lp7hvjmis4wir7h8yk-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/237d65an1lwn51jldg7m598b2z4pna5b-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/jdki5cbr5zdqg4b909r0bkhp232rzvx6-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/sj3jfnpd35rv18z9b1gcjqzjgvff5hq6-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/y5yr09v8mph0lq610sla6c0z2j438ppi-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/6a49zj2wva8nxw7sidw9j9bp2nifscbw-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/xw159a07hd1z48pdkzv65l60j474z9p1-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/bnfmimcfan36gg0g488c5hksg8nyr16y-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/fpxwbc130qcbyzsv5a4qr59jhnlv9q3a-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/2pg462hys4799azv54r10nxa26q9lrny-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/f6jbyw1asccf3w09w3p05dyb8f4s2zbp-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/7y6mgwrjkfs82sscds2fpzl2ydn3pg0z-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/hxi6hmgmvgyjnjakfpgxvc5zg81r0cql-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/1j2kwh41dw79w8yzi19lwjypd9kriwhd-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/pz9zkq8vjwv2gs2ijlpf4nm1isclmgz3-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/j1niz9mn9p32brkra7irkxkk4w1ynh9w-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/pz8mx3wwrp6gd95acwlx4kzwmyihvgch-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/6f7bjr7j8fn44x1qk1kww44r1zzp2sn6-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/vx5d85si3jm438wqc4q34qs43bcrnswc-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/4i4mjaf7z6gddspar487grxk5k1j4dcd-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/bmzls7bipx954xsnbgshh8kbi488zy5m-xz-5.6.3/lib'),
-          PosixPath('/nix/store/p5qx2l3ygricv44vkra2qppi38kj8q03-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/qpmg2piws75wmy1619ryh0dhwi9638ni-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/afdaxacrxy5jgh5pmm3a2xn3hny6wdq7-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/lqfiz5gbfmqrg9860sr82cnxcyvzhbp0-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/ay653ngjfvkcp286bgh17c3la54cgy7h-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/dlq0sl1589r70shf2q1l4v7gk2d3zzl0-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/7dlg43i87gz0ayn05nj3qkxsx2l6cd2q-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s3fhdiwyahn0090bbb67qdnb92v6ca89-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/a9wyj41d8nis9jwqm71k8ssp2by2c420-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/qbgg6jkmlsdn0wl2jszabjxb6rjgvy0i-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/7r2x1qjnxdhpgs74y19im0s39x7ak69y-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/yvfldqm9qvvlr484ylx184azjq1pq7mg-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/b9yx3c2ny9kh4vxmqxnpm355wmzfvc5v-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/4nib5gpv4ckmy9w2drj4g99bx5v0xxz5-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/x9y3nsv92pqbwy9h4ndvvy5vyi1dyhrz-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/npvyfw89qr7lyv03ng79bmrdc0bz2wly-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/la9dj8xid9s5702i8q6722j5hbwqg5ym-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/9fyv534c1xp8rvx51zz3jv49cnxalydc-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/k4wbhldwg6lfsiaxmp6fjzma8qdh3vm5-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/xyvlz999cggyydy6lg95jksrf9dmk268-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/lzk4rzrq285sr496i771m5x0nvfh3114-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/0lpfr8bcfgyg4ksaa7af3rmw148sn78y-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/k8i3z48g47dba6yc6rlp2xfksgy6gmcn-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/jsg02pmrjzdmvf6lxn9g74yngb2v44qx-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/2cknz1p4wzpc462r8xlwq65d65mh7yny-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/c046chc0hp16n75lkn8pbdbbylwdndxz-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/9s4qaaizqnfb2z38yl906l810p407f7v-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/d11ikp74xfv8jn2h791hpirfz2qqm2a3-pango-1.54.0/lib'),
-          PosixPath('/nix/store/13fw0scdl9ciz5lpabi9nkxwrnn8555g-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/kynlrr98p2c235b00c72b14apn7l8l4y-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/4cv0lxdkwwr8qrl7szgbdaj88l8sbl2j-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/lm734xz8svrfjys4bz6v3lbl73yf9qgp-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/wf593y0vvk9wzvff3pa8vdfc0lrmwahg-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/k53lmh232zhcm5mf1gg717cj8aqmc65a-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/zira3fpxs12ayza4np2kq8dpgdlxk3xh-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/l9byw3fs59qb3m8wkvchjgii70v26d2s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/1hdzn73hfcwjkyzvj5pnz7fb04p64fl9-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/3i24agm03wmglwbyk0mg8d6wa7w7l214-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/3ibs1c03k683g2vv2rii60476w690xs3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/wnl9qpnhayry14lhcbdafhadsjwsdr6p-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/ap724yhgv28mpsi1mmqcwypj4rrfhqmg-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/888bkaqdpfpx72dd8bdc69qsqlgbhcvf-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/qlzvmgr8w9prdlyys7irqf86p7bndf5b-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/lzcxvhh3wbd5fblh25hbs8jmdqknv39j-dconf-0.40.0-lib/lib'),
-          PosixPath('/nix/store/midcxccr0l1izcv48bpm4pj5wjgy34lc-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/p4mjdx6l2q4ff3ssjwh989rlw4xwljb7-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/3jzr6rnp46kscz7vxanjn5ri12q6hqcd-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/bxhckqxylrkykwbahjf57svssn3avdzk-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/wd1dlav3z5vwwv6yqj69xkzhldk5hpvb-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/jdgfa4j67zmzcys94cpd4w4sg9mnj2zb-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/awr474gcqxa74764fkx8yvljlp09xp12-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/cpyk8ksm7c79l0nabd576s80wngdzix5-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/31dwqk5iffa3za4jyzavck8rgdzi1fc7-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/06zcy9nwyg596hn3x65jbd1mbmyy3p9y-cups-2.4.11/lib'),
-          PosixPath('/nix/store/yq7i832byydy3nplap2krh6nbvrd5q3j-libdrm-2.4.123-dev/lib'),
-          PosixPath('/nix/store/6h80x85cfzan40ngkv7x0vf71rqa0i7k-libdrm-2.4.123-bin/lib'),
-          PosixPath('/nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib'),
-          PosixPath('/nix/store/3xcdg792jg5fdncjy3ggajjdg229qghj-util-linux-minimal-2.39.4-dev/lib'),
-          PosixPath('/nix/store/kqiznrjpaakanbrxhnq279slxxvawjzp-util-linux-minimal-2.39.4-bin/lib'),
-          PosixPath('/nix/store/qmn58s05ay763vzi7vxax0a6kw37gyjq-util-linux-minimal-2.39.4-lib/lib'),
-          PosixPath('/nix/store/rdiq2las0gswwsq2ww6m023r1dycwiws-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/gmnr6a33dbr978p4dzc8ck589z4ddwm2-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/ji427fnv38rcyh2m6z3hl3cc9ygmlhb0-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/m6r497vlxbki4fpivgzr3hpzhbc5hips-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/2nq19mwkgxmb9npqb4vb7gzs3inpvs3x-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/x79ks3lk3a6d4z6bsma21fx04vrp0nqd-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/94pix4pzamq3svx4jxjj2sgrvafn29b8-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/5d6m996mb176kn36a5qy8q5hlnf2j28j-libXScrnSaver-1.2.4/lib'),
-          PosixPath('/nix/store/pvyhq3ar7rg9wvc9j5mpw3a23d8i7fr5-libXtst-1.2.5/lib'),
-          PosixPath('/nix/store/pwfjx1j1is41m5pmzkg49sabfl2bjc9m-libxshmfence-1.3.2-dev/lib'),
-          PosixPath('/nix/store/qv14pgbg5gshfbfq5zqdn0ydh4bam59i-libxshmfence-1.3.2/lib'),
-          PosixPath('/nix/store/2p65kxc74bs8g6hh20if757a7mg36snq-mesa-24.2.8-dev/lib'),
-          PosixPath('/nix/store/83f8jlgdm6yqwxlmx7dlyjzkazfz73js-mesa-24.2.8/lib'),
-          PosixPath('/nix/store/cl0yjjpzp93k43jpqli5p303dpdmxypq-nss-3.101.2-dev/lib'),
-          PosixPath('/nix/store/z5mb24wx99yrzj1i25l97hy4hphadjz8-nspr-4.36-dev/lib'),
-          PosixPath('/nix/store/a2x0fabcvf03kjqrj6dxnnsy1dzv5sk0-nspr-4.36/lib'),
-          PosixPath('/nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib'),
-          PosixPath('/nix/store/hynav3ph5f1j2r70p82z21p5912b3kmk-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/vi2j2pqg0vcwrq9nv1lcxqr9czfbfza2-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/mxi53f9xhkshf3la64awqacfmx9ppkzw-die-hook/lib'),
-          PosixPath('/nix/store/aiqj94gcxjqdq8p172jvxkxwvqjljpg7-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/1bgsdxv3smy1nw5754pxrhn5dg2kdiwd-at-spi2-core-2.54.0-dev/lib'),
-          PosixPath('/nix/store/f285z91jd3k5cl64bca5vxxrfam67y9d-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/md2jp5g37y009lp72dg47cxaycdyff79-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/dl2q06nxjxz7b2dmpkrvjzdyk0plpxhs-expat-2.6.4/lib'),
-          PosixPath('/nix/store/la3w078ipfi6l985lrfrgckvx2c4lkff-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/af9ngaf6xzm44506ycw8fdnxkwib2s7p-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/xslbksjj97g6nagcx4n5maj9fpvnyhvs-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/06q0p7bhn2ffxxya20rrfqdib3h32csn-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/l5g2v1jgfyf3j0jp9iv5b79fi8yrwzpp-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/30gl46y1afg6crvcw9v3ipb6hmkmd7hj-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/6pak77li0iw9x0b3yhmbjvp846w3p6bx-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/7pls6w3nqphhg33sfwr8yipdf4wlr1mp-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/32mnhais5wq08yxzg7ppbm22isfhpy6y-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/c3zpspr0nip745xi4mayxjv4ykrx87yy-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib'),
-          PosixPath('/nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib'),
-          PosixPath('/nix/store/i0cscyjikhzvmjh8r4ccaw8d79ajim07-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/6539h3f4yxsz5h9h44dawahm90i8ajiz-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/8b0mc01h0flnpfc102g19xwx1ix97k42-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/bvf477jxly4jm91w0n7aggvd3fldg6cp-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/1yyryxp7mh7zsciapi8f1n0mnxkigmf8-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/cp24rhch20cbns9c9jsw7b6h78rlci3z-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/dm4fbs83adpy2k98cjwiaggwrjb3vq1w-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/m70hxn0ph0gc3gnvkpjb9631655nnw6z-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/cq1b3vjfyb5wq7ag0kv416cns6lqnp0v-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/rj95sph771w8mavzy4w5zcvhcfms16n9-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/1mldak8ls62za08yckviy3zfpzim4aiz-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/49i3byz2r6q1dw30byvhxr8lm5bix851-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/6zm19a1d8j9xc8lp7hvjmis4wir7h8yk-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/237d65an1lwn51jldg7m598b2z4pna5b-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/jdki5cbr5zdqg4b909r0bkhp232rzvx6-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/sj3jfnpd35rv18z9b1gcjqzjgvff5hq6-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/y5yr09v8mph0lq610sla6c0z2j438ppi-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/6a49zj2wva8nxw7sidw9j9bp2nifscbw-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/xw159a07hd1z48pdkzv65l60j474z9p1-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/bnfmimcfan36gg0g488c5hksg8nyr16y-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/fpxwbc130qcbyzsv5a4qr59jhnlv9q3a-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/2pg462hys4799azv54r10nxa26q9lrny-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/f6jbyw1asccf3w09w3p05dyb8f4s2zbp-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/7y6mgwrjkfs82sscds2fpzl2ydn3pg0z-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/hxi6hmgmvgyjnjakfpgxvc5zg81r0cql-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/1j2kwh41dw79w8yzi19lwjypd9kriwhd-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/pz9zkq8vjwv2gs2ijlpf4nm1isclmgz3-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/j1niz9mn9p32brkra7irkxkk4w1ynh9w-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/pz8mx3wwrp6gd95acwlx4kzwmyihvgch-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/6f7bjr7j8fn44x1qk1kww44r1zzp2sn6-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/vx5d85si3jm438wqc4q34qs43bcrnswc-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/4i4mjaf7z6gddspar487grxk5k1j4dcd-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/bmzls7bipx954xsnbgshh8kbi488zy5m-xz-5.6.3/lib'),
-          PosixPath('/nix/store/p5qx2l3ygricv44vkra2qppi38kj8q03-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/qpmg2piws75wmy1619ryh0dhwi9638ni-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/afdaxacrxy5jgh5pmm3a2xn3hny6wdq7-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/lqfiz5gbfmqrg9860sr82cnxcyvzhbp0-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/ay653ngjfvkcp286bgh17c3la54cgy7h-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/dlq0sl1589r70shf2q1l4v7gk2d3zzl0-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/7dlg43i87gz0ayn05nj3qkxsx2l6cd2q-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s3fhdiwyahn0090bbb67qdnb92v6ca89-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/a9wyj41d8nis9jwqm71k8ssp2by2c420-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/qbgg6jkmlsdn0wl2jszabjxb6rjgvy0i-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/7r2x1qjnxdhpgs74y19im0s39x7ak69y-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/yvfldqm9qvvlr484ylx184azjq1pq7mg-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/b9yx3c2ny9kh4vxmqxnpm355wmzfvc5v-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/4nib5gpv4ckmy9w2drj4g99bx5v0xxz5-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/x9y3nsv92pqbwy9h4ndvvy5vyi1dyhrz-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/npvyfw89qr7lyv03ng79bmrdc0bz2wly-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/la9dj8xid9s5702i8q6722j5hbwqg5ym-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/9fyv534c1xp8rvx51zz3jv49cnxalydc-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/k4wbhldwg6lfsiaxmp6fjzma8qdh3vm5-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/xyvlz999cggyydy6lg95jksrf9dmk268-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/lzk4rzrq285sr496i771m5x0nvfh3114-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/0lpfr8bcfgyg4ksaa7af3rmw148sn78y-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/k8i3z48g47dba6yc6rlp2xfksgy6gmcn-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/jsg02pmrjzdmvf6lxn9g74yngb2v44qx-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/2cknz1p4wzpc462r8xlwq65d65mh7yny-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/c046chc0hp16n75lkn8pbdbbylwdndxz-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/9s4qaaizqnfb2z38yl906l810p407f7v-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/d11ikp74xfv8jn2h791hpirfz2qqm2a3-pango-1.54.0/lib'),
-          PosixPath('/nix/store/13fw0scdl9ciz5lpabi9nkxwrnn8555g-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/kynlrr98p2c235b00c72b14apn7l8l4y-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/4cv0lxdkwwr8qrl7szgbdaj88l8sbl2j-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/lm734xz8svrfjys4bz6v3lbl73yf9qgp-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/wf593y0vvk9wzvff3pa8vdfc0lrmwahg-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/k53lmh232zhcm5mf1gg717cj8aqmc65a-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/zira3fpxs12ayza4np2kq8dpgdlxk3xh-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/l9byw3fs59qb3m8wkvchjgii70v26d2s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/1hdzn73hfcwjkyzvj5pnz7fb04p64fl9-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/3i24agm03wmglwbyk0mg8d6wa7w7l214-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/3ibs1c03k683g2vv2rii60476w690xs3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/wnl9qpnhayry14lhcbdafhadsjwsdr6p-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/ap724yhgv28mpsi1mmqcwypj4rrfhqmg-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/888bkaqdpfpx72dd8bdc69qsqlgbhcvf-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/qlzvmgr8w9prdlyys7irqf86p7bndf5b-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/lzcxvhh3wbd5fblh25hbs8jmdqknv39j-dconf-0.40.0-lib/lib')],
- 'paths': [PosixPath('/nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83')],
- 'recursive': True,
- 'runtime_dependencies': []}
-created 17101 symlinks in user environment
+copying path '/nix/store/qsfx2pvlcapk6aiw3jf21crdx82izd6r-elfutils-0.192' from 'https://cache.nixos.org'...
+copying path '/nix/store/xycfk5rzzhn8n0m39i6isksr9ii64x4s-libmicrohttpd-1.0.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/m0f18wgfz8yffsl09lciwiazgic3lsnm-fzf-0.59.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/5flsv148b6p305i6dcs4w2rldmcw5ada-libtiff-4.7.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/w78a59rlmzpqam3awhx9fnc5rv6xwys9-shadow-4.17.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/0wj3dk4phaw5vf95mr7srpq7nxp25rh5-kbd-2.7.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/w9d88bdyd5pxgd1m3dg7xwpb95d5f33i-tpm2-tss-4.1.3' from 'https://cache.nixos.org'...
+warning: collision between `/nix/store/78x2h4mlznrvx3shlwj160x6mgjgrzxv-xwayland-24.1.5_fish-completions/Xserver.fish' and `/nix/store/lqgzhcbjzb40ibsqq5a7gwvbj5x14yyj-xorg-server-21.1.14_fish-completions/Xserver.fish'
+created 629 symlinks in user environment
+copying path '/nix/store/n7v8wpczzgcrinp534dpzbyw2ngwxzgi-imlib2-1.12.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/nzfxyx5cg9mcdm233rnzzjbnbk44b6gy-libbpf-1.5.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/gdgpwhjscyy33zpyaaj97dnxkqqcdgkj-util-linux-minimal-2.39.4-bin' from 'https://cache.nixos.org'...
+warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/lib/xorg/protocol.txt' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/lib/xorg/protocol.txt'
+warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
+copying path '/nix/store/3x67153zchawpzm78wrxd96lni3nf3sj-systemd-257.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/mq9hdmv0na30dl6jkcincj9v0l9myjlm-man-db-2.13.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/faxrw4wnvydgv4d1x2s87f9lixbz644n-chromium-133.0.6943.53' from 'https://cache.nixos.org'...
+copying path '/nix/store/9jdxm3c5q6j6ssvc97h65j3vnk08dmr5-w3m-0.5.3+git20230121' from 'https://cache.nixos.org'...
+copying path '/nix/store/nyqwmqlnnhq3x5718309wrkif0wrppvp-procps-4.0.4' from 'https://cache.nixos.org'...
+copying path '/nix/store/3mks5gczcwmi2bzklk075zkfvyjpxapp-parallel-20250122' from 'https://cache.nixos.org'...
+copying path '/nix/store/yy4hjdp2rwhh01jdc58hvcmid89w8zm7-wikiman-2.13.2' from 'https://cache.nixos.org'...
+building '/nix/store/9h1yyhijfzsjw4gx1695y6mh52mc7y4y-user-environment.drv'...
+created 19008 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
@@ -462,427 +494,24 @@ gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/q1wk1y4bis40cmsinrgizi4l20avc16q-X-Restart-Triggers-polkit.drv'...
-building '/nix/store/c8kcxxq0r04zrypk6mdmv3vy3z6fghqi-dbus-1.drv'...
-building '/nix/store/s6mfy9q0dp1j6pfsszlki41fbd5a9dfs-unit-accounts-daemon.service.drv'...
-setting interpreter of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome_crashpad_handler
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome_crashpad_handler
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libEGL.so
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting interpreter of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/.Discord-wrapped
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/.Discord-wrapped
-    libffmpeg.so -> found: /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord
-    libgobject-2.0.so.0 -> found: /nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib
-    libglib-2.0.so.0 -> found: /nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib
-    libgio-2.0.so.0 -> found: /nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib
-    libnss3.so -> found: /nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib
-    libnssutil3.so -> found: /nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib
-    libsmime3.so -> found: /nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib
-    libnspr4.so -> found: /nix/store/a2x0fabcvf03kjqrj6dxnnsy1dzv5sk0-nspr-4.36/lib
-    libdbus-1.so.3 -> found: /nix/store/la3w078ipfi6l985lrfrgckvx2c4lkff-dbus-1.14.10-lib/lib
-    libatk-1.0.so.0 -> found: /nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib
-    libatk-bridge-2.0.so.0 -> found: /nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib
-    libdrm.so.2 -> found: /nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib
-    libgtk-3.so.0 -> found: /nix/store/l9byw3fs59qb3m8wkvchjgii70v26d2s-gtk+3-3.24.43/lib
-    libpango-1.0.so.0 -> found: /nix/store/d11ikp74xfv8jn2h791hpirfz2qqm2a3-pango-1.54.0/lib
-    libcairo.so.2 -> found: /nix/store/fpxwbc130qcbyzsv5a4qr59jhnlv9q3a-cairo-1.18.2/lib
-    libX11.so.6 -> found: /nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib
-    libXcomposite.so.1 -> found: /nix/store/b9yx3c2ny9kh4vxmqxnpm355wmzfvc5v-libXcomposite-0.4.6/lib
-    libXdamage.so.1 -> found: /nix/store/m6r497vlxbki4fpivgzr3hpzhbc5hips-libXdamage-1.1.6/lib
-    libXext.so.6 -> found: /nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib
-    libXfixes.so.3 -> found: /nix/store/ji427fnv38rcyh2m6z3hl3cc9ygmlhb0-libXfixes-6.0.1/lib
-    libXrandr.so.2 -> found: /nix/store/k4wbhldwg6lfsiaxmp6fjzma8qdh3vm5-libXrandr-1.5.4/lib
-    libgbm.so.1 -> found: /nix/store/83f8jlgdm6yqwxlmx7dlyjzkazfz73js-mesa-24.2.8/lib
-    libexpat.so.1 -> found: /nix/store/dl2q06nxjxz7b2dmpkrvjzdyk0plpxhs-expat-2.6.4/lib
-    libxcb.so.1 -> found: /nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib
-    libxkbcommon.so.0 -> found: /nix/store/9bjscsqnzkwyph3zdhajznn92h357r14-libxkbcommon-1.7.0/lib
-    libasound.so.2 -> found: /nix/store/p4mjdx6l2q4ff3ssjwh989rlw4xwljb7-alsa-lib-1.2.12/lib
-    libatspi.so.0 -> found: /nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-building '/nix/store/pgl9y7886blaasibcag4gsip8p8l81pd-X-Restart-Triggers-dbus.drv'...
-building '/nix/store/64sp5bf5dqy8a0fyfdkzky2p3450z1hd-system_fish-completions.drv'...
-building '/nix/store/ijbd6wzq04lg9wgfdlz3znlnc3id8n6m-unit-polkit.service.drv'...
-setting RPATH to: /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord:/nix/store/6qkwbcx4q47dq4scz7rk4f3nlbr5937r-glib-2.82.1/lib:/nix/store/zlz8azc10dnrq5pfwjb5pk2c7amxk8vk-nss-3.101.2/lib:/nix/store/a2x0fabcvf03kjqrj6dxnnsy1dzv5sk0-nspr-4.36/lib:/nix/store/la3w078ipfi6l985lrfrgckvx2c4lkff-dbus-1.14.10-lib/lib:/nix/store/yxv2diq8wpyvmi7dgjp0lqjbcl1y6236-at-spi2-core-2.54.0/lib:/nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib:/nix/store/l9byw3fs59qb3m8wkvchjgii70v26d2s-gtk+3-3.24.43/lib:/nix/store/d11ikp74xfv8jn2h791hpirfz2qqm2a3-pango-1.54.0/lib:/nix/store/fpxwbc130qcbyzsv5a4qr59jhnlv9q3a-cairo-1.18.2/lib:/nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib:/nix/store/b9yx3c2ny9kh4vxmqxnpm355wmzfvc5v-libXcomposite-0.4.6/lib:/nix/store/m6r497vlxbki4fpivgzr3hpzhbc5hips-libXdamage-1.1.6/lib:/nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib:/nix/store/ji427fnv38rcyh2m6z3hl3cc9ygmlhb0-libXfixes-6.0.1/lib:/nix/store/k4wbhldwg6lfsiaxmp6fjzma8qdh3vm5-libXrandr-1.5.4/lib:/nix/store/83f8jlgdm6yqwxlmx7dlyjzkazfz73js-mesa-24.2.8/lib:/nix/store/dl2q06nxjxz7b2dmpkrvjzdyk0plpxhs-expat-2.6.4/lib:/nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib:/nix/store/9bjscsqnzkwyph3zdhajznn92h357r14-libxkbcommon-1.7.0/lib:/nix/store/p4mjdx6l2q4ff3ssjwh989rlw4xwljb7-alsa-lib-1.2.12/lib:/nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libGLESv2.so
-    libX11.so.6 -> found: /nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib
-    libXext.so.6 -> found: /nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib
-    libxcb.so.1 -> found: /nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib
-    libdrm.so.2 -> found: /nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/zcq4irdcgn3ljqdnlpm2zjp7f1kw9jvm-libX11-1.8.10/lib:/nix/store/hi1mbz7s24l63w1m9sy9ynl8yjvb2f46-libXext-1.3.6/lib:/nix/store/c25p9xs9n6grwx4i4l4kmz09scgcav4b-libxcb-1.17.0/lib:/nix/store/4y9y64430fa00h4k30j29kjvb66231d7-libdrm-2.4.123/lib:/nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libvk_swiftshader.so
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libvulkan.so.1
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/libffmpeg.so
-    libgcc_s.so.1 -> found: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/bmjqxvy53752b3xfvbab6s87xq06hxbs-gcc-13.3.0-libgcc/lib
-setting interpreter of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome-sandbox
-searching for dependencies of /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/opt/Discord/chrome-sandbox
-auto-patchelf: 0 dependencies could not be satisfied
-rewriting symlink /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/bin/Discord to be relative to /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-rewriting symlink /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/bin/discord to be relative to /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-rewriting symlink /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/share/pixmaps/discord.png to be relative to /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-rewriting symlink /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83/share/icons/hicolor/256x256/apps/discord.png to be relative to /nix/store/dwh92p2i0fywk4agak3f7dr5jiykxn2c-discord-0.0.83
-warning: collision between `/nix/store/722b3456jc0p1089pvw8wcnvq9ywspgn-xwayland-24.1.4_fish-completions/Xserver.fish' and `/nix/store/lqgzhcbjzb40ibsqq5a7gwvbj5x14yyj-xorg-server-21.1.14_fish-completions/Xserver.fish'
-building '/nix/store/9m9ncfi98v19iq6bfzxjpscxafwgrw6f-unit-dbus.service.drv'...
-building '/nix/store/n7nl1nr8n9k2x684jnv1xb8rci2wn214-unit-dbus.service.drv'...
-created 618 symlinks in user environment
-building '/nix/store/ya565hnakmzqglhggypbc6b0zd245yan-user-environment.drv'...
-building '/nix/store/vk52b5krdiwqdmicn2mnd81q6q63nmjf-user-units.drv'...
-building '/nix/store/b5n0ss790dnpw1a6jrrpf1c8x44kxca6-virtualbox-modules-7.1.6a-6.6.75.drv'...
-building '/nix/store/z1cb17v5imwc7y2agjg2m9alizdyq2pb-system-units.drv'...
+building '/nix/store/xcqlqban3rlvdflskd1hi7rnr2ky1hrk-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/iblb23rm9qslddv3xd2bawpnwnvmvfwv-dbus-1.drv'...
+building '/nix/store/2dm3561aw5khgyzc9zzb97h2cam38rfm-unit-accounts-daemon.service.drv'...
 created 2827 symlinks in user environment
-Running phase: unpackPhase
-unpacking source archive /nix/store/879ghx973ch9pqb123qkbvr2z1mym0dl-virtualbox-7.1.6a-modsrc
-source root is virtualbox-7.1.6a-modsrc
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-no configure script, doing nothing
-Running phase: buildPhase
-build flags: -j8 SHELL=/nix/store/gwgqdl0242ymlikq9s9s62gkp5cvyal3-bash-5.2p37/bin/bash INSTALL_MOD_PATH=\$\(out\)
-=== Building 'vboxdrv' module ===
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxdrv'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxdrv SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxdrv -j8 modules
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
 gtk-update-icon-cache: Cache file created successfully.
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/linux/SUPDrv-linux.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/SUPDrv.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/SUPDrvGip.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/SUPDrvSem.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/SUPDrvTracer.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/SUPLibAll.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/common/string/strformatrt.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/combined-agnostic1.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/combined-agnostic2.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/combined-os-specific.o
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: rtThreadCtxHooksLnxSchedOut+0x23: call to {dynamic}() with UACCESS enabled
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: rtThreadCtxHooksLnxSchedIn+0x2d: call to {dynamic}() with UACCESS enabled
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: VBoxHost_RTR0MemKernelCopyFrom+0x17: redundant CLD
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: VBoxHost_RTR0MemKernelCopyTo+0x17: redundant CLD
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: supdrvTracerCommonDeregisterImpl+0x3c: relocation to !ENDBR: supdrvTracerProbeFireStub+0x0
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: .export_symbol+0x518: data relocation to !ENDBR: SUPR0TracerFireProbe+0x0
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: g_aFunctions+0xea0: data relocation to !ENDBR: SUPR0TracerFireProbe+0x0
-/build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.o: warning: objtool: g_pfnSupdrvProbeFireKernel+0x0: data relocation to !ENDBR: supdrvTracerProbeFireStub+0x0
-  MODPOST /build/virtualbox-7.1.6a-modsrc/vboxdrv/Module.symvers
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.mod.o
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.ko
-  BTF [M] /build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.ko
-Skipping BTF generation for /build/virtualbox-7.1.6a-modsrc/vboxdrv/vboxdrv.ko due to unavailability of vmlinux
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxdrv'
-
-=== Building 'vboxnetflt' module ===
-=== Building 'vboxnetadp' module ===
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxnetflt'
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxnetadp'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetflt SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetflt -j8 modules
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetadp SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetadp -j8 modules
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/linux/VBoxNetFlt-linux.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/VBoxNetFlt.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetadp/linux/VBoxNetAdp-linux.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/SUPR0IdcClient.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetadp/VBoxNetAdp.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/SUPR0IdcClientComponent.o
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/linux/SUPR0IdcClient-linux.o
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetadp/vboxnetadp.o
-  MODPOST /build/virtualbox-7.1.6a-modsrc/vboxnetadp/Module.symvers
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetadp/vboxnetadp.mod.o
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetadp/vboxnetadp.ko
-  BTF [M] /build/virtualbox-7.1.6a-modsrc/vboxnetadp/vboxnetadp.ko
-Skipping BTF generation for /build/virtualbox-7.1.6a-modsrc/vboxnetadp/vboxnetadp.ko due to unavailability of vmlinux
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxnetadp'
-
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/vboxnetflt.o
-  MODPOST /build/virtualbox-7.1.6a-modsrc/vboxnetflt/Module.symvers
-  CC [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/vboxnetflt.mod.o
-  LD [M]  /build/virtualbox-7.1.6a-modsrc/vboxnetflt/vboxnetflt.ko
-  BTF [M] /build/virtualbox-7.1.6a-modsrc/vboxnetflt/vboxnetflt.ko
-Skipping BTF generation for /build/virtualbox-7.1.6a-modsrc/vboxnetflt/vboxnetflt.ko due to unavailability of vmlinux
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxnetflt'
-
-Running phase: installPhase
-install flags: -j8 SHELL=/nix/store/gwgqdl0242ymlikq9s9s62gkp5cvyal3-bash-5.2p37/bin/bash INSTALL_MOD_PATH=\$\(out\) install
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxdrv'
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxnetadp'
-make[1]: Entering directory '/build/virtualbox-7.1.6a-modsrc/vboxnetflt'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxdrv SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxdrv -j8 modules
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetadp SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetadp -j8 modules
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetflt SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetflt -j8 modules
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: warning: -j8 forced in submake: resetting jobserver mode.
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetflt SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetflt INSTALL_MOD_PATH=/nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75 INSTALL_MOD_DIR=misc modules_install
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxnetadp SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxnetadp INSTALL_MOD_PATH=/nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75 INSTALL_MOD_DIR=misc modules_install
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make V= CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL= -C /nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build M=/build/virtualbox-7.1.6a-modsrc/vboxdrv SRCROOT=/build/virtualbox-7.1.6a-modsrc/vboxdrv INSTALL_MOD_PATH=/nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75 INSTALL_MOD_DIR=misc modules_install
-make[2]: Entering directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-  INSTALL /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxnetflt.ko
-  INSTALL /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxnetadp.ko
-  XZ      /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxnetflt.ko.xz
-  XZ      /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxnetadp.ko.xz
-  INSTALL /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxdrv.ko
-  XZ      /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75/misc/vboxdrv.ko.xz
-  DEPMOD  /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75
-Warning: modules_install: missing 'System.map' file. Skipping depmod.
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxnetadp'
-  DEPMOD  /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75
-Warning: modules_install: missing 'System.map' file. Skipping depmod.
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxnetflt'
-  DEPMOD  /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib/modules/6.6.75
-Warning: modules_install: missing 'System.map' file. Skipping depmod.
-make[2]: Leaving directory '/nix/store/2529v0vrv33sjij392jq8xags5cq6ks9-linux-6.6.75-dev/lib/modules/6.6.75/build'
-make[1]: Leaving directory '/build/virtualbox-7.1.6a-modsrc/vboxdrv'
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75
-checking for references to /build/ in /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75...
-patching script interpreter paths in /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75
-stripping (with command strip and flags -S -p) in  /nix/store/84yajpwp9pcgchwyb57cjp0jn320n8ih-virtualbox-modules-7.1.6a-6.6.75/lib
-building '/nix/store/y35p379qks4lbqya4cg6dv8d28v9hnax-linux-6.6.75-modules.drv'...
-created 23 symlinks in user environment
-kernel version is 6.6.75
-building '/nix/store/g363bndxf0i5ayimyhr4kx89rb4mskhj-etc-man_db.conf.drv'...
-building '/nix/store/xl1p47jsjww070062q3z5h2g9x46dnq3-etc.drv'...
-building '/nix/store/wiili8qha1bkbjchmdn2dzfp5r7813cf-linux-6.6.75-modules-shrunk.drv'...
-kernel version is 6.6.75
-root module: xhci_pci
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: thunderbolt
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/thunderbolt/thunderbolt.ko.xz
-root module: nvme
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_generic.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64-rocksoft.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/common/nvme-common.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/host/nvme-core.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/host/nvme.ko.xz
-root module: usb_storage
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/storage/usb-storage.ko.xz
-root module: usbhid
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/sd_mod.ko.xz
-root module: ext2
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/fs/ext2/ext2.ko.xz
-root module: ext4
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/fs/jbd2/jbd2.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc16.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/arch/x86/crypto/crc32c-intel.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crc32c_generic.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/fs/ext4/ext4.ko.xz
-root module: ahci
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libahci.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/ahci.ko.xz
-root module: sata_nv
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/sata_nv.ko.xz
-root module: sata_via
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/sata_via.ko.xz
-root module: sata_sis
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/pata_sis.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/sata_sis.ko.xz
-root module: sata_uli
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/sata_uli.ko.xz
-root module: ata_piix
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/ata_piix.ko.xz
-root module: pata_marvell
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/ata/pata_marvell.ko.xz
-root module: nvme
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/common/nvme-common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/host/nvme-core.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/nvme/host/nvme.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/sd_mod.ko.xz
-root module: sr_mod
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/cdrom/cdrom.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/scsi/sr_mod.ko.xz
-root module: mmc_block
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/mmc/core/mmc_core.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/mmc/core/mmc_block.ko.xz
-root module: uhci_hcd
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/uhci-hcd.ko.xz
-root module: ehci_hcd
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-hcd.ko.xz
-root module: ehci_pci
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-pci.ko.xz
-root module: ohci_hcd
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ohci-hcd.ko.xz
-root module: ohci_pci
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ohci-hcd.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/ohci-pci.ko.xz
-root module: xhci_hcd
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-hcd.ko.xz
-root module: xhci_pci
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: usbhid
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: hid_generic
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-generic.ko.xz
-root module: hid_lenovo
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-lenovo.ko.xz
-root module: hid_apple
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-apple.ko.xz
-root module: hid_roccat
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-roccat.ko.xz
-root module: hid_logitech_hidpp
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-logitech-hidpp.ko.xz
-root module: hid_logitech_dj
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-logitech-dj.ko.xz
-root module: hid_microsoft
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/ff-memless.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-microsoft.ko.xz
-root module: hid_cherry
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-cherry.ko.xz
-root module: hid_corsair
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/hid/hid-corsair.ko.xz
-root module: pcips2
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/pcips2.ko.xz
-root module: atkbd
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/vivaldi-fmap.ko.xz
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/libps2.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/keyboard/atkbd.ko.xz
-root module: i8042
-  dependency already copied: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/input/serio/i8042.ko.xz
-root module: rtc_cmos
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/rtc/rtc-cmos.ko.xz
-root module: vboxsf
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/misc/vboxguest.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/misc/vboxsf.ko.xz
-root module: dm_mod
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/dax/dax.ko.xz
-  copying dependency: /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/md/dm-mod.ko.xz
-firmware for /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci.ko.xz: renesas_usb_fw.mem
-lib/firmware -> /nix/store/x2sjvl3p266hwbmhrcpapsg3bmfgcbv6-linux-6.6.75-modules-shrunk/lib/firmware
-WARNING: missing firmware renesas_usb_fw.mem for module /nix/store/109722zcdbvmqzl1jal86kfhwr2gzqw6-linux-6.6.75-modules/lib/modules/6.6.75/kernel/drivers/usb/host/xhci-pci.ko.xz
-lib/firmware/edid not found, skipping.
-depmod: WARNING: could not open modules.builtin.modinfo at /nix/store/x2sjvl3p266hwbmhrcpapsg3bmfgcbv6-linux-6.6.75-modules-shrunk/lib/modules/6.6.75: No such file or directory
-building '/nix/store/r8rhshrwyrhl0klgqfijdx89w891nvrx-initrd-linux-6.6.75.drv'...
-building '/nix/store/mgb163fwnl71mm6rvx9l834ycd2f8fi5-boot.json.drv'...
-building '/nix/store/fsk1hwkn20xhbwcwdi36g7ikv2cfkdmd-nixos-system-debbie-24.11.714101.030ba1976b7c.drv'...
+building '/nix/store/l65fv1n5cs5rf8kbgq8ch1jmc6y9q325-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/6kvn3zz8q8h97bl7958g5gjw3p7g5szh-unit-polkit.service.drv'...
+building '/nix/store/9rj483jwpqapnl35j0vy7hqx5b6bqg8q-unit-dbus.service.drv'...
+building '/nix/store/hfyrgw00rkbhki8dl8w38lwm61d49mj3-unit-dbus.service.drv'...
+building '/nix/store/ysfwv6mcfgj2s8vjd28nrd09zaxcj1nc-system-units.drv'...
+building '/nix/store/k6lhkaifja5qq3f7yx1py341iwaqyf9c-user-units.drv'...
+building '/nix/store/6dyaq0mqhsvwkfvgmh6w3m5l9zll933c-etc-man_db.conf.drv'...
+building '/nix/store/acnbqfh2fd3gmhcn9vhxrdiwhizw9c9v-etc.drv'...
+building '/nix/store/g3qdd0hrq7f8va6ydma6f53grgbrbbp9-nixos-system-debbie-24.11.714127.f5a32fa27df9.drv'...
 stopping the following units: accounts-daemon.service
-NOT restarting the following changed units: systemd-fsck@dev-disk-by\x2duuid-0D69\x2d0099.service
+NOT restarting the following changed units: display-manager.service
 activating the configuration...
 setting up /etc...
-restarting systemd...
 reloading user units for nate...
 restarting sysinit-reactivation.target
 reloading the following units: dbus.service
