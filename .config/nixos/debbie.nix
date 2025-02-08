@@ -72,6 +72,26 @@ in {
 
   programs.hyprland.enable = true;
 
+  services.xserver = {
+    desktopManager = {
+      xterm.enable = false;
+      xfce.enable = true;
+    };
+  };
+
+  environment.xfce.excludePackages = with pkgs.xfce; [
+    mousepad
+    parole
+    ristretto
+    # xfce4-appfinder
+    # xfce4-notifyd
+    # xfce4-screenshooter
+    # xfce4-session
+    # xfce4-settings
+    xfce4-taskmanager
+    xfce4-terminal
+  ];
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
