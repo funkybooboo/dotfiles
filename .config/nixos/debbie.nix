@@ -68,29 +68,13 @@ in {
   services.displayManager.defaultSession = "cinnamon";
 
   environment.cinnamon.excludePackages = with pkgs; [
+    nemo
+    xfce.xfce4-terminal
+    gnome-terminal
+    xed
   ];
 
   programs.hyprland.enable = true;
-
-  #services.xserver = {
-  #  desktopManager = {
-  #    xterm.enable = false;
-  #    xfce.enable = true;
-  #  };
-  #};
-
-  environment.xfce.excludePackages = with pkgs.xfce; [
-    mousepad
-    parole
-    ristretto
-    xfce4-appfinder
-    xfce4-notifyd
-    xfce4-screenshooter
-    xfce4-session
-    xfce4-settings
-    xfce4-taskmanager
-    xfce4-terminal
-  ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -202,6 +186,7 @@ in {
       # deluge
       # dumptorrent
       # buildtorrent
+      mutt
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
