@@ -72,22 +72,22 @@ in {
 
   programs.hyprland.enable = true;
 
-  services.xserver = {
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-    };
-  };
+  #services.xserver = {
+  #  desktopManager = {
+  #    xterm.enable = false;
+  #    xfce.enable = true;
+  #  };
+  #};
 
   environment.xfce.excludePackages = with pkgs.xfce; [
     mousepad
     parole
     ristretto
-    # xfce4-appfinder
-    # xfce4-notifyd
-    # xfce4-screenshooter
-    # xfce4-session
-    # xfce4-settings
+    xfce4-appfinder
+    xfce4-notifyd
+    xfce4-screenshooter
+    xfce4-session
+    xfce4-settings
     xfce4-taskmanager
     xfce4-terminal
   ];
@@ -150,8 +150,6 @@ in {
       blanket # Minimalistic note-taking app for programmers
       drawio # Diagramming tool for creating flowcharts and UML diagrams
       drawing # Simple drawing tool
-      musicpod # Podcast client for managing and listening to podcasts
-      vlc # Open-source media player supporting many formats
       # ladybird # Lightweight web browser for Linux
       lazydocker # Terminal UI for managing Docker containers
       # proton-pass # Password manager integrated with Proton services
@@ -173,7 +171,7 @@ in {
       # todo # Simple CLI tool for managing to-do lists
       # vscode # Visual Studio Code, popular code editor
       vscodium
-      pomodoro-gtk # Pomodoro technique timer for productivity
+      # pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
       unetbootin # Tool for creating bootable USB drives
       deskreen # Share your desktop to any device over the network
@@ -276,9 +274,9 @@ in {
     uasm # UASM assembler for x86 and x64 architectures
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
-
     wofi # Lightweight Wayland application launcher
   ];
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
