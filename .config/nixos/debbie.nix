@@ -133,13 +133,12 @@ in {
       chromium # Open-source version of the Chrome web browser
       blanket # Minimalistic note-taking app for programmers
       drawio # Diagramming tool for creating flowcharts and UML diagrams
-      drawing # Simple drawing tool
       # ladybird # Lightweight web browser for Linux
       lazydocker # Terminal UI for managing Docker containers
       # proton-pass # Password manager integrated with Proton services
       # protonmail-desktop # Desktop client for ProtonMail secure email
       # protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
-      # protonvpn-gui # GUI for ProtonVPN for secure internet connections
+      protonvpn-gui # GUI for ProtonVPN for secure internet connections
       # discordo # Open-source Discord client
       yazi # Markdown-based personal wiki
       timg # Image viewer for the terminal
@@ -184,16 +183,15 @@ in {
       ripgrep
       imagemagick
 
-      #       dijo
-      #       taskwarrior-tui
-      #       taskwarrior3
-      #       planify
+      # dijo
+      # taskwarrior-tui
+      # taskwarrior3
+      # planify
       # tor-browser
       # deluge
       # dumptorrent
       # buildtorrent
       # mutt
-      # protonvpn-gui
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
@@ -225,7 +223,6 @@ in {
     git # Distributed version control system
     gnat14 # GNAT compiler for Ada and other languages
     libgcc # GCC runtime library for C and C++ programs
-    binutils
     gdb # GNU Debugger for debugging applications
     gdbgui # Web-based interface for GDB
     zig # Programming language for general-purpose programming
