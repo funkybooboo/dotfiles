@@ -185,6 +185,7 @@ in {
 
       dijo
       taskwarrior-tui
+      taskwarrior3
       planify
       # tor-browser
       # deluge
