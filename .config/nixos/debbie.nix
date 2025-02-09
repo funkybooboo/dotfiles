@@ -183,10 +183,10 @@ in {
       ripgrep
       imagemagick
 
-      dijo
-      taskwarrior-tui
-      taskwarrior3
-      planify
+      #       dijo
+      #       taskwarrior-tui
+      #       taskwarrior3
+      #       planify
       # tor-browser
       # deluge
       # dumptorrent
