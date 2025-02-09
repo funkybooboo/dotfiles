@@ -184,6 +184,7 @@ in {
       imagemagick
 
       dijo
+      taskwarrior-tui
       # tor-browser
       # deluge
       # dumptorrent
