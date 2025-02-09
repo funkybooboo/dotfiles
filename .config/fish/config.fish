@@ -22,4 +22,7 @@ function y
     rm -f -- "$tmp"
 end
 
+alias z='zoxide'
+alias j='jump'
+
 fnm env | source
