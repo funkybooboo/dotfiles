@@ -186,7 +186,8 @@ in {
       # deluge
       # dumptorrent
       # buildtorrent
-      mutt
+      # mutt
+      # protonvpn-gui
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
