@@ -180,6 +180,7 @@ in {
       poppler_utils
       file
       zoxide
+      jump
       ripgrep
       imagemagick
 
