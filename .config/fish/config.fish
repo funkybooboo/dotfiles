@@ -22,6 +22,8 @@ function y
     rm -f -- "$tmp"
 end
 
+jump shell fish | source
+
 alias z='zoxide'
 alias j='jump'
 

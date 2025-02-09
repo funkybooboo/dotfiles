@@ -225,6 +225,7 @@ in {
     git # Distributed version control system
     gnat14 # GNAT compiler for Ada and other languages
     libgcc # GCC runtime library for C and C++ programs
+    binutils
     gdb # GNU Debugger for debugging applications
     gdbgui # Web-based interface for GDB
     zig # Programming language for general-purpose programming
