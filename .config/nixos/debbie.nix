@@ -182,6 +182,8 @@ in {
       zoxide
       ripgrep
       imagemagick
+
+      dijo
       # tor-browser
       # deluge
       # dumptorrent
