@@ -183,6 +183,8 @@ in {
       ripgrep
       imagemagick
 
+      xfce.thunar
+
       # dijo
       # taskwarrior-tui
       # taskwarrior3
