@@ -185,6 +185,7 @@ in {
 
       dijo
       taskwarrior-tui
+      planify
       # tor-browser
       # deluge
       # dumptorrent
