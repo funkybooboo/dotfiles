@@ -207,6 +207,8 @@ in {
       ripgrep
       imagemagick
 
+      zathura
+
       xfce.thunar
       # xfce.xfce4-appfinder
 
