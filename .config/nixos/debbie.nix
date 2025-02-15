@@ -67,7 +67,7 @@ in {
 
   # Desktop Environment
 
-  services.xserver.desktopManager.cinnamon.enable = true;
+  services.xserver.desktopManager.cinnamon.enable = false;
   environment.cinnamon.excludePackages = with pkgs; [
     nemo
     xfce.xfce4-terminal
@@ -98,7 +98,7 @@ in {
 
   programs.hyprland.enable = true;
 
-  services.displayManager.defaultSession = "cinnamon";
+  services.displayManager.defaultSession = "xfce";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
