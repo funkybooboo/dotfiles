@@ -67,27 +67,34 @@ in {
 
   # Display Manager
   services.libinput.enable = true;
-  programs.regreet.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
 
   # Desktop Environment
-
-  services.xserver.desktopManager.cinnamon.enable = false;
+  services.xserver.desktopManager.cinnamon.enable = true;
   environment.cinnamon.excludePackages = with pkgs; [
     nemo
     xfce.xfce4-terminal
     gnome-terminal
     xed
     xterm
+    baobab # disk usage analyzer
+    epiphany # web browser
+    simple-scan # document scanner
+    totem # video player
+    yelp # help viewer
+    evince # document viewer
+    geary # email client
+    gnome-calculator
+    gnome-contacts
+    gnome-logs
+    gnome-maps
+    gnome-music
+    gnome-screenshot
+    gnome-system-monitor
+    pkgs.gnome-connections
+    pkgs.gnome-console
   ];
 
-  services.xserver = {
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-    };
-  };
-
-  programs.hyprland.withUWSM = true;
   programs.hyprland.enable = true;
 
   services.displayManager.defaultSession = "hyprland";
