@@ -67,7 +67,7 @@ in {
 
   # Display Manager
   services.libinput.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
+  programs.regreet.enable = true;
 
   # Desktop Environment
 
@@ -86,23 +86,11 @@ in {
       xfce.enable = true;
     };
   };
-  environment.xfce.excludePackages = with pkgs.xfce; [
-    mousepad
-    parole
-    ristretto
-    # xfce4-appfinder
-    # xfce4-notifyd
-    # xfce4-screenshooter
-    # xfce4-session
-    # xfce4-settings
-    xfce4-taskmanager
-    xfce4-terminal
-    thunar
-  ];
 
+  programs.hyprland.withUWSM = true;
   programs.hyprland.enable = true;
 
-  services.displayManager.defaultSession = "xfce";
+  services.displayManager.defaultSession = "hyprland";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -301,13 +289,27 @@ in {
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
 
-    wofi # Lightweight Wayland application launcher
+    # hyprland software
+    wofi
+    eww
+    hyprsunset
     waybar
     playerctl
     hyprpaper
     hyprwall
+    hyprpicker
     networkmanagerapplet
     power-profiles-daemon
+    dunst
+    hyprpolkitagent
+    hyprcursor
+    hypridle
+    hyprlock
+    nwg-look
+    wireplumber
+    xdg-desktop-portal-hyprland
+    libsForQt5.xwaylandvideobridge
+    cliphist
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
