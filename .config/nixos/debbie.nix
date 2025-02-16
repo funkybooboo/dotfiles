@@ -214,7 +214,6 @@ in {
       zathura
 
       xfce.thunar
-      # xfce.xfce4-appfinder
 
       # dijo
       # taskwarrior-tui
@@ -301,7 +300,13 @@ in {
     uasm # UASM assembler for x86 and x64 architectures
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
+
     wofi # Lightweight Wayland application launcher
+    waybar
+    playerctl
+    hyprpaper
+    hyprwall
+    networkmanagerapplet
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
