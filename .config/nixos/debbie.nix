@@ -96,9 +96,8 @@ in {
   ];
 
   programs.hyprland.enable = true;
-  programs.hyprland.withUWSM = true;
 
-  services.displayManager.defaultSession = "hyprland-uwsm";
+  services.displayManager.defaultSession = "hyprland";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -123,7 +122,10 @@ in {
 
   programs.fish.enable = true;
 
-  environment.variables.EDITOR = "nvim";
+  environment.variables = {
+    EDITOR = "nvim";
+    NIXOS_OZONE_WL = "1";
+  };
 
   fonts.packages = with pkgs; [nerdfonts];
   fonts.fontconfig.useEmbeddedBitmaps = true;
@@ -323,7 +325,6 @@ in {
     wireplumber
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
-    libsForQt5.xdg-desktop-portal-kde
     libsForQt5.xwaylandvideobridge
     cliphist
     wlogout
