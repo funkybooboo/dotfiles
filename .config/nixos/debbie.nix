@@ -298,9 +298,13 @@ in {
     hyprpaper
     hyprwall
     hyprpicker
+    hyprlandPlugins.hyprbars
+    hyprlandPlugins.hyprexpo
     networkmanagerapplet
     power-profiles-daemon
-    dunst
+    swaynotificationcenter
+    ianny
+    easyeffects
     hyprpolkitagent
     hyprcursor
     hypridle
