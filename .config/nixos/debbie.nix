@@ -307,6 +307,7 @@ in {
     hyprpaper
     hyprwall
     networkmanagerapplet
+    power-profiles-daemon
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
