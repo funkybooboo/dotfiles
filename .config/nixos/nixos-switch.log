@@ -1,368 +1,63 @@
 building Nix...
 building the system configuration...
-unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
-these 44 derivations will be built:
-  /nix/store/w3bflv8f56a01xzx370d69wlgvklisjg-nixos-manual-html.drv
-  /nix/store/fqc39aymb4z0wzilyxp3j7337chyy92c-nixos-help.drv
-  /nix/store/8yilmp4f3gj5xr8fcihhjnlhyn37b9bz-nixos-help.drv
-  /nix/store/pxny316wjvvgql06skzj5lvq0z7xahp2-nixos-version.drv
-  /nix/store/8xdl29k3sa94fpxsl76fcmr6x781q5x7-system-path.drv
-  /nix/store/ha6nkm45fp877hng284sqsna2pr7l28n-dbus-1.drv
-  /nix/store/7wn9rxw1hbpiryiw4ks01667d9nsa7xa-X-Restart-Triggers-dbus.drv
-  /nix/store/049y0kg3bcxpy9wvmkjps2xqjvyazxcw-unit-dbus.service.drv
-  /nix/store/6nx08vcj7gy3ba8p67f60f9rha14n00k-firmware.drv
-  /nix/store/25pwyh20lycfwwc5fpmqyl4jwls29xd9-linux-6.6.76-modules-shrunk.drv
-  /nix/store/2i9682908453902p0dpbamsaj1xdjklc-etc-systemd-journald.conf.drv
-  /nix/store/331mjsxvs4vmd1lq7w0r33mln7x6bg50-X-Restart-Triggers-systemd-journald.drv
-  /nix/store/3arq4akkmp1sh0has66hjpbjd2wnchvc-hyprpaper-0.7.1_fish-completions.drv
-  /nix/store/4ilclb3pqajs9bh8j4qsgh45z979a5w3-playerctl-2.4.1_fish-completions.drv
-  /nix/store/6a980zzn09865nrh6j21zhf7iv39y5wy-issue.drv
-  /nix/store/6abq1gl8pw6qw6bpn67ggzgxv3ypm8k7-unit-dbus.service.drv
-  /nix/store/8plawm6imh71f9568gpkqv81fdg34g2i-unit-systemd-journald-audit.socket.drv
-  /nix/store/dhypfmcp599vmngag5p27y2vv3y3r688-man-paths.drv
-  /nix/store/9w2619vmhwpybs287r0zxq8gnvlaj593-man-cache.drv
-  /nix/store/a0clfdsslwhvk85ca7krjw5g4mn6rl8p-etc-modprobe.d-firmware.conf.drv
-  /nix/store/i7fq62z1r4czb864plm7b1caz1gp99b9-initrd-linux-6.6.76.drv
-  /nix/store/wwlnvmalqqr5ixyn2lydxspalkjnn6vs-boot.json.drv
-  /nix/store/gabrcxcjgqrg23z1h8ajvqivrld2mc93-etc-man_db.conf.drv
-  /nix/store/gszh1cxd7k3199r9qskd7i3misihmyin-etc-os-release.drv
-  /nix/store/q5dnga3bzxqjljf25kch00yb5c35fvqc-user-units.drv
-  /nix/store/gh4sig5i27hafhvvdjc15wq0z2rkpss0-unit-accounts-daemon.service.drv
-  /nix/store/irw7c87987kxns6f3lg97s7i384nhg72-unit-systemd-journald.service.drv
-  /nix/store/r5gnkxvw6nn1mznw9hzjrr0my4ryl8xy-X-Restart-Triggers-polkit.drv
-  /nix/store/jfkprvqxa336lif19bz9y6n23idxv4jc-unit-polkit.service.drv
-  /nix/store/y3zbqcm7v8w5glsp6n77qz7axy7dm07i-shutdown-ramfs-contents.json.drv
-  /nix/store/npl7lx867a8qik9pihs2gq8g6xdr2hvh-unit-generate-shutdown-ramfs.service.drv
-  /nix/store/z355619sxdplrjjnnrcbqm51zb8yb15s-X-Restart-Triggers-systemd-journald-.drv
-  /nix/store/p7p2dbqv8zdz7w4d33bfd6ymrkxvs9vx-unit-systemd-journald-.service.drv
-  /nix/store/wadrggy0cmbqmlin1q07bx365b3pxd4m-system-units.drv
-  /nix/store/b2skzxch0nwqvv2s4pj2322krpgii3n1-waybar-0.11.0_fish-completions.drv
-  /nix/store/f4lbnpbkcriinrnr527aamxxm314ck3d-nixos-configuration-reference-manpage_fish-completions.drv
-  /nix/store/kv87masw0q56jy15qs4dpamx1wz5kmbd-nixos-manual-html_fish-completions.drv
-  /nix/store/lf6vla7h62k7hmspwiwlyrqw2r923w2l-hyprwall-0.1.8_fish-completions.drv
-  /nix/store/mh77lxy8vb7gggr6khqaqn4k4s7y75vi-nixos-help_fish-completions.drv
-  /nix/store/slwibaihpqschybcr7fz319lhcbgw85r-nixos-version_fish-completions.drv
-  /nix/store/x7spqzp5b4bwr7h0fw4lfpiln60i8wcc-system_fish-completions.drv
-  /nix/store/z9cnwhnjck8c64q87h0hzpssf6c10p47-user-environment.drv
-  /nix/store/zi3l1dfdgd9ghxv5cnkypa8h8xx7k6zy-etc.drv
-  /nix/store/a3368br392cambcyllxv8z8gxb7l3m09-nixos-system-debbie-24.11.714486.0b73e36b1962.drv
-these 21 paths will be fetched (668.11 MiB download, 1165.80 MiB unpacked):
-  /nix/store/pn29mddh5n9rzp0yxjkm0jwz6zgffgcx-atkmm-2.28.4
-  /nix/store/w31nn7sjh3r4hm8df2iiz28v0mq0c6mp-cairomm-1.14.5
-  /nix/store/n01hm4pjxzfl5d9n2q7qj2mvlnl6hmvg-chromium-133.0.6943.98
-  /nix/store/ydam0y9f4h14kkpk4gladjwfnmkwy2iv-chromium-133.0.6943.98-sandbox
-  /nix/store/hi6vfzjch5sak6xrsf8lzn9gdnp34imy-chromium-unwrapped-133.0.6943.98
-  /nix/store/rnhvqqqg8skz2gpv750vm3yksi31kd3h-chromium-unwrapped-133.0.6943.98-sandbox
-  /nix/store/nrxnwq2dd70f62pkvhbm7c70crqhx2fw-fmt-10.2.1
-  /nix/store/6jnqknypix4pjd22jkch396wp421wlzg-gtkmm-3.24.9
-  /nix/store/sa9f4zckbx8g7qgzik286sff3vlr348l-hyprpaper-0.7.1
-  /nix/store/ljh1icxmrfhr173sbv99s5xv3xgkrphf-hyprwall-0.1.8
-  /nix/store/5nkr124q0af90s2labgjqyqzjqw2izsz-jsoncpp-1.9.6
-  /nix/store/hylyhj05q1j0bw05z48h15mjr778kkln-libmpdclient-2.22
-  /nix/store/n58qg129fcnbp52gwblp2rg00p1v0z3x-linux-firmware-20250211-zstd
-  /nix/store/zk4imlyybl0kfvwybncw7by4fk9cj95q-microcode-intel-20250211
-  /nix/store/iacs4i2zsippss7vng3z23r082c51din-nixos-configuration-reference-manpage
-  /nix/store/v85dmbaic4l4756j75l0nmqh2zskrn00-options.json
-  /nix/store/68gpmf4lphrvkbsylxszydqz67p33x4j-pangomm-2.46.4
-  /nix/store/0q35q7dqh11hlz9czq3cnybrqdwww6d7-playerctl-2.4.1
-  /nix/store/26p8iwm4bjcw4f0zj6m2aghwyhyc7i8c-portaudio-190700_20210406
-  /nix/store/j9ips6f8w3m28ranly1dpm45hzihi9cc-spdlog-1.14.1
-  /nix/store/ycvg8r2fns0bgjkiv3ivfmz76abpyfkl-waybar-0.11.0
-copying path '/nix/store/n58qg129fcnbp52gwblp2rg00p1v0z3x-linux-firmware-20250211-zstd' from 'https://cache.nixos.org'...
-copying path '/nix/store/iacs4i2zsippss7vng3z23r082c51din-nixos-configuration-reference-manpage' from 'https://cache.nixos.org'...
-copying path '/nix/store/nrxnwq2dd70f62pkvhbm7c70crqhx2fw-fmt-10.2.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/sa9f4zckbx8g7qgzik286sff3vlr348l-hyprpaper-0.7.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/ljh1icxmrfhr173sbv99s5xv3xgkrphf-hyprwall-0.1.8' from 'https://cache.nixos.org'...
-copying path '/nix/store/zk4imlyybl0kfvwybncw7by4fk9cj95q-microcode-intel-20250211' from 'https://cache.nixos.org'...
-copying path '/nix/store/0q35q7dqh11hlz9czq3cnybrqdwww6d7-playerctl-2.4.1' from 'https://cache.nixos.org'...
-building '/nix/store/gszh1cxd7k3199r9qskd7i3misihmyin-etc-os-release.drv'...
-building '/nix/store/2i9682908453902p0dpbamsaj1xdjklc-etc-systemd-journald.conf.drv'...
-building '/nix/store/6a980zzn09865nrh6j21zhf7iv39y5wy-issue.drv'...
-building '/nix/store/pxny316wjvvgql06skzj5lvq0z7xahp2-nixos-version.drv'...
-copying path '/nix/store/w31nn7sjh3r4hm8df2iiz28v0mq0c6mp-cairomm-1.14.5' from 'https://cache.nixos.org'...
-copying path '/nix/store/pn29mddh5n9rzp0yxjkm0jwz6zgffgcx-atkmm-2.28.4' from 'https://cache.nixos.org'...
-copying path '/nix/store/5nkr124q0af90s2labgjqyqzjqw2izsz-jsoncpp-1.9.6' from 'https://cache.nixos.org'...
-copying path '/nix/store/hylyhj05q1j0bw05z48h15mjr778kkln-libmpdclient-2.22' from 'https://cache.nixos.org'...
-copying path '/nix/store/v85dmbaic4l4756j75l0nmqh2zskrn00-options.json' from 'https://cache.nixos.org'...
-copying path '/nix/store/26p8iwm4bjcw4f0zj6m2aghwyhyc7i8c-portaudio-190700_20210406' from 'https://cache.nixos.org'...
-building '/nix/store/8plawm6imh71f9568gpkqv81fdg34g2i-unit-systemd-journald-audit.socket.drv'...
-copying path '/nix/store/hi6vfzjch5sak6xrsf8lzn9gdnp34imy-chromium-unwrapped-133.0.6943.98' from 'https://cache.nixos.org'...
-copying path '/nix/store/rnhvqqqg8skz2gpv750vm3yksi31kd3h-chromium-unwrapped-133.0.6943.98-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/j9ips6f8w3m28ranly1dpm45hzihi9cc-spdlog-1.14.1' from 'https://cache.nixos.org'...
-building '/nix/store/z355619sxdplrjjnnrcbqm51zb8yb15s-X-Restart-Triggers-systemd-journald-.drv'...
-building '/nix/store/331mjsxvs4vmd1lq7w0r33mln7x6bg50-X-Restart-Triggers-systemd-journald.drv'...
-building '/nix/store/slwibaihpqschybcr7fz319lhcbgw85r-nixos-version_fish-completions.drv'...
-building '/nix/store/y3zbqcm7v8w5glsp6n77qz7axy7dm07i-shutdown-ramfs-contents.json.drv'...
-building '/nix/store/3arq4akkmp1sh0has66hjpbjd2wnchvc-hyprpaper-0.7.1_fish-completions.drv'...
-copying path '/nix/store/68gpmf4lphrvkbsylxszydqz67p33x4j-pangomm-2.46.4' from 'https://cache.nixos.org'...
-building '/nix/store/npl7lx867a8qik9pihs2gq8g6xdr2hvh-unit-generate-shutdown-ramfs.service.drv'...
-building '/nix/store/p7p2dbqv8zdz7w4d33bfd6ymrkxvs9vx-unit-systemd-journald-.service.drv'...
-building '/nix/store/irw7c87987kxns6f3lg97s7i384nhg72-unit-systemd-journald.service.drv'...
-building '/nix/store/4ilclb3pqajs9bh8j4qsgh45z979a5w3-playerctl-2.4.1_fish-completions.drv'...
-copying path '/nix/store/ydam0y9f4h14kkpk4gladjwfnmkwy2iv-chromium-133.0.6943.98-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/6jnqknypix4pjd22jkch396wp421wlzg-gtkmm-3.24.9' from 'https://cache.nixos.org'...
-building '/nix/store/lf6vla7h62k7hmspwiwlyrqw2r923w2l-hyprwall-0.1.8_fish-completions.drv'...
-building '/nix/store/f4lbnpbkcriinrnr527aamxxm314ck3d-nixos-configuration-reference-manpage_fish-completions.drv'...
-copying path '/nix/store/ycvg8r2fns0bgjkiv3ivfmz76abpyfkl-waybar-0.11.0' from 'https://cache.nixos.org'...
-building '/nix/store/w3bflv8f56a01xzx370d69wlgvklisjg-nixos-manual-html.drv'...
-building '/nix/store/b2skzxch0nwqvv2s4pj2322krpgii3n1-waybar-0.11.0_fish-completions.drv'...
-building '/nix/store/fqc39aymb4z0wzilyxp3j7337chyy92c-nixos-help.drv'...
-building '/nix/store/kv87masw0q56jy15qs4dpamx1wz5kmbd-nixos-manual-html_fish-completions.drv'...
-building '/nix/store/8yilmp4f3gj5xr8fcihhjnlhyn37b9bz-nixos-help.drv'...
-building '/nix/store/dhypfmcp599vmngag5p27y2vv3y3r688-man-paths.drv'...
-building '/nix/store/mh77lxy8vb7gggr6khqaqn4k4s7y75vi-nixos-help_fish-completions.drv'...
-building '/nix/store/8xdl29k3sa94fpxsl76fcmr6x781q5x7-system-path.drv'...
+these 17 derivations will be built:
+  /nix/store/s89fq2sy3l1kx6n2nplq66jd6bps8xl8-system-path.drv
+  /nix/store/0k1km82r2kpcsjkhmyfgyypswc4qk7yh-unit-accounts-daemon.service.drv
+  /nix/store/zab95a5zxvq4azq7r0g3xw60q9cl2607-man-paths.drv
+  /nix/store/z6lhs9y1mr66cdwc1jwpkp45zv9y7pzy-man-cache.drv
+  /nix/store/3fg4fygnrb2c1b4nh38xmrk1d7kw6vya-etc-man_db.conf.drv
+  /nix/store/8fm44ryr1x0nii2v9vnhh3a50dgk8l8r-dbus-1.drv
+  /nix/store/ycj13xf43l038hxqygjy88qvm1gzxg43-X-Restart-Triggers-dbus.drv
+  /nix/store/6hx3f314n0y8my5kgrqmi8b8rmajk295-unit-dbus.service.drv
+  /nix/store/iqwir7ckfz7bqbf951gfr9vi5rhlm96v-X-Restart-Triggers-polkit.drv
+  /nix/store/kkx4czd387sya66dnqxp8ar2h8y35jjf-unit-polkit.service.drv
+  /nix/store/q94y72ddyp15crvhicg3h91k86ln3c0z-unit-dbus.service.drv
+  /nix/store/gdzsr2xf9faxhnanhkdqbhchi0wr3lk3-system-units.drv
+  /nix/store/hd4avliynm36a5f345fxy4ngphy48pxy-power-profiles-daemon-0.23_fish-completions.drv
+  /nix/store/kbymd8x1k9bfqkq7vi6bzqkc0mp46p1c-system_fish-completions.drv
+  /nix/store/yn48xf4d8iqykdf2wbcr1d6cmhnzypqw-user-units.drv
+  /nix/store/gaipd7hfq822vm1qnkd9ajz5fz946sjp-etc.drv
+  /nix/store/mmgv2jk6xhq926y475dia82l5y46ksqf-nixos-system-debbie-24.11.714486.0b73e36b1962.drv
+these 2 paths will be fetched (0.13 MiB download, 0.52 MiB unpacked):
+  /nix/store/wflbndqxgnzq58ji1bksks29jpw6kpss-power-profiles-daemon-0.23
+  /nix/store/h855q6zlfag7g6y1q618sxhwnjpdvz9l-umockdev-0.18.4
+copying path '/nix/store/h855q6zlfag7g6y1q618sxhwnjpdvz9l-umockdev-0.18.4' from 'https://cache.nixos.org'...
+copying path '/nix/store/wflbndqxgnzq58ji1bksks29jpw6kpss-power-profiles-daemon-0.23' from 'https://cache.nixos.org'...
+building '/nix/store/zab95a5zxvq4azq7r0g3xw60q9cl2607-man-paths.drv'...
+building '/nix/store/hd4avliynm36a5f345fxy4ngphy48pxy-power-profiles-daemon-0.23_fish-completions.drv'...
+building '/nix/store/s89fq2sy3l1kx6n2nplq66jd6bps8xl8-system-path.drv'...
 warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
+building '/nix/store/kbymd8x1k9bfqkq7vi6bzqkc0mp46p1c-system_fish-completions.drv'...
+created 5531 symlinks in user environment
 warning: collision between `/nix/store/gavyqkxsdfm1nyzwjx5ic2q9mhg3i01z-rustfmt-1.82.0/bin/cargo-fmt' and `/nix/store/dyn2kdxcnhcjz13nqpdrpcgd3qj7996b-rustup-1.27.1/bin/cargo-fmt'
 warning: collision between `/nix/store/gavyqkxsdfm1nyzwjx5ic2q9mhg3i01z-rustfmt-1.82.0/bin/rustfmt' and `/nix/store/dyn2kdxcnhcjz13nqpdrpcgd3qj7996b-rustup-1.27.1/bin/rustfmt'
-created 5530 symlinks in user environment
-building '/nix/store/9w2619vmhwpybs287r0zxq8gnvlaj593-man-cache.drv'...
+building '/nix/store/z6lhs9y1mr66cdwc1jwpkp45zv9y7pzy-man-cache.drv'...
 warning: collision between `/nix/store/35iznn6njx7gb4frmrv71k3wwrbpplkj-VirtualBox-GuestAdditions-7.1.6a-6.6.76/lib/modules' and `/nix/store/xfcg90q2khxr1x0hhdrlyz27il36x9ih-zulu-ca-jdk-23.0.0/lib/modules'
 warning: collision between `/nix/store/mrjbkf9mh2abzfb8c6is6jj4za2njr3r-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/35iznn6njx7gb4frmrv71k3wwrbpplkj-VirtualBox-GuestAdditions-7.1.6a-6.6.76/bin/mount.vboxsf'
 warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/lib/xorg/protocol.txt' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/lib/xorg/protocol.txt'
 warning: collision between `/nix/store/mrg0p2saf78kwpivmmpv3pnb792n3q58-xwayland-24.1.5/share/man/man1/Xserver.1.gz' and `/nix/store/f2f0lqm70iap6lsvchvk15ymvhiip4m9-xorg-server-21.1.14/share/man/man1/Xserver.1.gz'
-created 10708 symlinks in user environment
-gtk-update-icon-cache: Cache file created successfully.
-gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/r5gnkxvw6nn1mznw9hzjrr0my4ryl8xy-X-Restart-Triggers-polkit.drv'...
-building '/nix/store/ha6nkm45fp877hng284sqsna2pr7l28n-dbus-1.drv'...
-building '/nix/store/gh4sig5i27hafhvvdjc15wq0z2rkpss0-unit-accounts-daemon.service.drv'...
-building '/nix/store/7wn9rxw1hbpiryiw4ks01667d9nsa7xa-X-Restart-Triggers-dbus.drv'...
-building '/nix/store/jfkprvqxa336lif19bz9y6n23idxv4jc-unit-polkit.service.drv'...
-building '/nix/store/049y0kg3bcxpy9wvmkjps2xqjvyazxcw-unit-dbus.service.drv'...
-building '/nix/store/6abq1gl8pw6qw6bpn67ggzgxv3ypm8k7-unit-dbus.service.drv'...
-building '/nix/store/wadrggy0cmbqmlin1q07bx365b3pxd4m-system-units.drv'...
-building '/nix/store/q5dnga3bzxqjljf25kch00yb5c35fvqc-user-units.drv'...
-building '/nix/store/x7spqzp5b4bwr7h0fw4lfpiln60i8wcc-system_fish-completions.drv'...
+created 10718 symlinks in user environment
 warning: collision between `/nix/store/78x2h4mlznrvx3shlwj160x6mgjgrzxv-xwayland-24.1.5_fish-completions/Xserver.fish' and `/nix/store/lqgzhcbjzb40ibsqq5a7gwvbj5x14yyj-xorg-server-21.1.14_fish-completions/Xserver.fish'
 created 614 symlinks in user environment
-copying path '/nix/store/n01hm4pjxzfl5d9n2q7qj2mvlnl6hmvg-chromium-133.0.6943.98' from 'https://cache.nixos.org'...
-building '/nix/store/z9cnwhnjck8c64q87h0hzpssf6c10p47-user-environment.drv'...
-created 1652 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/gabrcxcjgqrg23z1h8ajvqivrld2mc93-etc-man_db.conf.drv'...
-building '/nix/store/6nx08vcj7gy3ba8p67f60f9rha14n00k-firmware.drv'...
-created 860 symlinks in user environment
-building '/nix/store/a0clfdsslwhvk85ca7krjw5g4mn6rl8p-etc-modprobe.d-firmware.conf.drv'...
-building '/nix/store/25pwyh20lycfwwc5fpmqyl4jwls29xd9-linux-6.6.76-modules-shrunk.drv'...
-building '/nix/store/zi3l1dfdgd9ghxv5cnkypa8h8xx7k6zy-etc.drv'...
-kernel version is 6.6.76
-root module: xhci_pci
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: thunderbolt
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/thunderbolt/thunderbolt.ko.xz
-root module: nvme
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_generic.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64-rocksoft.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/common/nvme-common.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/host/nvme-core.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/host/nvme.ko.xz
-root module: usb_storage
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/storage/usb-storage.ko.xz
-root module: usbhid
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/sd_mod.ko.xz
-root module: ext2
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/fs/ext2/ext2.ko.xz
-root module: ext4
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/fs/jbd2/jbd2.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc16.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/arch/x86/crypto/crc32c-intel.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crc32c_generic.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/fs/ext4/ext4.ko.xz
-root module: ahci
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libahci.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/ahci.ko.xz
-root module: sata_nv
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/sata_nv.ko.xz
-root module: sata_via
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/sata_via.ko.xz
-root module: sata_sis
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/pata_sis.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/sata_sis.ko.xz
-root module: sata_uli
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/sata_uli.ko.xz
-root module: ata_piix
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/ata_piix.ko.xz
-root module: pata_marvell
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/ata/pata_marvell.ko.xz
-root module: nvme
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/common/nvme-common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/host/nvme-core.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/nvme/host/nvme.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/sd_mod.ko.xz
-root module: sr_mod
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/cdrom/cdrom.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/scsi/sr_mod.ko.xz
-root module: mmc_block
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/mmc/core/mmc_core.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/mmc/core/mmc_block.ko.xz
-root module: uhci_hcd
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/uhci-hcd.ko.xz
-root module: ehci_hcd
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-hcd.ko.xz
-root module: ehci_pci
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-pci.ko.xz
-root module: ohci_hcd
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ohci-hcd.ko.xz
-root module: ohci_pci
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ohci-hcd.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/ohci-pci.ko.xz
-root module: xhci_hcd
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-hcd.ko.xz
-root module: xhci_pci
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: usbhid
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: hid_generic
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-generic.ko.xz
-root module: hid_lenovo
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-lenovo.ko.xz
-root module: hid_apple
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-apple.ko.xz
-root module: hid_roccat
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-roccat.ko.xz
-root module: hid_logitech_hidpp
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-logitech-hidpp.ko.xz
-root module: hid_logitech_dj
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-logitech-dj.ko.xz
-root module: hid_microsoft
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/ff-memless.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-microsoft.ko.xz
-root module: hid_cherry
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-cherry.ko.xz
-root module: hid_corsair
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/hid/hid-corsair.ko.xz
-root module: pcips2
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/pcips2.ko.xz
-root module: atkbd
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/vivaldi-fmap.ko.xz
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/libps2.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/keyboard/atkbd.ko.xz
-root module: i8042
-  dependency already copied: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/input/serio/i8042.ko.xz
-root module: rtc_cmos
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/rtc/rtc-cmos.ko.xz
-root module: vboxsf
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/misc/vboxguest.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/misc/vboxsf.ko.xz
-root module: dm_mod
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/dax/dax.ko.xz
-  copying dependency: /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/md/dm-mod.ko.xz
-firmware for /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci.ko.xz: renesas_usb_fw.mem
-lib/firmware -> /nix/store/jv5izz1nd0rrzhly1g455h53h3hfzwz2-linux-6.6.76-modules-shrunk/lib/firmware
-WARNING: missing firmware renesas_usb_fw.mem for module /nix/store/kyvn5467imxwh9fia17kxfgdjrq5mbv2-linux-6.6.76-modules/lib/modules/6.6.76/kernel/drivers/usb/host/xhci-pci.ko.xz
-lib/firmware/edid not found, skipping.
-depmod: WARNING: could not open modules.builtin.modinfo at /nix/store/jv5izz1nd0rrzhly1g455h53h3hfzwz2-linux-6.6.76-modules-shrunk/lib/modules/6.6.76: No such file or directory
-building '/nix/store/i7fq62z1r4czb864plm7b1caz1gp99b9-initrd-linux-6.6.76.drv'...
-building '/nix/store/wwlnvmalqqr5ixyn2lydxspalkjnn6vs-boot.json.drv'...
-building '/nix/store/a3368br392cambcyllxv8z8gxb7l3m09-nixos-system-debbie-24.11.714486.0b73e36b1962.drv'...
+gtk-update-icon-cache: Cache file created successfully.
+building '/nix/store/iqwir7ckfz7bqbf951gfr9vi5rhlm96v-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/8fm44ryr1x0nii2v9vnhh3a50dgk8l8r-dbus-1.drv'...
+building '/nix/store/0k1km82r2kpcsjkhmyfgyypswc4qk7yh-unit-accounts-daemon.service.drv'...
+building '/nix/store/ycj13xf43l038hxqygjy88qvm1gzxg43-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/kkx4czd387sya66dnqxp8ar2h8y35jjf-unit-polkit.service.drv'...
+building '/nix/store/6hx3f314n0y8my5kgrqmi8b8rmajk295-unit-dbus.service.drv'...
+building '/nix/store/q94y72ddyp15crvhicg3h91k86ln3c0z-unit-dbus.service.drv'...
+building '/nix/store/yn48xf4d8iqykdf2wbcr1d6cmhnzypqw-user-units.drv'...
+building '/nix/store/gdzsr2xf9faxhnanhkdqbhchi0wr3lk3-system-units.drv'...
+building '/nix/store/3fg4fygnrb2c1b4nh38xmrk1d7kw6vya-etc-man_db.conf.drv'...
+building '/nix/store/gaipd7hfq822vm1qnkd9ajz5fz946sjp-etc.drv'...
+building '/nix/store/mmgv2jk6xhq926y475dia82l5y46ksqf-nixos-system-debbie-24.11.714486.0b73e36b1962.drv'...
 stopping the following units: accounts-daemon.service
 activating the configuration...
 setting up /etc...
 reloading user units for nate...
 restarting sysinit-reactivation.target
 reloading the following units: dbus.service
-restarting the following units: polkit.service, systemd-journald.service
+restarting the following units: polkit.service
 starting the following units: accounts-daemon.service
-the following new units were started: run-credentials-systemd\x2dtmpfiles\x2dresetup.service.mount, sysinit-reactivation.target, systemd-journald-audit.socket, systemd-tmpfiles-resetup.service
