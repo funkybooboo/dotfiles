@@ -117,6 +117,9 @@ in {
 
   environment.variables.EDITOR = "nvim";
 
+  fonts.packages = with pkgs; [nerdfonts];
+  fonts.fontconfig.useEmbeddedBitmaps = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nate = {
     isNormalUser = true;
@@ -277,7 +280,6 @@ in {
     batmon # Battery monitor for Linux
     xclip # Command-line interface to the X11 clipboard
     ripgrep # Fast text searching tool
-    nerdfonts # Icon collection for programming nerds
     dotnetCorePackages.sdk_9_0 # .NET Core SDK for building cross-platform applications
     libnotify # Library for sending desktop notifications
     ffmpeg # Command-line tool for handling multimedia files
