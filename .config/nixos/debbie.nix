@@ -96,8 +96,9 @@ in {
   ];
 
   programs.hyprland.enable = true;
+  programs.hyprland.withUWSM = true;
 
-  services.displayManager.defaultSession = "hyprland";
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -320,7 +321,9 @@ in {
     hyprlock
     nwg-look
     wireplumber
+    xdg-desktop-portal
     xdg-desktop-portal-hyprland
+    libsForQt5.xdg-desktop-portal-kde
     libsForQt5.xwaylandvideobridge
     cliphist
     wlogout
