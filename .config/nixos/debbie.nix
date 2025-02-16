@@ -323,6 +323,7 @@ in {
     xdg-desktop-portal-hyprland
     libsForQt5.xwaylandvideobridge
     cliphist
+    wlogout
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
