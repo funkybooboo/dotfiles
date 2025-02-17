@@ -219,7 +219,7 @@ in {
       # dijo
       # taskwarrior-tui
       # taskwarrior3
-      # planify
+      planify
       # tor-browser
       # deluge
       # dumptorrent
