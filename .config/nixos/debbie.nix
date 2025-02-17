@@ -146,7 +146,7 @@ in {
       go # Go programming language
       fish # User-friendly command-line shell
       kitty # Fast, feature-rich, GPU-based terminal emulator
-      discord # Communication platform for gamers
+      webcord
       cloc # Counts lines of code in programming projects
       lsd # Modern alternative to 'ls' with better formatting
       bat # 'cat' command with syntax highlighting and Git integration
@@ -313,15 +313,11 @@ in {
 
     # hyprland software
     wofi
-    rofi-wayland
-    eww
     hyprsunset
     waybar
     pavucontrol
-    font-awesome
     playerctl
     hyprpaper
-    hyprwall
     hyprpicker
     hyprlandPlugins.hyprbars
     hyprlandPlugins.hyprexpo
@@ -332,15 +328,16 @@ in {
     ianny
     easyeffects
     hyprpolkitagent
-    hyprcursor
     hypridle
     brightnessctl
     hyprlock
     nwg-look
     wireplumber
+
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
     libsForQt5.xwaylandvideobridge
+
     cliphist
     wlogout
     hyprshot
