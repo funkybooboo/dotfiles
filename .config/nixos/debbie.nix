@@ -220,6 +220,7 @@ in {
       # taskwarrior-tui
       # taskwarrior3
       planify
+      appflowy
       # tor-browser
       # deluge
       # dumptorrent

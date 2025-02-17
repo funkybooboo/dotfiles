@@ -69,7 +69,8 @@
     "format-alt": "<span size='13000' foreground='#B1E3AD'>{icon} </span> {time}",
     "format-full": "<span size='13000' foreground='#B1E3AD'> </span>{capacity}%",
     "format-icons": ["", "", "", "", ""],
-    "tooltip-format": "{time}"
+    "tooltip-format": "{time}",
+    on-click: "kitty -e batmon"
   },
   "network": {
     "format-wifi": "{essid} ({signalStrength}%) ",
