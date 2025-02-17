@@ -220,13 +220,17 @@ in {
       # dijo
       # taskwarrior-tui
       # taskwarrior3
-      planify
-      appflowy
-      # tor-browser
-      # deluge
-      # dumptorrent
-      # buildtorrent
+      # planify
+      # appflowy
+
+      tor-browser
+      arti
+      deluge
+      dumptorrent
+      buildtorrent
       # mutt
+
+      ladybird
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
