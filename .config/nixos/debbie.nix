@@ -215,6 +215,7 @@ in {
       zathura
 
       xfce.thunar
+      gparted
 
       # dijo
       # taskwarrior-tui
