@@ -70,9 +70,10 @@
     "format-full": "<span size='13000' foreground='#B1E3AD'> </span>{capacity}%",
     "format-icons": ["", "", "", "", ""],
     "tooltip-format": "{time}",
-    on-click: "kitty -e batmon"
+    "on-click": "kitty -e batmon"
   },
   "network": {
+    "tooltip": false,
     "format-wifi": "{essid} ({signalStrength}%) ",
     "format-ethernet": "{ipaddr}/{cidr} ",
     "tooltip-format": "{ifname} via {gwaddr} ",
@@ -104,15 +105,21 @@
   },
   "custom/power": {
     "format" : "⏻ ",
-    "tooltip": false,
+    "tooltip": true,
     "menu": "on-click",
-    "menu-file": "$HOME/.config/waybar/power_menu.xml",
+    "menu-file": "~/.config/waybar/power_menu.xml",
     "menu-actions": {
       "shutdown": "shutdown",
       "reboot": "reboot",
       "suspend": "systemctl suspend",
       "hibernate": "systemctl hibernate"
     }
-  }
+  },
+  "custom/disk": {
+    "exec": "df -h / | awk 'NR==2 {print $5}'",
+    "format": "{output}",
+    "on-click": "sudo -E gparted",
+    "interval": 60
+  },
 }
 
