@@ -299,8 +299,15 @@ in {
     uasm # UASM assembler for x86 and x64 architectures
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
-
     stow # Sym-link manager
+
+    kdePackages.breeze-gtk
+    kdePackages.breeze-icons
+    kdePackages.breeze.qt5
+    kdePackages.breeze
+    catppuccin-cursors # Mouse cursor theme
+    catppuccin-papirus-folders # Icon theme, e.g. for pcmanfm-qt
+    papirus-folders # For the catppucing stuff work
 
     # hyprland software
     wofi
