@@ -329,6 +329,7 @@ in {
     libsForQt5.xwaylandvideobridge
     cliphist
     wlogout
+    hyprshot
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
