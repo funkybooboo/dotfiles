@@ -300,13 +300,14 @@ in {
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
 
-    stow
+    stow # Sym-link manager
 
     # hyprland software
     wofi
     eww
     hyprsunset
     waybar
+    pavucontrol
     font-awesome
     playerctl
     hyprpaper
