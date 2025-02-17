@@ -300,6 +300,8 @@ in {
     gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
 
+    stow
+
     # hyprland software
     wofi
     eww
