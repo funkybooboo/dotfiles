@@ -131,13 +131,13 @@ button:hover {
 }
 
 #disk {
-  color: @blue;
-  border-bottom: 2px solid @blue;
+  color: @yellow;
+  border-bottom: 2px solid @yellow;
 }
 
 #disk:hover {
-  color: @green;
-  border-bottom: 2px solid @green;
+  color: @yellow;
+  border-bottom: 2px solid @yellow;
 }
 
 #temperature {

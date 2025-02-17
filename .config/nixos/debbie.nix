@@ -313,6 +313,7 @@ in {
 
     # hyprland software
     wofi
+    rofi-wayland
     eww
     hyprsunset
     waybar
