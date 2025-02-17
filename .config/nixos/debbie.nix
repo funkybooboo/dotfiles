@@ -291,7 +291,6 @@ in {
     xclip # Command-line interface to the X11 clipboard
     ripgrep # Fast text searching tool
     dotnetCorePackages.sdk_9_0 # .NET Core SDK for building cross-platform applications
-    libnotify # Library for sending desktop notifications
     ffmpeg # Command-line tool for handling multimedia files
     nasm # Netwide Assembler, a popular assembler for x86 architectures
     nasmfmt # Formatter for NASM source code
@@ -316,11 +315,13 @@ in {
     networkmanagerapplet
     power-profiles-daemon
     swaynotificationcenter
+    libnotify # Library for sending desktop notifications
     ianny
     easyeffects
     hyprpolkitagent
     hyprcursor
     hypridle
+    brightnessctl
     hyprlock
     nwg-look
     wireplumber
