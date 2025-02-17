@@ -306,6 +306,7 @@ in {
     eww
     hyprsunset
     waybar
+    font-awesome
     playerctl
     hyprpaper
     hyprwall
