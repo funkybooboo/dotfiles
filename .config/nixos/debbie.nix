@@ -312,6 +312,8 @@ in {
     catppuccin-papirus-folders # Icon theme, e.g. for pcmanfm-qt
     papirus-folders # For the catppucing stuff work
 
+    font-awesome
+
     # hyprland software
     wofi
     hyprsunset
