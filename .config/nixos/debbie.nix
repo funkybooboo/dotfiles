@@ -164,12 +164,12 @@ in {
       drawio # Diagramming tool for creating flowcharts and UML diagrams
       # ladybird # Lightweight web browser for Linux
       lazydocker # Terminal UI for managing Docker containers
-      # proton-pass # Password manager integrated with Proton services
+      proton-pass # Password manager integrated with Proton services
       # protonmail-desktop # Desktop client for ProtonMail secure email
-      # protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
+      protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
       protonvpn-gui # GUI for ProtonVPN for secure internet connections
       # discordo # Open-source Discord client
-      yazi # Markdown-based personal wiki
+      yazi # TUI file viewer
       timg # Image viewer for the terminal
       asciinema # Record and share terminal sessions
       # cmatrix # Matrix-like animation in the terminal
@@ -211,9 +211,7 @@ in {
       jump
       ripgrep
       imagemagick
-
       zathura
-
       xfce.thunar
       gparted
 
