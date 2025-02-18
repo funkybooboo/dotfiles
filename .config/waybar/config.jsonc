@@ -28,7 +28,7 @@
     "on-click": "kitty -e htop",
   },
   "memory": {
-    "format": "{}% ",
+    "format": "{}% ",
     "on-click": "kitty -e htop"
   },
   "mpd": {
@@ -118,7 +118,7 @@
     }
   },
   "custom/disk": {
-    "exec": "~/.config/waybar/disk_usage.sh",
+    "exec": "~/.scripts/disk_usage.sh",
     "format": "{}% ",
     "restart-interval": 60,
   }
