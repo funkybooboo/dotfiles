@@ -28,7 +28,7 @@
     "on-click": "kitty -e htop",
   },
   "memory": {
-    "format": "{}% ",
+    "format": "{}% ",
     "on-click": "kitty -e htop"
   },
   "mpd": {
@@ -101,6 +101,7 @@
     "on-click": "pavucontrol"
   },
   "backlight": {
+    "scroll-step": "1.0",
     "format": "{percent}% {icon}",
     "format-icons": ["", "", "", "", "", "", "", "", ""]
   },
@@ -120,7 +121,6 @@
     "exec": "~/.config/waybar/disk_usage.sh",
     "format": "{}% ",
     "restart-interval": 60,
-    "on-click": "~/.config/waybar/launch_gparted.sh",
   }
 }
 
