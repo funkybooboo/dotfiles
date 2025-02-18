@@ -59,7 +59,7 @@ button:hover {
 #battery,
 #cpu,
 #memory,
-#disk,
+#custom-disk,
 #temperature,
 #backlight,
 #wireplumber,
@@ -130,12 +130,12 @@ button:hover {
   border-bottom: 2px solid @yellow;
 }
 
-#disk {
+#custom-disk {
   color: @yellow;
   border-bottom: 2px solid @yellow;
 }
 
-#disk:hover {
+#custom-disk:hover {
   color: @yellow;
   border-bottom: 2px solid @yellow;
 }

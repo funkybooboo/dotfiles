@@ -342,6 +342,10 @@ in {
     cliphist
     wlogout
     hyprshot
+
+    ethtool
+    wirelesstools
+    iw
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
