@@ -60,6 +60,7 @@ button:hover {
 #cpu,
 #memory,
 #custom-disk,
+#custom-gpu,
 #temperature,
 #backlight,
 #wireplumber,
@@ -136,6 +137,16 @@ button:hover {
 }
 
 #custom-disk:hover {
+  color: @yellow;
+  border-bottom: 2px solid @yellow;
+}
+
+#custom-gpu {
+  color: @yellow;
+  border-bottom: 2px solid @yellow;
+}
+
+#custom-gpu:hover {
   color: @yellow;
   border-bottom: 2px solid @yellow;
 }
