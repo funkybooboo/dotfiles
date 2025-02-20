@@ -118,9 +118,15 @@
     }
   },
   "custom/disk": {
-    "exec": "~/.scripts/disk_usage.sh",
+    "exec": "~/.scripts/disk_capacity.sh",
     "format": "{}% ",
-    "restart-interval": 60,
+    "restart-interval": 10,
+  },
+  "custom/gpu-usage": {
+    "exec": "cat /sys/class/hwmon/hwmon2/device/gpu_busy_percent",
+    "format": "{}% ",
+    "return-type": "",
+    "interval": 1
   }
 }
 
