@@ -162,7 +162,6 @@ in {
       chromium # Open-source version of the Chrome web browser
       blanket # Minimalistic note-taking app for programmers
       drawio # Diagramming tool for creating flowcharts and UML diagrams
-      # ladybird # Lightweight web browser for Linux
       lazydocker # Terminal UI for managing Docker containers
       proton-pass # Password manager integrated with Proton services
       # protonmail-desktop # Desktop client for ProtonMail secure email
@@ -253,7 +252,9 @@ in {
     vim # Highly configurable text editor
     wget # Command-line utility for downloading files from the web
     curl # Command-line tool for transferring data with URLs
-    firefox # Popular open-source web browser
+    firefox
+    librewolf
+    ladybird
     git # Distributed version control system
     gnat14 # GNAT compiler for Ada and other languages
     libgcc # GCC runtime library for C and C++ programs
