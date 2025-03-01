@@ -123,9 +123,9 @@ in {
 
   programs.fish.enable = true;
 
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.variables = {
     EDITOR = "nvim";
-    NIXOS_OZONE_WL = "1";
   };
 
   fonts.packages = with pkgs; [nerdfonts];
@@ -156,7 +156,6 @@ in {
       fzf # Command-line fuzzy finder
       docker # Platform for developing, shipping, and running apps in containers
       wireshark # Network protocol analyzer
-      # postman # API development and testing tool
       zoom-us # Video conferencing tool
       alpaca # Simple CLI for working with large codebases
       obsidian # Knowledge management and note-taking application
@@ -168,11 +167,9 @@ in {
       # protonmail-desktop # Desktop client for ProtonMail secure email
       protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
       protonvpn-gui # GUI for ProtonVPN for secure internet connections
-      # discordo # Open-source Discord client
       yazi # TUI file viewer
       timg # Image viewer for the terminal
       asciinema # Record and share terminal sessions
-      # cmatrix # Matrix-like animation in the terminal
       # aalib # ASCII art library for image and video rendering
       # oneko # Classic Japanese cat chasing a mouse on the screen
       espeak # Compact open-source software speech synthesizer
@@ -180,8 +177,6 @@ in {
       nix-tour # Educational tour through Nix and NixOS
       lynx # Text-based web browser
       gh # GitHub CLI tool for managing GitHub repositories
-      # todo # Simple CLI tool for managing to-do lists
-      # vscode # Visual Studio Code, popular code editor
       vscodium
       # pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
@@ -190,15 +185,12 @@ in {
       rclone # Command-line program for managing cloud storage
       rclone-browser # GUI for managing cloud storage with Rclone
       signal-desktop # Secure messaging app for desktop
-      # faircamp # Fairly new community platform with media sharing features
       pandoc # Universal document converter
       texliveTeTeX # TeXLive distribution for typesetting documents
       unixtools.xxd # Hexdump tool for examining binary files
       black # Python code formatter
       sbcl # Steel Bank Common Lisp compiler
       gfortran # GNU Fortran compiler for compiling Fortran programs.
-      # gitbutler # Git GUI for managing repositories and version control.
-      # codecrafters-cli # CLI tool for Codecrafters' systems programming projects.
       git-filter-repo
       ascii
       mpv
@@ -215,17 +207,10 @@ in {
       xfce.thunar
       gparted
 
-      # dijo
-      # taskwarrior-tui
-      # taskwarrior3
-      # planify
-      # appflowy
-
       tor-browser
       deluge
       dumptorrent
       buildtorrent
-      # mutt
 
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
@@ -356,11 +341,11 @@ in {
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   # List services that you want to enable:
 
