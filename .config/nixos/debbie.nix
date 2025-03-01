@@ -338,6 +338,7 @@ in {
     wireplumber
 
     xdg-desktop-portal
+    xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     libsForQt5.xwaylandvideobridge
 
