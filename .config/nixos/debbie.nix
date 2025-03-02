@@ -135,7 +135,7 @@ in {
   users.users.nate = {
     isNormalUser = true;
     description = "Nate Stott";
-    extraGroups = ["networkmanager" "wheel" "wireshark"];
+    extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
     shell = pkgs.fish;
     packages = with pkgs; [
       neovim # Highly extensible text editor for coding
@@ -154,7 +154,6 @@ in {
       tldr # Simplified and community-contributed man pages
       unstable.wikiman # Wiki-based markdown documentation viewer
       fzf # Command-line fuzzy finder
-      docker # Platform for developing, shipping, and running apps in containers
       wireshark # Network protocol analyzer
       zoom-us # Video conferencing tool
       alpaca # Simple CLI for working with large codebases
@@ -227,6 +226,8 @@ in {
   virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.virtualbox.guest.enable = true;
   virtualisation.virtualbox.guest.dragAndDrop = true;
+
+  virtualisation.docker.enable = true;
 
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
