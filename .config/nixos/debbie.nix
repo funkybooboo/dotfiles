@@ -1,12 +1,8 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   config,
   pkgs,
   ...
 }: let
-  # add unstable channel declaratively
   unstableTarball =
     fetchTarball
     https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz;
@@ -20,24 +16,18 @@ in {
     };
   };
 
-  # Bootloader.
+  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  # Set your time zone
   time.timeZone = "America/New_York";
   #time.timeZone = "America/Denver";
 
-  # Select internationalisation properties.
+  # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -52,8 +42,8 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
   # Configure X11
@@ -77,13 +67,10 @@ in {
     gnome-terminal
     xed
     xterm
-    baobab # disk usage analyzer
-    epiphany # web browser
-    simple-scan # document scanner
-    totem # video player
-    yelp # help viewer
-    evince # document viewer
-    geary # email client
+    baobab
+    epiphany
+    evince
+    geary
     gnome-calculator
     gnome-contacts
     gnome-logs
@@ -100,10 +87,10 @@ in {
 
   services.displayManager.defaultSession = "hyprland";
 
-  # Enable CUPS to print documents.
+  # Enable CUPS to print documents
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  # Enable sound with pipewire
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -112,14 +99,7 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    # media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   programs.fish.enable = true;
 
@@ -131,7 +111,7 @@ in {
   fonts.packages = with pkgs; [nerdfonts];
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with ‘passwd’
   users.users.nate = {
     isNormalUser = true;
     description = "Nate Stott";
@@ -158,7 +138,6 @@ in {
       zoom-us # Video conferencing tool
       alpaca # Simple CLI for working with large codebases
       obsidian # Knowledge management and note-taking application
-      chromium # Open-source version of the Chrome web browser
       blanket # Minimalistic note-taking app for programmers
       drawio # Diagramming tool for creating flowcharts and UML diagrams
       lazydocker # Terminal UI for managing Docker containers
@@ -232,8 +211,6 @@ in {
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
@@ -242,6 +219,8 @@ in {
     firefox
     librewolf
     ladybird
+    brave
+    chromium # Open-source version of the Chrome web browser
     git # Distributed version control system
     gnat14 # GNAT compiler for Ada and other languages
     libgcc # GCC runtime library for C and C++ programs
@@ -340,24 +319,19 @@ in {
     sysstat
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
   programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
 
-  # List services that you want to enable:
-
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
+  # Firewall
   networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [];
+  networking.firewall.allowedUDPPorts = [];
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -377,9 +351,9 @@ in {
     flags = [
       "--update-input"
       "nixpkgs"
-      "-L"
+      "-L" # print build logs
     ];
-    dates = "9:00";
+    dates = "2:00";
     randomizedDelaySec = "45min";
   };
 }
