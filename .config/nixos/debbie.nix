@@ -229,6 +229,7 @@ in {
     gdb # GNU Debugger for debugging applications
     gdbgui # Web-based interface for GDB
     zig # Programming language for general-purpose programming
+    rustlings
     rustup
     rustfmt # Rust code formatter
     fnm # Fast Node Manager for managing Node.js versions
