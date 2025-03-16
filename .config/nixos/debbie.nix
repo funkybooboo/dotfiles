@@ -219,6 +219,7 @@ in {
     imhex
     open-watcom-v2
     grub2
+    libisoburn
 
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
