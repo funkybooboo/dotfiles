@@ -1,365 +1,74 @@
 building Nix...
 building the system configuration...
-these 51 derivations will be built:
-  /nix/store/8npw2n84wpxr9p8byiqzgvpnbfhd0ism-nixos-manual-html.drv
-  /nix/store/fb64xb63al7q2yfadyr7scmkp8f234qd-nixos-version.drv
-  /nix/store/78waawmr0nc7ch9y6kk60zc7pcyj12v1-nixos-help.drv
-  /nix/store/ssqwcyzkzwjshy7bk29mphm5gglknp42-nixos-help.drv
-  /nix/store/07kjn4liqk5vwq8af7jk5342qgvv4r3n-system-path.drv
-  /nix/store/0gpigg6l36pc01r5s7hzmklqx7davl9s-xserver.conf.drv
-  /nix/store/y010r6dmhdpfhy4hhl65hh86a67h1fg4-firmware.drv
-  /nix/store/0lbyfrr64f5j69124hk08qcfyg9nszqk-etc-modprobe.d-firmware.conf.drv
-  /nix/store/ggjax2pqimqqj3w02b5cq4znckw17brv-fc-cache.drv
-  /nix/store/rdkq88ad9xrw6yxiax0bz14iw7r9h6ni-fc-00-nixos-cache.conf.drv
-  /nix/store/bfwxjqa2hs19w7hh6b4ychbhfs55rj5h-fontconfig-conf.drv
-  /nix/store/31rqr5kfgqzzbdl2bxisjm4963kdhhd9-fontconfig-etc.drv
-  /nix/store/4hcmk979a1lg8v628b6pn1g9ikdm38z6-etc-os-release.drv
-  /nix/store/vc37djnc74ijvn11y88qsckn5x2zlipg-man-paths.drv
-  /nix/store/p76yd9kh6cq6gwx9z0qiqal7rq0hm7a6-man-cache.drv
-  /nix/store/ckrmsld16svqnv6dpggfhnvgsr9w52fy-etc-man_db.conf.drv
-  /nix/store/hlvf5bvdl48f8x47rpipcs7664jmzzqb-issue.drv
-  /nix/store/izhhf4cy6hm85xc6d3sqbfryr8nix86i-dbus-1.drv
-  /nix/store/dihlhaqwj328dhx83bar95isvxqlpai0-xserver-wrapper.drv
-  /nix/store/k9z7zif4xs48ppsf97mkfx26wk4f7az2-lightdm.conf.drv
-  /nix/store/1g11gzc433k8j9dp3qffm5wpd6j272sf-nixos-version_fish-completions.drv
-  /nix/store/1plyc2mginq25yc7aymfyk7zwk3qiy3z-nixos-configuration-reference-manpage_fish-completions.drv
-  /nix/store/4gdvcil224k83w17clr39ybqhdm7216v-fastfetch-2.35.0_fish-completions.drv
-  /nix/store/95r71a9lnyvl0giacsyyqyrfda5ykp5n-firefox-136.0.1_fish-completions.drv
-  /nix/store/dna636grpgyhwcpp0cff9rp9mgbq4la3-cinnamon-screensaver-6.2.1_fish-completions.drv
-  /nix/store/hmy9yg4p65fpxiqa1c6ba06bkfl9bc52-catppuccin-cursors-1.0.2_fish-completions.drv
-  /nix/store/jc25hhyp090daf4znan3s4awrczlijxk-chromium-134.0.6998.88_fish-completions.drv
-  /nix/store/jm4rhq0bprzavbqp90wchd0h936grs2w-nixos-manual-html_fish-completions.drv
-  /nix/store/nyz9ibdgmz1g7kr3l09dm07sl9p8mgg0-nixos-help_fish-completions.drv
-  /nix/store/xxfmmha4fraacl8nx8d360qrzf2mxphz-nixos-icons-0-unstable-2024-04-10_fish-completions.drv
-  /nix/store/mk8b77nb7nd8fgaf1wzl2xfapc8gy9r2-system_fish-completions.drv
-  /nix/store/yhng5dmdy2kxc0qpi7gwrdqjsgqyh8vn-X-Restart-Triggers-dbus.drv
-  /nix/store/8l1d3c8nhi3pfif58vvwiai9gv5vvx4q-unit-dbus.service.drv
-  /nix/store/n2pn8gwwrnhxxjd1qp9gc9j5vmrv4d7n-user-units.drv
-  /nix/store/60xr44mzixr3brywppldgxhyb06bdqw3-unit-accounts-daemon.service.drv
-  /nix/store/b8d6nkqym2w364h6kvccqym91wyvrbwr-shutdown-ramfs-contents.json.drv
-  /nix/store/b0r0n8dc2w9rlh900hxb24rzlgyhbvhs-unit-generate-shutdown-ramfs.service.drv
-  /nix/store/aynd9fq8qvpwq9agigyibny80k4lgybc-X-Restart-Triggers-polkit.drv
-  /nix/store/qprrv5yxkl0mycdw8vqhq6y3n6cbm2x5-unit-polkit.service.drv
-  /nix/store/wf7p1cqwnf83gpgmmsr7hz4m0205d3mx-unit-dbus.service.drv
-  /nix/store/raddnlw9i85j6bfa03vkk12rd8i74yqd-system-units.drv
-  /nix/store/1z79d3hy8ash5dcx9n6g1ca30ad8fawq-obsidian.desktop.drv
-  /nix/store/34vas2lzqdhilg9qfpa5kpmgrvim4cfy-obsidian-1.7.6.tar.gz.drv
-  /nix/store/8wv066ydyf53ylh9dz2cfizlcjzv7wi7-obsidian-logo-gradient.svg.drv
-  /nix/store/3v9dzcnw9xgjia4s6pmb1fq10s651kln-obsidian-1.7.6.drv
-  /nix/store/y7ykiajkn4jkh9jbiqplrpcmrdhi9mi8-user-environment.drv
-  /nix/store/1ad2bbsh5fin0kam6f83986dd9ah8yz3-etc.drv
-  /nix/store/7ggjyppn0asyf6i3b9ijg0jvs6k7xffg-linux-6.6.82-modules-shrunk.drv
-  /nix/store/ycp3211dfbb4cr9yrhpcz2i34ps5g50g-initrd-linux-6.6.82.drv
-  /nix/store/kbk0in0nag78lk87bxxmn3y773f5nqlq-boot.json.drv
-  /nix/store/hc480xxh2axp3k0qq8rpzfd9l2zibsr3-nixos-system-debbie-24.11.715614.cdd2ef009676.drv
-these 40 paths will be fetched (877.96 MiB download, 1990.83 MiB unpacked):
-  /nix/store/047bcpkg6mqyrf64f5bk1lvz58qpzq9l-catppuccin-cursors-1.0.2
-  /nix/store/rnnkqadfnrnqpcl88aglqri51as4fx53-catppuccin-cursors-1.0.2-frappeBlue
-  /nix/store/jna1sfm5qh994rf24khb4b1vi2qvky33-chafa-1.14.5
-  /nix/store/765gx27c3jngp79cvyb3njzw5fh09cfm-chromium-134.0.6998.88
-  /nix/store/3jpr8j86cg4hwgv99awni53an6ilffp5-chromium-134.0.6998.88-sandbox
-  /nix/store/d5750s0pka2df7dpzczsl4nj4da9wg12-chromium-unwrapped-134.0.6998.88
-  /nix/store/kil33ghdwlhmvn4ykahp56i6v176w6p1-chromium-unwrapped-134.0.6998.88-sandbox
-  /nix/store/278p47afvwyl42mw58zz7arrrnfdv3zn-cinnamon-screensaver-6.2.1
-  /nix/store/2if6arfw5skbggv1is2gwcfpdm2cqshy-djvulibre-3.5.28-bin
-  /nix/store/b30p5h8bhmz3806gb2i4irqphxszwfp2-djvulibre-3.5.28-dev
-  /nix/store/cgsq010g4p5f4wfp0r1rrnvf1yjvb8mz-fastfetch-2.35.0
-  /nix/store/hdj89iybxk8qhmcd5w3jygmn3nm41s18-fastfetch-2.35.0-man
-  /nix/store/hxl05kvczfwazcg7lygjzh9a9sdhrc84-fftw-double-3.3.10-dev
-  /nix/store/j86qyx6ib6hwbahph8z6z7sqx9h54344-firefox-136.0.1
-  /nix/store/pij8xdrk75dxfm39xyqxmnp77sq5gqsi-firefox-unwrapped-136.0.1
-  /nix/store/s3fim61a28zjq55ya935pg60nvr2436i-imagemagick-7.1.1-45
-  /nix/store/23x3flwqkh3j2idskhqj52dd70zsbhnh-imagemagick-7.1.1-45-dev
-  /nix/store/v5m02dbwaydrfbp816q3wcl9zaswkdhk-imagemagick-7.1.1-45-doc
-  /nix/store/qq4nfyfh2rmdxg0wh6y03jlh97nqm7kw-iso-flags-unstable-18012020
-  /nix/store/238gd9n86z0ky1zwfhy1vqggpv791p5q-kitty-0.37.0
-  /nix/store/2in6g46jqh1ika649jaybgcdr497s01a-kitty-0.37.0-terminfo
-  /nix/store/a70rlml1v85xzrgpxblfwmk1j8cf0n84-lcms2-2.16-bin
-  /nix/store/h52ikrqi2xm44b369z5bxq6f16cxnj5l-lcms2-2.16-dev
-  /nix/store/frvb92vp2mmbkpmnjm3ysygg148wqx1m-libheif-1.18.2-bin
-  /nix/store/6wlg3mvk7mj93b8qwfdm0501xf64zfs3-libheif-1.18.2-dev
-  /nix/store/pw49jw5lrgg1isl1ksmyqda3dqn144ya-libhwy-1.0.7
-  /nix/store/hp9lnlqa9j1pafchsnw1ybfryizxrja6-libjxl-0.11.1-dev
-  /nix/store/mjmkcr98sgyhyk1cs0r83f8l2z6p035h-liblqr-1-0.4.2-dev
-  /nix/store/a8m9gbdb0irgm6a9n98yfyq69d703ls7-libraw-0.21.3
-  /nix/store/dr5jkkwk45ky2x2hhj8wh7v7xd9n68m5-libraw-0.21.3-dev
-  /nix/store/ijaj1g829viydqk8lyajczak554h6zr0-linux-firmware-20250311-zstd
-  /nix/store/s6drfm16yxm1vx50clpi1ppxlidbl3fq-nixos-configuration-reference-manpage
-  /nix/store/2s6c5ihwmsqkpiabd7qhlfwa73fygdar-nixos-icons-0-unstable-2024-04-10
-  /nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047
-  /nix/store/q067j8l3spfbpc7nam00v22im7q2b8j4-openexr-3.2.4-bin
-  /nix/store/cn0a38l48v8pim9gabc9fyazxr1amx75-openexr-3.2.4-dev
-  /nix/store/8m18cv8c76kls52wz6sv148fp6m7glrm-openjpeg-2.5.2-dev
-  /nix/store/6q9a0xrxvwisw38hzn8il6p3cjc0y78g-options.json
-  /nix/store/s85fhnw3a2lyng47ycmqkhdz2wy7g171-signal-desktop-7.44.0
-  /nix/store/v5z3wnmi2kckmvwl40fdzpqigwqh292d-yazi-0.3.3
-copying path '/nix/store/047bcpkg6mqyrf64f5bk1lvz58qpzq9l-catppuccin-cursors-1.0.2' from 'https://cache.nixos.org'...
-copying path '/nix/store/hdj89iybxk8qhmcd5w3jygmn3nm41s18-fastfetch-2.35.0-man' from 'https://cache.nixos.org'...
-copying path '/nix/store/ijaj1g829viydqk8lyajczak554h6zr0-linux-firmware-20250311-zstd' from 'https://cache.nixos.org'...
-copying path '/nix/store/s6drfm16yxm1vx50clpi1ppxlidbl3fq-nixos-configuration-reference-manpage' from 'https://cache.nixos.org'...
-copying path '/nix/store/2s6c5ihwmsqkpiabd7qhlfwa73fygdar-nixos-icons-0-unstable-2024-04-10' from 'https://cache.nixos.org'...
-copying path '/nix/store/qq4nfyfh2rmdxg0wh6y03jlh97nqm7kw-iso-flags-unstable-18012020' from 'https://cache.nixos.org'...
-copying path '/nix/store/v5m02dbwaydrfbp816q3wcl9zaswkdhk-imagemagick-7.1.1-45-doc' from 'https://cache.nixos.org'...
-copying path '/nix/store/2in6g46jqh1ika649jaybgcdr497s01a-kitty-0.37.0-terminfo' from 'https://cache.nixos.org'...
-building '/nix/store/4hcmk979a1lg8v628b6pn1g9ikdm38z6-etc-os-release.drv'...
-building '/nix/store/hlvf5bvdl48f8x47rpipcs7664jmzzqb-issue.drv'...
-building '/nix/store/fb64xb63al7q2yfadyr7scmkp8f234qd-nixos-version.drv'...
-copying path '/nix/store/d5750s0pka2df7dpzczsl4nj4da9wg12-chromium-unwrapped-134.0.6998.88' from 'https://cache.nixos.org'...
-copying path '/nix/store/kil33ghdwlhmvn4ykahp56i6v176w6p1-chromium-unwrapped-134.0.6998.88-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/jna1sfm5qh994rf24khb4b1vi2qvky33-chafa-1.14.5' from 'https://cache.nixos.org'...
-copying path '/nix/store/s3fim61a28zjq55ya935pg60nvr2436i-imagemagick-7.1.1-45' from 'https://cache.nixos.org'...
-copying path '/nix/store/pij8xdrk75dxfm39xyqxmnp77sq5gqsi-firefox-unwrapped-136.0.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/6q9a0xrxvwisw38hzn8il6p3cjc0y78g-options.json' from 'https://cache.nixos.org'...
-copying path '/nix/store/s85fhnw3a2lyng47ycmqkhdz2wy7g171-signal-desktop-7.44.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047' from 'https://cache.nixos.org'...
-building '/nix/store/1z79d3hy8ash5dcx9n6g1ca30ad8fawq-obsidian.desktop.drv'...
-building '/nix/store/34vas2lzqdhilg9qfpa5kpmgrvim4cfy-obsidian-1.7.6.tar.gz.drv'...
-building '/nix/store/8wv066ydyf53ylh9dz2cfizlcjzv7wi7-obsidian-logo-gradient.svg.drv'...
-copying path '/nix/store/3jpr8j86cg4hwgv99awni53an6ilffp5-chromium-134.0.6998.88-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/rnnkqadfnrnqpcl88aglqri51as4fx53-catppuccin-cursors-1.0.2-frappeBlue' from 'https://cache.nixos.org'...
-building '/nix/store/1g11gzc433k8j9dp3qffm5wpd6j272sf-nixos-version_fish-completions.drv'...
-building '/nix/store/b8d6nkqym2w364h6kvccqym91wyvrbwr-shutdown-ramfs-contents.json.drv'...
-building '/nix/store/1plyc2mginq25yc7aymfyk7zwk3qiy3z-nixos-configuration-reference-manpage_fish-completions.drv'...
-
-trying https://obsidian.md/images/obsidian-logo-gradient.svg
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-copying path '/nix/store/278p47afvwyl42mw58zz7arrrnfdv3zn-cinnamon-screensaver-6.2.1' from 'https://cache.nixos.org'...
-building '/nix/store/b0r0n8dc2w9rlh900hxb24rzlgyhbvhs-unit-generate-shutdown-ramfs.service.drv'...
-building '/nix/store/hmy9yg4p65fpxiqa1c6ba06bkfl9bc52-catppuccin-cursors-1.0.2_fish-completions.drv'...
-building '/nix/store/xxfmmha4fraacl8nx8d360qrzf2mxphz-nixos-icons-0-unstable-2024-04-10_fish-completions.drv'...
-
-trying https://github.com/obsidianmd/obsidian-releases/releases/download/v1.7.6/obsidian-1.7.6.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-100  4872    0  4872    0     0  18435      0 --:--:-- --:--:-- --:--:-- 18454
-copying path '/nix/store/cgsq010g4p5f4wfp0r1rrnvf1yjvb8mz-fastfetch-2.35.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/238gd9n86z0ky1zwfhy1vqggpv791p5q-kitty-0.37.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/v5z3wnmi2kckmvwl40fdzpqigwqh292d-yazi-0.3.3' from 'https://cache.nixos.org'...
-copying path '/nix/store/pw49jw5lrgg1isl1ksmyqda3dqn144ya-libhwy-1.0.7' from 'https://cache.nixos.org'...
-building '/nix/store/dna636grpgyhwcpp0cff9rp9mgbq4la3-cinnamon-screensaver-6.2.1_fish-completions.drv'...
-building '/nix/store/8npw2n84wpxr9p8byiqzgvpnbfhd0ism-nixos-manual-html.drv'...
-copying path '/nix/store/hxl05kvczfwazcg7lygjzh9a9sdhrc84-fftw-double-3.3.10-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/mjmkcr98sgyhyk1cs0r83f8l2z6p035h-liblqr-1-0.4.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/8m18cv8c76kls52wz6sv148fp6m7glrm-openjpeg-2.5.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/2if6arfw5skbggv1is2gwcfpdm2cqshy-djvulibre-3.5.28-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/a70rlml1v85xzrgpxblfwmk1j8cf0n84-lcms2-2.16-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/frvb92vp2mmbkpmnjm3ysygg148wqx1m-libheif-1.18.2-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/a8m9gbdb0irgm6a9n98yfyq69d703ls7-libraw-0.21.3' from 'https://cache.nixos.org'...
-copying path '/nix/store/hp9lnlqa9j1pafchsnw1ybfryizxrja6-libjxl-0.11.1-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/q067j8l3spfbpc7nam00v22im7q2b8j4-openexr-3.2.4-bin' from 'https://cache.nixos.org'...
-building '/nix/store/4gdvcil224k83w17clr39ybqhdm7216v-fastfetch-2.35.0_fish-completions.drv'...
-building '/nix/store/ggjax2pqimqqj3w02b5cq4znckw17brv-fc-cache.drv'...
-building '/nix/store/0gpigg6l36pc01r5s7hzmklqx7davl9s-xserver.conf.drv'...
-copying path '/nix/store/b30p5h8bhmz3806gb2i4irqphxszwfp2-djvulibre-3.5.28-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/h52ikrqi2xm44b369z5bxq6f16cxnj5l-lcms2-2.16-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/6wlg3mvk7mj93b8qwfdm0501xf64zfs3-libheif-1.18.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/cn0a38l48v8pim9gabc9fyazxr1amx75-openexr-3.2.4-dev' from 'https://cache.nixos.org'...
-building '/nix/store/dihlhaqwj328dhx83bar95isvxqlpai0-xserver-wrapper.drv'...
-copying path '/nix/store/dr5jkkwk45ky2x2hhj8wh7v7xd9n68m5-libraw-0.21.3-dev' from 'https://cache.nixos.org'...
-building '/nix/store/k9z7zif4xs48ppsf97mkfx26wk4f7az2-lightdm.conf.drv'...
-copying path '/nix/store/23x3flwqkh3j2idskhqj52dd70zsbhnh-imagemagick-7.1.1-45-dev' from 'https://cache.nixos.org'...
-100  106M  100  106M    0     0  20.3M      0  0:00:05  0:00:05 --:--:-- 21.4M
-building '/nix/store/3v9dzcnw9xgjia4s6pmb1fq10s651kln-obsidian-1.7.6.drv'...
-Font directories:
-        /nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1
-        /nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2
-        /nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4
-        /nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3
-        /nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37
-        /nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503
-        /nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5
-        /nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01
-        /nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047
-        /nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share
-        /nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share
-        /nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib
-        /nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib
-        /nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share
-        /nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share
-        /nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share
-        /nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share
-        /nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share
-        /nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts
-        /nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts
-        /nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11
-        /nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11
-        /nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts
-        /nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts
-        /nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts
-        /nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts
-        /nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts
-        /nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts/truetype
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype
-        /nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype
-        /nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts
-        /nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts
-        /nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts/truetype
-        /nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts/truetype
-        /nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts/truetype
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc/liberation-fonts-2.1.5
-        /nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts/truetype
-        /nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts/opentype
-        /nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts/noto
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype/NerdFonts
-        /nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype/NerdFonts
-        /nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype/ubuntu
-        /nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts/misc
-        /nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts/misc
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts/truetype: skipping, existing cache is valid: 1 fonts, 0 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts: skipping, existing cache is valid: 0 fonts, 2 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype/NerdFonts: skipping, existing cache is valid: 312 fonts, 0 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype/NerdFonts: skipping, existing cache is valid: 1742 fonts, 0 dirs
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype/ubuntu: skipping, existing cache is valid: 14 fonts, 0 dirs
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts/misc: skipping, existing cache is valid: 1 fonts, 0 dirs
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts/misc: skipping, existing cache is valid: 47 fonts, 0 dirs
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts/truetype: skipping, existing cache is valid: 22 fonts, 0 dirs
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts/truetype: skipping, existing cache is valid: 12 fonts, 0 dirs
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts/truetype: skipping, existing cache is valid: 33 fonts, 0 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share: skipping, existing cache is valid: 0 fonts, 2 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc/liberation-fonts-2.1.5: skipping, existing cache is valid: 0 fonts, 0 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts/truetype: skipping, existing cache is valid: 12 fonts, 0 dirs
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts: skipping, existing cache is valid: 2 fonts, 1 dirs
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts/opentype: skipping, existing cache is valid: 1 fonts, 0 dirs
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts: skipping, existing cache is valid: 0 fonts, 1 dirs
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts/noto: skipping, existing cache is valid: 1 fonts, 0 dirs
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share: skipping, looped directory detected
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share: skipping, looped directory detected
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib: skipping, looped directory detected
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib: skipping, looped directory detected
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share: skipping, looped directory detected
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share: skipping, looped directory detected
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share: skipping, looped directory detected
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share: skipping, looped directory detected
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share: skipping, looped directory detected
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share: skipping, looped directory detected
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts: skipping, looped directory detected
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts: skipping, looped directory detected
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11: skipping, looped directory detected
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11: skipping, looped directory detected
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts: skipping, looped directory detected
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts: skipping, looped directory detected
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts: skipping, looped directory detected
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc: skipping, looped directory detected
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts: skipping, looped directory detected
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts: skipping, looped directory detected
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts: skipping, looped directory detected
-/nix/store/xbhdma9dgg9nlaavq832z71j2q48ya2q-dejavu-fonts-minimal-2.37/share/fonts/truetype: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype: skipping, looped directory detected
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype: skipping, looped directory detected
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts: skipping, looped directory detected
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts: skipping, looped directory detected
-/nix/store/xxj5ah2cdmj13krhgmx7yrn2icjmimgp-dejavu-fonts-2.37/share/fonts/truetype: skipping, looped directory detected
-/nix/store/5irks2qgn5fqaxf2hhf4cp8f7g93z4di-freefont-ttf-20120503/share/fonts/truetype: skipping, looped directory detected
-/nix/store/a4n3ylvq2cl3hhfn48c65qvx422hcam7-gyre-fonts-2.005/share/fonts/truetype: skipping, looped directory detected
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/doc/liberation-fonts-2.1.5: skipping, looped directory detected
-/nix/store/jkx61rws6llwbs07bgxn7q9nfvl3103x-liberation-fonts-2.1.5/share/fonts/truetype: skipping, looped directory detected
-/nix/store/1jiakvn36ja5d0z2ifhdsf9hpiwqmi9z-unifont-16.0.01/share/fonts/opentype: skipping, looped directory detected
-/nix/store/13l23h54f80ghn1vfhzq1vs7l0fdrhgx-noto-fonts-color-emoji-2.047/share/fonts/noto: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/opentype/NerdFonts: skipping, looped directory detected
-/nix/store/zaypl6chpbjjjds5rcp0zzzi8b58yy33-nerdfonts-3.2.1/share/fonts/truetype/NerdFonts: skipping, looped directory detected
-/nix/store/kkd40n6fvnfvjpsjbm2vyiflf4zd34h3-ubuntu-classic-0.83-6ubuntu2/share/fonts/truetype/ubuntu: skipping, looped directory detected
-/nix/store/h43ihknh3xpgljk608i6m8zw38aza5l5-font-cursor-misc-1.0.4/lib/X11/fonts/misc: skipping, looped directory detected
-/nix/store/3kny2kmlxbzv82j5jzvl5h3sf7inc4lp-font-misc-misc-1.1.3/lib/X11/fonts/misc: skipping, looped directory detected
-/var/cache/fontconfig: not cleaning non-existent cache directory
-/nix/store/pinhqfq0w9lkiskya5a872ag7hyvqfq1-fc-cache: cleaning cache directory
-fc-cache: succeeded
-building '/nix/store/rdkq88ad9xrw6yxiax0bz14iw7r9h6ni-fc-00-nixos-cache.conf.drv'...
-building '/nix/store/bfwxjqa2hs19w7hh6b4ychbhfs55rj5h-fontconfig-conf.drv'...
-Running phase: unpackPhase
-unpacking source archive /nix/store/dzi6dpnl1w6bbhpalxy34pc9f6xh0rjh-obsidian-1.7.6.tar.gz
-building '/nix/store/31rqr5kfgqzzbdl2bxisjm4963kdhhd9-fontconfig-etc.drv'...
-created 1 symlinks in user environment
-building '/nix/store/78waawmr0nc7ch9y6kk60zc7pcyj12v1-nixos-help.drv'...
-building '/nix/store/jm4rhq0bprzavbqp90wchd0h936grs2w-nixos-manual-html_fish-completions.drv'...
-building '/nix/store/ssqwcyzkzwjshy7bk29mphm5gglknp42-nixos-help.drv'...
-building '/nix/store/nyz9ibdgmz1g7kr3l09dm07sl9p8mgg0-nixos-help_fish-completions.drv'...
-source root is obsidian-1.7.6
-setting SOURCE_DATE_EPOCH to timestamp 1731259336 of file obsidian-1.7.6/resources/obsidian.asar
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-no configure script, doing nothing
-Running phase: buildPhase
-no Makefile or custom buildPhase, doing nothing
-Running phase: installPhase
-copying path '/nix/store/j86qyx6ib6hwbahph8z6z7sqx9h54344-firefox-136.0.1' from 'https://cache.nixos.org'...
-building '/nix/store/95r71a9lnyvl0giacsyyqyrfda5ykp5n-firefox-136.0.1_fish-completions.drv'...
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/lyd4scg3v2z6y2m0vzrjzc0blnaarqs4-obsidian-1.7.6
-checking for references to /build/ in /nix/store/lyd4scg3v2z6y2m0vzrjzc0blnaarqs4-obsidian-1.7.6...
-patching script interpreter paths in /nix/store/lyd4scg3v2z6y2m0vzrjzc0blnaarqs4-obsidian-1.7.6
-stripping (with command strip and flags -S -p) in  /nix/store/lyd4scg3v2z6y2m0vzrjzc0blnaarqs4-obsidian-1.7.6/bin
-building '/nix/store/y7ykiajkn4jkh9jbiqplrpcmrdhi9mi8-user-environment.drv'...
-created 3026 symlinks in user environment
-gtk-update-icon-cache: Cache file created successfully.
-copying path '/nix/store/765gx27c3jngp79cvyb3njzw5fh09cfm-chromium-134.0.6998.88' from 'https://cache.nixos.org'...
-building '/nix/store/jc25hhyp090daf4znan3s4awrczlijxk-chromium-134.0.6998.88_fish-completions.drv'...
-building '/nix/store/vc37djnc74ijvn11y88qsckn5x2zlipg-man-paths.drv'...
-building '/nix/store/07kjn4liqk5vwq8af7jk5342qgvv4r3n-system-path.drv'...
+unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
+these 17 derivations will be built:
+  /nix/store/vr47w6h6izscbddybci8k5njqidpp3ks-system-path.drv
+  /nix/store/hql5nf86x0snr1m5ncbplza8n78dirm2-dbus-1.drv
+  /nix/store/q2lmzbr1wa9cdjp0fq4nl60kxrh32yi7-X-Restart-Triggers-dbus.drv
+  /nix/store/v0jr6kkr6fzr35jvrir3p7vylk6jxdn1-unit-dbus.service.drv
+  /nix/store/1rhxykfrkc1xq3k4x6n7baiajqrnbf44-user-units.drv
+  /nix/store/sdhgwmy975skhijnxdpf85iqd8c83mx2-qemu-9.1.3_fish-completions.drv
+  /nix/store/gj0v3g9x5fbs9z36jq6gx5i6wa4cql76-system_fish-completions.drv
+  /nix/store/bbi91a4p72wwm8fmz95xhaksh8z5va0s-X-Restart-Triggers-polkit.drv
+  /nix/store/r004z63y2wb6mjwgjyymrqnxsxwkq7sx-unit-polkit.service.drv
+  /nix/store/wi1c329gzpxhwpbx7n9phrdfcidf1fiv-unit-accounts-daemon.service.drv
+  /nix/store/xw6j6gfhx3irqkh4ck57gssj30d95j0c-unit-dbus.service.drv
+  /nix/store/k5b7jvwfm7a1gixdsvg4l6kv7yg3bj6h-system-units.drv
+  /nix/store/vf0clyfy98g15ml2lr1bjmb3g80hxhq0-man-paths.drv
+  /nix/store/73xiadnl03rih15g94xx8faaaii9pl39-man-cache.drv
+  /nix/store/x25plxqaqkbrkva4gbddx9azjh0nnx1f-etc-man_db.conf.drv
+  /nix/store/m3ps5c340mx4fphlpbm30nzh40lhkhid-etc.drv
+  /nix/store/4i78c3zpk3pz2fy8czima2n75lrnv2x3-nixos-system-debbie-24.11.715614.cdd2ef009676.drv
+these 15 paths will be fetched (139.06 MiB download, 958.47 MiB unpacked):
+  /nix/store/3c99g03k4fzibibda2c04zbx7hh6qiq6-canokey-qemu-0-unstable-2023-06-06
+  /nix/store/lacvlhgy2ykn9wwy2bai8kjb9jjxw7i8-capstone-5.0.3
+  /nix/store/srjdc8zjcdmj9hv13p9hylc77x3jhpbb-dtc-1.7.2
+  /nix/store/k36vix77dnl8p9jbah8400ccws8b5yw9-gfxstream-0.1.2
+  /nix/store/ik67c057s30w0g1kdr8wsw2adzgc6s0x-libcacard-2.8.1
+  /nix/store/rkbmx4958zlxkj5h1ak41l7p5jg8lp8r-libiscsi-1.20.0
+  /nix/store/7nhkjx4kyppdhqvqsl8ky7dw0n2as07i-qemu-9.1.3
+  /nix/store/g0n0j3kjd719kq6zq0nls825fagf6ybg-qemu-9.1.3-ga
+  /nix/store/sz9qip6fr5n6jvifn99wx6nk120j87an-rutabaga_gfx-0.1.2
+  /nix/store/fdwqcy2qa3f7zb89ypbpgd4x9ayaw5jf-spice-0.15.2
+  /nix/store/g5w2b3b0ci8gab3wdjra18cy6r8yvjsg-usbredir-0.15.0
+  /nix/store/yz02cylwji4zykqygcg0g42mhbs36fhy-vde2-2.3.3
+  /nix/store/ihv02ms97ia7p0jqkdxigcqhcw01w2j4-virglrenderer-1.1.0
+  /nix/store/5i9nnq66nzssmdg5g1jmh9wg9y04qndx-vte-0.78.2
+  /nix/store/w5wf6r16w078g5ik66yikdmzh9bpbacx-wolfssl-all-5.7.2-lib
+copying path '/nix/store/3c99g03k4fzibibda2c04zbx7hh6qiq6-canokey-qemu-0-unstable-2023-06-06' from 'https://cache.nixos.org'...
+copying path '/nix/store/lacvlhgy2ykn9wwy2bai8kjb9jjxw7i8-capstone-5.0.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/ik67c057s30w0g1kdr8wsw2adzgc6s0x-libcacard-2.8.1' from 'https://cache.nixos.org'...
+copying path '/nix/store/srjdc8zjcdmj9hv13p9hylc77x3jhpbb-dtc-1.7.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/rkbmx4958zlxkj5h1ak41l7p5jg8lp8r-libiscsi-1.20.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/g0n0j3kjd719kq6zq0nls825fagf6ybg-qemu-9.1.3-ga' from 'https://cache.nixos.org'...
+copying path '/nix/store/fdwqcy2qa3f7zb89ypbpgd4x9ayaw5jf-spice-0.15.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/g5w2b3b0ci8gab3wdjra18cy6r8yvjsg-usbredir-0.15.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/5i9nnq66nzssmdg5g1jmh9wg9y04qndx-vte-0.78.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/ihv02ms97ia7p0jqkdxigcqhcw01w2j4-virglrenderer-1.1.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/k36vix77dnl8p9jbah8400ccws8b5yw9-gfxstream-0.1.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/w5wf6r16w078g5ik66yikdmzh9bpbacx-wolfssl-all-5.7.2-lib' from 'https://cache.nixos.org'...
+copying path '/nix/store/sz9qip6fr5n6jvifn99wx6nk120j87an-rutabaga_gfx-0.1.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/yz02cylwji4zykqygcg0g42mhbs36fhy-vde2-2.3.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/7nhkjx4kyppdhqvqsl8ky7dw0n2as07i-qemu-9.1.3' from 'https://cache.nixos.org'...
+building '/nix/store/vf0clyfy98g15ml2lr1bjmb3g80hxhq0-man-paths.drv'...
+building '/nix/store/sdhgwmy975skhijnxdpf85iqd8c83mx2-qemu-9.1.3_fish-completions.drv'...
+building '/nix/store/vr47w6h6izscbddybci8k5njqidpp3ks-system-path.drv'...
 warning: collision between `/nix/store/rc974afa4h1b3a5hf5ibmgndhivqd4a5-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/a2nclc6pa7g4nh039l0crd8iz4y6d9ay-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+created 5625 symlinks in user environment
+building '/nix/store/73xiadnl03rih15g94xx8faaaii9pl39-man-cache.drv'...
 warning: collision between `/nix/store/cmckgrqah6602im2qb2d4llj0m9wac8w-rustfmt-1.82.0/bin/cargo-fmt' and `/nix/store/vs2215qf5kv4i2rwyxzwan7xhg2h7vpr-rustup-1.27.1/bin/cargo-fmt'
 warning: collision between `/nix/store/cmckgrqah6602im2qb2d4llj0m9wac8w-rustfmt-1.82.0/bin/rustfmt' and `/nix/store/vs2215qf5kv4i2rwyxzwan7xhg2h7vpr-rustup-1.27.1/bin/rustfmt'
-created 5613 symlinks in user environment
-building '/nix/store/p76yd9kh6cq6gwx9z0qiqal7rq0hm7a6-man-cache.drv'...
-warning: creating dangling symlink `/nix/store/bfkjax1prkqs2k0r50ayaz4c21z1zqhi-system-path//etc/xdg/xdg-default' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/bfkjax1prkqs2k0r50ayaz4c21z1zqhi-system-path//etc/xdg/xdg-xfce' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/bfkjax1prkqs2k0r50ayaz4c21z1zqhi-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
+building '/nix/store/gj0v3g9x5fbs9z36jq6gx5i6wa4cql76-system_fish-completions.drv'...
+warning: creating dangling symlink `/nix/store/98cgakvjj1zbjyd3v6bq223kwh8qfvhh-system-path//etc/xdg/xdg-default' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/98cgakvjj1zbjyd3v6bq223kwh8qfvhh-system-path//etc/xdg/xdg-xfce' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/98cgakvjj1zbjyd3v6bq223kwh8qfvhh-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/x8rf01i7rnfhs56jjla6ddfqnlg0mzkh-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
+warning: collision between `/nix/store/lhk0qq679icvg0566n2f4rii6b22b025-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/vn1f6xq1p336aqif5rb1g21v56qs5nms-xorg-server-21.1.16_fish-completions/Xserver.fish'
+created 648 symlinks in user environment
 warning: collision between `/nix/store/ha8f2s1gz2qh198n076x44688f77mm5y-VirtualBox-GuestAdditions-7.1.6a-6.6.82/lib/modules' and `/nix/store/83amb02rw8cg4gb9srjy54wdawxw8n50-zulu-ca-jdk-23.0.0/lib/modules'
 warning: collision between `/nix/store/z0i4j34si0kzns0vpfygr5ic9m0kaq95-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/ha8f2s1gz2qh198n076x44688f77mm5y-VirtualBox-GuestAdditions-7.1.6a-6.6.82/bin/mount.vboxsf'
 warning: collision between `/nix/store/rc974afa4h1b3a5hf5ibmgndhivqd4a5-xwayland-24.1.6/lib/xorg/protocol.txt' and `/nix/store/a2nclc6pa7g4nh039l0crd8iz4y6d9ay-xorg-server-21.1.16/lib/xorg/protocol.txt'
 warning: collision between `/nix/store/rc974afa4h1b3a5hf5ibmgndhivqd4a5-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/a2nclc6pa7g4nh039l0crd8iz4y6d9ay-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
-building '/nix/store/mk8b77nb7nd8fgaf1wzl2xfapc8gy9r2-system_fish-completions.drv'...
-warning: collision between `/nix/store/lhk0qq679icvg0566n2f4rii6b22b025-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/vn1f6xq1p336aqif5rb1g21v56qs5nms-xorg-server-21.1.16_fish-completions/Xserver.fish'
-created 640 symlinks in user environment
-created 19206 symlinks in user environment
+created 19343 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
@@ -373,233 +82,19 @@ gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/y010r6dmhdpfhy4hhl65hh86a67h1fg4-firmware.drv'...
-created 867 symlinks in user environment
-building '/nix/store/0lbyfrr64f5j69124hk08qcfyg9nszqk-etc-modprobe.d-firmware.conf.drv'...
-building '/nix/store/7ggjyppn0asyf6i3b9ijg0jvs6k7xffg-linux-6.6.82-modules-shrunk.drv'...
-kernel version is 6.6.82
-root module: xhci_pci
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: thunderbolt
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/thunderbolt/thunderbolt.ko.xz
-root module: nvme
 gtk-update-icon-cache: Cache file created successfully.
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-building '/nix/store/aynd9fq8qvpwq9agigyibny80k4lgybc-X-Restart-Triggers-polkit.drv'...
-building '/nix/store/izhhf4cy6hm85xc6d3sqbfryr8nix86i-dbus-1.drv'...
-building '/nix/store/60xr44mzixr3brywppldgxhyb06bdqw3-unit-accounts-daemon.service.drv'...
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_generic.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64-rocksoft.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/common/nvme-common.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/host/nvme-core.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/host/nvme.ko.xz
-root module: usb_storage
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/storage/usb-storage.ko.xz
-root module: usbhid
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-building '/nix/store/yhng5dmdy2kxc0qpi7gwrdqjsgqyh8vn-X-Restart-Triggers-dbus.drv'...
-building '/nix/store/qprrv5yxkl0mycdw8vqhq6y3n6cbm2x5-unit-polkit.service.drv'...
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/block/t10-pi.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/sd_mod.ko.xz
-root module: ext2
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/fs/ext2/ext2.ko.xz
-root module: ext4
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/fs/jbd2/jbd2.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/fs/mbcache.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc16.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/arch/x86/crypto/crc32c-intel.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crc32c_generic.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/fs/ext4/ext4.ko.xz
-root module: ahci
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libahci.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/ahci.ko.xz
-root module: sata_nv
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/sata_nv.ko.xz
-root module: sata_via
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/sata_via.ko.xz
-root module: sata_sis
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/pata_sis.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/sata_sis.ko.xz
-building '/nix/store/8l1d3c8nhi3pfif58vvwiai9gv5vvx4q-unit-dbus.service.drv'...
-building '/nix/store/wf7p1cqwnf83gpgmmsr7hz4m0205d3mx-unit-dbus.service.drv'...
-root module: sata_uli
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/sata_uli.ko.xz
-root module: ata_piix
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/ata_piix.ko.xz
-root module: pata_marvell
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/libata.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/ata/pata_marvell.ko.xz
-root module: nvme
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/common/nvme-common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/host/nvme-core.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/nvme/host/nvme.ko.xz
-root module: sd_mod
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-building '/nix/store/n2pn8gwwrnhxxjd1qp9gc9j5vmrv4d7n-user-units.drv'...
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/arch/x86/crypto/crct10dif-pclmul.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/crypto/crct10dif_generic.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc-t10dif.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/lib/crc64-rocksoft.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/block/t10-pi.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/sd_mod.ko.xz
-root module: sr_mod
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/cdrom/cdrom.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_common.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/scsi_mod.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/scsi/sr_mod.ko.xz
-root module: mmc_block
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/mmc/core/mmc_core.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/mmc/core/mmc_block.ko.xz
-root module: uhci_hcd
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/uhci-hcd.ko.xz
-root module: ehci_hcd
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-hcd.ko.xz
-root module: ehci_pci
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-hcd.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-pci.ko.xz
-root module: ohci_hcd
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ohci-hcd.ko.xz
-root module: ohci_pci
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ohci-hcd.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-hcd.ko.xz
-building '/nix/store/raddnlw9i85j6bfa03vkk12rd8i74yqd-system-units.drv'...
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ehci-pci.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/ohci-pci.ko.xz
-root module: xhci_hcd
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-hcd.ko.xz
-root module: xhci_pci
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-hcd.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci-renesas.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci.ko.xz
-root module: usbhid
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/usbhid/usbhid.ko.xz
-root module: hid_generic
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-generic.ko.xz
-root module: hid_lenovo
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-lenovo.ko.xz
-root module: hid_apple
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-apple.ko.xz
-root module: hid_roccat
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-roccat.ko.xz
-root module: hid_logitech_hidpp
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-logitech-hidpp.ko.xz
-root module: hid_logitech_dj
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-logitech-dj.ko.xz
-root module: hid_microsoft
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/ff-memless.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-microsoft.ko.xz
-root module: hid_cherry
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-cherry.ko.xz
-root module: hid_corsair
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/leds/led-class.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/usbhid/usbhid.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/hid/hid-corsair.ko.xz
-root module: pcips2
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/pcips2.ko.xz
-root module: atkbd
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/vivaldi-fmap.ko.xz
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/libps2.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/keyboard/atkbd.ko.xz
-root module: i8042
-  dependency already copied: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/serio.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/input/serio/i8042.ko.xz
-root module: rtc_cmos
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/rtc/rtc-cmos.ko.xz
-root module: vboxsf
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/misc/vboxguest.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/misc/vboxsf.ko.xz
-root module: dm_mod
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/dax/dax.ko.xz
-  copying dependency: /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/md/dm-mod.ko.xz
-firmware for /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci.ko.xz: renesas_usb_fw.mem
-lib/firmware -> /nix/store/9w8q906bzhkw36yj7dj8y8x0rdwvxx4p-linux-6.6.82-modules-shrunk/lib/firmware
-WARNING: missing firmware renesas_usb_fw.mem for module /nix/store/59k1hj22m3rb410arh7rzv45cna0a8rg-linux-6.6.82-modules/lib/modules/6.6.82/kernel/drivers/usb/host/xhci-pci.ko.xz
-lib/firmware/edid not found, skipping.
-depmod: WARNING: could not open modules.builtin.modinfo at /nix/store/9w8q906bzhkw36yj7dj8y8x0rdwvxx4p-linux-6.6.82-modules-shrunk/lib/modules/6.6.82: No such file or directory
-building '/nix/store/ycp3211dfbb4cr9yrhpcz2i34ps5g50g-initrd-linux-6.6.82.drv'...
-building '/nix/store/kbk0in0nag78lk87bxxmn3y773f5nqlq-boot.json.drv'...
-building '/nix/store/ckrmsld16svqnv6dpggfhnvgsr9w52fy-etc-man_db.conf.drv'...
-building '/nix/store/1ad2bbsh5fin0kam6f83986dd9ah8yz3-etc.drv'...
-building '/nix/store/hc480xxh2axp3k0qq8rpzfd9l2zibsr3-nixos-system-debbie-24.11.715614.cdd2ef009676.drv'...
+building '/nix/store/bbi91a4p72wwm8fmz95xhaksh8z5va0s-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/hql5nf86x0snr1m5ncbplza8n78dirm2-dbus-1.drv'...
+building '/nix/store/wi1c329gzpxhwpbx7n9phrdfcidf1fiv-unit-accounts-daemon.service.drv'...
+building '/nix/store/q2lmzbr1wa9cdjp0fq4nl60kxrh32yi7-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/r004z63y2wb6mjwgjyymrqnxsxwkq7sx-unit-polkit.service.drv'...
+building '/nix/store/v0jr6kkr6fzr35jvrir3p7vylk6jxdn1-unit-dbus.service.drv'...
+building '/nix/store/xw6j6gfhx3irqkh4ck57gssj30d95j0c-unit-dbus.service.drv'...
+building '/nix/store/1rhxykfrkc1xq3k4x6n7baiajqrnbf44-user-units.drv'...
+building '/nix/store/k5b7jvwfm7a1gixdsvg4l6kv7yg3bj6h-system-units.drv'...
+building '/nix/store/x25plxqaqkbrkva4gbddx9azjh0nnx1f-etc-man_db.conf.drv'...
+building '/nix/store/m3ps5c340mx4fphlpbm30nzh40lhkhid-etc.drv'...
+building '/nix/store/4i78c3zpk3pz2fy8czima2n75lrnv2x3-nixos-system-debbie-24.11.715614.cdd2ef009676.drv'...
 stopping the following units: accounts-daemon.service
 activating the configuration...
 setting up /etc...
@@ -608,3 +103,4 @@ restarting sysinit-reactivation.target
 reloading the following units: dbus.service
 restarting the following units: polkit.service
 starting the following units: accounts-daemon.service
+the following new units were started: run-credentials-systemd\x2dtmpfiles\x2dresetup.service.mount, sysinit-reactivation.target, systemd-tmpfiles-resetup.service
