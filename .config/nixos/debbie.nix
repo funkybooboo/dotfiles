@@ -218,6 +218,7 @@ in {
     qemu
     imhex
     open-watcom-v2
+    grub2
 
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
