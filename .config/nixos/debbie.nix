@@ -220,6 +220,12 @@ in {
     open-watcom-v2
     grub2
     libisoburn
+    bison
+    flex
+    gmp
+    libmpc
+    mpfr
+    texinfo
 
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
