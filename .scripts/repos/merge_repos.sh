@@ -3,11 +3,15 @@
 # Script to add a child repository as a subtree into a specified folder
 # within a parent repository without squashing history.
 #
+# It first checks the child repository for additional branches. If more than one branch
+# is found (i.e. branches other than the one specified with -b), it prints a message
+# and exits.
+#
 # Usage:
 #   ./merge_subtree.sh -P <parent_repo_path> -C <child_repo_url> -p <subfolder> [-b <branch>] [-R <child_remote_name>]
 #
-#   -P  Path to the parent repository (destination repository) where the merge will occur.
-#       Defaults to the current directory "." if not provided.
+#   -P  Path to the parent repository (destination repo) where the merge will occur.
+#        Defaults to the current directory "." if not provided.
 #   -C  URL of the child repository to merge (required)
 #   -p  Subfolder path in the parent repository where the child repository's files will be placed (required)
 #   -b  Branch name from the child repository (default: main)
@@ -86,8 +90,22 @@ fi
 echo "Fetching remote '${child_remote_name}'..."
 git fetch ${child_remote_name}
 
+# Check for additional branches in the child repository
+# We use ls-remote to list remote heads, then extract branch names.
+remote_branches=$(git ls-remote --heads ${child_remote_name} | awk '{print $2}' | sed 's|refs/heads/||')
+# Remove empty lines and count the branches.
+branch_count=$(echo "$remote_branches" | grep -v '^$' | wc -l)
+
+# If there is more than one branch, warn the user.
+if [ "$branch_count" -gt 1 ]; then
+    echo "Error: The child repository has multiple branches:"
+    echo "$remote_branches"
+    echo "Please merge the other branches into the '${branch}' branch and delete them before merging with the parent repository."
+    exit 1
+fi
+
 # Add the subtree from the child repository without squashing history
 echo "Adding subtree from remote '${child_remote_name}' branch '${branch}' into folder '${subfolder}'..."
-git subtree add --prefix=${subfolder} ${child_remote_name} ${branch}
+git subtree add --prefix="${subfolder}" ${child_remote_name} ${branch}
 
 echo "Subtree merge complete in parent repository at '$parent_repo_path'."
