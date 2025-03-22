@@ -1,3 +1,4 @@
-# scripts
+# dotfiles
 
-These are helpful scripts I use.
+My systems configs and helpful scripts
+
