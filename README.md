@@ -1,4 +1,4 @@
-# dotfiles
+# Dotfiles
 
 My systems configs and helpful scripts
 
