@@ -118,7 +118,7 @@
     }
   },
   "custom/disk": {
-    "exec": "~/.scripts/disk_capacity.sh",
+    "exec": "~/.scripts/waybar/disk_capacity.sh",
     "format": "{}% ",
     "restart-interval": 10,
   },
@@ -127,6 +127,10 @@
     "format": "{}% ",
     "return-type": "",
     "interval": 1
+  },
+  "custom/network-usage": {
+    "exec": "~/.scripts/waybar/network_usage.py",
+    "format": "{} ",
   }
 }
 
