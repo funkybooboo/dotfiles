@@ -214,6 +214,8 @@ in {
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
 
   environment.systemPackages = with pkgs; [
+    mariadb
+
     # os building tools
     qemu
     imhex
