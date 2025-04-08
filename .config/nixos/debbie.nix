@@ -215,6 +215,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     mariadb
+    mysql84
 
     # os building tools
     qemu
