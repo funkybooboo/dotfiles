@@ -1,7 +1,6 @@
 building Nix...
 building the system configuration...
-unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
-these 230 derivations will be built:
+these 210 derivations will be built:
   /nix/store/z7cj31gag9agjaw5fnljsrqaf6rm4xyw-fish_patched-completion-generator.drv
   /nix/store/04hd2g3xvacnp4s34af4s3qkb7ib2k86-NetworkManager-sstp-gnome-1.3.2_fish-completions.drv
   /nix/store/0g729ig0bqm034sygdybpb2f89g7k3m6-iptables-1.8.10_fish-completions.drv
@@ -10,69 +9,55 @@ these 230 derivations will be built:
   /nix/store/0igiawqxzy6drvvrapj0wkakwlfwgyz5-librewolf-136.0.4-1_fish-completions.drv
   /nix/store/0jkf0p0799384wz7psvx7lj8ayn6qqz3-acl-2.3.2_fish-completions.drv
   /nix/store/0rq4yifn0jng6j2s04s526k89x8wa5nv-qtstyleplugins-unstable-2017-03-11_fish-completions.drv
+  /nix/store/0s2vxhsrs5n7ckccgkba5x13cajway0r-mysql-8.4.4_fish-completions.drv
   /nix/store/0sshd1in7g97165k4lr6ri07cmjra53g-nasmfmt-unstable-2022-09-15_fish-completions.drv
-  /nix/store/apgswd56bvikdqn4lhm2hyp7zcvmq961-etc-os-release.drv
-  /nix/store/mh1hz4id9ngfzwjya4ckyp85rs9rhn0p-shutdown-ramfs-contents.json.drv
-  /nix/store/0vh9hgfpk3b6343c9b3891fmfa7qhnsy-unit-generate-shutdown-ramfs.service.drv
   /nix/store/am4q3wpipdxzbi6r5lswq5r26jni90dw-builder.pl.drv
   /nix/store/113c5xr12rfvzxhzzc663b8n6rb8zr0r-perl-5.40.0-env.drv
   /nix/store/17zjx02yx90xg374a5dy3934y2608fan-linux-pam-1.6.1_fish-completions.drv
   /nix/store/18vvxphwgggq4pbwny72pmh5yifn8xz6-fuse-3.16.2_fish-completions.drv
   /nix/store/191k6pglg2ab8p6hwlbqc8davw49cj9x-mint-themes-2.1.8_fish-completions.drv
   /nix/store/1asdqfcnalkg4qlrgzd6b20w991rssq5-cmake-3.30.5_fish-completions.drv
-  /nix/store/1bvm7bmdhi3pf0q1ycxvvw37fly09d5d-distribution.ini.drv
-  /nix/store/k5vqj0h725y0wiwl63g6l7xvq1hv20j4-nixos-manual-html.drv
-  /nix/store/33jn7lnj6pabw04igaf4br8fabi1ja45-nixos-help.drv
-  /nix/store/drqdxkpksh5mjg0p2y7pdggvj95aanbj-nixos-help.drv
-  /nix/store/1jhs1nqca91vnqlbk1w0f7r3r245rdyh-nixos-help_fish-completions.drv
   /nix/store/1vl3njh419lchw7p11cz58kmh8l835yv-breeze-6.2.5_fish-completions.drv
-  /nix/store/xs3hn9qizng6i531vjylybvppb24h0cj-nixos-version.drv
-  /nix/store/22hnh01jc7p5gxv8xg0aszlaqjkm7myn-system-path.drv
-  /nix/store/250dj1pi29xxmfz0in2gqsijdgb3s8h9-policies.json.drv
   /nix/store/28yyagz16i9nmax3md19vyg0y5xjxh4m-python3.12-pip-24.0_fish-completions.drv
   /nix/store/2ic581a7qn7wisxzp0zkirc3ngrmji05-imhex-1.35.4_fish-completions.drv
-  /nix/store/76lsvpij5vdc89d7s1xdm58z5x7b4wvy-dbus-1.drv
-  /nix/store/y5ykqz82l6sbl00b7rhvarckizri7hbp-X-Restart-Triggers-dbus.drv
-  /nix/store/2xn3f99c5h7s8sb7nn3dnhphx3qi0bdh-unit-dbus.service.drv
   /nix/store/30l326acq35jrcc89sa47nrkgflgc5kc-hyprexpo-0.45.0_fish-completions.drv
   /nix/store/30qxr4xj0rvv0wm49bhvlj3f90zk4zbz-shadow-4.16.0_fish-completions.drv
-  /nix/store/34vas2lzqdhilg9qfpa5kpmgrvim4cfy-obsidian-1.7.6.tar.gz.drv
-  /nix/store/r663h4pr6c3j22hd7xhsm3xplyarj0wj-drawio.desktop.drv
-  /nix/store/355v1k7mjphgr0bjnrjryfa92qcbhfa5-drawio-24.7.17.drv
   /nix/store/36gkz5n12xspsiia8ni167wih5ycgv67-mint-y-icons-1.7.7_fish-completions.drv
   /nix/store/3i1s7x7r190w1ph3dsv6l7nr0z10xrvw-getent-glibc-2.40-66_fish-completions.drv
   /nix/store/3sdglxjlfc2sqn90ygn36hjs84zqgyd7-libnotify-0.8.3_fish-completions.drv
   /nix/store/41avmpvqrjmjg26jkrz7mp1wa5pb085h-libisoburn-1.5.6_fish-completions.drv
+  /nix/store/41q011iczh6qn1ra8grwvvjgpc3xqvc4-man-paths.drv
   /nix/store/4346cc41f4xd4ar9jns3415pbqwxy8xd-networkmanager-1.48.10_fish-completions.drv
   /nix/store/453fcsw9bjj8rhcihaijkkqwmzpinwr0-jack-libs_fish-completions.drv
   /nix/store/48m71jslwzna6w451acl8b21xp70nkjb-hypridle-0.1.5_fish-completions.drv
   /nix/store/4fym568b9ln846bhnli06x84z7rk66hh-stage-2-init.sh.drv
-  /nix/store/8wv066ydyf53ylh9dz2cfizlcjzv7wi7-obsidian-logo-gradient.svg.drv
-  /nix/store/wqnq0286cc88n26jg904svh0pd531c4q-obsidian.desktop.drv
-  /nix/store/4h7wvwaal3ziqkhbf1347dfp85cypljr-obsidian-1.7.6.drv
   /nix/store/4n5lcc6cdwfryskx8s706nhan7mkw7bk-hicolor-icon-theme-0.18_fish-completions.drv
   /nix/store/4nkjbqir7khl7sx73kq8rz6ya7jc5rkz-mint-x-icons-1.7.1_fish-completions.drv
   /nix/store/4pjagzzchsvks3c8476nbllz5d2b431k-evolution-with-plugins_fish-completions.drv
   /nix/store/4ybv0w7gk5skc8l7501zqfxlgvx829kh-bzip2-1.0.8_fish-completions.drv
   /nix/store/4yfb0n5v27c0iqg6l41fqdf4aqbcmm7d-asmjit-unstable-2023-04-28_fish-completions.drv
   /nix/store/5a7n81knln1g1ss4588ixw7h030calqd-bash-interactive-5.2p37_fish-completions.drv
+  /nix/store/b9wv85pj46dq2wnng5kdvi3g4ic1b9ff-system-path.drv
+  /nix/store/blcryf1mbgipd7k2knfidy1s8jz3lv1r-dbus-1.drv
+  /nix/store/c5wswi5swk3l3zpsh9ph3nwn6635hva6-X-Restart-Triggers-dbus.drv
+  /nix/store/5slahj6lim5f011vns98lkyqyhl0nq8p-unit-dbus.service.drv
   /nix/store/608i6srixzs8q3yq1jqi3bx10hd274rq-util-linux-2.39.4_fish-completions.drv
+  /nix/store/7zk3r2vwcrksdk2920jz2aknchsfbaas-unit-console-getty.service-disabled.drv
+  /nix/store/b35xli82v96njx5ggkv87sjpczrx60g7-unit-accounts-daemon.service.drv
+  /nix/store/817z60hkarmf75k9vqqwbdnnanv9p5n5-X-Restart-Triggers-polkit.drv
+  /nix/store/flxadml688giv8r334p1ypw4fn7zlz5l-unit-polkit.service.drv
+  /nix/store/g4l44334sdjlf5wcys2yr64l95kg4fvh-unit-pipewire.socket-disabled.drv
+  /nix/store/gyqppkmjgdqq823qkfisyaxl6cd13ix5-unit-wireplumber.service-disabled.drv
+  /nix/store/v4c2rlgvr5wc86zgz7jdqggglk28h403-unit-pipewire.service-disabled.drv
+  /nix/store/61f119v79x95272jac0f6sjn1zdrfvyb-system-units.drv
   /nix/store/6fv595cvplzqijldswpwm8xnzww9kwfl-polkit-gnome-0.105_fish-completions.drv
   /nix/store/72kfimj01fl444qwv84yyhjihy4imchr-NetworkManager-iodine-gnome-1.2.0-unstable-2024-11-02_fish-completions.drv
   /nix/store/7370cvh81rlgjgal7n40yr0id0wq1gq9-cups-2.4.11_fish-completions.drv
   /nix/store/7apf19i3ksjgcjn9hvn7wqh09fai85nk-gnome-online-accounts-gtk-3.50.5_fish-completions.drv
   /nix/store/7fd321lkjg32wzln021hbrzb11wy3r4j-sound-theme-freedesktop-0.8_fish-completions.drv
   /nix/store/7xpvyxxi7w3qy17sb38zbid9sl32mwxl-mariadb-server-10.11.11_fish-completions.drv
-  /nix/store/7zk3r2vwcrksdk2920jz2aknchsfbaas-unit-console-getty.service-disabled.drv
   /nix/store/82dzypmx06asr3dwl58hjbk34a755hj4-hyprpaper-0.7.1_fish-completions.drv
   /nix/store/8328wmwwrbcbszvydp6w8146q5l6ryj1-strace-6.14_fish-completions.drv
-  /nix/store/fpbffscqwpi9rx5k53fykgaism4wnn9w-X-Restart-Triggers-polkit.drv
-  /nix/store/cwr2fyf5bygq19wlf7hk2irrjw2bcv92-unit-polkit.service.drv
-  /nix/store/g4l44334sdjlf5wcys2yr64l95kg4fvh-unit-pipewire.socket-disabled.drv
-  /nix/store/gyqppkmjgdqq823qkfisyaxl6cd13ix5-unit-wireplumber.service-disabled.drv
-  /nix/store/v4c2rlgvr5wc86zgz7jdqggglk28h403-unit-pipewire.service-disabled.drv
-  /nix/store/wmjm35fspbz024gwjqp0236ghbchs2hz-unit-accounts-daemon.service.drv
-  /nix/store/9l8g5r3k7y90xkjfw0vdrkjkzjxyil6l-system-units.drv
   /nix/store/8bhbyq3m7lplfh28ak14wbccfgn5phm2-nwg-look-0.2.7_fish-completions.drv
   /nix/store/8gcachhrwp5hs6zqy6igq0mpdk3rv3ci-zstd-1.5.6_fish-completions.drv
   /nix/store/8jcq2m0khr5ni67j5n6chdxxjs31panr-deno-2.1.4_fish-completions.drv
@@ -82,12 +67,14 @@ these 230 derivations will be built:
   /nix/store/8y2ywx8y1zlp4rr95srhm55d7h5jys7n-dotnet-sdk-wrapped-9.0.202_fish-completions.drv
   /nix/store/90ncs0wwdkxnkh9riq05p9fisnbcp7j7-breeze-icons-6.8.0_fish-completions.drv
   /nix/store/93626f4p8xwvyhh1hsfpzczfc65rsrwr-cliphist-0.6.1_fish-completions.drv
+  /nix/store/9abisnmwsvl1rp85xfixjg5722cvplzs-nixos-help_fish-completions.drv
   /nix/store/9ajs8y83lzlpg0rrmc4ik6fvhdphxj1m-ld-library-path_fish-completions.drv
   /nix/store/9kp2v5552vmrj023kv7q6my920js5fk7-breeze-gtk-6.2.5_fish-completions.drv
   /nix/store/9my40axpcf1hnrkhs2js5sxcnig9i4dd-shadow-4.16.0_fish-completions.drv
   /nix/store/9rvnbm5lkl302n98g2jx7ndfqdcsz34a-systemd-256.10_fish-completions.drv
   /nix/store/aa5nq168n7p42z6s1wn1k2wlfg04kdpz-nixos-firewall-tool_fish-completions.drv
   /nix/store/abr3w97jjn5v16aifa6kx0bgkgbf0vcv-cinnamon-control-center-6.2.0_fish-completions.drv
+  /nix/store/ahxp8jjjgjvaagcas90ahcm0yndp6mxz-boot.json.drv
   /nix/store/aiylz32mymqjd7gnssncakc9n7g912rp-gtk+3-3.24.43_fish-completions.drv
   /nix/store/aj037r811rwhb081224pqyq95sk4qn2r-mint-l-theme-1.9.8_fish-completions.drv
   /nix/store/aj2hc3kf3wsi6rx9yhpy81kl7gfagcpg-at-spi2-core-2.54.1_fish-completions.drv
@@ -109,10 +96,10 @@ these 230 derivations will be built:
   /nix/store/czwa588h4rm62pkh6xwksdclycpmyxqn-gdbgui-0.15.2.0_fish-completions.drv
   /nix/store/d3h56859airw6bcqrkbff9r1a1az4z27-cinnamon-menus-6.2.0_fish-completions.drv
   /nix/store/dpa6ycg8zga2yk3hmf9aamcli732ymmn-hyprlock-0.5.0_fish-completions.drv
-  /nix/store/dy223daawjb5armivif145y0s76jf4bh-docker-27.3.1_fish-completions.drv
   /nix/store/dypps4izn1h9z5qspxm3744cgzrccyvl-libmpc-1.3.1_fish-completions.drv
   /nix/store/f44qhp1r031v3p4hcdmxy5d5gcr31s3d-hyprpolkitagent-0.1.1_fish-completions.drv
   /nix/store/f4vhbf3capz4976gqjxz7xf7bi39vv4n-e2fsprogs-1.47.1_fish-completions.drv
+  /nix/store/f75qgd2j1clivbj30wazx29bs7drdn2h-docker-27.5.1_fish-completions.drv
   /nix/store/ffb069gycbhgi17i02naywp8qd8nriba-chromium-135.0.7049.52_fish-completions.drv
   /nix/store/fg0knl26nnlaqmw22jm1shhldmpgwjby-gawk-5.3.1_fish-completions.drv
   /nix/store/fj46hprwfqy1cd9fbkb5x29r4nvkrqrh-qt6gtk2-0.2-unstable-2024-08-14_fish-completions.drv
@@ -122,6 +109,8 @@ these 230 derivations will be built:
   /nix/store/g175w0fz7r2j7r6zbx69sfr5djkapzad-gnat-wrapper-14.2.0_fish-completions.drv
   /nix/store/g55l5hbx3dvm7af3fwpqd0wab3ww14p6-mount.vboxsf_fish-completions.drv
   /nix/store/g8mgzra8ymk50mgi31alsq3y7dym6n83-ianny-1.0.0_fish-completions.drv
+  /nix/store/nxwsn3brr633lkpip9298y39wgqw3f5r-man-cache.drv
+  /nix/store/m22azxi58sfl4162h019s2gp1k7sf7xm-etc-man_db.conf.drv
   /nix/store/ghmsy22gsakdicvx0593c2mczbfd32sk-mint-artwork-1.8.4_fish-completions.drv
   /nix/store/h476drhn184dmmi3l8ykmnpmjfdyadvn-NetworkManager-l2tp-gnome-1.20.16_fish-completions.drv
   /nix/store/h92j6ibh4skk7dmzih99kyf9n513mwh1-libgnomekbd-3.28.1_fish-completions.drv
@@ -134,6 +123,7 @@ these 230 derivations will be built:
   /nix/store/i0cjxp6mpwzpnh9ah1gk5jcy89xkc3y9-glibc-2.40-66_fish-completions.drv
   /nix/store/i2kfq3y5pini4qb5c2rcmc0il2zc6r3f-breeze-6.2.5_fish-completions.drv
   /nix/store/i6g57xsh9q1l224lvv4dwd4ids7l1pnf-NetworkManager-vpnc-1.4.0_fish-completions.drv
+  /nix/store/ia32dhb9q7p9i35vla89805vwmra43y8-nixos-manual-html_fish-completions.drv
   /nix/store/iavy6pnjq1ayf69jj5k341461vb3bdqp-zig-0.13.0_fish-completions.drv
   /nix/store/iglq14061wkm1hvshbjdrjsw7zlw987b-time-1.9_fish-completions.drv
   /nix/store/isbgmw0wsjxhjw47cnaar4ifzrxs6g8k-poetry-1.8.4_fish-completions.drv
@@ -148,7 +138,6 @@ these 230 derivations will be built:
   /nix/store/k92fj19hgbgy2bvnxv801bc0q4316m5p-papirus-folders-1.13.1_fish-completions.drv
   /nix/store/ki8gliqwhx609kn25xf42lnm50sxq7b3-fnm-1.37.2_fish-completions.drv
   /nix/store/knnc7mvsvwnnwyl625canzyr4gw97mcc-polkit-124_fish-completions.drv
-  /nix/store/knsszlcrj89q2xbpf78y618r890fxiq6-nixos-configuration-reference-manpage_fish-completions.drv
   /nix/store/lir35diiz20sgv10m9cf5ld8cba8ipmc-mpfr-4.2.1_fish-completions.drv
   /nix/store/llsvx1klidpyw9lv1h4m20mlwhn9pp50-typescript-5.6.3_fish-completions.drv
   /nix/store/lpp8vwkafqqbnlj1yan0cj69lqck6gd1-xviewer-3.4.6_fish-completions.drv
@@ -171,7 +160,6 @@ these 230 derivations will be built:
   /nix/store/nyjv25vyj0xpqsy1qz1ym7byss7p7ynf-bulky-3.4_fish-completions.drv
   /nix/store/p2dsg61ksl3k3psb5pd2dpm55sbgl2i7-nix-info_fish-completions.drv
   /nix/store/pj2z8m4w46gzvs4km3bbnzcdclbk7xpj-xf86-input-libinput-1.5.0_fish-completions.drv
-  /nix/store/pqwi9j61x0ilmb3gf8znbcxvsidaskcv-nixos-manual-html_fish-completions.drv
   /nix/store/q66jmmrjq1imygp5ydw93hpjksdih6rm-iw-6.9_fish-completions.drv
   /nix/store/q7ql0yvccgjj91jfygzpsia3inhqm80j-command-not-found_fish-completions.drv
   /nix/store/qn0kacfx74cnl4hjv48ls0sgm2b12gq4-gnome-themes-extra-3.28_fish-completions.drv
@@ -207,7 +195,6 @@ these 230 derivations will be built:
   /nix/store/xnx6q04x569z1h6cd1lis2n5w98cs9lf-asmrepl-1.0.3_fish-completions.drv
   /nix/store/yfp4121s7krrc3s5mrccc2caxf5lm345-less-668_fish-completions.drv
   /nix/store/yhx1kfbyl0369jvx35ixixw3hbw9d6sq-firefox-137.0_fish-completions.drv
-  /nix/store/yklinzmdbmi54sny0a2hy2m44lhz82ba-nixos-version_fish-completions.drv
   /nix/store/ywpvnm6pwv94vskib4rks7p3qvs0hnda-xdg-desktop-portal-hyprland-1.3.6_fish-completions.drv
   /nix/store/z29prlxiyg3fvp4znk0rarxq6ldcnjr9-udisks-2.10.1_fish-completions.drv
   /nix/store/z8q6bp7virzvgryvakz71h8c5amvdd20-wpa_supplicant-2.11_fish-completions.drv
@@ -218,255 +205,70 @@ these 230 derivations will be built:
   /nix/store/zk2lyjfrssy9vqaacxnf25c8sjrv6c6l-clang-tools-18.1.8_fish-completions.drv
   /nix/store/znsm0dv8a855mf7l459pjyb2r69nf3fi-bruno-1.34.2_fish-completions.drv
   /nix/store/zv0l9p4rqgz7x3k1c8ss8w5ryak0zm8b-composer-2.8.5_fish-completions.drv
-  /nix/store/b0h4b3pl8g8jg13gf3hk65czg7h2973z-system_fish-completions.drv
-  /nix/store/cqmn9aaypjpvvrpklpx8drbci8pq8jzh-torbrowser.desktop.drv
-  /nix/store/yjyj4qdzxfrfz4qq2s4acrzabmaa6kh9-tor-browser-14.0.9.drv
-  /nix/store/cnyksih3jiqbzpxhy7d5vfra5zhxm6h7-user-environment.drv
-  /nix/store/jap25h9q19hb8gdkcsamlh1lcm22bl47-unit-dbus.service.drv
-  /nix/store/flwlrg2dql7b9wcd2ldr7b9kqrncgdiw-user-units.drv
-  /nix/store/ib6pdg0vzrzxjk5c0s4d4vg258c3w4a1-issue.drv
-  /nix/store/qn1192kfpp9kgg0wlflfs02gy42rfkyf-man-paths.drv
-  /nix/store/qs4rq0z09mfs0n0pc9rpa8jwdfvhmsn0-man-cache.drv
-  /nix/store/inld4v1vi115xhkayzq2gyz913arlkyl-etc-man_db.conf.drv
-  /nix/store/84ryfchl9zkz45h1dxdrgwxw7a0l1a0r-etc.drv
-  /nix/store/hp84am9gy4g80p9fwydzfs2izrs3d5cp-boot.json.drv
+  /nix/store/v06f6rfv01h8ibm4fmwl8qxmf73ib9q9-system_fish-completions.drv
+  /nix/store/xbma3wscwq7i3qa8qfj3z9p5zhiq4ryw-unit-dbus.service.drv
+  /nix/store/x9bax07idcrpkbayvxcj1bpc9ns35fyn-user-units.drv
+  /nix/store/gcqs79wjdgszh73snidag4b53sj7vmg2-etc.drv
   /nix/store/pyfsbza5zz8sxjs52mrs16cfx2rm2jlm-ensure-all-wrappers-paths-exist.drv
-  /nix/store/fginsj8lsxiicicbfpkss9wb1zq840x8-nixos-system-debbie-24.11.716687.bdb91860de2f.drv
-these 114 paths will be fetched (610.32 MiB download, 2233.66 MiB unpacked):
-  /nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev
-  /nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14
-  /nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook
-  /nix/store/nqg785qdbz7d6fm299mwyk3757ni7p1j-bruno-1.34.2
-  /nix/store/qyy2fnshvyxqpx8sbqcblq76krqdd2ic-c-ares-1.27.0
+  /nix/store/r0a12ha6ri0jhklx2w434bqpzh2q04kh-nixos-system-debbie-24.11.716793.a880f49904d6.drv
+these 25 paths will be fetched (31.66 MiB download, 325.37 MiB unpacked):
+  /nix/store/zjm6is5id0kbmxchlqn8njbdabbcq65z-abseil-cpp-20210324.2
   /nix/store/p4f71kc3b6b3kb15bdj3s078h6g3phz6-catppuccin-cursors-1.0.2
   /nix/store/9gx0q4lsq0yw3k9bjh9yhbysn3jjcmc5-catppuccin-cursors-1.0.2-frappeBlue
-  /nix/store/baxmcwryr64729m9mav1vzsda3pw2vhg-chromium-135.0.7049.52
-  /nix/store/x5nijk68d9hmmc8mb178irbwxh58yk1w-chromium-135.0.7049.52-sandbox
-  /nix/store/vipj882wq11xbvpvl7n1a2girhiclxpv-chromium-unwrapped-135.0.7049.52
-  /nix/store/9ic3cx1ldxjc189f0psjqjsj5pjjjh9w-chromium-unwrapped-135.0.7049.52-sandbox
-  /nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook
-  /nix/store/lgfp6sl5hpykmld29rqvi9pam8ji8k24-curl-8.12.1
-  /nix/store/8qf68jid6rr2f4c8ppyp0ixdlv0axnpn-curl-8.12.1-bin
-  /nix/store/04shrm4bvxw1yam87da7y9k872kqn777-curl-8.12.1-dev
-  /nix/store/xz1772bzjjsabm61gm75wh3sjlmcs4bn-curl-8.12.1-dev
-  /nix/store/swnhrfysvmwjvibcafm0im377pcfs80v-curl-8.12.1-man
-  /nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev
   /nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook
-  /nix/store/qansn2axjzki0kz8xiyhkq4r18xbw1jr-djvulibre-3.5.28-bin
-  /nix/store/0l2qyzgxv1l9icsfspbmxp47sicf2nah-djvulibre-3.5.28-dev
-  /nix/store/3wayhp88nyjybqp3qmzg25j0q0igdzb7-documentation-highlighter
-  /nix/store/2dqxj1b04122gzbjrj9llnxg1mna1klq-electron-33.4.8
-  /nix/store/if8ciwzc07fr3xdykcijgcm8xak8y4k9-electron-34.4.1
-  /nix/store/daaz7w725m4mc8s1zirx1s5ybzfg0w05-electron-unwrapped-33.4.8
-  /nix/store/nr49n34jzm5wjfl169lgcv13x8cmn9h0-electron-unwrapped-34.4.1
-  /nix/store/hxl05kvczfwazcg7lygjzh9a9sdhrc84-fftw-double-3.3.10-dev
   /nix/store/p751fjd81h3926ivxsq0x20lz5j7yscc-file-5.45
-  /nix/store/71gw06a3dq9ikyxnvh3zgsbg9qfdnk0z-fixup-yarn-lock
   /nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0
   /nix/store/m0hpy0zn4clnmqx0xk1y99kbrnli8wgb-getconf-glibc-2.40-66
   /nix/store/2mvs4p4yzgpxmdbln7klhqvbgrg088b0-gnat-14.2.0-man
   /nix/store/aj7i2sf2s4cvanm6q92bsdb4phw05fpm-gnat-wrapper-14.2.0-man
   /nix/store/d8qbcrirc6jidfacy0qa50zy07i15xcz-gnu-config-2024-01-01
   /nix/store/m3da56j3r7h4hp0kr8v1xsnk16x900yf-gnumake-4.4.1
-  /nix/store/xs7gbsp6i8cs47a4kglcp9hjf98awy75-imagemagick-7.1.1-45-dev
-  /nix/store/hfic0kdby8vwhx84r1iknl8xjmqbhvim-install-shell-files
-  /nix/store/j8zh9isliyy5irixrwvw5fkmnqwvd2r5-judy-1.0.5
-  /nix/store/n6zw4496n0bd9r6gjwkjmf5ja6757q32-krb5-1.21.3
-  /nix/store/mqv9pcxl4sg38yq13wyx1w4f5gcflinn-krb5-1.21.3-dev
-  /nix/store/zfk4v9lxal3ch98qnf7zlciwgmk4w1ij-krb5-1.21.3-dev
-  /nix/store/bhvah40258cfi5sj1wiy2zmdn5xgj4m1-krb5-1.21.3-lib
-  /nix/store/g56is59a1c8mvkfc2wqj2bsjmi94qk83-lcms2-2.16-bin
-  /nix/store/zlgk100ra38i4v7lxlg6jl6pqixpjdl1-lcms2-2.16-dev
-  /nix/store/wriq1k70x6b43ba6d9g8y4n7fvq4bgyw-libXt-1.3.0-dev
-  /nix/store/2033hvn62kf6srmdh5qyih9fh4zhbzwg-libev-4.33
-  /nix/store/cqi1lxjbid5yj4fxwdzm3gpznhg306l3-libheif-1.18.2-bin
-  /nix/store/nb1n19hhp0wlbpcig5ryfmwd8z4vnb2k-libheif-1.18.2-dev
-  /nix/store/7xsj4ajnczgyiild64bq3ihddwq9vjpm-libhwy-1.0.7
-  /nix/store/3bn2kw52g4b7rn8b482990mh2vzgmp23-libidn2-2.3.7-bin
-  /nix/store/l7gwkg6mvhhimqw5yf6irsqyq0svfhis-libidn2-2.3.7-dev
-  /nix/store/4m1vywwx9djhx7rr7j0mac6z7my4ncf8-libjxl-0.11.1-dev
-  /nix/store/cfw5w1vg4kqd7gbcjl5s1bcxvb1pyy6n-liblqr-1-0.4.2-dev
-  /nix/store/ld052rmj61z65b2hjap70yd7jawjz13d-libpsl-0.21.5-bin
-  /nix/store/qnc5wmskd5hjwynv5880idb3mgr81wn2-libpsl-0.21.5-dev
-  /nix/store/paqp7fvl10bwim9m4hwpwhvhfwylrklp-libraw-0.21.3
-  /nix/store/hq10zcphx3012981ixmwac7d6qwcv1vr-libraw-0.21.3-dev
-  /nix/store/qmz79v7x18zmi6g2iagxwazqfwbxzhra-libssh2-1.11.1
-  /nix/store/0rg4nqym82ngd29dy8qm1bggm94dkry3-libssh2-1.11.1-dev
-  /nix/store/71fjraii4jdj3ylqpj0cdvgiz0kv93qg-libssh2-1.11.1-dev
+  /nix/store/qxyzsk48r4ggm5s3z1vpha916d98aw0l-libedit-20240808-3.1-dev
   /nix/store/lvkjaxy84cky6vbkbpphqpd7cz620c09-libxslt-1.1.42-bin
+  /nix/store/8pxgbb9rgz9vgfyvk82y2qqgazs67p5p-lz4-1.10.0
+  /nix/store/1vifh0n1awrl1mciims0p9i4j1rkxgwj-lz4-1.10.0-dev
   /nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook
   /nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook
-  /nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11
-  /nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man
-  /nix/store/5ahjfkydg49xvbr3vghhv317prgspnf3-mirrors-list
-  /nix/store/970fk2m63qra4ybkpp99rw7mld9fphlv-nghttp2-1.64.0
-  /nix/store/vq8iz61lv8n5acb2znjsdlkspgm25n91-nghttp2-1.64.0
-  /nix/store/ify6nfhgwwffgsc9vxfjl04dbknsz4bb-nghttp2-1.64.0-dev
-  /nix/store/w8xb93nwhnhlkqd9kwahkzqvbg98qs74-nghttp2-1.64.0-dev
-  /nix/store/1w5jm9zaxwr5b8nvh41c7iz236my185m-nghttp2-1.64.0-lib
-  /nix/store/z7fg8wxbxwxkg7rzcfr5ywyq5angdx9d-nix-tour-unstable-2022-01-03
-  /nix/store/wfwvjx0yigbds6q6vsig0xkcdavs5gqa-nixos-configuration-reference-manpage
-  /nix/store/avk29l6h4rx8myrnai82igd4wdw5nf9r-nixos-render-docs-0.0
-  /nix/store/hpgajv0lzdb99mpfdz0xyqbc33sn91vz-nixos-test-driver-docstrings
-  /nix/store/0mjqknzq14azqkvmg7wzjil67ywxkivg-nodejs-slim-20.19.0
-  /nix/store/zdqi51vy7k5l180v0rr2c70fk2lm9x31-offline
-  /nix/store/kg31yi89w5drnb7b41nqv2sdym63skll-openexr-3.2.4-bin
-  /nix/store/hp2yl62b8jb9gkh68cxfk0hqq4h6cgc0-openexr-3.2.4-dev
-  /nix/store/iwyr7l525iy04lzlrwwkddnlhq1i93k2-openjpeg-2.5.2-dev
-  /nix/store/isk8l71r4d1nl39mpv92ank2rs4cx3w9-openssl-3.3.3
-  /nix/store/09pyjyjdr5mwmki9gb0yf809l54xr8p2-openssl-3.3.3-bin
-  /nix/store/hgq0ircylcm0mx6y7ml9chcbwgrz9xg7-openssl-3.3.3-dev
-  /nix/store/7fgnhvl8kbl3mc2n1kwqxji7dk5rjjsk-options.json
-  /nix/store/c72zskhp04cig9dyi47n15irdp81wsjp-options.json
-  /nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15
-  /nix/store/bzjlj2qpvc992yhx4js2ds5iiczz9l3q-perl-5.40.0-env
-  /nix/store/jv3ks8jc2309zmq62j69n4irxv2fx1dc-perl5.40.0-Capture-Tiny-0.48
+  /nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4
   /nix/store/imic6yg6d1rdia9x2mfvad2vbjqywp1x-perl5.40.0-Config-IniFiles-3.000003
-  /nix/store/y10hfdfgk19a3p7q0b6zxga9y7y5z2ij-perl5.40.0-DBD-mysql-4.050
-  /nix/store/aly47irx6x5sqqrvaky989hj42lwvlbq-perl5.40.0-Devel-CheckLib-1.16
   /nix/store/3h232k50n53s90s1rxg3b83h5l929rvw-perl5.40.0-IO-Stringy-2.113
-  /nix/store/mkq98y3h5f56zrc34brg830qb0znal10-perl5.40.0-Mock-Config-0.03
-  /nix/store/qm644vb405zsa0q39afc3ayz2yvx63pa-perl5.40.0-Module-Manifest-1.09
-  /nix/store/k2a61d68v5vlzcqp3mhg9l8lay9p82k4-perl5.40.0-Params-Util-1.102
-  /nix/store/bsms7rrhj23xdaydzx8lpc6i72fqxn10-perl5.40.0-Test-Deep-1.204
-  /nix/store/bcd0ni2aqs0knp063j4jx3lh728va03y-perl5.40.0-Test-DistManifest-1.014
-  /nix/store/xbx8l1s0v3a3vrmhn5km1kvpnxw7jlff-perl5.40.0-Test-Pod-1.52
-  /nix/store/624l678xqxy3494fbx45yvjxppr25hr0-proton-pass-1.24.1
-  /nix/store/32xa06cd524h0s9k90ybnspfl2y1liah-python3-3.12.8-env
-  /nix/store/a7wvb2p3pyih8y9mjan1l52jkgxkqd8a-python3.12-markdown-it-py-3.0.0
-  /nix/store/x5fifi82xax5ds44zav04i6qvr2nbrdj-python3.12-mdit-py-plugins-0.4.2
-  /nix/store/4bw71mk4p24fa6wivhyna23l0zml92vw-python3.12-mdurl-0.1.2
-  /nix/store/cbwnppr7hgbz2hv4lhl2svb8plhrv9d4-python3.12-pyelftools-0.31
-  /nix/store/4pzpyp2z6979cwzp16k6rlyyym6mw9cr-source
-  /nix/store/sany11pwjyh3pa2kp01m7h66c9qxaiia-source
+  /nix/store/msb3fgy3ll4kcv5qmh0287pqcv7wx8dk-protobuf-21.12
   /nix/store/hsxp8g7zdr6wxk1mp812g8nbzvajzn4w-stdenv-linux
   /nix/store/szfi0xd0cwdaldhkp8vlgi7jfv662nmd-stdenv-linux
-  /nix/store/100qy6jrh3jdmncw51c1pkj37wbdip2z-tor-browser-linux-x86_64-14.0.9.tar.xz
   /nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook
-  /nix/store/pwjqmqbnzgswkhh50fr8qibpb7g1gh2w-webcord-4.10.3
-  /nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook
   /nix/store/yhk5lix4kpgmvapxaq1j1g87g9f342jz-xkb-validated
-  /nix/store/yp79ahzniddw0jvywxvjddixavmnphx8-yarn-1.22.22
 copying path '/nix/store/yhk5lix4kpgmvapxaq1j1g87g9f342jz-xkb-validated' from 'https://cache.nixos.org'...
 copying path '/nix/store/p4f71kc3b6b3kb15bdj3s078h6g3phz6-catppuccin-cursors-1.0.2' from 'https://cache.nixos.org'...
 copying path '/nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook' from 'https://cache.nixos.org'...
-copying path '/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man' from 'https://cache.nixos.org'...
-copying path '/nix/store/wfwvjx0yigbds6q6vsig0xkcdavs5gqa-nixos-configuration-reference-manpage' from 'https://cache.nixos.org'...
 copying path '/nix/store/3h232k50n53s90s1rxg3b83h5l929rvw-perl5.40.0-IO-Stringy-2.113' from 'https://cache.nixos.org'...
-copying path '/nix/store/d8qbcrirc6jidfacy0qa50zy07i15xcz-gnu-config-2024-01-01' from 'https://cache.nixos.org'...
 copying path '/nix/store/2mvs4p4yzgpxmdbln7klhqvbgrg088b0-gnat-14.2.0-man' from 'https://cache.nixos.org'...
-copying path '/nix/store/hfic0kdby8vwhx84r1iknl8xjmqbhvim-install-shell-files' from 'https://cache.nixos.org'...
-copying path '/nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook' from 'https://cache.nixos.org'...
+copying path '/nix/store/d8qbcrirc6jidfacy0qa50zy07i15xcz-gnu-config-2024-01-01' from 'https://cache.nixos.org'...
 copying path '/nix/store/p751fjd81h3926ivxsq0x20lz5j7yscc-file-5.45' from 'https://cache.nixos.org'...
+copying path '/nix/store/m3da56j3r7h4hp0kr8v1xsnk16x900yf-gnumake-4.4.1' from 'https://cache.nixos.org'...
 copying path '/nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0' from 'https://cache.nixos.org'...
 copying path '/nix/store/m0hpy0zn4clnmqx0xk1y99kbrnli8wgb-getconf-glibc-2.40-66' from 'https://cache.nixos.org'...
-copying path '/nix/store/m3da56j3r7h4hp0kr8v1xsnk16x900yf-gnumake-4.4.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/100qy6jrh3jdmncw51c1pkj37wbdip2z-tor-browser-linux-x86_64-14.0.9.tar.xz' from 'https://cache.nixos.org'...
-copying path '/nix/store/vipj882wq11xbvpvl7n1a2girhiclxpv-chromium-unwrapped-135.0.7049.52' from 'https://cache.nixos.org'...
-copying path '/nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/qyy2fnshvyxqpx8sbqcblq76krqdd2ic-c-ares-1.27.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/9ic3cx1ldxjc189f0psjqjsj5pjjjh9w-chromium-unwrapped-135.0.7049.52-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/9gx0q4lsq0yw3k9bjh9yhbysn3jjcmc5-catppuccin-cursors-1.0.2-frappeBlue' from 'https://cache.nixos.org'...
-copying path '/nix/store/swnhrfysvmwjvibcafm0im377pcfs80v-curl-8.12.1-man' from 'https://cache.nixos.org'...
-copying path '/nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/qansn2axjzki0kz8xiyhkq4r18xbw1jr-djvulibre-3.5.28-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/3wayhp88nyjybqp3qmzg25j0q0igdzb7-documentation-highlighter' from 'https://cache.nixos.org'...
-copying path '/nix/store/daaz7w725m4mc8s1zirx1s5ybzfg0w05-electron-unwrapped-33.4.8' from 'https://cache.nixos.org'...
-copying path '/nix/store/nr49n34jzm5wjfl169lgcv13x8cmn9h0-electron-unwrapped-34.4.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/hxl05kvczfwazcg7lygjzh9a9sdhrc84-fftw-double-3.3.10-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/j8zh9isliyy5irixrwvw5fkmnqwvd2r5-judy-1.0.5' from 'https://cache.nixos.org'...
-copying path '/nix/store/mqv9pcxl4sg38yq13wyx1w4f5gcflinn-krb5-1.21.3-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/g56is59a1c8mvkfc2wqj2bsjmi94qk83-lcms2-2.16-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/wriq1k70x6b43ba6d9g8y4n7fvq4bgyw-libXt-1.3.0-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/2033hvn62kf6srmdh5qyih9fh4zhbzwg-libev-4.33' from 'https://cache.nixos.org'...
-copying path '/nix/store/aj7i2sf2s4cvanm6q92bsdb4phw05fpm-gnat-wrapper-14.2.0-man' from 'https://cache.nixos.org'...
-copying path '/nix/store/cqi1lxjbid5yj4fxwdzm3gpznhg306l3-libheif-1.18.2-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/x5nijk68d9hmmc8mb178irbwxh58yk1w-chromium-135.0.7049.52-sandbox' from 'https://cache.nixos.org'...
-copying path '/nix/store/7xsj4ajnczgyiild64bq3ihddwq9vjpm-libhwy-1.0.7' from 'https://cache.nixos.org'...
-copying path '/nix/store/3bn2kw52g4b7rn8b482990mh2vzgmp23-libidn2-2.3.7-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/cfw5w1vg4kqd7gbcjl5s1bcxvb1pyy6n-liblqr-1-0.4.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/ld052rmj61z65b2hjap70yd7jawjz13d-libpsl-0.21.5-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/zlgk100ra38i4v7lxlg6jl6pqixpjdl1-lcms2-2.16-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/paqp7fvl10bwim9m4hwpwhvhfwylrklp-libraw-0.21.3' from 'https://cache.nixos.org'...
-copying path '/nix/store/0l2qyzgxv1l9icsfspbmxp47sicf2nah-djvulibre-3.5.28-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/71fjraii4jdj3ylqpj0cdvgiz0kv93qg-libssh2-1.11.1-dev' from 'https://cache.nixos.org'...
+copying path '/nix/store/zjm6is5id0kbmxchlqn8njbdabbcq65z-abseil-cpp-20210324.2' from 'https://cache.nixos.org'...
+copying path '/nix/store/qxyzsk48r4ggm5s3z1vpha916d98aw0l-libedit-20240808-3.1-dev' from 'https://cache.nixos.org'...
 copying path '/nix/store/lvkjaxy84cky6vbkbpphqpd7cz620c09-libxslt-1.1.42-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/l7gwkg6mvhhimqw5yf6irsqyq0svfhis-libidn2-2.3.7-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook' from 'https://cache.nixos.org'...
-copying path '/nix/store/qnc5wmskd5hjwynv5880idb3mgr81wn2-libpsl-0.21.5-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/nb1n19hhp0wlbpcig5ryfmwd8z4vnb2k-libheif-1.18.2-dev' from 'https://cache.nixos.org'...
+copying path '/nix/store/8pxgbb9rgz9vgfyvk82y2qqgazs67p5p-lz4-1.10.0' from 'https://cache.nixos.org'...
 copying path '/nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook' from 'https://cache.nixos.org'...
-copying path '/nix/store/5ahjfkydg49xvbr3vghhv317prgspnf3-mirrors-list' from 'https://cache.nixos.org'...
-copying path '/nix/store/970fk2m63qra4ybkpp99rw7mld9fphlv-nghttp2-1.64.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/hq10zcphx3012981ixmwac7d6qwcv1vr-libraw-0.21.3-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/1w5jm9zaxwr5b8nvh41c7iz236my185m-nghttp2-1.64.0-lib' from 'https://cache.nixos.org'...
-copying path '/nix/store/hpgajv0lzdb99mpfdz0xyqbc33sn91vz-nixos-test-driver-docstrings' from 'https://cache.nixos.org'...
-copying path '/nix/store/0mjqknzq14azqkvmg7wzjil67ywxkivg-nodejs-slim-20.19.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/zdqi51vy7k5l180v0rr2c70fk2lm9x31-offline' from 'https://cache.nixos.org'...
-copying path '/nix/store/kg31yi89w5drnb7b41nqv2sdym63skll-openexr-3.2.4-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/vq8iz61lv8n5acb2znjsdlkspgm25n91-nghttp2-1.64.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/iwyr7l525iy04lzlrwwkddnlhq1i93k2-openjpeg-2.5.2-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/isk8l71r4d1nl39mpv92ank2rs4cx3w9-openssl-3.3.3' from 'https://cache.nixos.org'...
-copying path '/nix/store/7fgnhvl8kbl3mc2n1kwqxji7dk5rjjsk-options.json' from 'https://cache.nixos.org'...
-copying path '/nix/store/4m1vywwx9djhx7rr7j0mac6z7my4ncf8-libjxl-0.11.1-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/c72zskhp04cig9dyi47n15irdp81wsjp-options.json' from 'https://cache.nixos.org'...
-copying path '/nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15' from 'https://cache.nixos.org'...
-copying path '/nix/store/jv3ks8jc2309zmq62j69n4irxv2fx1dc-perl5.40.0-Capture-Tiny-0.48' from 'https://cache.nixos.org'...
+copying path '/nix/store/9gx0q4lsq0yw3k9bjh9yhbysn3jjcmc5-catppuccin-cursors-1.0.2-frappeBlue' from 'https://cache.nixos.org'...
 copying path '/nix/store/imic6yg6d1rdia9x2mfvad2vbjqywp1x-perl5.40.0-Config-IniFiles-3.000003' from 'https://cache.nixos.org'...
-copying path '/nix/store/mkq98y3h5f56zrc34brg830qb0znal10-perl5.40.0-Mock-Config-0.03' from 'https://cache.nixos.org'...
-copying path '/nix/store/k2a61d68v5vlzcqp3mhg9l8lay9p82k4-perl5.40.0-Params-Util-1.102' from 'https://cache.nixos.org'...
-copying path '/nix/store/bsms7rrhj23xdaydzx8lpc6i72fqxn10-perl5.40.0-Test-Deep-1.204' from 'https://cache.nixos.org'...
-copying path '/nix/store/w8xb93nwhnhlkqd9kwahkzqvbg98qs74-nghttp2-1.64.0-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/xbx8l1s0v3a3vrmhn5km1kvpnxw7jlff-perl5.40.0-Test-Pod-1.52' from 'https://cache.nixos.org'...
-copying path '/nix/store/hp2yl62b8jb9gkh68cxfk0hqq4h6cgc0-openexr-3.2.4-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/4bw71mk4p24fa6wivhyna23l0zml92vw-python3.12-mdurl-0.1.2' from 'https://cache.nixos.org'...
-copying path '/nix/store/ify6nfhgwwffgsc9vxfjl04dbknsz4bb-nghttp2-1.64.0-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/aly47irx6x5sqqrvaky989hj42lwvlbq-perl5.40.0-Devel-CheckLib-1.16' from 'https://cache.nixos.org'...
-copying path '/nix/store/bhvah40258cfi5sj1wiy2zmdn5xgj4m1-krb5-1.21.3-lib' from 'https://cache.nixos.org'...
-copying path '/nix/store/qmz79v7x18zmi6g2iagxwazqfwbxzhra-libssh2-1.11.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/09pyjyjdr5mwmki9gb0yf809l54xr8p2-openssl-3.3.3-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/qm644vb405zsa0q39afc3ayz2yvx63pa-perl5.40.0-Module-Manifest-1.09' from 'https://cache.nixos.org'...
-copying path '/nix/store/cbwnppr7hgbz2hv4lhl2svb8plhrv9d4-python3.12-pyelftools-0.31' from 'https://cache.nixos.org'...
-copying path '/nix/store/4pzpyp2z6979cwzp16k6rlyyym6mw9cr-source' from 'https://cache.nixos.org'...
-copying path '/nix/store/sany11pwjyh3pa2kp01m7h66c9qxaiia-source' from 'https://cache.nixos.org'...
-copying path '/nix/store/a7wvb2p3pyih8y9mjan1l52jkgxkqd8a-python3.12-markdown-it-py-3.0.0' from 'https://cache.nixos.org'...
-copying path '/nix/store/xz1772bzjjsabm61gm75wh3sjlmcs4bn-curl-8.12.1-dev' from 'https://cache.nixos.org'...
+copying path '/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook' from 'https://cache.nixos.org'...
 copying path '/nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook' from 'https://cache.nixos.org'...
-copying path '/nix/store/bcd0ni2aqs0knp063j4jx3lh728va03y-perl5.40.0-Test-DistManifest-1.014' from 'https://cache.nixos.org'...
-copying path '/nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook' from 'https://cache.nixos.org'...
-copying path '/nix/store/yp79ahzniddw0jvywxvjddixavmnphx8-yarn-1.22.22' from 'https://cache.nixos.org'...
-copying path '/nix/store/xs7gbsp6i8cs47a4kglcp9hjf98awy75-imagemagick-7.1.1-45-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/n6zw4496n0bd9r6gjwkjmf5ja6757q32-krb5-1.21.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/1vifh0n1awrl1mciims0p9i4j1rkxgwj-lz4-1.10.0-dev' from 'https://cache.nixos.org'...
 copying path '/nix/store/hsxp8g7zdr6wxk1mp812g8nbzvajzn4w-stdenv-linux' from 'https://cache.nixos.org'...
-copying path '/nix/store/y10hfdfgk19a3p7q0b6zxga9y7y5z2ij-perl5.40.0-DBD-mysql-4.050' from 'https://cache.nixos.org'...
-copying path '/nix/store/71gw06a3dq9ikyxnvh3zgsbg9qfdnk0z-fixup-yarn-lock' from 'https://cache.nixos.org'...
-copying path '/nix/store/lgfp6sl5hpykmld29rqvi9pam8ji8k24-curl-8.12.1' from 'https://cache.nixos.org'...
-copying path '/nix/store/32xa06cd524h0s9k90ybnspfl2y1liah-python3-3.12.8-env' from 'https://cache.nixos.org'...
-copying path '/nix/store/hgq0ircylcm0mx6y7ml9chcbwgrz9xg7-openssl-3.3.3-dev' from 'https://cache.nixos.org'...
 copying path '/nix/store/szfi0xd0cwdaldhkp8vlgi7jfv662nmd-stdenv-linux' from 'https://cache.nixos.org'...
-copying path '/nix/store/x5fifi82xax5ds44zav04i6qvr2nbrdj-python3.12-mdit-py-plugins-0.4.2' from 'https://cache.nixos.org'...
-building '/nix/store/hp84am9gy4g80p9fwydzfs2izrs3d5cp-boot.json.drv'...
+copying path '/nix/store/aj7i2sf2s4cvanm6q92bsdb4phw05fpm-gnat-wrapper-14.2.0-man' from 'https://cache.nixos.org'...
+building '/nix/store/z7cj31gag9agjaw5fnljsrqaf6rm4xyw-fish_patched-completion-generator.drv'...
+copying path '/nix/store/msb3fgy3ll4kcv5qmh0287pqcv7wx8dk-protobuf-21.12' from 'https://cache.nixos.org'...
+building '/nix/store/ahxp8jjjgjvaagcas90ahcm0yndp6mxz-boot.json.drv'...
 building '/nix/store/am4q3wpipdxzbi6r5lswq5r26jni90dw-builder.pl.drv'...
-building '/nix/store/1bvm7bmdhi3pf0q1ycxvvw37fly09d5d-distribution.ini.drv'...
-building '/nix/store/r663h4pr6c3j22hd7xhsm3xplyarj0wj-drawio.desktop.drv'...
 building '/nix/store/pyfsbza5zz8sxjs52mrs16cfx2rm2jlm-ensure-all-wrappers-paths-exist.drv'...
-building '/nix/store/apgswd56bvikdqn4lhm2hyp7zcvmq961-etc-os-release.drv'...
-building '/nix/store/ib6pdg0vzrzxjk5c0s4d4vg258c3w4a1-issue.drv'...
-building '/nix/store/xs3hn9qizng6i531vjylybvppb24h0cj-nixos-version.drv'...
-Checking that Nix store paths of all wrapped programs exist... OK
-copying path '/nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14' from 'https://cache.nixos.org'...
-building '/nix/store/wqnq0286cc88n26jg904svh0pd531c4q-obsidian.desktop.drv'...
-building '/nix/store/250dj1pi29xxmfz0in2gqsijdgb3s8h9-policies.json.drv'...
 building '/nix/store/4fym568b9ln846bhnli06x84z7rk66hh-stage-2-init.sh.drv'...
-building '/nix/store/cqmn9aaypjpvvrpklpx8drbci8pq8jzh-torbrowser.desktop.drv'...
 building '/nix/store/7zk3r2vwcrksdk2920jz2aknchsfbaas-unit-console-getty.service-disabled.drv'...
 building '/nix/store/v4c2rlgvr5wc86zgz7jdqggglk28h403-unit-pipewire.service-disabled.drv'...
-/nix/store/6lvsaahn6sk22ci641844qfis8qd8719-torbrowser.desktop/share/applications/torbrowser.desktop: hint: value item "Security" in key "Categories" in group "Desktop Entry" can be extended with another category among the following categories: Settings, or System
-building '/nix/store/z7cj31gag9agjaw5fnljsrqaf6rm4xyw-fish_patched-completion-generator.drv'...
-building '/nix/store/113c5xr12rfvzxhzzc663b8n6rb8zr0r-perl-5.40.0-env.drv'...
-building '/nix/store/mh1hz4id9ngfzwjya4ckyp85rs9rhn0p-shutdown-ramfs-contents.json.drv'...
 building '/nix/store/g4l44334sdjlf5wcys2yr64l95kg4fvh-unit-pipewire.socket-disabled.drv'...
-building '/nix/store/gyqppkmjgdqq823qkfisyaxl6cd13ix5-unit-wireplumber.service-disabled.drv'...
 Running phase: unpackPhase
 unpacking source archive /nix/store/qn776mpsvs055jlh20mbb61732hr87fk-fish-3.7.1/share/fish/tools/create_manpage_completions.py
 unpacking source archive /nix/store/qn776mpsvs055jlh20mbb61732hr87fk-fish-3.7.1/share/fish/tools/deroff.py
@@ -483,25 +285,23 @@ Running phase: fixupPhase
 shrinking RPATHs of ELF executables and libraries in /nix/store/8bkhp55dqn1f5bhzhjn049r7mxi684nw-fish_patched-completion-generator
 checking for references to /build/ in /nix/store/8bkhp55dqn1f5bhzhjn049r7mxi684nw-fish_patched-completion-generator...
 patching script interpreter paths in /nix/store/8bkhp55dqn1f5bhzhjn049r7mxi684nw-fish_patched-completion-generator
-created 183 symlinks in user environment
-building '/nix/store/0vh9hgfpk3b6343c9b3891fmfa7qhnsy-unit-generate-shutdown-ramfs.service.drv'...
+Checking that Nix store paths of all wrapped programs exist... OK
+copying path '/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4' from 'https://cache.nixos.org'...
+building '/nix/store/gyqppkmjgdqq823qkfisyaxl6cd13ix5-unit-wireplumber.service-disabled.drv'...
+building '/nix/store/113c5xr12rfvzxhzzc663b8n6rb8zr0r-perl-5.40.0-env.drv'...
 building '/nix/store/sxcykr78z2ijfi3sbmzwn8sk3h4r78wn-NetworkManager-fortisslvpn-gnome-1.4.0_fish-completions.drv'...
 building '/nix/store/72kfimj01fl444qwv84yyhjihy4imchr-NetworkManager-iodine-gnome-1.2.0-unstable-2024-11-02_fish-completions.drv'...
 building '/nix/store/h476drhn184dmmi3l8ykmnpmjfdyadvn-NetworkManager-l2tp-gnome-1.20.16_fish-completions.drv'...
 building '/nix/store/fq98rqag0sdizcxjdgy2l96zc0cns4ms-NetworkManager-openconnect-1.2.10_fish-completions.drv'...
 building '/nix/store/vgxjyblqgsnarjbycz7djrn71ldsx8gw-NetworkManager-openvpn-1.12.0_fish-completions.drv'...
 building '/nix/store/04hd2g3xvacnp4s34af4s3qkb7ib2k86-NetworkManager-sstp-gnome-1.3.2_fish-completions.drv'...
-copying path '/nix/store/8qf68jid6rr2f4c8ppyp0ixdlv0axnpn-curl-8.12.1-bin' from 'https://cache.nixos.org'...
-copying path '/nix/store/zfk4v9lxal3ch98qnf7zlciwgmk4w1ij-krb5-1.21.3-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/bzjlj2qpvc992yhx4js2ds5iiczz9l3q-perl-5.40.0-env' from 'https://cache.nixos.org'...
 building '/nix/store/i6g57xsh9q1l224lvv4dwd4ids7l1pnf-NetworkManager-vpnc-1.4.0_fish-completions.drv'...
+created 183 symlinks in user environment
 building '/nix/store/rgmrcyh29mzadfrdw20vghckqrcgi3mv-VirtualBox-GuestAdditions-7.1.6a-6.6.85_fish-completions.drv'...
 building '/nix/store/lypsv0yzkfn304cfqa3pj5hh1czbfsf3-accountsservice-23.13.9_fish-completions.drv'...
 building '/nix/store/0jkf0p0799384wz7psvx7lj8ayn6qqz3-acl-2.3.2_fish-completions.drv'...
 building '/nix/store/8rq09bys3fcq5n54xp1fzqnqgrs76388-adwaita-icon-theme-47.0_fish-completions.drv'...
 building '/nix/store/v5lxaxs9ghpj5i1r8p9kmfc23zjdxi0f-alejandra-3.1.0_fish-completions.drv'...
-copying path '/nix/store/0rg4nqym82ngd29dy8qm1bggm94dkry3-libssh2-1.11.1-dev' from 'https://cache.nixos.org'...
-copying path '/nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook' from 'https://cache.nixos.org'...
 building '/nix/store/4yfb0n5v27c0iqg6l41fqdf4aqbcmm7d-asmjit-unstable-2023-04-28_fish-completions.drv'...
 building '/nix/store/xnx6q04x569z1h6cd1lis2n5w98cs9lf-asmrepl-1.0.3_fish-completions.drv'...
 building '/nix/store/aj2hc3kf3wsi6rx9yhpy81kl7gfagcpg-at-spi2-core-2.54.1_fish-completions.drv'...
@@ -513,13 +313,13 @@ building '/nix/store/1vl3njh419lchw7p11cz58kmh8l835yv-breeze-6.2.5_fish-completi
 building '/nix/store/i2kfq3y5pini4qb5c2rcmc0il2zc6r3f-breeze-6.2.5_fish-completions.drv'...
 building '/nix/store/9kp2v5552vmrj023kv7q6my920js5fk7-breeze-gtk-6.2.5_fish-completions.drv'...
 building '/nix/store/90ncs0wwdkxnkh9riq05p9fisnbcp7j7-breeze-icons-6.8.0_fish-completions.drv'...
+building '/nix/store/znsm0dv8a855mf7l459pjyb2r69nf3fi-bruno-1.34.2_fish-completions.drv'...
 building '/nix/store/vf31rb8nwyk4w5vymb4c6d3v8azzidm6-bruno-cli-1.34.2_fish-completions.drv'...
 building '/nix/store/nyjv25vyj0xpqsy1qz1ym7byss7p7ynf-bulky-3.4_fish-completions.drv'...
-copying path '/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11' from 'https://cache.nixos.org'...
-copying path '/nix/store/avk29l6h4rx8myrnai82igd4wdw5nf9r-nixos-render-docs-0.0' from 'https://cache.nixos.org'...
 building '/nix/store/4ybv0w7gk5skc8l7501zqfxlgvx829kh-bzip2-1.0.8_fish-completions.drv'...
 building '/nix/store/b2iv4q5d09jmywkl150ci5p4xyx61d4d-catppuccin-cursors-1.0.2_fish-completions.drv'...
 building '/nix/store/jm03vplkr6b68x5r0ikwmxyvymalkcng-catppuccin-papirus-folders-unstable-2023-08-02_fish-completions.drv'...
+building '/nix/store/ffb069gycbhgi17i02naywp8qd8nriba-chromium-135.0.7049.52_fish-completions.drv'...
 building '/nix/store/abr3w97jjn5v16aifa6kx0bgkgbf0vcv-cinnamon-control-center-6.2.0_fish-completions.drv'...
 building '/nix/store/nqnjf617k5ml3b1s0i8zc44mn57dki6r-cinnamon-desktop-6.2.0_fish-completions.drv'...
 building '/nix/store/d3h56859airw6bcqrkbff9r1a1az4z27-cinnamon-menus-6.2.0_fish-completions.drv'...
@@ -531,7 +331,6 @@ building '/nix/store/93626f4p8xwvyhh1hsfpzczfc65rsrwr-cliphist-0.6.1_fish-comple
 building '/nix/store/1asdqfcnalkg4qlrgzd6b20w991rssq5-cmake-3.30.5_fish-completions.drv'...
 building '/nix/store/hibswh8bv1msc2mrqzqmclagim75b3nk-colord-1.4.6_fish-completions.drv'...
 building '/nix/store/q7ql0yvccgjj91jfygzpsia3inhqm80j-command-not-found_fish-completions.drv'...
-copying path '/nix/store/04shrm4bvxw1yam87da7y9k872kqn777-curl-8.12.1-dev' from 'https://cache.nixos.org'...
 building '/nix/store/zv0l9p4rqgz7x3k1c8ss8w5ryak0zm8b-composer-2.8.5_fish-completions.drv'...
 building '/nix/store/7370cvh81rlgjgal7n40yr0id0wq1gq9-cups-2.4.11_fish-completions.drv'...
 building '/nix/store/vx0zmr3m9dg0pdbw4dcypaabd8l6adps-cups-pk-helper-0.2.6_fish-completions.drv'...
@@ -539,7 +338,7 @@ building '/nix/store/qsxilprv83k60527zlyv62y6y01ybjwb-curl-8.12.1_fish-completio
 building '/nix/store/0hai0wkl9dvmj8421zg2vbmrh3d5d38r-dbeaver-bin-24.2.3_fish-completions.drv'...
 building '/nix/store/m4pkmlwf36qfx0yj8sx9y3sww7vrnwk8-dbus-1.14.10_fish-completions.drv'...
 building '/nix/store/8jcq2m0khr5ni67j5n6chdxxjs31panr-deno-2.1.4_fish-completions.drv'...
-building '/nix/store/dy223daawjb5armivif145y0s76jf4bh-docker-27.3.1_fish-completions.drv'...
+building '/nix/store/f75qgd2j1clivbj30wazx29bs7drdn2h-docker-27.5.1_fish-completions.drv'...
 building '/nix/store/8y2ywx8y1zlp4rr95srhm55d7h5jys7n-dotnet-sdk-wrapped-9.0.202_fish-completions.drv'...
 building '/nix/store/f4vhbf3capz4976gqjxz7xf7bi39vv4n-e2fsprogs-1.47.1_fish-completions.drv'...
 building '/nix/store/rkdkpvy428hfijzs8hdj143fisxnskzm-easyeffects-7.2.3_fish-completions.drv'...
@@ -597,16 +396,54 @@ building '/nix/store/blybrqz75gsbmizlnz6pb0kzq6d1v9lk-libreoffice-24.2.7.2-wrapp
 building '/nix/store/0igiawqxzy6drvvrapj0wkakwlfwgyz5-librewolf-136.0.4-1_fish-completions.drv'...
 building '/nix/store/17zjx02yx90xg374a5dy3934y2608fan-linux-pam-1.6.1_fish-completions.drv'...
 building '/nix/store/vw9m7zw9mvxsfvvcmlbw41vrdldg80qc-lvm2-2.03.31_fish-completions.drv'...
+building '/nix/store/41q011iczh6qn1ra8grwvvjgpc3xqvc4-man-paths.drv'...
+building '/nix/store/7xpvyxxi7w3qy17sb38zbid9sl32mwxl-mariadb-server-10.11.11_fish-completions.drv'...
 building '/nix/store/ghmsy22gsakdicvx0593c2mczbfd32sk-mint-artwork-1.8.4_fish-completions.drv'...
 building '/nix/store/mv7fws0cgbxs9w58qm2kp5bj0hswc0az-mint-cursor-themes-1.0.2_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man8/mysqld.8.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man8/mysqld.8.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql.server.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql.server.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqldump.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqldump.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_secure_installation.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_secure_installation.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlslap.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlslap.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_tzinfo_to_sql.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_tzinfo_to_sql.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisam_ftdump.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisam_ftdump.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlcheck.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlcheck.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisampack.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisampack.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqld_multi.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqld_multi.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisamlog.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisamlog.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqladmin.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqladmin.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/perror.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/perror.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlshow.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlshow.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/innochecksum.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/innochecksum.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlbinlog.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlbinlog.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlimport.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlimport.1.gz'
 building '/nix/store/r23dlwidym7ghia1ngyid3qp40w6b2mi-mint-l-icons-1.7.2_fish-completions.drv'...
 building '/nix/store/aj037r811rwhb081224pqyq95sk4qn2r-mint-l-theme-1.9.8_fish-completions.drv'...
 building '/nix/store/191k6pglg2ab8p6hwlbqc8davw49cj9x-mint-themes-2.1.8_fish-completions.drv'...
 building '/nix/store/4nkjbqir7khl7sx73kq8rz6ya7jc5rkz-mint-x-icons-1.7.1_fish-completions.drv'...
 building '/nix/store/36gkz5n12xspsiia8ni167wih5ycgv67-mint-y-icons-1.7.7_fish-completions.drv'...
 building '/nix/store/g55l5hbx3dvm7af3fwpqd0wab3ww14p6-mount.vboxsf_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqldumpslow.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqldumpslow.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisamchk.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisamchk.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_config.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_config.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqld_safe.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqld_safe.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/my_print_defaults.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/my_print_defaults.1.gz'
+warning: collision between `/nix/store/wg1wxany42rmpx74bnkyzpznyvyn43p9-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/sihcya2lnjhza5mi5880lp1zqz19yv04-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man5/info.5.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man5/info.5.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man5/texinfo.5.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man5/texinfo.5.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/pod2texi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/pod2texi.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texindex.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texindex.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2pdf.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2pdf.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/makeinfo.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/makeinfo.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2dvi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2dvi.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2any.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2any.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/pdftexi2dvi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/pdftexi2dvi.1.gz'
+warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/install-info.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/install-info.1.gz'
+created 5884 symlinks in user environment
 building '/nix/store/lir35diiz20sgv10m9cf5ld8cba8ipmc-mpfr-4.2.1_fish-completions.drv'...
 building '/nix/store/x6p027fymp7bkg7jma7f4h71fsnn1sgf-mtools-4.0.45_fish-completions.drv'...
+building '/nix/store/0s2vxhsrs5n7ckccgkba5x13cajway0r-mysql-8.4.4_fish-completions.drv'...
 building '/nix/store/0sshd1in7g97165k4lr6ri07cmjra53g-nasmfmt-unstable-2022-09-15_fish-completions.drv'...
 building '/nix/store/zjyi5kx6j4ina6l1ricjq6mq77ciwf8g-ncurses-6.4.20221231_fish-completions.drv'...
 building '/nix/store/z9ij0naypnphqbpfxcpdj50yi3krqx3d-nemo-with-extensions-6.2.8_fish-completions.drv'...
@@ -615,15 +452,13 @@ building '/nix/store/4346cc41f4xd4ar9jns3415pbqwxy8xd-networkmanager-1.48.10_fis
 building '/nix/store/wf41idkfd1bz27h10mia83fpkklxx68v-nix-2.24.13_fish-completions.drv'...
 building '/nix/store/vdgkm39jp8wfbxdpsdgml4hzfwx294ba-nix-bash-completions-0.6.8_fish-completions.drv'...
 building '/nix/store/p2dsg61ksl3k3psb5pd2dpm55sbgl2i7-nix-info_fish-completions.drv'...
-building '/nix/store/knsszlcrj89q2xbpf78y618r890fxiq6-nixos-configuration-reference-manpage_fish-completions.drv'...
 building '/nix/store/v4r5c9ab48rl4k0zcdjj8z49ikg2clac-nixos-container_fish-completions.drv'...
 building '/nix/store/aa5nq168n7p42z6s1wn1k2wlfg04kdpz-nixos-firewall-tool_fish-completions.drv'...
+building '/nix/store/nxwsn3brr633lkpip9298y39wgqw3f5r-man-cache.drv'...
+building '/nix/store/9abisnmwsvl1rp85xfixjg5722cvplzs-nixos-help_fish-completions.drv'...
 building '/nix/store/brjfnzjn578k5rmb7swfzw1jaf379w9g-nixos-icons-0-unstable-2024-04-10_fish-completions.drv'...
-building '/nix/store/k5vqj0h725y0wiwl63g6l7xvq1hv20j4-nixos-manual-html.drv'...
-building '/nix/store/yklinzmdbmi54sny0a2hy2m44lhz82ba-nixos-version_fish-completions.drv'...
+building '/nix/store/ia32dhb9q7p9i35vla89805vwmra43y8-nixos-manual-html_fish-completions.drv'...
 building '/nix/store/8bhbyq3m7lplfh28ak14wbccfgn5phm2-nwg-look-0.2.7_fish-completions.drv'...
-building '/nix/store/34vas2lzqdhilg9qfpa5kpmgrvim4cfy-obsidian-1.7.6.tar.gz.drv'...
-building '/nix/store/8wv066ydyf53ylh9dz2cfizlcjzv7wi7-obsidian-logo-gradient.svg.drv'...
 building '/nix/store/m8niznhki6s8qfbjlpg42i6q6if0nn13-onboard-1.4.1_fish-completions.drv'...
 building '/nix/store/m9x7wi70lc7f335dsz8zr1wmg9iam1nw-open-watcom-v2-0-unstable-2024-10-13_fish-completions.drv'...
 building '/nix/store/k92fj19hgbgy2bvnxv801bc0q4316m5p-papirus-folders-1.13.1_fish-completions.drv'...
@@ -631,17 +466,8 @@ building '/nix/store/ajbk73s12939ydjf86q387n6bbki972f-pavucontrol-6.1_fish-compl
 building '/nix/store/hlfwx9vc8h5yk0q4ji7094x30mywhrnh-perl-5.40.0_fish-completions.drv'...
 building '/nix/store/bcb56madmyw0sbp1hn2j4kgxfb9ijhml-php-with-extensions-8.2.28_fish-completions.drv'...
 building '/nix/store/rg10s4qzqivxzfl4yj8n4byqk85svvv2-pipewire-1.2.7_fish-completions.drv'...
-
-trying https://github.com/obsidianmd/obsidian-releases/releases/download/v1.7.6/obsidian-1.7.6.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-
-trying https://obsidian.md/images/obsidian-logo-gradient.svg
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
 building '/nix/store/isbgmw0wsjxhjw47cnaar4ifzrxs6g8k-poetry-1.8.4_fish-completions.drv'...
 building '/nix/store/knnc7mvsvwnnwyl625canzyr4gw97mcc-polkit-124_fish-completions.drv'...
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
 building '/nix/store/6fv595cvplzqijldswpwm8xnzww9kwfl-polkit-gnome-0.105_fish-completions.drv'...
 building '/nix/store/n2w5g8ayab8fjk2zqxmnbvxzm20wjx09-power-profiles-daemon-0.23_fish-completions.drv'...
 building '/nix/store/28yyagz16i9nmax3md19vyg0y5xjxh4m-python3.12-pip-24.0_fish-completions.drv'...
@@ -657,144 +483,148 @@ building '/nix/store/7fd321lkjg32wzln021hbrzb11wy3r4j-sound-theme-freedesktop-0.
 building '/nix/store/nsmif7bpgmql63ccm6jqb8yszv7ll9fx-speech-dispatcher-0.11.5_fish-completions.drv'...
 building '/nix/store/mgczi61330rbs48wm9fx8njc782a01cl-sqlite-3.46.1_fish-completions.drv'...
 building '/nix/store/8328wmwwrbcbszvydp6w8146q5l6ryj1-strace-6.14_fish-completions.drv'...
-copying path '/nix/store/2dqxj1b04122gzbjrj9llnxg1mna1klq-electron-33.4.8' from 'https://cache.nixos.org'...
-building '/nix/store/33jn7lnj6pabw04igaf4br8fabi1ja45-nixos-help.drv'...
-building '/nix/store/pqwi9j61x0ilmb3gf8znbcxvsidaskcv-nixos-manual-html_fish-completions.drv'...
 building '/nix/store/hsl3ydibmm3jradm78c2r444zy2cxwsm-switcheroo-control-2.6_fish-completions.drv'...
+building '/nix/store/b9wv85pj46dq2wnng5kdvi3g4ic1b9ff-system-path.drv'...
 building '/nix/store/9rvnbm5lkl302n98g2jx7ndfqdcsz34a-systemd-256.10_fish-completions.drv'...
 building '/nix/store/iglq14061wkm1hvshbjdrjsw7zlw987b-time-1.9_fish-completions.drv'...
 building '/nix/store/fnywrpyxprviwf7rhfsk4brahvwbhbfi-tmux-3.5a_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysql_tzinfo_to_sql' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysql_tzinfo_to_sql'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysql_secure_installation' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysql_secure_installation'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/innochecksum' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/innochecksum'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysql' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysql'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqld_safe' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqld_safe'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/perror' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/perror'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/myisampack' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/myisampack'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqlcheck' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqlcheck'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqladmin' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqladmin'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/my_print_defaults' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/my_print_defaults'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/myisam_ftdump' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/myisam_ftdump'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/myisamchk' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/myisamchk'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/myisamlog' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/myisamlog'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqldumpslow' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqldumpslow'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqldump' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqldump'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqld_multi' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqld_multi'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqlshow' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqlshow'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqlslap' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqlslap'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqlimport' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqlimport'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqld' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqld'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/bin/mysqlbinlog' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/bin/mysqlbinlog'
 building '/nix/store/k17410v3d3cn41m6h84fjmrclcsi9k99-touchegg-2.0.17_fish-completions.drv'...
 building '/nix/store/llsvx1klidpyw9lv1h4m20mlwhn9pp50-typescript-5.6.3_fish-completions.drv'...
-building '/nix/store/drqdxkpksh5mjg0p2y7pdggvj95aanbj-nixos-help.drv'...
 building '/nix/store/awzwv0ww96pvm7vnlm9x9mb4s8bljhcl-uasm-2.56.2_fish-completions.drv'...
 building '/nix/store/z29prlxiyg3fvp4znk0rarxq6ldcnjr9-udisks-2.10.1_fish-completions.drv'...
 building '/nix/store/608i6srixzs8q3yq1jqi3bx10hd274rq-util-linux-2.39.4_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/qa_auth_interface.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/qa_auth_interface.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/libdaemon_example.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/libdaemon_example.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/qa_auth_server.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/qa_auth_server.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/qa_auth_client.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/qa_auth_client.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/auth_test_plugin.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/auth_test_plugin.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/adt_null.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/adt_null.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/mysql/plugin/mypluglib.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/mysql/plugin/mypluglib.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/libmysqlclient_r.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/libmysqlclient_r.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/lib/libmysqlclient.so' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/lib/libmysqlclient.so'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/english/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/english/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/greek/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/greek/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/estonian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/estonian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/hungarian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/hungarian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/czech/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/czech/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/romanian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/romanian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/bulgarian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/bulgarian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/french/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/french/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/korean/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/korean/errmsg.sys'
 building '/nix/store/jdmkvwr2hgnsyh61brfl987q73nsw60a-virtualbox-7.1.6a_fish-completions.drv'...
 building '/nix/store/jliir9lygbgqnqy47b1cvwc4mlp53bja-warpinator-1.8.6_fish-completions.drv'...
 building '/nix/store/vsqjz25vc0p0zsmw1cbklyxchq8bf9sv-waybar-0.11.0_fish-completions.drv'...
 building '/nix/store/hnjlm853vn9xh3pinkdc76i9v2abnvxs-wget-1.25.0_fish-completions.drv'...
-building '/nix/store/1jhs1nqca91vnqlbk1w0f7r3r245rdyh-nixos-help_fish-completions.drv'...
 building '/nix/store/vrxrag5lk4j0gn00z34zk4fkbgkkvc9j-wireplumber-0.5.8_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/portuguese/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/portuguese/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/ukrainian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/ukrainian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/norwegian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/norwegian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/russian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/russian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/serbian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/serbian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/italian/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/italian/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/german/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/german/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/dutch/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/dutch/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/norwegian-ny/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/norwegian-ny/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/japanese/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/japanese/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/swedish/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/swedish/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/slovak/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/slovak/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/danish/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/danish/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/spanish/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/spanish/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/polish/errmsg.sys' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/polish/errmsg.sys'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/hebrew.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/hebrew.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/armscii8.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/armscii8.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/dec8.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/dec8.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/README' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/README'
 building '/nix/store/cqgsgxppsw3d1r682id16yvc32fa5fxy-wlogout-1.2.2_fish-completions.drv'...
-100  4872    0  4872    0     0    857      0 --:--:--  0:00:05 --:--:--  1103
-copying path '/nix/store/if8ciwzc07fr3xdykcijgcm8xak8y4k9-electron-34.4.1' from 'https://cache.nixos.org'...
 building '/nix/store/z8q6bp7virzvgryvakz71h8c5amvdd20-wpa_supplicant-2.11_fish-completions.drv'...
 building '/nix/store/sm16n3alfav96przki6884zvyd1v3rph-xapp-2.8.5_fish-completions.drv'...
 building '/nix/store/fyym6q12193zn8da7dxrbq5px1mf8gh1-xdg-desktop-portal-1.18.4_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/macce.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/macce.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/geostd8.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/geostd8.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/hp8.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/hp8.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/latin2.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/latin2.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp1250.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp1250.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp852.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp852.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/Index.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/Index.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/latin5.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/latin5.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/keybcs2.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/keybcs2.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp1257.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp1257.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp850.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp850.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/swe7.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/swe7.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/greek.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/greek.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp1256.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp1256.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/latin1.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/latin1.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/latin7.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/latin7.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/ascii.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/ascii.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/macroman.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/macroman.xml'
 building '/nix/store/vx10wwfy2c8dnmsc3n7hnv3rq9pjwaba-xdg-desktop-portal-gtk-1.15.1_fish-completions.drv'...
 building '/nix/store/ywpvnm6pwv94vskib4rks7p3qvs0hnda-xdg-desktop-portal-hyprland-1.3.6_fish-completions.drv'...
 building '/nix/store/vzbv1zdqav92igqr3qrvszwy7s6xb0na-xdg-desktop-portal-xapp-1.0.9_fish-completions.drv'...
 building '/nix/store/arwjr19lasny7sd9n4h88mrzchv51ldg-xf86-input-evdev-2.11.0_fish-completions.drv'...
 building '/nix/store/pj2z8m4w46gzvs4km3bbnzcdclbk7xpj-xf86-input-libinput-1.5.0_fish-completions.drv'...
-building '/nix/store/7xpvyxxi7w3qy17sb38zbid9sl32mwxl-mariadb-server-10.11.11_fish-completions.drv'...
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/koi8u.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/koi8u.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/koi8r.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/koi8r.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp866.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp866.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/mysql/charsets/cp1251.xml' and `/nix/store/0y6z5grz8phg8q0s8v2g2q6nz2zr5q9i-mariadb-server-10.11.11/share/mysql/charsets/cp1251.xml'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man8/mysqld.8.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man8/mysqld.8.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql.server.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql.server.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqldump.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqldump.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_secure_installation.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_secure_installation.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlslap.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlslap.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_tzinfo_to_sql.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_tzinfo_to_sql.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisam_ftdump.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisam_ftdump.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlcheck.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlcheck.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisampack.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisampack.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqld_multi.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqld_multi.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisamlog.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisamlog.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqladmin.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqladmin.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/perror.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/perror.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql.1.gz'
 building '/nix/store/lpp8vwkafqqbnlj1yan0cj69lqck6gd1-xviewer-3.4.6_fish-completions.drv'...
 building '/nix/store/zfy5wxa12f8gr80rnm16far0il8f8094-xwaylandvideobridge-0.4.0_fish-completions.drv'...
 building '/nix/store/v4qz82nzgf3waz71994mmccd6f88myfm-xz-5.6.3_fish-completions.drv'...
-copying path '/nix/store/pwjqmqbnzgswkhh50fr8qibpb7g1gh2w-webcord-4.10.3' from 'https://cache.nixos.org'...
 building '/nix/store/iavy6pnjq1ayf69jj5k341461vb3bdqp-zig-0.13.0_fish-completions.drv'...
-building '/nix/store/8gcachhrwp5hs6zqy6igq0mpdk3rv3ci-zstd-1.5.6_fish-completions.drv'...
-copying path '/nix/store/z7fg8wxbxwxkg7rzcfr5ywyq5angdx9d-nix-tour-unstable-2022-01-03' from 'https://cache.nixos.org'...
-copying path '/nix/store/nqg785qdbz7d6fm299mwyk3757ni7p1j-bruno-1.34.2' from 'https://cache.nixos.org'...
-copying path '/nix/store/624l678xqxy3494fbx45yvjxppr25hr0-proton-pass-1.24.1' from 'https://cache.nixos.org'...
-building '/nix/store/355v1k7mjphgr0bjnrjryfa92qcbhfa5-drawio-24.7.17.drv'...
-Running phase: unpackPhase
-unpacking source archive /nix/store/4pzpyp2z6979cwzp16k6rlyyym6mw9cr-source
-source root is source
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-yarn config v1.22.22
-success Set "yarn-offline-mirror" to "/nix/store/zdqi51vy7k5l180v0rr2c70fk2lm9x31-offline".
-Done in 0.03s.
-yarn install v1.22.22
-[1/5] Validating package.json...
-[2/5] Resolving packages...
-[3/5] Fetching packages...
-[4/5] Linking dependencies...
-warning "electron-builder > app-builder-lib@24.13.3" has unmet peer dependency "electron-builder-squirrel-windows@24.13.3".
-[5/5] Building fresh packages...
-warning Ignored scripts due to flag.
-Done in 2.79s.
-patching script interpreter paths in node_modules/
-node_modules/typescript/bin/tsc: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/typescript/bin/tsserver: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/glob/dist/esm/bin.mjs: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/node-addon-api/tools/conversion.js: interpreter directive changed from "#! /usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/which/bin/node-which: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/mime/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/is-ci/bin.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/json5/lib/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/@electron/fuses/dist/bin.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/@electron/osx-sign/bin/electron-osx-flat.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/@electron/osx-sign/bin/electron-osx-sign.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/@electron/get/node_modules/semver/bin/semver.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/@electron/asar/bin/asar.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/dmg-license/bin/dmg-license.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/electron/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/mkdirp/bin/cmd.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/electron-builder/install-app-deps.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/electron-builder/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/extract-zip/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/ejs/bin/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/semver/bin/semver.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/jake/bin/bash_completion.sh: interpreter directive changed from "#!/bin/bash" to "/nix/store/8vpg72ik2kgxfj05lc56hkqrdrfl8xi9-bash-5.2p37/bin/bash"
-node_modules/jake/bin/cli.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-node_modules/js-yaml/bin/js-yaml.js: interpreter directive changed from "#!/usr/bin/env node" to "/nix/store/56fk3hhkk2lw9q5wdlq0v1ns65scwja4-nodejs-20.19.0/bin/node"
-Running phase: buildPhase
-yarn run v1.22.22
-$ /build/source/node_modules/.bin/electron-builder --dir -c.electronDist=/nix/store/nr49n34jzm5wjfl169lgcv13x8cmn9h0-electron-unwrapped-34.4.1/libexec/electron -c.electronVersion=34.4.1
-  • electron-builder  version=24.13.3 os=6.6.85
-  • writing effective config  file=dist/builder-effective-config.yaml
-  • packaging       platform=linux arch=x64 electron=34.4.1 appOutDir=dist/linux-unpacked
-  • copying Electron  source=/nix/store/nr49n34jzm5wjfl169lgcv13x8cmn9h0-electron-unwrapped-34.4.1/libexec/electron destination=/build/source/dist/linux-unpacked
-Done in 2.09s.
-Running phase: installPhase
-Copying '/nix/store/nszpi0n8yfcvdd9cr1qcnd0bv1qi6ki4-drawio.desktop/share/applications/drawio.desktop' into '/nix/store/x9kwrpc3m6z5va7a99h1hag47i700gjx-drawio-24.7.17/share/applications'
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/x9kwrpc3m6z5va7a99h1hag47i700gjx-drawio-24.7.17
-checking for references to /build/ in /nix/store/x9kwrpc3m6z5va7a99h1hag47i700gjx-drawio-24.7.17...
-patching script interpreter paths in /nix/store/x9kwrpc3m6z5va7a99h1hag47i700gjx-drawio-24.7.17
-stripping (with command strip and flags -S -p) in  /nix/store/x9kwrpc3m6z5va7a99h1hag47i700gjx-drawio-24.7.17/bin
-copying path '/nix/store/baxmcwryr64729m9mav1vzsda3pw2vhg-chromium-135.0.7049.52' from 'https://cache.nixos.org'...
-building '/nix/store/yjyj4qdzxfrfz4qq2s4acrzabmaa6kh9-tor-browser-14.0.9.drv'...
-Running phase: unpackPhase
-unpacking source archive /nix/store/100qy6jrh3jdmncw51c1pkj37wbdip2z-tor-browser-linux-x86_64-14.0.9.tar.xz
-building '/nix/store/ffb069gycbhgi17i02naywp8qd8nriba-chromium-135.0.7049.52_fish-completions.drv'...
-building '/nix/store/znsm0dv8a855mf7l459pjyb2r69nf3fi-bruno-1.34.2_fish-completions.drv'...
-building '/nix/store/qn1192kfpp9kgg0wlflfs02gy42rfkyf-man-paths.drv'...
-building '/nix/store/22hnh01jc7p5gxv8xg0aszlaqjkm7myn-system-path.drv'...
-building '/nix/store/b0h4b3pl8g8jg13gf3hk65czg7h2973z-system_fish-completions.drv'...
-warning: collision between `/nix/store/wg1wxany42rmpx74bnkyzpznyvyn43p9-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/sihcya2lnjhza5mi5880lp1zqz19yv04-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man5/info.5.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man5/info.5.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man5/texinfo.5.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man5/texinfo.5.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/pod2texi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/pod2texi.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texindex.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texindex.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2pdf.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2pdf.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/makeinfo.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/makeinfo.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2dvi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2dvi.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/texi2any.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/texi2any.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/pdftexi2dvi.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/pdftexi2dvi.1.gz'
-warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/man/man1/install-info.1.gz' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/man/man1/install-info.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlshow.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlshow.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/innochecksum.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/innochecksum.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlbinlog.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlbinlog.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqlimport.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqlimport.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqldumpslow.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqldumpslow.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/myisamchk.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/myisamchk.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysql_config.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysql_config.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/mysqld_safe.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/mysqld_safe.1.gz'
+warning: collision between `/nix/store/jn2asqbac6lv79pzn8k7mpaxx0a70fhx-mysql-8.4.4/share/man/man1/my_print_defaults.1.gz' and `/nix/store/x292xvy0xwnm4bn6jqr54vyfk7g72lx7-mariadb-server-10.11.11-man/share/man/man1/my_print_defaults.1.gz'
 warning: collision between `/nix/store/ci04zrl659f8ci0ixps2nwr8nq4l08c0-vim-9.1.1122/bin/vi' and `/nix/store/w78f11c1xx9w73ncam9wg71d25zm09vy-open-watcom-v2-0-unstable-2024-10-13/bin/vi'
 warning: collision between `/nix/store/x4r10mj7yif2y51fl8ski7fcrk8xchj9-rustfmt-1.82.0/bin/cargo-fmt' and `/nix/store/68xsz8zbv5xlssr3r56a5l394ys6nfmj-rustup-1.27.1/bin/cargo-fmt'
 warning: collision between `/nix/store/x4r10mj7yif2y51fl8ski7fcrk8xchj9-rustfmt-1.82.0/bin/rustfmt' and `/nix/store/68xsz8zbv5xlssr3r56a5l394ys6nfmj-rustup-1.27.1/bin/rustfmt'
-warning: collision between `/nix/store/laskf7jsinx2zjpk0y3xkkrkcy3gi5ip-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/j60w146ill6629k0xibvg9jy10g9z38f-xorg-server-21.1.16_fish-completions/Xserver.fish'
-warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/install-info.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/install-info.fish'
-warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/texindex.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/texindex.fish'
-warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/pod2texi.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/pod2texi.fish'
-warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/makeinfo.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/makeinfo.fish'
-warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/texi2dvi.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/texi2dvi.fish'
-created 673 symlinks in user environment
-created 5880 symlinks in user environment
-building '/nix/store/qs4rq0z09mfs0n0pc9rpa8jwdfvhmsn0-man-cache.drv'...
-warning: creating dangling symlink `/nix/store/dyjm29a2gphjnhk7a90157bw5fwjwp0i-system-path//etc/xdg/xdg-default' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/dyjm29a2gphjnhk7a90157bw5fwjwp0i-system-path//etc/xdg/xdg-xfce' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
-warning: creating dangling symlink `/nix/store/dyjm29a2gphjnhk7a90157bw5fwjwp0i-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/7lnh5rqkgpv8sabifks23jfhr4pyxk1x-system-path//etc/xdg/xdg-default' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-default' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/7lnh5rqkgpv8sabifks23jfhr4pyxk1x-system-path//etc/xdg/xdg-xfce' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-xfce' -> `/usr/share/mint-artwork/xfce'
+warning: creating dangling symlink `/nix/store/7lnh5rqkgpv8sabifks23jfhr4pyxk1x-system-path//etc/xdg/xdg-default.desktop' -> `/nix/store/78v9kd1c27bs3yd2z34wahbckk6mhm28-mint-artwork-1.8.4/etc/xdg/xdg-default.desktop' -> `/usr/share/mint-artwork/xfce'
 warning: collision between `/nix/store/ric33qn68w7c1rhggnj12dfa2w9l11ay-VirtualBox-GuestAdditions-7.1.6a-6.6.85/lib/modules' and `/nix/store/8qhbdgy7ai0wxqj66zp5z76yfx2s1r4p-zulu-ca-jdk-23.0.0/lib/modules'
 warning: collision between `/nix/store/nv2vmqxvifhnrw4q87vc6sly8pvkvjns-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/ric33qn68w7c1rhggnj12dfa2w9l11ay-VirtualBox-GuestAdditions-7.1.6a-6.6.85/bin/mount.vboxsf'
 warning: collision between `/nix/store/wg1wxany42rmpx74bnkyzpznyvyn43p9-xwayland-24.1.6/lib/xorg/protocol.txt' and `/nix/store/sihcya2lnjhza5mi5880lp1zqz19yv04-xorg-server-21.1.16/lib/xorg/protocol.txt'
 warning: collision between `/nix/store/wg1wxany42rmpx74bnkyzpznyvyn43p9-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/sihcya2lnjhza5mi5880lp1zqz19yv04-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+building '/nix/store/8gcachhrwp5hs6zqy6igq0mpdk3rv3ci-zstd-1.5.6_fish-completions.drv'...
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/bin/texi2dvi' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/bin/texi2dvi'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/bin/makeinfo' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/bin/makeinfo'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/bin/texi2pdf' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/bin/texi2pdf'
@@ -1018,6 +848,7 @@ warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM855.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM855.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/SAMI_WS2.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/SAMI_WS2.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/EBCDIC_AT_DE_A.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/EBCDIC_AT_DE_A.pm'
+building '/nix/store/v06f6rfv01h8ibm4fmwl8qxmf73ib9q9-system_fish-completions.drv'...
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM852.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM852.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM863.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/IBM863.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/ATARI_ST.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/lib/libintl-perl/lib/Locale/RecodeData/ATARI_ST.pm'
@@ -1341,963 +1172,40 @@ warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/init/documentation_examples.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/init/documentation_examples.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/init/chm.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/init/chm.pm'
 warning: collision between `/nix/store/1s9avlvqmgsxl1yrv1y5k3hcm2yqq7nf-texinfo-interactive-7.1.1/share/texinfo/init/html32.pm' and `/nix/store/9gfhlbd5jnq59n5nwhsmls3g2qqk5d17-texinfo-7.1.1/share/texinfo/init/html32.pm'
-created 20508 symlinks in user environment
-100  106M  100  106M    0     0  4733k      0  0:00:22  0:00:22 --:--:-- 10.1M
-building '/nix/store/4h7wvwaal3ziqkhbf1347dfp85cypljr-obsidian-1.7.6.drv'...
-source root is tor-browser
-setting SOURCE_DATE_EPOCH to timestamp 1743444000 of file tor-browser/start-tor-browser.desktop
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-no configure script, doing nothing
-Running phase: buildPhase
-Running phase: unpackPhase
-unpacking source archive /nix/store/dzi6dpnl1w6bbhpalxy34pc9f6xh0rjh-obsidian-1.7.6.tar.gz
-source root is obsidian-1.7.6
-setting SOURCE_DATE_EPOCH to timestamp 1731259336 of file obsidian-1.7.6/resources/obsidian.asar
-Running phase: patchPhase
-Running phase: updateAutotoolsGnuConfigScriptsPhase
-Running phase: configurePhase
-no configure script, doing nothing
-Running phase: buildPhase
-no Makefile or custom buildPhase, doing nothing
-Running phase: installPhase
+warning: collision between `/nix/store/laskf7jsinx2zjpk0y3xkkrkcy3gi5ip-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/j60w146ill6629k0xibvg9jy10g9z38f-xorg-server-21.1.16_fish-completions/Xserver.fish'
+warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/install-info.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/install-info.fish'
+warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/texindex.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/texindex.fish'
+warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/pod2texi.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/pod2texi.fish'
+warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/makeinfo.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/makeinfo.fish'
+warning: collision between `/nix/store/p8svsmpfb1780wk19plkvq6sndzyl4mk-texinfo-interactive-7.1.1_fish-completions/texi2dvi.fish' and `/nix/store/lalar4lmmakb9ly3vjz1k2jqbcmyq11s-texinfo-7.1.1_fish-completions/texi2dvi.fish'
+created 696 symlinks in user environment
+created 20779 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/0w61kz0y29fvpcnp2kzm42sl39pvg06v-obsidian-1.7.6
-checking for references to /build/ in /nix/store/0w61kz0y29fvpcnp2kzm42sl39pvg06v-obsidian-1.7.6...
-patching script interpreter paths in /nix/store/0w61kz0y29fvpcnp2kzm42sl39pvg06v-obsidian-1.7.6
-stripping (with command strip and flags -S -p) in  /nix/store/0w61kz0y29fvpcnp2kzm42sl39pvg06v-obsidian-1.7.6/bin
-/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser /build/tor-browser
-automatically fixing dependencies for ELF files
-{'append_rpaths': [],
- 'extra_args': ['--no-clobber-old-sections'],
- 'ignore_missing': [],
- 'keep_libc': False,
- 'libs': [PosixPath('/nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/q3vpsxhzdj15yjzhzq94x55m99wly5w8-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15/lib'),
-          PosixPath('/nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook/lib'),
-          PosixPath('/nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook/lib'),
-          PosixPath('/nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/2vcwlijkh8y1glx5fl7b0s5p9gq3z77s-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/i7410jj50sip9d3mjy95ckq59az9y0y1-at-spi2-core-2.54.1-dev/lib'),
-          PosixPath('/nix/store/a3aly8dp93wcml4j9hhwk9401a63v76m-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/gb3dqi6h7plva3dbvw58xxrgc5qp3idw-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/0hv5ymwkczx3ak8h3yldfbwbab33jnrw-expat-2.6.4/lib'),
-          PosixPath('/nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/qkj4b3si2xbry58xslhm1vrixhxrvskp-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/vq3bmhq1j35i77da24ba3xg7aizllzrz-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/ccrjbcfl5zcdp0n5mh69f4airrb9g8m4-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/fwzb9f7n2ia6z8lk0w597brrjdmyv29s-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/r25i9ffbldgn22436psygd7ivbvs3qq8-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/8g8wdqid20924fbppbljsl6l7gr0p21j-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/mxs6376hnc3469ldz5kh0ld34kjllsjl-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/cmzjrq13sxbfhwfzs2s3yxn4hms4gjfz-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib'),
-          PosixPath('/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib'),
-          PosixPath('/nix/store/dnf3f18mapdn7rsvibpcgg70f1mhqarz-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/a8a53z1zjw7qy8wdwnahvzph3x56alcn-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/w4wi2ik0fkz57b7i8ds4fr1jnj0333j0-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/c0v34jqmvavh3fmcdd478llzy9mjw7kw-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/yyfzan4mn874v885jy6fs598gjb31c4l-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/qiisx6c7qpyzq522j3icsfhj8ayw6ah4-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/c78nfhymlhasf7fy1fbv6cgkw6w1gfpv-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/a6s9mjppf0d5g7pyzb81f0illazxnql3-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/qpj54f9yy1llgqjfw0jndfxxmz15xx88-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/x7fy57xwnh46xwk8hmxxi7ml3236i20k-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/qhys87y256mrpvcskmck42ialqyz0bj2-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/ips0ppgqx9i7a200yvmjn4j75lr4d36y-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/445hfbxb2fzgr8030c2wc5hblp59x1vn-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/f8kgcvf20brszwqx3w15l4nv86acvw55-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/hl93nc5vy322x56mj186lr4nw6588qdl-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/mmrzgkkm5kmh9zd7i4j7588kb4yq5hm0-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/2dnmgjsw3imp37b2dx1g1231g7bzhrq2-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/jpg51cs8938ynqh2lh4gk2msrsd5h4c6-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/f2qgm4nprf7splcmww9zrhgrb6vnd2li-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/v8yic680bkabdvxi7v8py16xjg5lqchq-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/fhm4xps82x74ivvjl3yln18fqpcyj1k6-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/1202lxbzv39q4q3abqvf9yqb06hj2nm3-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/r8d7haxm2gmkm2n21glcmhn95vyf1wkk-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/zv23yqng2pfrbidamg912043dpw43cn5-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/1n6a85ywwz07afnzx6nqdbymzbcyvaiy-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/sgpy8980rvm1r669rzdn6kiaphrw5v6w-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/i384n7wyhr8iy42l8r0kfj4vyfp4l0kw-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/a632fwv85d01z19cfzjkd1043f0975nm-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/cjzvhr73ba4h0fmx4zk8ynz8qrcgkdyk-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/1yzhkgxlcja1av33s8bcacbfvfgw4qvj-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/r584hq3xbq8rcivm4873ksij6j7g1xp9-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/rbns8mzghhqxih4hj2js4mb4s6ivy5d1-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/sf31nmjhlsdp2h26vbwbpa7gwfn4i4na-xz-5.6.3/lib'),
-          PosixPath('/nix/store/xzgjrhk6sa1z9qmwpkdc9cl45faa5lar-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/xmmli2ijsz2br6573z3sqsgg0spnj7i9-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/6cf2yj12gf51jn5vdbdw01gmgvyj431s-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/ww2i28l1i6p629qc0jsmgs7xlzkv6c5b-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/530yp2bmkv9hh8a3d75d0zdzwjbc4kkq-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/wxr4m0hp1n4c0cikm0i4v98iinn7xiag-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s2fkghy0vlcrg48npy4dw2rl6l5q3xw2-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/vw6dfjvrigija8iwv8201b4janywvrjs-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/j131lij70w3j3kik75hx7ygnivql6gqp-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/3w8r75v2qzci693h5qls9rygpw4lainf-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/78c9mf12ap5772qn1bbh2fwn2d80qpmp-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/sjrhck9fddbjd35lck7r4vp3163xxmn6-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/9cvb4haga95mikh4b9ixlmbdgw1wj7ir-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/194qfmrz4ns4s3khi7j5f79cvsgjkrip-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/7g6qyfq89p9n2347j324iif6x716vmks-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/ak90l2zaayyv5vmpfb3xr2awy1d6ayhp-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/0gp6vb74jgsyr257p7kjdg3m9610m4pk-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/6bcxybx1mrhzfmczc6ybpgh3dxybi18f-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/p9mmc8ccnngsrxr4xmwkkz0j9cypg27g-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/fcy1487k38v2fcs31bg13k50a9wj90rx-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/x4qjlbgzky3w3c8hm4qsav5cf9ymm0vh-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/cpyc3zsjmbrrb2pc4kpw1gw7f25kim72-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/5di6aml9nxk76q8dkcx0qklnikq1jyx3-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/8c17fly174n963dqbkzyz4p73kspsbvg-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/incxhcfjgnxmd4v68pniffkgcmvdml9j-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/4jzlggfwmz7bvfpdjvmmqfzbm2c2j345-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/80fr9vf9pz1dmszndabxf817ixaaj6sw-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/kd8wksp9mqbwih97lfdy0d3wlham7lcg-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/wbn631z6v8j42m4z03l483vyfyc5qq7c-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib'),
-          PosixPath('/nix/store/wxgadzsdwgj3vz8z9yy99kpzgdq0fvip-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/fxk1xcv2p2j284jil9vv49hcmxqndvx4-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/d0gbikvar8lpypxs5rpjhdv8qfdxyi48-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/77hhp2ql5da7mf8h8bcb9ipcp6c2rfih-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/3mlbq7n0fxvlbjpfk7053vfklqf6zyhz-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/gh97y37ijjba544d6lhlfs90i7m0yp13-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/k2m33hinl05a3wn1ds90gigplcyf9h6c-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/xxpr2srvvlwvlidmd3yipx9sk7g1z2vr-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/11szpaxyi7n640kc3n3jhs779a7jhnb9-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/nn7nj7xq8gdfyxqhchphzia7i34rwb0v-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/zh4x353xh2c5irsy7cp4dn6cjkvc74az-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/hs9zzny8h11wqk9469pknpba8w0arvk6-cups-2.4.11/lib'),
-          PosixPath('/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/a12nhfjz008iwi4qdf0wv8fawkpvzl8s-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/rhrgpmwjyi9j2lw8hc8ayi379d0zg9xz-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/9wwkzvmrlv43y71rbw8sbh9bamc62a16-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/1mv8pj4nxwnd9bbxshljc9p4cnl3rakj-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/0ar4nwrw7lq2d6dykrxvrrm8qpv7b4rb-dconf-0.40.0-lib/lib'),
-          PosixPath('/nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev/lib'),
-          PosixPath('/nix/store/448l5j0r4i3hrkzjihhs8kk5nnd0nh7d-dbus-glib-0.112/lib'),
-          PosixPath('/nix/store/s6hy1d4shb9azba31ciwqyfak6cp7fhh-libXtst-1.2.5/lib'),
-          PosixPath('/nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/q3vpsxhzdj15yjzhzq94x55m99wly5w8-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15/lib'),
-          PosixPath('/nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook/lib'),
-          PosixPath('/nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook/lib'),
-          PosixPath('/nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/2vcwlijkh8y1glx5fl7b0s5p9gq3z77s-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/i7410jj50sip9d3mjy95ckq59az9y0y1-at-spi2-core-2.54.1-dev/lib'),
-          PosixPath('/nix/store/a3aly8dp93wcml4j9hhwk9401a63v76m-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/gb3dqi6h7plva3dbvw58xxrgc5qp3idw-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/0hv5ymwkczx3ak8h3yldfbwbab33jnrw-expat-2.6.4/lib'),
-          PosixPath('/nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/qkj4b3si2xbry58xslhm1vrixhxrvskp-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/vq3bmhq1j35i77da24ba3xg7aizllzrz-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/ccrjbcfl5zcdp0n5mh69f4airrb9g8m4-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/fwzb9f7n2ia6z8lk0w597brrjdmyv29s-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/r25i9ffbldgn22436psygd7ivbvs3qq8-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/8g8wdqid20924fbppbljsl6l7gr0p21j-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/mxs6376hnc3469ldz5kh0ld34kjllsjl-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/cmzjrq13sxbfhwfzs2s3yxn4hms4gjfz-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib'),
-          PosixPath('/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib'),
-          PosixPath('/nix/store/dnf3f18mapdn7rsvibpcgg70f1mhqarz-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/a8a53z1zjw7qy8wdwnahvzph3x56alcn-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/w4wi2ik0fkz57b7i8ds4fr1jnj0333j0-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/c0v34jqmvavh3fmcdd478llzy9mjw7kw-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/yyfzan4mn874v885jy6fs598gjb31c4l-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/qiisx6c7qpyzq522j3icsfhj8ayw6ah4-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/c78nfhymlhasf7fy1fbv6cgkw6w1gfpv-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/a6s9mjppf0d5g7pyzb81f0illazxnql3-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/qpj54f9yy1llgqjfw0jndfxxmz15xx88-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/x7fy57xwnh46xwk8hmxxi7ml3236i20k-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/qhys87y256mrpvcskmck42ialqyz0bj2-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/ips0ppgqx9i7a200yvmjn4j75lr4d36y-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/445hfbxb2fzgr8030c2wc5hblp59x1vn-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/f8kgcvf20brszwqx3w15l4nv86acvw55-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/hl93nc5vy322x56mj186lr4nw6588qdl-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/mmrzgkkm5kmh9zd7i4j7588kb4yq5hm0-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/2dnmgjsw3imp37b2dx1g1231g7bzhrq2-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/jpg51cs8938ynqh2lh4gk2msrsd5h4c6-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/f2qgm4nprf7splcmww9zrhgrb6vnd2li-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/v8yic680bkabdvxi7v8py16xjg5lqchq-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/fhm4xps82x74ivvjl3yln18fqpcyj1k6-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/1202lxbzv39q4q3abqvf9yqb06hj2nm3-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/r8d7haxm2gmkm2n21glcmhn95vyf1wkk-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/zv23yqng2pfrbidamg912043dpw43cn5-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/1n6a85ywwz07afnzx6nqdbymzbcyvaiy-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/sgpy8980rvm1r669rzdn6kiaphrw5v6w-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/i384n7wyhr8iy42l8r0kfj4vyfp4l0kw-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/a632fwv85d01z19cfzjkd1043f0975nm-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/cjzvhr73ba4h0fmx4zk8ynz8qrcgkdyk-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/1yzhkgxlcja1av33s8bcacbfvfgw4qvj-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/r584hq3xbq8rcivm4873ksij6j7g1xp9-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/rbns8mzghhqxih4hj2js4mb4s6ivy5d1-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/sf31nmjhlsdp2h26vbwbpa7gwfn4i4na-xz-5.6.3/lib'),
-          PosixPath('/nix/store/xzgjrhk6sa1z9qmwpkdc9cl45faa5lar-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/xmmli2ijsz2br6573z3sqsgg0spnj7i9-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/6cf2yj12gf51jn5vdbdw01gmgvyj431s-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/ww2i28l1i6p629qc0jsmgs7xlzkv6c5b-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/530yp2bmkv9hh8a3d75d0zdzwjbc4kkq-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/wxr4m0hp1n4c0cikm0i4v98iinn7xiag-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s2fkghy0vlcrg48npy4dw2rl6l5q3xw2-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/vw6dfjvrigija8iwv8201b4janywvrjs-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/j131lij70w3j3kik75hx7ygnivql6gqp-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/3w8r75v2qzci693h5qls9rygpw4lainf-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/78c9mf12ap5772qn1bbh2fwn2d80qpmp-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/sjrhck9fddbjd35lck7r4vp3163xxmn6-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/9cvb4haga95mikh4b9ixlmbdgw1wj7ir-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/194qfmrz4ns4s3khi7j5f79cvsgjkrip-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/7g6qyfq89p9n2347j324iif6x716vmks-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/ak90l2zaayyv5vmpfb3xr2awy1d6ayhp-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/0gp6vb74jgsyr257p7kjdg3m9610m4pk-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/6bcxybx1mrhzfmczc6ybpgh3dxybi18f-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/p9mmc8ccnngsrxr4xmwkkz0j9cypg27g-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/fcy1487k38v2fcs31bg13k50a9wj90rx-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/x4qjlbgzky3w3c8hm4qsav5cf9ymm0vh-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/cpyc3zsjmbrrb2pc4kpw1gw7f25kim72-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/5di6aml9nxk76q8dkcx0qklnikq1jyx3-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/8c17fly174n963dqbkzyz4p73kspsbvg-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/incxhcfjgnxmd4v68pniffkgcmvdml9j-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/4jzlggfwmz7bvfpdjvmmqfzbm2c2j345-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/80fr9vf9pz1dmszndabxf817ixaaj6sw-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/kd8wksp9mqbwih97lfdy0d3wlham7lcg-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/wbn631z6v8j42m4z03l483vyfyc5qq7c-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib'),
-          PosixPath('/nix/store/wxgadzsdwgj3vz8z9yy99kpzgdq0fvip-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/fxk1xcv2p2j284jil9vv49hcmxqndvx4-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/d0gbikvar8lpypxs5rpjhdv8qfdxyi48-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/77hhp2ql5da7mf8h8bcb9ipcp6c2rfih-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/3mlbq7n0fxvlbjpfk7053vfklqf6zyhz-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/gh97y37ijjba544d6lhlfs90i7m0yp13-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/k2m33hinl05a3wn1ds90gigplcyf9h6c-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/xxpr2srvvlwvlidmd3yipx9sk7g1z2vr-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/11szpaxyi7n640kc3n3jhs779a7jhnb9-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/nn7nj7xq8gdfyxqhchphzia7i34rwb0v-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/zh4x353xh2c5irsy7cp4dn6cjkvc74az-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/hs9zzny8h11wqk9469pknpba8w0arvk6-cups-2.4.11/lib'),
-          PosixPath('/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/a12nhfjz008iwi4qdf0wv8fawkpvzl8s-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/rhrgpmwjyi9j2lw8hc8ayi379d0zg9xz-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/9wwkzvmrlv43y71rbw8sbh9bamc62a16-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/1mv8pj4nxwnd9bbxshljc9p4cnl3rakj-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/0ar4nwrw7lq2d6dykrxvrrm8qpv7b4rb-dconf-0.40.0-lib/lib'),
-          PosixPath('/nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev/lib'),
-          PosixPath('/nix/store/448l5j0r4i3hrkzjihhs8kk5nnd0nh7d-dbus-glib-0.112/lib'),
-          PosixPath('/nix/store/s6hy1d4shb9azba31ciwqyfak6cp7fhh-libXtst-1.2.5/lib')],
- 'paths': [PosixPath('firefox.real'), PosixPath('TorBrowser/Tor')],
- 'recursive': True,
- 'runtime_dependencies': []}
-setting interpreter of firefox.real
-searching for dependencies of firefox.real
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of TorBrowser/Tor/libssl.so.3
-    libcrypto.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-searching for dependencies of TorBrowser/Tor/libevent-2.1.so.7
-searching for dependencies of TorBrowser/Tor/libcrypto.so.3
-setting interpreter of TorBrowser/Tor/tor
-searching for dependencies of TorBrowser/Tor/tor
-    libz.so.1 -> found: /nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib
-    libevent-2.1.so.7 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-    libssl.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-    libcrypto.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting RPATH to: /nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting interpreter of TorBrowser/Tor/PluggableTransports/conjure-client
-searching for dependencies of TorBrowser/Tor/PluggableTransports/conjure-client
-setting interpreter of TorBrowser/Tor/PluggableTransports/lyrebird
-searching for dependencies of TorBrowser/Tor/PluggableTransports/lyrebird
-searching for dependencies of TorBrowser/Tor/libstdc++/libstdc++.so.6
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-auto-patchelf: 0 dependencies could not be satisfied
-gtk-update-icon-cache: Cache file created successfully.
-gtk-update-icon-cache: Cache file created successfully.
-Checking bundled Tor ...
-Checking tor-browser wrapper ...
-Running phase: glibPreInstallPhase
-Running phase: glibPreInstallPhase
-Running phase: glibPreInstallPhase
-Running phase: installPhase
-'/nix/store/wqdi87rmivhcr0rdb3lsmkm2386rinwa-distribution.ini' -> '/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/distribution/distribution.ini'
-'/nix/store/xlk78k0367bk2sh0727v3vzrgclfj2f3-policies.json' -> '/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/distribution/policies.json'
-Copying '/nix/store/6lvsaahn6sk22ci641844qfis8qd8719-torbrowser.desktop/share/applications/torbrowser.desktop' into '/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/applications'
-Running phase: glibPreFixupPhase
-Running phase: glibPreFixupPhase
-Running phase: glibPreFixupPhase
-Running phase: gappsWrapperArgsHook
-Running phase: dropIconThemeCache
-Running phase: dropIconThemeCache
-Running phase: dropIconThemeCache
-Running phase: fixupPhase
-shrinking RPATHs of ELF executables and libraries in /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/tor-browser
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozgtk.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavutil.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnspr4.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/liblgpllibs.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsoftokn3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsmime3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libgkcodecs.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssckbi.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsqlite3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssutil3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnss3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/vaapitest
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplc4.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/abicheck
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavcodec.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsandbox.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozwayland.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/firefox
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libfreeblpriv3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libipcclientcerts.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/updater
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libssl3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/glxtest
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libxul.so
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libssl.so.3
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libevent-2.1.so.7
 gtk-update-icon-cache: Cache file created successfully.
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/conjure-client
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/lyrebird
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++/libstdc++.so.6
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libcrypto.so.3
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/tor
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplds4.so
-Wrapping program '/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/tor-browser'
-shrinking RPATHs of ELF executables and libraries in /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/.tor-browser-wrapped
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/tor-browser
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozgtk.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavutil.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnspr4.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/liblgpllibs.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsoftokn3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsmime3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libgkcodecs.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssckbi.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsqlite3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssutil3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnss3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/vaapitest
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplc4.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/abicheck
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavcodec.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsandbox.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozwayland.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/firefox
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libfreeblpriv3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libipcclientcerts.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/updater
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libssl3.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/glxtest
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libxul.so
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libssl.so.3
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libevent-2.1.so.7
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/conjure-client
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/lyrebird
 gtk-update-icon-cache: Cache file created successfully.
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++/libstdc++.so.6
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libcrypto.so.3
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/tor
-shrinking /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplds4.so
 gtk-update-icon-cache: Cache file created successfully.
-checking for references to /build/ in /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9...
-patching script interpreter paths in /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/execdesktop: interpreter directive changed from "#!/usr/bin/env bash" to "/nix/store/8vpg72ik2kgxfj05lc56hkqrdrfl8xi9-bash-5.2p37/bin/bash"
-/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/start-tor-browser: interpreter directive changed from "#!/usr/bin/env bash" to "/nix/store/8vpg72ik2kgxfj05lc56hkqrdrfl8xi9-bash-5.2p37/bin/bash"
-stripping (with command strip and flags -S -p) in  /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin
-automatically fixing dependencies for ELF files
-{'append_rpaths': [],
- 'extra_args': ['--no-clobber-old-sections', '--no-clobber-old-sections'],
- 'ignore_missing': [],
- 'keep_libc': False,
- 'libs': [PosixPath('/nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/q3vpsxhzdj15yjzhzq94x55m99wly5w8-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15/lib'),
-          PosixPath('/nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook/lib'),
-          PosixPath('/nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook/lib'),
-          PosixPath('/nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/2vcwlijkh8y1glx5fl7b0s5p9gq3z77s-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/i7410jj50sip9d3mjy95ckq59az9y0y1-at-spi2-core-2.54.1-dev/lib'),
-          PosixPath('/nix/store/a3aly8dp93wcml4j9hhwk9401a63v76m-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/gb3dqi6h7plva3dbvw58xxrgc5qp3idw-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/0hv5ymwkczx3ak8h3yldfbwbab33jnrw-expat-2.6.4/lib'),
-          PosixPath('/nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/qkj4b3si2xbry58xslhm1vrixhxrvskp-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/vq3bmhq1j35i77da24ba3xg7aizllzrz-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/ccrjbcfl5zcdp0n5mh69f4airrb9g8m4-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/fwzb9f7n2ia6z8lk0w597brrjdmyv29s-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/r25i9ffbldgn22436psygd7ivbvs3qq8-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/8g8wdqid20924fbppbljsl6l7gr0p21j-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/mxs6376hnc3469ldz5kh0ld34kjllsjl-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/cmzjrq13sxbfhwfzs2s3yxn4hms4gjfz-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib'),
-          PosixPath('/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib'),
-          PosixPath('/nix/store/dnf3f18mapdn7rsvibpcgg70f1mhqarz-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/a8a53z1zjw7qy8wdwnahvzph3x56alcn-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/w4wi2ik0fkz57b7i8ds4fr1jnj0333j0-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/c0v34jqmvavh3fmcdd478llzy9mjw7kw-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/yyfzan4mn874v885jy6fs598gjb31c4l-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/qiisx6c7qpyzq522j3icsfhj8ayw6ah4-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/c78nfhymlhasf7fy1fbv6cgkw6w1gfpv-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/a6s9mjppf0d5g7pyzb81f0illazxnql3-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/qpj54f9yy1llgqjfw0jndfxxmz15xx88-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/x7fy57xwnh46xwk8hmxxi7ml3236i20k-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/qhys87y256mrpvcskmck42ialqyz0bj2-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/ips0ppgqx9i7a200yvmjn4j75lr4d36y-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/445hfbxb2fzgr8030c2wc5hblp59x1vn-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/f8kgcvf20brszwqx3w15l4nv86acvw55-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/hl93nc5vy322x56mj186lr4nw6588qdl-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/mmrzgkkm5kmh9zd7i4j7588kb4yq5hm0-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/2dnmgjsw3imp37b2dx1g1231g7bzhrq2-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/jpg51cs8938ynqh2lh4gk2msrsd5h4c6-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/f2qgm4nprf7splcmww9zrhgrb6vnd2li-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/v8yic680bkabdvxi7v8py16xjg5lqchq-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/fhm4xps82x74ivvjl3yln18fqpcyj1k6-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/1202lxbzv39q4q3abqvf9yqb06hj2nm3-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/r8d7haxm2gmkm2n21glcmhn95vyf1wkk-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/zv23yqng2pfrbidamg912043dpw43cn5-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/1n6a85ywwz07afnzx6nqdbymzbcyvaiy-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/sgpy8980rvm1r669rzdn6kiaphrw5v6w-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/i384n7wyhr8iy42l8r0kfj4vyfp4l0kw-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/a632fwv85d01z19cfzjkd1043f0975nm-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/cjzvhr73ba4h0fmx4zk8ynz8qrcgkdyk-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/1yzhkgxlcja1av33s8bcacbfvfgw4qvj-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/r584hq3xbq8rcivm4873ksij6j7g1xp9-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/rbns8mzghhqxih4hj2js4mb4s6ivy5d1-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/sf31nmjhlsdp2h26vbwbpa7gwfn4i4na-xz-5.6.3/lib'),
-          PosixPath('/nix/store/xzgjrhk6sa1z9qmwpkdc9cl45faa5lar-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/xmmli2ijsz2br6573z3sqsgg0spnj7i9-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/6cf2yj12gf51jn5vdbdw01gmgvyj431s-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/ww2i28l1i6p629qc0jsmgs7xlzkv6c5b-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/530yp2bmkv9hh8a3d75d0zdzwjbc4kkq-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/wxr4m0hp1n4c0cikm0i4v98iinn7xiag-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s2fkghy0vlcrg48npy4dw2rl6l5q3xw2-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/vw6dfjvrigija8iwv8201b4janywvrjs-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/j131lij70w3j3kik75hx7ygnivql6gqp-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/3w8r75v2qzci693h5qls9rygpw4lainf-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/78c9mf12ap5772qn1bbh2fwn2d80qpmp-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/sjrhck9fddbjd35lck7r4vp3163xxmn6-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/9cvb4haga95mikh4b9ixlmbdgw1wj7ir-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/194qfmrz4ns4s3khi7j5f79cvsgjkrip-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/7g6qyfq89p9n2347j324iif6x716vmks-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/ak90l2zaayyv5vmpfb3xr2awy1d6ayhp-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/0gp6vb74jgsyr257p7kjdg3m9610m4pk-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/6bcxybx1mrhzfmczc6ybpgh3dxybi18f-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/p9mmc8ccnngsrxr4xmwkkz0j9cypg27g-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/fcy1487k38v2fcs31bg13k50a9wj90rx-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/x4qjlbgzky3w3c8hm4qsav5cf9ymm0vh-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/cpyc3zsjmbrrb2pc4kpw1gw7f25kim72-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/5di6aml9nxk76q8dkcx0qklnikq1jyx3-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/8c17fly174n963dqbkzyz4p73kspsbvg-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/incxhcfjgnxmd4v68pniffkgcmvdml9j-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/4jzlggfwmz7bvfpdjvmmqfzbm2c2j345-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/80fr9vf9pz1dmszndabxf817ixaaj6sw-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/kd8wksp9mqbwih97lfdy0d3wlham7lcg-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/wbn631z6v8j42m4z03l483vyfyc5qq7c-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib'),
-          PosixPath('/nix/store/wxgadzsdwgj3vz8z9yy99kpzgdq0fvip-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/fxk1xcv2p2j284jil9vv49hcmxqndvx4-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/d0gbikvar8lpypxs5rpjhdv8qfdxyi48-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/77hhp2ql5da7mf8h8bcb9ipcp6c2rfih-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/3mlbq7n0fxvlbjpfk7053vfklqf6zyhz-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/gh97y37ijjba544d6lhlfs90i7m0yp13-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/k2m33hinl05a3wn1ds90gigplcyf9h6c-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/xxpr2srvvlwvlidmd3yipx9sk7g1z2vr-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/11szpaxyi7n640kc3n3jhs779a7jhnb9-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/nn7nj7xq8gdfyxqhchphzia7i34rwb0v-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/zh4x353xh2c5irsy7cp4dn6cjkvc74az-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/hs9zzny8h11wqk9469pknpba8w0arvk6-cups-2.4.11/lib'),
-          PosixPath('/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/a12nhfjz008iwi4qdf0wv8fawkpvzl8s-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/rhrgpmwjyi9j2lw8hc8ayi379d0zg9xz-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/9wwkzvmrlv43y71rbw8sbh9bamc62a16-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/1mv8pj4nxwnd9bbxshljc9p4cnl3rakj-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/0ar4nwrw7lq2d6dykrxvrrm8qpv7b4rb-dconf-0.40.0-lib/lib'),
-          PosixPath('/nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev/lib'),
-          PosixPath('/nix/store/448l5j0r4i3hrkzjihhs8kk5nnd0nh7d-dbus-glib-0.112/lib'),
-          PosixPath('/nix/store/s6hy1d4shb9azba31ciwqyfak6cp7fhh-libXtst-1.2.5/lib'),
-          PosixPath('/nix/store/s4qvjy1y6cb11a44crb0ky882pcamz9r-auto-patchelf-hook/lib'),
-          PosixPath('/nix/store/ymrkzqsal9vprg5zpd2dkb4bmpqpgncr-auto-patchelf-0-unstable-2024-08-14/lib'),
-          PosixPath('/nix/store/q3vpsxhzdj15yjzhzq94x55m99wly5w8-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/55vdk1ld22fdfhi4g6s4vcdb4dpjv6mc-patchelf-0.18.0-unstable-2024-06-15/lib'),
-          PosixPath('/nix/store/hy11sdm0fdvj7mbyr6bvk4prxndr6rsf-copy-desktop-items-hook/lib'),
-          PosixPath('/nix/store/37vnpxpb0zsp6ld3z9ci2bs1bjiyd2i3-make-shell-wrapper-hook/lib'),
-          PosixPath('/nix/store/8vsw4dc0igp5gi8dr6iyxbbzjdk953va-die-hook/lib'),
-          PosixPath('/nix/store/94c2njy52mwwrvql0zmpfix49dz60kcf-wrap-gapps-hook/lib'),
-          PosixPath('/nix/store/8wa3kq81w2nwsr5wh1dgk15da4vds30s-make-binary-wrapper-hook/lib'),
-          PosixPath('/nix/store/2vcwlijkh8y1glx5fl7b0s5p9gq3z77s-gtk+3-3.24.43-dev/lib'),
-          PosixPath('/nix/store/i7410jj50sip9d3mjy95ckq59az9y0y1-at-spi2-core-2.54.1-dev/lib'),
-          PosixPath('/nix/store/a3aly8dp93wcml4j9hhwk9401a63v76m-dbus-1.14.10-dev/lib'),
-          PosixPath('/nix/store/gb3dqi6h7plva3dbvw58xxrgc5qp3idw-expat-2.6.4-dev/lib'),
-          PosixPath('/nix/store/0hv5ymwkczx3ak8h3yldfbwbab33jnrw-expat-2.6.4/lib'),
-          PosixPath('/nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib'),
-          PosixPath('/nix/store/qkj4b3si2xbry58xslhm1vrixhxrvskp-dbus-1.14.10/lib'),
-          PosixPath('/nix/store/vq3bmhq1j35i77da24ba3xg7aizllzrz-glib-2.82.1-dev/lib'),
-          PosixPath('/nix/store/ccrjbcfl5zcdp0n5mh69f4airrb9g8m4-zlib-1.3.1-dev/lib'),
-          PosixPath('/nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib'),
-          PosixPath('/nix/store/fwzb9f7n2ia6z8lk0w597brrjdmyv29s-libffi-3.4.6-dev/lib'),
-          PosixPath('/nix/store/r25i9ffbldgn22436psygd7ivbvs3qq8-libffi-3.4.6/lib'),
-          PosixPath('/nix/store/8g8wdqid20924fbppbljsl6l7gr0p21j-gettext-0.21.1/lib'),
-          PosixPath('/nix/store/mxs6376hnc3469ldz5kh0ld34kjllsjl-glibc-iconv-2.40/lib'),
-          PosixPath('/nix/store/cmzjrq13sxbfhwfzs2s3yxn4hms4gjfz-glib-2.82.1-bin/lib'),
-          PosixPath('/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib'),
-          PosixPath('/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib'),
-          PosixPath('/nix/store/dnf3f18mapdn7rsvibpcgg70f1mhqarz-cairo-1.18.2-dev/lib'),
-          PosixPath('/nix/store/a8a53z1zjw7qy8wdwnahvzph3x56alcn-fontconfig-2.15.0-dev/lib'),
-          PosixPath('/nix/store/w4wi2ik0fkz57b7i8ds4fr1jnj0333j0-freetype-2.13.3-dev/lib'),
-          PosixPath('/nix/store/c0v34jqmvavh3fmcdd478llzy9mjw7kw-bzip2-1.0.8-dev/lib'),
-          PosixPath('/nix/store/yyfzan4mn874v885jy6fs598gjb31c4l-bzip2-1.0.8-bin/lib'),
-          PosixPath('/nix/store/qiisx6c7qpyzq522j3icsfhj8ayw6ah4-bzip2-1.0.8/lib'),
-          PosixPath('/nix/store/c78nfhymlhasf7fy1fbv6cgkw6w1gfpv-brotli-1.1.0-dev/lib'),
-          PosixPath('/nix/store/a6s9mjppf0d5g7pyzb81f0illazxnql3-brotli-1.1.0-lib/lib'),
-          PosixPath('/nix/store/qpj54f9yy1llgqjfw0jndfxxmz15xx88-brotli-1.1.0/lib'),
-          PosixPath('/nix/store/x7fy57xwnh46xwk8hmxxi7ml3236i20k-libpng-apng-1.6.43-dev/lib'),
-          PosixPath('/nix/store/qhys87y256mrpvcskmck42ialqyz0bj2-libpng-apng-1.6.43/lib'),
-          PosixPath('/nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib'),
-          PosixPath('/nix/store/ips0ppgqx9i7a200yvmjn4j75lr4d36y-fontconfig-2.15.0-bin/lib'),
-          PosixPath('/nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib'),
-          PosixPath('/nix/store/445hfbxb2fzgr8030c2wc5hblp59x1vn-pixman-0.43.4/lib'),
-          PosixPath('/nix/store/f8kgcvf20brszwqx3w15l4nv86acvw55-libXext-1.3.6-dev/lib'),
-          PosixPath('/nix/store/hl93nc5vy322x56mj186lr4nw6588qdl-xorgproto-2024.1/lib'),
-          PosixPath('/nix/store/mmrzgkkm5kmh9zd7i4j7588kb4yq5hm0-libXau-1.0.11-dev/lib'),
-          PosixPath('/nix/store/2dnmgjsw3imp37b2dx1g1231g7bzhrq2-libXau-1.0.11/lib'),
-          PosixPath('/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib'),
-          PosixPath('/nix/store/jpg51cs8938ynqh2lh4gk2msrsd5h4c6-libXrender-0.9.11-dev/lib'),
-          PosixPath('/nix/store/f2qgm4nprf7splcmww9zrhgrb6vnd2li-libX11-1.8.10-dev/lib'),
-          PosixPath('/nix/store/v8yic680bkabdvxi7v8py16xjg5lqchq-libxcb-1.17.0-dev/lib'),
-          PosixPath('/nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib'),
-          PosixPath('/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib'),
-          PosixPath('/nix/store/fhm4xps82x74ivvjl3yln18fqpcyj1k6-libXrender-0.9.11/lib'),
-          PosixPath('/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib'),
-          PosixPath('/nix/store/1202lxbzv39q4q3abqvf9yqb06hj2nm3-fribidi-1.0.16-dev/lib'),
-          PosixPath('/nix/store/r8d7haxm2gmkm2n21glcmhn95vyf1wkk-fribidi-1.0.16/lib'),
-          PosixPath('/nix/store/zv23yqng2pfrbidamg912043dpw43cn5-gdk-pixbuf-2.42.12-dev/lib'),
-          PosixPath('/nix/store/1n6a85ywwz07afnzx6nqdbymzbcyvaiy-libtiff-4.7.0-dev/lib'),
-          PosixPath('/nix/store/sgpy8980rvm1r669rzdn6kiaphrw5v6w-libdeflate-1.22/lib'),
-          PosixPath('/nix/store/i384n7wyhr8iy42l8r0kfj4vyfp4l0kw-libjpeg-turbo-3.0.4-dev/lib'),
-          PosixPath('/nix/store/a632fwv85d01z19cfzjkd1043f0975nm-libjpeg-turbo-3.0.4-bin/lib'),
-          PosixPath('/nix/store/cjzvhr73ba4h0fmx4zk8ynz8qrcgkdyk-libjpeg-turbo-3.0.4/lib'),
-          PosixPath('/nix/store/1yzhkgxlcja1av33s8bcacbfvfgw4qvj-libwebp-1.4.0/lib'),
-          PosixPath('/nix/store/r584hq3xbq8rcivm4873ksij6j7g1xp9-xz-5.6.3-dev/lib'),
-          PosixPath('/nix/store/rbns8mzghhqxih4hj2js4mb4s6ivy5d1-xz-5.6.3-bin/lib'),
-          PosixPath('/nix/store/sf31nmjhlsdp2h26vbwbpa7gwfn4i4na-xz-5.6.3/lib'),
-          PosixPath('/nix/store/xzgjrhk6sa1z9qmwpkdc9cl45faa5lar-zstd-1.5.6-dev/lib'),
-          PosixPath('/nix/store/xmmli2ijsz2br6573z3sqsgg0spnj7i9-zstd-1.5.6-bin/lib'),
-          PosixPath('/nix/store/6cf2yj12gf51jn5vdbdw01gmgvyj431s-zstd-1.5.6/lib'),
-          PosixPath('/nix/store/ww2i28l1i6p629qc0jsmgs7xlzkv6c5b-libtiff-4.7.0-bin/lib'),
-          PosixPath('/nix/store/530yp2bmkv9hh8a3d75d0zdzwjbc4kkq-libtiff-4.7.0/lib'),
-          PosixPath('/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib'),
-          PosixPath('/nix/store/wxr4m0hp1n4c0cikm0i4v98iinn7xiag-gsettings-desktop-schemas-47.1/lib'),
-          PosixPath('/nix/store/s2fkghy0vlcrg48npy4dw2rl6l5q3xw2-libICE-1.1.1-dev/lib'),
-          PosixPath('/nix/store/vw6dfjvrigija8iwv8201b4janywvrjs-libICE-1.1.1/lib'),
-          PosixPath('/nix/store/j131lij70w3j3kik75hx7ygnivql6gqp-libSM-1.2.4-dev/lib'),
-          PosixPath('/nix/store/3w8r75v2qzci693h5qls9rygpw4lainf-libSM-1.2.4/lib'),
-          PosixPath('/nix/store/78c9mf12ap5772qn1bbh2fwn2d80qpmp-libXcomposite-0.4.6-dev/lib'),
-          PosixPath('/nix/store/sjrhck9fddbjd35lck7r4vp3163xxmn6-libXfixes-6.0.1-dev/lib'),
-          PosixPath('/nix/store/9cvb4haga95mikh4b9ixlmbdgw1wj7ir-libXfixes-6.0.1/lib'),
-          PosixPath('/nix/store/194qfmrz4ns4s3khi7j5f79cvsgjkrip-libXcomposite-0.4.6/lib'),
-          PosixPath('/nix/store/7g6qyfq89p9n2347j324iif6x716vmks-libXcursor-1.2.2-dev/lib'),
-          PosixPath('/nix/store/ak90l2zaayyv5vmpfb3xr2awy1d6ayhp-libXcursor-1.2.2/lib'),
-          PosixPath('/nix/store/0gp6vb74jgsyr257p7kjdg3m9610m4pk-libXdamage-1.1.6-dev/lib'),
-          PosixPath('/nix/store/6bcxybx1mrhzfmczc6ybpgh3dxybi18f-libXdamage-1.1.6/lib'),
-          PosixPath('/nix/store/p9mmc8ccnngsrxr4xmwkkz0j9cypg27g-libXi-1.8.2-dev/lib'),
-          PosixPath('/nix/store/fcy1487k38v2fcs31bg13k50a9wj90rx-libXi-1.8.2/lib'),
-          PosixPath('/nix/store/x4qjlbgzky3w3c8hm4qsav5cf9ymm0vh-libXrandr-1.5.4-dev/lib'),
-          PosixPath('/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib'),
-          PosixPath('/nix/store/cpyc3zsjmbrrb2pc4kpw1gw7f25kim72-pango-1.54.0-dev/lib'),
-          PosixPath('/nix/store/5di6aml9nxk76q8dkcx0qklnikq1jyx3-harfbuzz-10.0.1-dev/lib'),
-          PosixPath('/nix/store/8c17fly174n963dqbkzyz4p73kspsbvg-graphite2-1.3.14-dev/lib'),
-          PosixPath('/nix/store/incxhcfjgnxmd4v68pniffkgcmvdml9j-graphite2-1.3.14/lib'),
-          PosixPath('/nix/store/4jzlggfwmz7bvfpdjvmmqfzbm2c2j345-harfbuzz-10.0.1/lib'),
-          PosixPath('/nix/store/80fr9vf9pz1dmszndabxf817ixaaj6sw-libXft-2.3.8-dev/lib'),
-          PosixPath('/nix/store/kd8wksp9mqbwih97lfdy0d3wlham7lcg-libXft-2.3.8/lib'),
-          PosixPath('/nix/store/wbn631z6v8j42m4z03l483vyfyc5qq7c-pango-1.54.0-bin/lib'),
-          PosixPath('/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib'),
-          PosixPath('/nix/store/wxgadzsdwgj3vz8z9yy99kpzgdq0fvip-libglvnd-1.7.0-dev/lib'),
-          PosixPath('/nix/store/fxk1xcv2p2j284jil9vv49hcmxqndvx4-libglvnd-1.7.0/lib'),
-          PosixPath('/nix/store/d0gbikvar8lpypxs5rpjhdv8qfdxyi48-wayland-1.23.1-dev/lib'),
-          PosixPath('/nix/store/77hhp2ql5da7mf8h8bcb9ipcp6c2rfih-wayland-1.23.1/lib'),
-          PosixPath('/nix/store/3mlbq7n0fxvlbjpfk7053vfklqf6zyhz-wayland-protocols-1.38/lib'),
-          PosixPath('/nix/store/gh97y37ijjba544d6lhlfs90i7m0yp13-libXinerama-1.1.5-dev/lib'),
-          PosixPath('/nix/store/k2m33hinl05a3wn1ds90gigplcyf9h6c-libXinerama-1.1.5/lib'),
-          PosixPath('/nix/store/xxpr2srvvlwvlidmd3yipx9sk7g1z2vr-cups-2.4.11-dev/lib'),
-          PosixPath('/nix/store/11szpaxyi7n640kc3n3jhs779a7jhnb9-gmp-with-cxx-6.3.0-dev/lib'),
-          PosixPath('/nix/store/nn7nj7xq8gdfyxqhchphzia7i34rwb0v-gmp-with-cxx-6.3.0/lib'),
-          PosixPath('/nix/store/zh4x353xh2c5irsy7cp4dn6cjkvc74az-cups-2.4.11-lib/lib'),
-          PosixPath('/nix/store/hs9zzny8h11wqk9469pknpba8w0arvk6-cups-2.4.11/lib'),
-          PosixPath('/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib'),
-          PosixPath('/nix/store/a12nhfjz008iwi4qdf0wv8fawkpvzl8s-librsvg-2.58.3-dev/lib'),
-          PosixPath('/nix/store/rhrgpmwjyi9j2lw8hc8ayi379d0zg9xz-librsvg-2.58.3/lib'),
-          PosixPath('/nix/store/9wwkzvmrlv43y71rbw8sbh9bamc62a16-patchelf-0.15.0/lib'),
-          PosixPath('/nix/store/i9ymkbklv1q9yzl7wwx7300wbkqdln0r-update-autotools-gnu-config-scripts-hook/lib'),
-          PosixPath('/nix/store/h9lc1dpi14z7is86ffhl3ld569138595-audit-tmpdir.sh/lib'),
-          PosixPath('/nix/store/m54bmrhj6fqz8nds5zcj97w9s9bckc9v-compress-man-pages.sh/lib'),
-          PosixPath('/nix/store/wgrbkkaldkrlrni33ccvm3b6vbxzb656-make-symlinks-relative.sh/lib'),
-          PosixPath('/nix/store/5yzw0vhkyszf2d179m0qfkgxmp5wjjx4-move-docs.sh/lib'),
-          PosixPath('/nix/store/fyaryjvghbkpfnsyw97hb3lyb37s1pd6-move-lib64.sh/lib'),
-          PosixPath('/nix/store/kd4xwxjpjxi71jkm6ka0np72if9rm3y0-move-sbin.sh/lib'),
-          PosixPath('/nix/store/pag6l61paj1dc9sv15l7bm5c17xn5kyk-move-systemd-user-units.sh/lib'),
-          PosixPath('/nix/store/jivxp510zxakaaic7qkrb7v1dd2rdbw9-multiple-outputs.sh/lib'),
-          PosixPath('/nix/store/12lvf0c7xric9cny7slvf9cmhypl1p67-patch-shebangs.sh/lib'),
-          PosixPath('/nix/store/cickvswrvann041nqxb0rxilc46svw1n-prune-libtool-files.sh/lib'),
-          PosixPath('/nix/store/xyff06pkhki3qy1ls77w10s0v79c9il0-reproducible-builds.sh/lib'),
-          PosixPath('/nix/store/aazf105snicrlvyzzbdj85sx4179rpfp-set-source-date-epoch-to-latest.sh/lib'),
-          PosixPath('/nix/store/gps9qrh99j7g02840wv5x78ykmz30byp-strip.sh/lib'),
-          PosixPath('/nix/store/gnd8f9h2ycxrfrvrga508c4n9cxy6720-gcc-wrapper-13.3.0/lib'),
-          PosixPath('/nix/store/1mv8pj4nxwnd9bbxshljc9p4cnl3rakj-binutils-wrapper-2.43.1/lib'),
-          PosixPath('/nix/store/0ar4nwrw7lq2d6dykrxvrrm8qpv7b4rb-dconf-0.40.0-lib/lib'),
-          PosixPath('/nix/store/aqcvyk6p400qsm24i2d7vmyj44alnqfg-alsa-lib-1.2.12-dev/lib'),
-          PosixPath('/nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib'),
-          PosixPath('/nix/store/73903smzmvvnmwk8w8w72k62ypzmsz7d-dbus-glib-0.112-dev/lib'),
-          PosixPath('/nix/store/448l5j0r4i3hrkzjihhs8kk5nnd0nh7d-dbus-glib-0.112/lib'),
-          PosixPath('/nix/store/s6hy1d4shb9azba31ciwqyfak6cp7fhh-libXtst-1.2.5/lib')],
- 'paths': [PosixPath('/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9')],
- 'recursive': True,
- 'runtime_dependencies': []}
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/.tor-browser-wrapped
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/.tor-browser-wrapped
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/bin/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozgtk.so
-    libgtk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libgdk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-setting RPATH to: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavutil.so
-    libgkcodecs.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnspr4.so
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/liblgpllibs.so
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsoftokn3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozsqlite3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libsmime3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnss3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libgkcodecs.so
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssckbi.so
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsqlite3.so
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnssutil3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libnss3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/vaapitest
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/vaapitest
-    libxcb-shm.so.0 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libX11-xcb.so.1 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libX11.so.6 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libxcb.so.1 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libXext.so.6 -> found: /nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib
-    libXrandr.so.2 -> found: /nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib
-    libgtk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libgdk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libpangocairo-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libpango-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libatk-1.0.so.0 -> found: /nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib
-    libcairo-gobject.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libcairo.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libgdk_pixbuf-2.0.so.0 -> found: /nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib
-    libgio-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libgobject-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libglib-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib:/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib:/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib:/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib:/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib:/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib:/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib:/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib:/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib:/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplc4.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/abicheck
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/abicheck
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozavcodec.so
-    libgkcodecs.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozavutil.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozsandbox.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libmozwayland.so
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/firefox
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/firefox
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libfreeblpriv3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libipcclientcerts.so
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/updater
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/updater
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnss3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libsmime3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozsqlite3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libssl3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libgtk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libgdk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libpangocairo-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libpango-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libatk-1.0.so.0 -> found: /nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib
-    libcairo-gobject.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libcairo.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libgdk_pixbuf-2.0.so.0 -> found: /nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib
-    libgio-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libgobject-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libglib-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser:/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib:/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib:/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib:/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib:/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib:/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libssl3.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnss3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/glxtest
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/glxtest
-    libxcb-shm.so.0 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libX11-xcb.so.1 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libX11.so.6 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libxcb.so.1 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libXext.so.6 -> found: /nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib
-    libXrandr.so.2 -> found: /nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib
-    libgtk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libgdk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libpangocairo-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libpango-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libatk-1.0.so.0 -> found: /nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib
-    libcairo-gobject.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libcairo.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libgdk_pixbuf-2.0.so.0 -> found: /nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib
-    libgio-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libgobject-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libglib-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib:/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib:/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib:/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib:/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib:/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib:/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib:/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib:/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib:/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libxul.so
-    libmozsandbox.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplc4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libplds4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libgkcodecs.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    liblgpllibs.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnss3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libnssutil3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libsmime3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozsqlite3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libssl3.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozgtk.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libmozwayland.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-    libasound.so.2 -> found: /nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib
-    libfreetype.so.6 -> found: /nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib
-    libfontconfig.so.1 -> found: /nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib
-    libgtk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libgdk-3.so.0 -> found: /nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib
-    libpangocairo-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libpango-1.0.so.0 -> found: /nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib
-    libatk-1.0.so.0 -> found: /nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib
-    libcairo-gobject.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libcairo.so.2 -> found: /nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib
-    libgdk_pixbuf-2.0.so.0 -> found: /nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib
-    libgio-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libgobject-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libglib-2.0.so.0 -> found: /nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib
-    libdbus-1.so.3 -> found: /nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib
-    libxcb-shm.so.0 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libX11-xcb.so.1 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libX11.so.6 -> found: /nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib
-    libxcb.so.1 -> found: /nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib
-    libXext.so.6 -> found: /nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib
-    libXrandr.so.2 -> found: /nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib
-    libstdc++.so.6 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser:/nix/store/sjc0p8p1c0iygj1dv9154n5kh11pdd7y-alsa-lib-1.2.12/lib:/nix/store/wl70zja2d4s0bcrv7l1v28j3rg8cz8fs-freetype-2.13.3/lib:/nix/store/36612x5yd3rnhap9ryscj0lmx0s412q0-fontconfig-2.15.0-lib/lib:/nix/store/gx4sh34i3620jl7sfz4rmc8mx3sd8w9s-gtk+3-3.24.43/lib:/nix/store/dm3ikmmfj2b6nd9z64d0343kgy0ljywd-pango-1.54.0/lib:/nix/store/63n523spll2najppx1jw30kk1d28f6cq-at-spi2-core-2.54.1/lib:/nix/store/ggllrkfnkh5j9ayqivlzh02cdsc7f8q1-cairo-1.18.2/lib:/nix/store/rinw6ardq076x1bqxj3nry44v9swdl7n-gdk-pixbuf-2.42.12/lib:/nix/store/mjzgvv9cqi991q02v69jnm33y0adykmh-glib-2.82.1/lib:/nix/store/qsksjrv9d0dc5qa5l1xwdnl3c2fm68zz-dbus-1.14.10-lib/lib:/nix/store/15i5x29vvg2ghh6qrdkrp3mpyyvyxhnj-libxcb-1.17.0/lib:/nix/store/z0hghghr5iayxan0942blh7chihy6xm2-libX11-1.8.10/lib:/nix/store/glsfxkdd7xrz61wvdp51nsg2wxkmsp7s-libXext-1.3.6/lib:/nix/store/0gdc309g29ljk1xr0fj93if3bl2516x1-libXrandr-1.5.4/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++:/nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/libplds4.so
-    libnspr4.so -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libssl.so.3
-    libcrypto.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting RPATH to: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libevent-2.1.so.7
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libcrypto.so.3
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/tor
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/tor
-    libz.so.1 -> found: /nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib
-    libevent-2.1.so.7 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-    libssl.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-    libcrypto.so.3 -> found: /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting RPATH to: /nix/store/vpg96mfr1jw5arlqg831i69g29v0sdb3-zlib-1.3.1/lib:/nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/conjure-client
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/conjure-client
-setting interpreter of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/lyrebird
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/PluggableTransports/lyrebird
-searching for dependencies of /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/tor-browser/TorBrowser/Tor/libstdc++/libstdc++.so.6
-    libgcc_s.so.1 -> found: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-setting RPATH to: /nix/store/czlhi3r9b6ip4xyynwibfhm458ljwsir-gcc-13.3.0-libgcc/lib
-auto-patchelf: 0 dependencies could not be satisfied
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/icons/hicolor/32x32/apps/tor-browser.png to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/icons/hicolor/64x64/apps/tor-browser.png to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/icons/hicolor/16x16/apps/tor-browser.png to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/icons/hicolor/128x128/apps/tor-browser.png to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/icons/hicolor/48x48/apps/tor-browser.png to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-rewriting symlink /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9/share/doc/tor-browser to be relative to /nix/store/grmrscicl1flppjalcn2fb6fxq18w1nd-tor-browser-14.0.9
-building '/nix/store/cnyksih3jiqbzpxhy7d5vfra5zhxm6h7-user-environment.drv'...
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/fpbffscqwpi9rx5k53fykgaism4wnn9w-X-Restart-Triggers-polkit.drv'...
-building '/nix/store/76lsvpij5vdc89d7s1xdm58z5x7b4wvy-dbus-1.drv'...
-building '/nix/store/wmjm35fspbz024gwjqp0236ghbchs2hz-unit-accounts-daemon.service.drv'...
-created 3026 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/y5ykqz82l6sbl00b7rhvarckizri7hbp-X-Restart-Triggers-dbus.drv'...
-building '/nix/store/cwr2fyf5bygq19wlf7hk2irrjw2bcv92-unit-polkit.service.drv'...
-building '/nix/store/2xn3f99c5h7s8sb7nn3dnhphx3qi0bdh-unit-dbus.service.drv'...
-building '/nix/store/jap25h9q19hb8gdkcsamlh1lcm22bl47-unit-dbus.service.drv'...
-building '/nix/store/9l8g5r3k7y90xkjfw0vdrkjkzjxyil6l-system-units.drv'...
-building '/nix/store/flwlrg2dql7b9wcd2ldr7b9kqrncgdiw-user-units.drv'...
-building '/nix/store/inld4v1vi115xhkayzq2gyz913arlkyl-etc-man_db.conf.drv'...
-building '/nix/store/84ryfchl9zkz45h1dxdrgwxw7a0l1a0r-etc.drv'...
-building '/nix/store/fginsj8lsxiicicbfpkss9wb1zq840x8-nixos-system-debbie-24.11.716687.bdb91860de2f.drv'...
+gtk-update-icon-cache: Cache file created successfully.
+building '/nix/store/817z60hkarmf75k9vqqwbdnnanv9p5n5-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/blcryf1mbgipd7k2knfidy1s8jz3lv1r-dbus-1.drv'...
+building '/nix/store/b35xli82v96njx5ggkv87sjpczrx60g7-unit-accounts-daemon.service.drv'...
+building '/nix/store/c5wswi5swk3l3zpsh9ph3nwn6635hva6-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/flxadml688giv8r334p1ypw4fn7zlz5l-unit-polkit.service.drv'...
+building '/nix/store/5slahj6lim5f011vns98lkyqyhl0nq8p-unit-dbus.service.drv'...
+building '/nix/store/xbma3wscwq7i3qa8qfj3z9p5zhiq4ryw-unit-dbus.service.drv'...
+building '/nix/store/61f119v79x95272jac0f6sjn1zdrfvyb-system-units.drv'...
+building '/nix/store/x9bax07idcrpkbayvxcj1bpc9ns35fyn-user-units.drv'...
+building '/nix/store/m22azxi58sfl4162h019s2gp1k7sf7xm-etc-man_db.conf.drv'...
+building '/nix/store/gcqs79wjdgszh73snidag4b53sj7vmg2-etc.drv'...
+building '/nix/store/r0a12ha6ri0jhklx2w434bqpzh2q04kh-nixos-system-debbie-24.11.716793.a880f49904d6.drv'...
 stopping the following units: accounts-daemon.service
 activating the configuration...
 setting up /etc...
