@@ -90,6 +90,11 @@ in {
   # Enable CUPS to print documents
   services.printing.enable = true;
 
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+  };
+
   # Enable sound with pipewire
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -214,9 +219,6 @@ in {
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
 
   environment.systemPackages = with pkgs; [
-    mariadb
-    mysql84
-
     # os building tools
     qemu
     imhex
