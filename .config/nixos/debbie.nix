@@ -197,6 +197,7 @@ in {
 
       safeeyes
 
+      jetbrains.datagrip
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development
       jetbrains.rider # JetBrains IDE for .NET development
