@@ -164,6 +164,7 @@ in {
       pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
       yq
+      python312Packages.playwright
       unetbootin # Tool for creating bootable USB drives
       deskreen # Share your desktop to any device over the network
       rclone # Command-line program for managing cloud storage
