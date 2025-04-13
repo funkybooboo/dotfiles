@@ -161,8 +161,9 @@ in {
       lynx # Text-based web browser
       gh # GitHub CLI tool for managing GitHub repositories
       vscodium
-      # pomodoro-gtk # Pomodoro technique timer for productivity
+      pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
+      yq
       unetbootin # Tool for creating bootable USB drives
       deskreen # Share your desktop to any device over the network
       rclone # Command-line program for managing cloud storage
