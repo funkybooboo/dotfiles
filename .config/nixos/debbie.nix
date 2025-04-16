@@ -160,6 +160,7 @@ in {
       nix-tour # Educational tour through Nix and NixOS
       lynx # Text-based web browser
       gh # GitHub CLI tool for managing GitHub repositories
+      github-desktop
       vscodium
       pomodoro-gtk # Pomodoro technique timer for productivity
       jq # Command-line JSON processor
