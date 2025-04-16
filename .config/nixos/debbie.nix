@@ -237,6 +237,8 @@ in {
     mpfr
     texinfo
 
+    docker-compose
+
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
     wget # Command-line utility for downloading files from the web
