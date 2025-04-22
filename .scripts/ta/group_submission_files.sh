@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Navigate to the submissions directory
-cd submissions || { echo "Submissions directory not found!"; exit 1; }
+cd submissions || {
+    echo "Submissions directory not found!"
+    exit 1
+}
 
 # Loop through all files in the current directory
 for file in *; do
@@ -23,4 +26,3 @@ for file in *; do
         unzip "$prefix/$file" -d "$prefix/"
     fi
 done
-
