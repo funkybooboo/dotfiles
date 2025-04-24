@@ -226,6 +226,8 @@ in {
 
       gitbutler
 
+      libstdcxx5
+
       jetbrains.datagrip
       jetbrains.webstorm # JetBrains IDE for JavaScript and web development
       jetbrains.rust-rover # JetBrains IDE for Rust development

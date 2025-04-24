@@ -1,31 +1,20 @@
 building Nix...
 building the system configuration...
+unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
+these 3 derivations will be built:
+  /nix/store/3dxmscwqpivjxl2hcrlvd5dr4r1468d6-user-environment.drv
+  /nix/store/4y0maqf7b8i8s31z3q367s9hwmkgs9jv-etc.drv
+  /nix/store/nlfvcwkl3bss7d1nyvlg0bsq7iksp0f4-nixos-system-debbie-24.11.717196.9684b53175fc.drv
+this path will be fetched (0.20 MiB download, 1.04 MiB unpacked):
+  /nix/store/zmh1bhvyqmlf77nik8s6hs6xswabkvah-libstdc++5-3.3.6
+copying path '/nix/store/zmh1bhvyqmlf77nik8s6hs6xswabkvah-libstdc++5-3.3.6' from 'https://cache.nixos.org'...
+building '/nix/store/3dxmscwqpivjxl2hcrlvd5dr4r1468d6-user-environment.drv'...
+created 3086 symlinks in user environment
+gtk-update-icon-cache: Cache file created successfully.
+building '/nix/store/4y0maqf7b8i8s31z3q367s9hwmkgs9jv-etc.drv'...
+building '/nix/store/nlfvcwkl3bss7d1nyvlg0bsq7iksp0f4-nixos-system-debbie-24.11.717196.9684b53175fc.drv'...
 activating the configuration...
 setting up /etc...
 reloading user units for nate...
 restarting sysinit-reactivation.target
-warning: the following units failed: mysql.service
-× mysql.service - MySQL Server
-     Loaded: loaded (/etc/systemd/system/mysql.service; enabled; preset: ignored)
-     Active: failed (Result: exit-code) since Thu 2025-04-24 17:32:15 EDT; 277ms ago
-   Duration: 2min 3.738s
- Invocation: 8a94504369424c1ea4ba8609c1baab0b
-    Process: 6236 ExecStartPre=/nix/store/0rxnaq3r1wr3fcc4chjp061jja1sjq6c-unit-script-mysql-pre-start/bin/mysql-pre-start (code=exited, status=0/SUCCESS)
-    Process: 6238 ExecStart=/nix/store/fv60cjwfnzsldhagy2db1ds56m4wci5j-unit-script-mysql-start/bin/mysql-start (code=exited, status=1/FAILURE)
-   Main PID: 6238 (code=exited, status=1/FAILURE)
-     Status: "MariaDB server is down"
-         IP: 0B in, 0B out
-         IO: 12K read, 4K written
-   Mem peak: 37.4M
-        CPU: 84ms
-
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [Note] InnoDB: Starting shutdown...
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [Note] Plugin 'FEEDBACK' is disabled.
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [ERROR] Could not open mysql.plugin table: "Unknown storage engine 'Aria'". Some plugins may be not loaded
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [ERROR] Failed to initialize plugins.
-Apr 24 17:32:15 debbie mysql-start[6238]: 2025-04-24 17:32:15 0 [ERROR] Aborting
-Apr 24 17:32:15 debbie systemd[1]: mysql.service: Main process exited, code=exited, status=1/FAILURE
-Apr 24 17:32:15 debbie systemd[1]: mysql.service: Failed with result 'exit-code'.
-Apr 24 17:32:15 debbie systemd[1]: Stopped MySQL Server.
+the following new units were started: run-credentials-systemd\x2dtmpfiles\x2dresetup.service.mount, sysinit-reactivation.target, systemd-tmpfiles-resetup.service
