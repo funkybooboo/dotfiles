@@ -55,37 +55,67 @@ in {
     };
   };
 
-  # Display Manager
   services.libinput.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
+
+  # Display Manager
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  #services.xserver.displayManager.lightdm.enable = true;
 
   # Desktop Environment
-  services.xserver.desktopManager.cinnamon.enable = true;
-  environment.cinnamon.excludePackages = with pkgs; [
-    nemo
-    xfce.xfce4-terminal
-    gnome-terminal
-    xed
-    xterm
-    baobab
-    epiphany
-    evince
-    geary
-    gnome-calculator
-    gnome-contacts
-    gnome-logs
-    gnome-maps
-    gnome-music
-    gnome-screenshot
-    gnome-system-monitor
-    pkgs.gnome-connections
-    pkgs.gnome-console
+  #services.xserver.desktopManager.cinnamon.enable = true;
+  #environment.cinnamon.excludePackages = with pkgs; [
+  #  nemo
+  #  xfce.xfce4-terminal
+  #  gnome-terminal
+  #  xed
+  #  xterm
+  #  baobab
+  #  epiphany
+  #  evince
+  #  geary
+  #  gnome-calculator
+  #  gnome-contacts
+  #  gnome-logs
+  #  gnome-maps
+  #  gnome-music
+  #  # gnome-screenshot
+  #  gnome-system-monitor
+  #  pkgs.gnome-connections
+  #  pkgs.gnome-console
+  #];
+
+  services.xserver.enable = true;
+  services.desktopManager.plasma6.enable = true;
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    plasma-browser-integration
+    konsole
+    (lib.getBin qttools) # Expose qdbus in PATH
+    ark
+    elisa
+    gwenview
+    okular
+    kate
+    khelpcenter
+    dolphin
+    baloo-widgets # baloo information in Dolphin
+    dolphin-plugins
+    #spectacle
+    ffmpegthumbs
+    krdp
+    #xwaylandvideobridge # exposes Wayland windows to X11 screen capture
   ];
 
-  programs.hyprland.enable = true;
-  programs.hyprland.xwayland.enable = true;
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
+  };
 
-  services.displayManager.defaultSession = "hyprland";
+  #programs.hyprland.enable = true;
+  #programs.hyprland.xwayland.enable = true;
+
+  services.displayManager.defaultSession = "plasma6";
 
   # Enable CUPS to print documents
   services.printing.enable = true;
