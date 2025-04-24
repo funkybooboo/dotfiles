@@ -49,7 +49,7 @@ backup_path() {
   src="$1"; dest="$2"
   if (( DRYRUN )); then
     echo "DRY RUN: mkdir -p $(dirname "$dest")"
-    echo "DRY RUN: mv $src $dest  # or cp+rm on cross‐FS"
+    echo "DRY RUN: mv $src $dest  # or cp+rm on cross-FS"
   else
     mkdir -p "$(dirname "$dest")"
     if ! mv "$src" "$dest" 2>/dev/null; then
@@ -61,10 +61,11 @@ backup_path() {
 
 # ——— 1) BACKUP CONFLICTS: HOME PACKAGES ———
 HOME_PKGS=(bash config gdbinit ideavim scripts vim)
-echo "🔍 Checking home‐package conflicts…"
+echo "🔍 Checking home-package conflicts…"
 for pkg in "${HOME_PKGS[@]}"; do
   [[ -d $pkg ]] || continue
-  # dir‐vs‐file
+
+  # dir-vs-file (a file where a directory should go)
   find "$pkg" -type d | while read -r d; do
     rel=${d#"$pkg"/}; tgt="$TARGET_HOME/$rel"
     if [[ -f $tgt && ! -d $tgt ]]; then
@@ -72,11 +73,12 @@ for pkg in "${HOME_PKGS[@]}"; do
       backup_path "$tgt" "$BACKUP_DIR/home/$rel"
     fi
   done
-  # file‐vs‐file
-  find "$pkg" -type f | while read -r f; do
+
+  # file-vs-file and symlinks
+  find "$pkg" -type f -o -type l | while read -r f; do
     rel=${f#"$pkg"/}; tgt="$TARGET_HOME/$rel"
-    if [[ -e $tgt && ! -L $tgt ]]; then
-      echo "  • backing up existing file: $tgt"
+    if [[ -e $tgt || -L $tgt ]]; then
+      echo "  • backing up existing path: $tgt"
       backup_path "$tgt" "$BACKUP_DIR/home/$rel"
     fi
   done
@@ -84,8 +86,8 @@ done
 
 # ——— 2) BACKUP CONFLICTS: SYSTEM PACKAGE (etc/) ———
 if [[ -d etc ]]; then
-  echo "🔍 Checking system‐package conflicts…"
-  # dir‐vs‐file under /etc
+  echo "🔍 Checking system-package conflicts…"
+  # dir-vs-file under /etc
   find etc -type d | while read -r d; do
     rel=${d#etc/}; tgt="/$rel"
     if [[ -f $tgt && ! -d $tgt ]]; then
@@ -102,11 +104,11 @@ if [[ -d etc ]]; then
       fi
     fi
   done
-  # file‐vs‐file under /etc
-  find etc -type f | while read -r f; do
+  # file-vs-file and symlinks under /etc
+  find etc -type f -o -type l | while read -r f; do
     rel=${f#etc/}; tgt="/$rel"
-    if [[ -e $tgt && ! -L $tgt ]]; then
-      echo "  • backing up existing root file: $tgt"
+    if [[ -e $tgt || -L $tgt ]]; then
+      echo "  • backing up existing root path: $tgt"
       if (( DRYRUN )); then
         echo "DRY RUN: sudo mkdir -p $BACKUP_DIR/root/$(dirname "$rel")"
         echo "DRY RUN: sudo mv $tgt $BACKUP_DIR/root/$rel"
@@ -123,49 +125,44 @@ fi
 
 echo "✅ Backups complete."
 
-# ——— 3) INSTALL HOME PACKAGE SYMLINKS ———
-echo "👉  Installing home‐package symlinks into $TARGET_HOME"
-for pkg in "${HOME_PKGS[@]}"; do
+# ——— 3) REMOVE STALE ABSOLUTE SYMLINKS ———
+echo "🗑 Removing stale home-package symlinks…"
+for pkg in bash gdbinit ideavim vim; do
   [[ -d $pkg ]] || continue
-  echo "  ↪️  $pkg"
-
-  find "$pkg" -type f | while read -r f; do
-    rel=${f#"$pkg/"}           # e.g. "bashrc" or "config/nvim/init.lua"
-    src="$DOTDIR/$pkg/$rel"
-    dst="$TARGET_HOME/$rel"
-
-    # backup any real file in the way
-    if [[ -e $dst && ! -L $dst ]]; then
-      echo "    • backing up existing file: $dst"
-      backup_path "$dst" "$BACKUP_DIR/home/$rel"
+  for src in "$pkg"/*; do
+    base=${src##*/}; tgt="$TARGET_HOME/$base"
+    if [[ -L $tgt ]]; then
+      run rm "$tgt"
+      echo "  • removed $tgt"
     fi
-
-    # ensure parent directory exists
-    run mkdir -p "$(dirname "$dst")"
-
-    # create or overwrite symlink
-    run ln -snf "$src" "$dst"
-    echo "    ↪ linked $dst → $src"
   done
 done
 
-# ——— 4) STOW NIXOS CONFIG ———
+# ——— 4) STOW HOME PACKAGES ———
+echo "👉  Stowing home-package symlinks into $TARGET_HOME"
+STOW_HOME_ARGS=(--restow -d "$DOTDIR" -t "$TARGET_HOME" "${HOME_PKGS[@]}")
+if (( DRYRUN )); then
+  stow -n -v "${STOW_HOME_ARGS[@]}"
+else
+  stow -v "${STOW_HOME_ARGS[@]}"
+fi
+
+# ——— 5) STOW NIXOS CONFIG ———
 if [[ -d etc/nixos ]]; then
-  STOW_SYS="-v -d '$DOTDIR/etc' -t /etc"
-  (( DRYRUN )) && STOW_SYS="-n $STOW_SYS"
   echo "👉  Stowing NixOS configuration into /etc"
-  eval "sudo stow --restow $STOW_SYS nixos"
+  STOW_SYS_ARGS=(--restow -d "$DOTDIR/etc" -t /etc nixos)
+  if (( DRYRUN )); then
+    sudo stow -n -v "${STOW_SYS_ARGS[@]}"
+  else
+    sudo stow -v "${STOW_SYS_ARGS[@]}"
+  fi
 else
   echo "⚠️  etc/nixos not found; skipping system config"
 fi
 
-# ——— 5) REGISTER SCRIPTS INTO PATH ———
+# ——— 6) REGISTER SCRIPTS INTO PATH ———
 BIN_DIR="$TARGET_HOME/.local/bin"
-if (( DRYRUN )); then
-  echo "DRY RUN: mkdir -p $BIN_DIR"
-else
-  mkdir -p "$BIN_DIR"
-fi
+run mkdir -p "$BIN_DIR"
 
 if [[ -f config.json ]]; then
   echo "🔗 Registering scripts into $BIN_DIR"
@@ -174,11 +171,7 @@ if [[ -f config.json ]]; then
     src="$DOTDIR/$rel"
     link="$BIN_DIR/$(basename "$rel")"
     if [[ -f $src ]]; then
-      if (( DRYRUN )); then
-        echo "DRY RUN: ln -sf $src $link"
-      else
-        ln -sf "$src" "$link"
-      fi
+      run ln -sf "$src" "$link"
     else
       echo "  ⚠️  $rel not found, skipping"
     fi
