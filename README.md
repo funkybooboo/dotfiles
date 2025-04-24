@@ -9,7 +9,7 @@ This repository manages your personal dotfiles, NixOS system configuration, and 
 
 ---
 
-## 📦 Repository layout
+## 📦 Repository Layout
 
 ```
 .
@@ -36,7 +36,7 @@ git clone https://your.git.repo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
-### 2. Enter development shell
+### 2. Enter Development Shell
 
 This brings in `stow` and `jq` automatically:
 
@@ -50,7 +50,7 @@ You’ll see:
 🛠  Entered nix-shell with stow and jq available
 ```
 
-### 3. Preview changes (dry-run)
+### 3. Preview Changes (Dry-Run)
 
 Before touching anything, simulate the full workflow:
 
@@ -60,7 +60,7 @@ Before touching anything, simulate the full workflow:
 
 You should see “DRY RUN:” messages, the Stow links that _would_ be created, and any backups that _would_ occur.
 
-### 4. Apply for real
+### 4. Apply for Real
 
 If the dry-run looks good, run:
 
@@ -73,6 +73,13 @@ If the dry-run looks good, run:
 - Home dotfiles linked into your `$HOME`  
 - NixOS `configuration.nix` linked into `/etc/nixos`  
 - Scripts listed in `config.json` symlinked into `~/.local/bin`
+
+### Notes on Overriding Files:
+- Existing symlinks or files in `$HOME` or `/etc/nixos` will be **overwritten** with the dotfiles versions if they already exist.
+- The script **backs up** existing files before making changes, storing them in `~/dotfiles/stow-backups/<timestamp>/`.
+- If you don’t want a file to be overwritten, you can either:
+  1. Remove the `--restow` option in the script.
+  2. Manually move the file before running `setup.sh`.
 
 ---
 
@@ -93,6 +100,8 @@ List any scripts you want exposed on your `PATH`. Paths are **relative** to the 
 
 Whenever you add a new helper, just add its repo path here and re-run `./setup.sh`.
 
+---
+
 ### `shell.nix`
 
 Provides a throwaway environment with:
@@ -101,6 +110,12 @@ Provides a throwaway environment with:
 - `jq`    (for parsing `config.json`)  
 
 No need to install anything globally—just `nix-shell`.
+
+---
+
+## 📝 License
+
+This project is licensed under the **GNU General Public License (GPL)**. You can view the full license at [project root/LICENSE](LICENSE).
 
 ---
 
@@ -121,26 +136,4 @@ which rebuild update
 ```
 
 Each should point back into your `~/dotfiles` repo.
-
----
-
-## ⚡ FAQ
-
-- **Q:** _“Do I have to run from `~/dotfiles`?”_  
-  **A:** No—`setup.sh` always `cd`s into the repo. If your dotfiles live elsewhere, invoke it as:
-  ```bash
-  /path/to/setup.sh [dotfiles-dir] [home-target]
-  ```
-
-- **Q:** _“What if a file conflict isn’t detected?”_  
-  The script catches:
-  1. **File vs File**  
-  2. **File vs Directory**  
-  in both `$HOME` and `/etc`. If you run into something unusual, check `stow-backups/…` for any stray files.
-
-- **Q:** _“How do I customize which packages get stowed?”_  
-  Edit the `HOME_PKGS=(…)` array near the top of `setup.sh`. By default it includes:
-  ```bash
-  bash config gdbinit ideavim scripts vim
-  ```
 
