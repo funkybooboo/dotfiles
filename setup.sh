@@ -13,6 +13,18 @@ TARGET_HOME="${2:-$HOME}"
 TS=$(date +'%Y%m%d%H%M%S%N')           # nanosecond timestamp for backups
 BACKUP_DIR="$DOTDIR/stow-backups/$TS"
 
+# ——— 0) PROMPT FOR SUDO (once) ———
+if (( DRYRUN )); then
+  echo "DRY RUN: would request sudo credentials now"
+else
+  echo "🔒 This script needs sudo to handle /etc. Please enter your password when prompted."
+  sudo -v
+  # keep‐alive: refresh until script exits
+  ( while true; do sudo -n true; sleep 60; done ) &
+  SUDO_PID=$!
+  trap 'kill $SUDO_PID' EXIT
+fi
+
 # helper to run or echo
 run() {
   if (( DRYRUN )); then
@@ -23,18 +35,6 @@ run() {
 }
 
 cd "$DOTDIR" || { echo "❌ dotfiles repo not found at $DOTDIR"; exit 1; }
-
-# ——— 0) SUDO SETUP ———
-if (( DRYRUN )); then
-  echo "DRY RUN: sudo -v  # ensure sudo upfront"
-else
-  echo "🔒 Requesting sudo up front…"
-  sudo -v
-  # keep-alive
-  ( while true; do sudo -n true; sleep 60; done ) &  
-  SUDO_PID=$!
-  trap 'kill $SUDO_PID' EXIT
-fi
 
 # ——— prepare backup dirs ———
 if (( DRYRUN )); then
@@ -49,7 +49,7 @@ backup_path() {
   src="$1"; dest="$2"
   if (( DRYRUN )); then
     echo "DRY RUN: mkdir -p $(dirname "$dest")"
-    echo "DRY RUN: mv $src $dest  # or cp+rm on cross-fs"
+    echo "DRY RUN: mv $src $dest  # or cp+rm on cross‐FS"
   else
     mkdir -p "$(dirname "$dest")"
     if ! mv "$src" "$dest" 2>/dev/null; then
@@ -125,7 +125,7 @@ echo "✅ Backups complete."
 
 # ——— 3) STOW HOME PACKAGES ———
 STOW_OPTS="-v -d '$DOTDIR' -t '$TARGET_HOME'"
-if (( DRYRUN )); then STOW_OPTS="-n $STOW_OPTS"; fi
+(( DRYRUN )) && STOW_OPTS="-n $STOW_OPTS"
 echo "👉  Stowing home packages into $TARGET_HOME"
 for pkg in "${HOME_PKGS[@]}"; do
   [[ -d $pkg ]] || continue
@@ -136,7 +136,7 @@ done
 # ——— 4) STOW NIXOS CONFIG ———
 if [[ -d etc/nixos ]]; then
   STOW_SYS="-v -d '$DOTDIR/etc' -t /etc"
-  if (( DRYRUN )); then STOW_SYS="-n $STOW_SYS"; fi
+  (( DRYRUN )) && STOW_SYS="-n $STOW_SYS"
   echo "👉  Stowing NixOS configuration into /etc"
   eval "sudo stow --restow $STOW_SYS nixos"
 else
@@ -145,11 +145,7 @@ fi
 
 # ——— 5) REGISTER SCRIPTS INTO PATH ———
 BIN_DIR="$TARGET_HOME/.local/bin"
-if (( DRYRUN )); then
-  echo "DRY RUN: mkdir -p $BIN_DIR"
-else
-  mkdir -p "$BIN_DIR"
-fi
+(( DRYRUN )) && echo "DRY RUN: mkdir -p $BIN_DIR" || mkdir -p "$BIN_DIR"
 if [[ -f config.json ]]; then
   echo "🔗 Registering scripts into $BIN_DIR"
   while IFS= read -r rel; do
