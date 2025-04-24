@@ -105,6 +105,12 @@ in {
   #xwaylandvideobridge # exposes Wayland windows to X11 screen capture
   #];
 
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
+  };
+
   #programs.hyprland.enable = true;
   #programs.hyprland.xwayland.enable = true;
 
