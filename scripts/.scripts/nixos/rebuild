@@ -2,47 +2,57 @@
 
 # Check if ~/.bashrc exists and source it, or panic if it's missing
 if [ ! -f "$HOME/.bashrc" ]; then
-  echo "Error: ~/.bashrc not found!"
-  exit 1 # Exit with a non-zero status to indicate failure
+    echo "Error: ~/.bashrc not found!"
+    exit 1 # Exit with a non-zero status to indicate failure
 else
-  source "$HOME/.bashrc"
+    source "$HOME/.bashrc"
 fi
 
 # A rebuild script that commits on a successful build
 set -e
 
+# Define the path to the config directory using ~ for the home directory
+CONFIG_DIR="$HOME/dotfiles/config/.config/nixos"
+
+# Print the resolved path to ensure it's correct
+echo "Config directory: $CONFIG_DIR"
+
+# Check for .nix files in the config directory
+echo "Checking for .nix files in $CONFIG_DIR..."
+find "$CONFIG_DIR" -name "*.nix"
+
 # cd to your config dir
-pushd ~/.config/nixos/
+pushd "$CONFIG_DIR"
 
 # Edit your config
 $EDITOR debbie.nix
 
 # Early return if no changes were detected (thanks @singiamtel!)
-if dotfiles diff --quiet '*.nix'; then
-  echo "No changes detected, exiting."
-  popd
-  exit 0
+if dotfiles diff --quiet "$CONFIG_DIR/*.nix"; then
+    echo "No changes detected, exiting."
+    popd
+    exit 0
 fi
 
 # Autoformat your nix files
 alejandra . &>/dev/null ||
-  (
-    alejandra .
-    echo "formatting failed!" && exit 1
-  )
+    (
+        alejandra .
+        echo "formatting failed!" && exit 1
+    )
 
 # Shows your changes
-dotfiles diff -U0 '*.nix'
+dotfiles diff -U0 "$CONFIG_DIR/*.nix"
 
 echo "NixOS Rebuilding..."
 
-# Rebuild, output simplified errors, log trackebacks
+# Rebuild, output simplified errors, log trackbacks
 sudo nixos-rebuild switch &>nixos-switch.log || (cat nixos-switch.log | grep --color error && exit 1)
 
 # Get current generation metadata
 current=$(nixos-rebuild list-generations | grep current)
 
-# Commit all changes witih the generation metadata
+# Commit all changes with the generation metadata
 dotfiles commit -am "$current"
 
 # Push the changes to your remote repository
