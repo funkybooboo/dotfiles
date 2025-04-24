@@ -8,6 +8,7 @@ if [[ "${1:-}" == "--dry-run" ]]; then
   DRYRUN=1
   shift
 fi
+
 DOTDIR="${1:-$HOME/dotfiles}"
 TARGET_HOME="${2:-$HOME}"
 TS=$(date +'%Y%m%d%H%M%S%N')           # nanosecond timestamp for backups
@@ -19,13 +20,12 @@ if (( DRYRUN )); then
 else
   echo "🔒 This script needs sudo to handle /etc. Please enter your password when prompted."
   sudo -v
-  # keep‐alive: refresh until script exits
   ( while true; do sudo -n true; sleep 60; done ) &
   SUDO_PID=$!
   trap 'kill $SUDO_PID' EXIT
 fi
 
-# helper to run or echo
+# ——— helper to run or echo ———
 run() {
   if (( DRYRUN )); then
     echo "DRY RUN: $*"
@@ -123,14 +123,30 @@ fi
 
 echo "✅ Backups complete."
 
-# ——— 3) STOW HOME PACKAGES ———
-STOW_OPTS="-v -d '$DOTDIR' -t '$TARGET_HOME'"
-(( DRYRUN )) && STOW_OPTS="-n $STOW_OPTS"
-echo "👉  Stowing home packages into $TARGET_HOME"
+# ——— 3) INSTALL HOME PACKAGE SYMLINKS ———
+echo "👉  Installing home‐package symlinks into $TARGET_HOME"
 for pkg in "${HOME_PKGS[@]}"; do
   [[ -d $pkg ]] || continue
   echo "  ↪️  $pkg"
-  eval "stow --restow $STOW_OPTS $pkg"
+
+  find "$pkg" -type f | while read -r f; do
+    rel=${f#"$pkg/"}           # e.g. "bashrc" or "config/nvim/init.lua"
+    src="$DOTDIR/$pkg/$rel"
+    dst="$TARGET_HOME/$rel"
+
+    # backup any real file in the way
+    if [[ -e $dst && ! -L $dst ]]; then
+      echo "    • backing up existing file: $dst"
+      backup_path "$dst" "$BACKUP_DIR/home/$rel"
+    fi
+
+    # ensure parent directory exists
+    run mkdir -p "$(dirname "$dst")"
+
+    # create or overwrite symlink
+    run ln -snf "$src" "$dst"
+    echo "    ↪ linked $dst → $src"
+  done
 done
 
 # ——— 4) STOW NIXOS CONFIG ———
@@ -145,12 +161,18 @@ fi
 
 # ——— 5) REGISTER SCRIPTS INTO PATH ———
 BIN_DIR="$TARGET_HOME/.local/bin"
-(( DRYRUN )) && echo "DRY RUN: mkdir -p $BIN_DIR" || mkdir -p "$BIN_DIR"
+if (( DRYRUN )); then
+  echo "DRY RUN: mkdir -p $BIN_DIR"
+else
+  mkdir -p "$BIN_DIR"
+fi
+
 if [[ -f config.json ]]; then
   echo "🔗 Registering scripts into $BIN_DIR"
   while IFS= read -r rel; do
     [[ -z $rel ]] && continue
-    src="$DOTDIR/$rel"; link="$BIN_DIR/$(basename "$rel")"
+    src="$DOTDIR/$rel"
+    link="$BIN_DIR/$(basename "$rel")"
     if [[ -f $src ]]; then
       if (( DRYRUN )); then
         echo "DRY RUN: ln -sf $src $link"
