@@ -1,0 +1,7 @@
+{
+  "add-to-path": [
+    "scripts/.scripts/nixos/rebuild",
+    "scripts/.scripts/nixos/update"
+  ]
+}
+
