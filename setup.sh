@@ -19,17 +19,23 @@ fi
 # ─── Read config.json for binaries to expose ────────────────────────────────────
 BINARIES=( $(jq -r '.["add-to-path"][]' config.json) )
 
-# ─── Gather packages (everything except etc, .git, config.json, etc...) ────
-PACKAGES=()
-for entry in * .[!.]*; do
-  case "$entry" in
-    .|..|.git|etc|config.json|setup.sh|README.md|LICENSE|shell.nix|stow-backups|*~|.gitignore) continue ;; 
-  esac
-  PACKAGES+=("$entry")
-done
+# ─── Define HOME and ROOT package arrays ────────────────────────────────────────
+HOME_PACKAGES=(
+  bash
+  config
+  gdbinit
+  ideavim
+  scripts
+  vim
+)
+
+ROOT_PACKAGES=(
+  etc
+)
 
 # Debugging output to check package names
-echo "Packages to be stowed: ${PACKAGES[*]}"
+echo "Home packages to be stowed: ${HOME_PACKAGES[*]}"
+echo "Root packages to be stowed: ${ROOT_PACKAGES[*]}"
 
 # ─── Backup any existing targets before we touch them ────────────────────────────
 TS=$(date +%Y%m%d%H%M%S)
@@ -38,7 +44,7 @@ echo "💾  Backing up existing files to $BACKUP_DIR …"
 mkdir -p "$BACKUP_DIR"
 
 # 1) Home-targeted packages
-for pkg in "${PACKAGES[@]}"; do
+for pkg in "${HOME_PACKAGES[@]}"; do
   find "$DOTFILES_DIR/$pkg" -mindepth 1 | while read -r src; do
     rel=${src#"$DOTFILES_DIR/$pkg/"}        # path relative inside package
     dest="$HOME/$rel"
@@ -65,22 +71,24 @@ for pkg in "${PACKAGES[@]}"; do
   done
 done
 
-# 2) etc tree
-find "$DOTFILES_DIR/etc" -mindepth 1 | while read -r src; do
-  rel=${src#"$DOTFILES_DIR/etc/"}         # path under /etc
-  dest="/$rel"
-  if [ -e "$dest" ]; then
-      sudo mkdir -p "$BACKUP_DIR/etc/$(dirname "$rel")"
-      sudo cp -r "$dest" "$BACKUP_DIR/etc/$rel"  # Copy instead of move
-      echo "  backed up: $dest → $BACKUP_DIR/etc/$rel"
-  fi
+# 2) Root-targeted packages
+for pkg in "${ROOT_PACKAGES[@]}"; do
+  find "$DOTFILES_DIR/$pkg" -mindepth 1 | while read -r src; do
+    rel=${src#"$DOTFILES_DIR/$pkg/"}         # path under /etc
+    dest="/$rel"
+    if [ -e "$dest" ]; then
+        sudo mkdir -p "$BACKUP_DIR/etc/$(dirname "$rel")"
+        sudo cp -r "$dest" "$BACKUP_DIR/etc/$rel"  # Copy instead of move
+        echo "  backed up: $dest → $BACKUP_DIR/etc/$rel"
+    fi
+  done
 done
 
 echo ""
 
 # ─── Stow into $HOME, force-overwriting any existing files/links ───────────────
-echo "🔗  Stowing to \$HOME: ${PACKAGES[*]}"
-for pkg in "${PACKAGES[@]}"; do
+echo "🔗  Stowing to \$HOME: ${HOME_PACKAGES[*]}"
+for pkg in "${HOME_PACKAGES[@]}"; do
   echo "Stowing package: $pkg"  # Debugging output
   if [ -z "$pkg" ]; then
     echo "Skipping empty package: $pkg"
@@ -93,13 +101,6 @@ for pkg in "${PACKAGES[@]}"; do
     "$pkg"
 done
 
-# ─── Link only Pictures/wallpapers into ~/Pictures/wallpapers ─────────────────
-echo ""
-echo "🔗  Linking wallpapers into \$HOME/Pictures/wallpapers"
-mkdir -p "$HOME/Pictures"
-rm -rf "$HOME/Pictures/wallpapers"
-ln -s "$DOTFILES_DIR/Pictures/wallpapers" "$HOME/Pictures/wallpapers"
-
 # ─── Clean out existing /etc targets and stow etc into /etc ────────────────────
 echo ""
 echo "🗑  Cleaning out /etc targets for your etc/ tree"
@@ -107,11 +108,20 @@ echo "🗑  Cleaning out /etc targets for your etc/ tree"
 sudo rm -rf /etc/nixos
 
 echo "🔗  Stowing 'etc' to /etc (requires sudo)"
-sudo stow \
-  --verbose \
-  --target=/etc \
-  --restow \
-  etc
+for pkg in "${ROOT_PACKAGES[@]}"; do
+  sudo stow \
+    --verbose \
+    --target=/etc \
+    --restow \
+    "$pkg"
+done
+
+# ─── Link only Pictures/wallpapers into ~/Pictures/wallpapers ─────────────────
+echo ""
+echo "🔗  Linking wallpapers into \$HOME/Pictures/wallpapers"
+mkdir -p "$HOME/Pictures"
+rm -rf "$HOME/Pictures/wallpapers"
+ln -s "$DOTFILES_DIR/Pictures/wallpapers" "$HOME/Pictures/wallpapers"
 
 # ─── Expose configured scripts into ~/.local/bin ────────────────────────────────
 echo ""
