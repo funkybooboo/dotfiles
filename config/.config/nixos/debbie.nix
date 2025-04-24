@@ -322,6 +322,9 @@ in {
     nix-init # NixOS system initialization tool
     stow # Sym-link manager
 
+    unixtools.quota
+    thunderbird
+
     kdePackages.breeze-gtk
     kdePackages.breeze-icons
     kdePackages.breeze.qt5
