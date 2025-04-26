@@ -5,8 +5,9 @@
   ...
 }: let
   unstableTarball = fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"; # TODO pin to a commit with a hash
   };
+
   flatpakApps = [
     "dev.zelikos.rollit"
     "io.github.voxelcubes.hand-tex"
@@ -16,6 +17,14 @@
     "com.play0ad.zeroad"
   ];
   flatpakAppList = lib.concatStringsSep " " flatpakApps;
+
+  mysqlInitScript = pkgs.writeTextFile {
+    name = "mariadb-init";
+    text = lib.concatStringsSep "\n" [
+      "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+      "FLUSH PRIVILEGES;"
+    ];
+  };
 in {
   nixpkgs.config = {
     allowUnfree = true;
@@ -29,9 +38,7 @@ in {
   system.activationScripts.installFlatpaks = ''
     if ! command -v flatpak >/dev/null; then
       echo "Flatpak not available during activation, skipping install."
-      exit 0
-    fi
-
+    else
     if ! flatpak remote-list | grep -q flathub; then
       flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
     fi
@@ -39,6 +46,7 @@ in {
     for app in ${flatpakAppList}; do
       flatpak install -y --noninteractive flathub "$app" || true
     done
+    fi
   '';
 
   # Bootloader
@@ -137,6 +145,7 @@ in {
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
+    initialScript = toString mysqlInitScript;
   };
 
   # Enable sound with pipewire
