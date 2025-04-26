@@ -1,0 +1,15 @@
+# maximum column width before wrapping
+max_width = 120
+
+# number of spaces to indent
+indent_width = 4
+
+# keep simple attributes (key = value;) on one line
+keep_simple_attrset = true
+
+# group function arguments on one line if possible
+group_function_arguments = true
+
+# remove trailing blank lines
+compact_blank_lines = true
+
