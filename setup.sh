@@ -29,6 +29,7 @@ HOME_PACKAGES=(
     vim
     git
     jump
+    alejandra
 )
 
 ROOT_PACKAGES=(
