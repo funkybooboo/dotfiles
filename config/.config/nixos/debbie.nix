@@ -284,6 +284,7 @@ in {
     zip
     unzip
     gparted
+    jump
 
     # ─── Browsers ───
     brave
