@@ -417,6 +417,10 @@ in {
     after = ["network-online.target" "flatpak-system-helper.service"];
     serviceConfig = {
       Type = "oneshot";
+
+      # Inject PATH so flatpak is found
+      Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+
       ExecStart = pkgs.writeShellScript "install-flatpaks" ''
         set -e
 
@@ -442,6 +446,7 @@ in {
           fi
         done
       '';
+
       StandardOutput = "append:/var/log/install-flatpaks.log";
       StandardError = "append:/var/log/install-flatpaks.log";
     };
