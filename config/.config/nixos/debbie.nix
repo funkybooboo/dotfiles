@@ -282,7 +282,6 @@ in {
     xdg-desktop-portal-kde
     xdg-desktop-portal-hyprland
 
-    # os building tools
     qemu
     imhex
     open-watcom-v2
