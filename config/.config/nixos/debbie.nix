@@ -5,7 +5,7 @@
   ...
 }: let
   unstableTarball = fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"; # TODO pin to a commit with a hash
+    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   };
 
   flatpakApps = [
@@ -89,53 +89,24 @@ in {
   # Display Manager
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
-  #services.xserver.displayManager.lightdm.enable = true;
-
-  # Desktop Environment
-  #services.xserver.desktopManager.cinnamon.enable = true;
-  #environment.cinnamon.excludePackages = with pkgs; [
-  #  nemo
-  #  xfce.xfce4-terminal
-  #  gnome-terminal
-  #  xed
-  #  xterm
-  #  baobab
-  #  epiphany
-  #  evince
-  #  geary
-  #  gnome-calculator
-  #  gnome-contacts
-  #  gnome-logs
-  #  gnome-maps
-  #  gnome-music
-  #  # gnome-screenshot
-  #  gnome-system-monitor
-  #  pkgs.gnome-connections
-  #  pkgs.gnome-console
-  #];
 
   services.desktopManager.plasma6.enable = true;
-  #environment.plasma6.excludePackages = with pkgs.kdePackages; [
-  #  plasma-browser-integration
-  #  konsole
-  #(lib.getBin qttools) # Expose qdbus in PATH
-  #  ark
-  #  elisa
-  #  gwenview
-  #  okular
-  #  kate
-  #  khelpcenter
-  #  dolphin
-  #  baloo-widgets # baloo information in Dolphin
-  #  dolphin-plugins
-  #spectacle
-  #  ffmpegthumbs
-  #  krdp
-  #xwaylandvideobridge # exposes Wayland windows to X11 screen capture
-  #];
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    plasma-browser-integration
+    konsole
+    elisa
+    gwenview
+    okular
+    kate
+    khelpcenter
+    dolphin
+    baloo-widgets
+    dolphin-plugins
+    ffmpegthumbs
+    krdp
+  ];
 
-  #programs.hyprland.enable = true;
-  #programs.hyprland.xwayland.enable = true;
+  programs.hyprland.enable = true;
 
   services.displayManager.defaultSession = "plasma";
 
@@ -385,9 +356,9 @@ in {
     kdePackages.breeze-icons
     kdePackages.breeze.qt5
     kdePackages.breeze
-    catppuccin-cursors # Mouse cursor theme
-    catppuccin-papirus-folders # Icon theme, e.g. for pcmanfm-qt
-    papirus-folders # For the catppucing stuff work
+    catppuccin-cursors
+    catppuccin-papirus-folders
+    papirus-folders
 
     font-awesome
 
@@ -404,8 +375,7 @@ in {
     networkmanagerapplet
     power-profiles-daemon
     swaynotificationcenter
-    libnotify # Library for sending desktop notifications
-    # ianny
+    libnotify
     easyeffects
     hyprpolkitagent
     hypridle
@@ -413,18 +383,14 @@ in {
     hyprlock
     nwg-look
     wireplumber
-
     libsForQt5.xwaylandvideobridge
-
     cliphist
     wlogout
     hyprshot
-
     ethtool
     wirelesstools
     iw
     bc
-
     sysstat
   ];
 
@@ -441,9 +407,6 @@ in {
     enable = true;
     enableSSHSupport = true;
   };
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
 
   # Firewall
   networking.firewall.enable = true;
@@ -473,6 +436,7 @@ in {
       Persistent = true;
     };
   };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
