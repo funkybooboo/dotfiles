@@ -35,20 +35,6 @@ in {
     };
   };
 
-  system.activationScripts.installFlatpaks = ''
-    if command -v flatpak >/dev/null; then
-      if ! flatpak remote-list | grep -q flathub; then
-        flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
-      fi
-
-      for app in ${flatpakAppList}; do
-        flatpak install -y --noninteractive flathub "$app" || true
-      done
-    else
-      echo "Flatpak not available during activation, skipping install."
-    fi
-  '';
-
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -424,6 +410,42 @@ in {
   programs.nix-ld.libraries = with pkgs; [
     # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
   ];
+
+  systemd.services.install-flatpaks = {
+    description = "Install Flatpak apps from Flathub";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "flatpak-system-helper.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+        set -e
+
+        # Ensure flatpak is installed
+        if ! command -v flatpak >/dev/null; then
+          echo "Flatpak command not found! Skipping Flatpak app installation."
+          exit 0
+        fi
+
+        # Make sure flathub is added
+        if ! flatpak remote-list | grep -q flathub; then
+          echo "Adding Flathub remote..."
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        fi
+
+        # Install apps
+        for app in ${flatpakAppList}; do
+          echo "Installing $app..."
+          if ! flatpak info "$app" >/dev/null 2>&1; then
+            flatpak install -y --noninteractive flathub "$app"
+          else
+            echo "$app already installed."
+          fi
+        done
+      '';
+      StandardOutput = "append:/var/log/install-flatpaks.log";
+      StandardError = "append:/var/log/install-flatpaks.log";
+    };
+  };
 
   systemd.services.flatpak-update = {
     description = "Update all Flatpak apps";
