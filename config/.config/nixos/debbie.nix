@@ -180,220 +180,101 @@ in {
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # ─── Programming Languages ───
-    go
-    julia
-    lua51Packages.lua
-    php
-    python313
-    python312Packages.pip
-    rustup
-    sbcl
-    zulu23
-    dotnetCorePackages.sdk_9_0
+      neovim # Highly extensible text editor for coding
+      tree-sitter # Parser generator for syntax highlighting and code analysis
+      lazygit # Simple terminal UI for git commands
+      luajitPackages.luarocks-nix # LuaJIT support for LuaRocks package manager
+      fd # Fast and user-friendly alternative to 'find'
+      lsof
+      go # Go programming language
+      fish # User-friendly command-line shell
+      kitty # Fast, feature-rich, GPU-based terminal emulator
+      webcord
+      cloc # Counts lines of code in programming projects
+      lsd # Modern alternative to 'ls' with better formatting
+      bat # 'cat' command with syntax highlighting and Git integration
+      tldr # Simplified and community-contributed man pages
+      unstable.wikiman # Wiki-based markdown documentation viewer
+      fzf # Command-line fuzzy finder
+      wireshark # Network protocol analyzer
+      zoom-us # Video conferencing tool
+      alpaca # Simple CLI for working with large codebases
+      imaginer
+      chance
+      memorado
+      varia
+      keypunch
+      devtoolbox
+      concessio
+      obsidian # Knowledge management and note-taking application
+      blanket # Minimalistic note-taking app for programmers
+      drawio # Diagramming tool for creating flowcharts and UML diagrams
+      lazydocker # Terminal UI for managing Docker containers
+      proton-pass # Password manager integrated with Proton services
+      # protonmail-desktop # Desktop client for ProtonMail secure email
+      protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
+      protonvpn-gui # GUI for ProtonVPN for secure internet connections
+      yazi # TUI file viewer
+      timg # Image viewer for the terminal
+      asciinema # Record and share terminal sessions
+      # aalib # ASCII art library for image and video rendering
+      # oneko # Classic Japanese cat chasing a mouse on the screen
+      espeak # Compact open-source software speech synthesizer
+      asciiquarium # Fun aquarium screensaver in ASCII art
+      nix-tour # Educational tour through Nix and NixOS
+      lynx # Text-based web browser
+      gh # GitHub CLI tool for managing GitHub repositories
+      github-desktop
+      vscodium
+      pomodoro-gtk # Pomodoro technique timer for productivity
+      jq # Command-line JSON processor
+      yq
+      unetbootin # Tool for creating bootable USB drives
+      deskreen # Share your desktop to any device over the network
+      rclone # Command-line program for managing cloud storage
+      rclone-browser # GUI for managing cloud storage with Rclone
+      signal-desktop # Secure messaging app for desktop
+      pandoc # Universal document converter
+      texliveTeTeX # TeXLive distribution for typesetting documents
+      unixtools.xxd # Hexdump tool for examining binary files
+      black # Python code formatter
+      sbcl # Steel Bank Common Lisp compiler
+      gfortran # GNU Fortran compiler for compiling Fortran programs.
+      git-filter-repo
+      ascii
+      mpv
+      glow
+      chess-tui
+      stockfish
+      poppler_utils
+      file
+      zoxide
+      jump
+      ripgrep
+      imagemagick
+      zathura
+      xfce.thunar
+      gparted
 
-    # ─── Compilers, Build Systems, and Low-Level Tools ───
-    asmjit
-    asmrepl
-    bison
-    cmake
-    flex
-    gfortran
-    gmp
-    gnat14
-    gradle
-    maven
-    gnumake
-    imhex
-    libmpc
-    mpfr
-    nasm
-    nasmfmt
-    open-watcom-v2
-    texinfo
-    uasm
-    gdb
-    gdbgui
+      tor-browser
+      deluge
+      dumptorrent
+      buildtorrent
 
-    # ─── Development Tools ───
-    alejandra
-    bat
-    cloc
-    fastfetch
-    fd
-    fzf
-    gh
-    git
-    gitbutler
-    git-filter-repo
-    glow
-    jq
-    lazygit
-    lsd
-    neovim
-    ripgrep
-    stow
-    tree
-    unixtools.xxd
-    yq
-    fnm
-    typescript
-    deno
-    poetry
-    black
-    bruno
-    bruno-cli
-    rustfmt
-    rustlings
+      safeeyes
 
-    # ─── IDES ───
-    jetbrains.clion
-    jetbrains.datagrip
-    jetbrains.goland
-    jetbrains.idea-ultimate
-    jetbrains.pycharm-professional
-    jetbrains.rider
-    jetbrains.rust-rover
-    jetbrains.webstorm
-    vscodium
+      gitbutler
 
-    # ─── Database Tools ───
-    dbeaver-bin
-    sqlite
+      libstdcxx5
 
-    # ─── Operating System Building and Virtualization ───
-    grub2
-    libisoburn
-    qemu
-
-    # ─── Nix/NixOS Tools ───
-    nix-init
-    nix-tour
-
-    # ─── System Utilities ───
-    bc
-    curl
-    file
-    htop-vim
-    imagemagick
-    ripgrep
-    safeeyes
-    stow
-    wget
-    xclip
-    zip
-    unzip
-    gparted
-    jump
-
-    # ─── Browsers ───
-    brave
-    chromium
-    firefox
-    ladybird
-    librewolf
-    lynx
-    tor-browser
-
-    # ─── Communication ───
-    signal-desktop
-    webcord
-    zoom-us
-    thunderbird
-
-    # ─── VPN / Security ───
-    proton-pass
-    protonmail-bridge-gui
-    protonvpn-gui
-
-    # ─── Cloud Storage / Backup Tools ───
-    deskreen
-    rclone
-    rclone-browser
-
-    # ─── Office and Productivity ───
-    blanket
-    drawio
-    libreoffice
-    obsidian
-
-    # ─── Multimedia Tools ───
-    asciinema
-    mpv
-    pandoc
-    poppler_utils
-    texliveTeTeX
-    timg
-    zathura
-    ffmpeg
-
-    # ─── Fun / Educational ───
-    asciiquarium
-    chess-tui
-    espeak
-    stockfish
-    aalib
-    oneko
-
-    # ─── File Sharing / Torrenting ───
-    buildtorrent
-    deluge
-    dumptorrent
-    unetbootin
-
-    # ─── Docker / Containers ───
-    docker-compose
-    lazydocker
-
-    # ─── Hyprland / Wayland Ecosystem ───
-    brightnessctl
-    cliphist
-    easyeffects
-    hypridle
-    hyprlock
-    hyprpaper
-    hyprpicker
-    hyprpolkitagent
-    hyprshot
-    hyprsunset
-    hyprlandPlugins.hyprbars
-    hyprlandPlugins.hyprexpo
-    libnotify
-    libsForQt5.xwaylandvideobridge
-    networkmanagerapplet
-    nwg-look
-    pavucontrol
-    playerctl
-    power-profiles-daemon
-    swaynotificationcenter
-    waybar
-    wireplumber
-    wlogout
-    wofi
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-kde
-    xdg-desktop-portal-hyprland
-
-    # ─── KDE and Themes ───
-    catppuccin-cursors
-    catppuccin-papirus-folders
-    font-awesome
-    kdePackages.breeze
-    kdePackages.breeze-gtk
-    kdePackages.breeze-icons
-    kdePackages.breeze.qt5
-    papirus-folders
-
-    # ─── Miscellaneous Utilities ───
-    alpaca
-    concessio
-    devtoolbox
-    imaginer
-    keypunch
-    memorado
-    varia
-    unstable.wikiman
+      jetbrains.datagrip
+      jetbrains.webstorm # JetBrains IDE for JavaScript and web development
+      jetbrains.rust-rover # JetBrains IDE for Rust development
+      jetbrains.rider # JetBrains IDE for .NET development
+      jetbrains.pycharm-professional # Professional IDE for Python development
+      jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
+      jetbrains.goland # JetBrains IDE for Go programming language
+      jetbrains.clion # JetBrains IDE for C and C++ development
   ];
 
   services.locate.enable = true;
