@@ -180,6 +180,7 @@ in {
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
+    viewnior
     maven
     neovim # Highly extensible text editor for coding
     tree-sitter # Parser generator for syntax highlighting and code analysis
