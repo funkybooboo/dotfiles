@@ -1,11 +1,21 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
-  unstableTarball =
-    fetchTarball
-    https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz;
+  unstableTarball = fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+  };
+  flatpakApps = [
+    "dev.zelikos.rollit"
+    "io.github.voxelcubes.hand-tex"
+    "io.github.dman95.SASM"
+    "io.github.hamza_algohary.Coulomb"
+    "io.gitlab.persiangolf.voicegen"
+    "com.play0ad.zeroad"
+  ];
+  flatpakAppList = lib.concatStringsSep " " flatpakApps;
 in {
   nixpkgs.config = {
     allowUnfree = true;
@@ -16,16 +26,27 @@ in {
     };
   };
 
+  system.activationScripts.installFlatpaks = ''
+    if ! command -v flatpak >/dev/null; then
+      echo "Flatpak not available during activation, skipping install."
+      exit 0
+    fi
+
+    if ! flatpak remote-list | grep -q flathub; then
+      flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
+    fi
+
+    for app in ${flatpakAppList}; do
+      flatpak install -y --noninteractive flathub "$app" || true
+    done
+  '';
+
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Enable networking
   networking.networkmanager.enable = true;
-
-  # Set your time zone
-  time.timeZone = "America/New_York";
-  #time.timeZone = "America/Denver";
 
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
@@ -133,11 +154,27 @@ in {
 
   services.systembus-notify.enable = true;
 
+  services.flatpak.enable = true;
+
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-kde
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+  };
+
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.variables = {
     EDITOR = "nvim";
   };
 
+  fonts.enableDefaultPackages = true;
   fonts.packages = with pkgs; [nerdfonts];
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
@@ -167,6 +204,13 @@ in {
       wireshark # Network protocol analyzer
       zoom-us # Video conferencing tool
       alpaca # Simple CLI for working with large codebases
+      imaginer
+      chance
+      memorado
+      varia
+      keypunch
+      devtoolbox
+      concessio
       obsidian # Knowledge management and note-taking application
       blanket # Minimalistic note-taking app for programmers
       drawio # Diagramming tool for creating flowcharts and UML diagrams
@@ -247,10 +291,12 @@ in {
 
   virtualisation.docker.enable = true;
 
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
-
   environment.systemPackages = with pkgs; [
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-kde
+    xdg-desktop-portal-hyprland
+
     # os building tools
     qemu
     imhex
@@ -320,7 +366,6 @@ in {
     asmrepl # Interactive REPL for assembly language
     asmjit # Library for machine code generation in assembly language
     uasm # UASM assembler for x86 and x64 architectures
-    gnupg # GNU Privacy Guard for secure communication and file encryption
     nix-init # NixOS system initialization tool
     stow # Sym-link manager
 
@@ -351,7 +396,7 @@ in {
     power-profiles-daemon
     swaynotificationcenter
     libnotify # Library for sending desktop notifications
-    ianny
+    # ianny
     easyeffects
     hyprpolkitagent
     hypridle
@@ -360,9 +405,6 @@ in {
     nwg-look
     wireplumber
 
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-hyprland
     libsForQt5.xwaylandvideobridge
 
     cliphist
@@ -376,6 +418,14 @@ in {
 
     sysstat
   ];
+
+  services.automatic-timezoned.enable = true;
+
+  services.locate.enable = true;
+
+  programs.neovim.enable = true;
+  programs.neovim.viAlias = true;
+  programs.neovim.vimAlias = true;
 
   programs.mtr.enable = true;
   programs.gnupg.agent = {
@@ -396,6 +446,24 @@ in {
     # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
   ];
 
+  systemd.services.flatpak-update = {
+    description = "Update all Flatpak apps";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.flatpak}/bin/flatpak update --noninteractive";
+      StandardOutput = "append:/var/log/flatpak-update.log";
+      StandardError = "append:/var/log/flatpak-update.log";
+    };
+  };
+
+  systemd.timers.flatpak-update = {
+    description = "Run daily Flatpak updates";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
