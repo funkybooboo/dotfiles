@@ -36,16 +36,16 @@ in {
   };
 
   system.activationScripts.installFlatpaks = ''
-    if ! command -v flatpak >/dev/null; then
-      echo "Flatpak not available during activation, skipping install."
-    else
-    if ! flatpak remote-list | grep -q flathub; then
-      flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
-    fi
+    if command -v flatpak >/dev/null; then
+      if ! flatpak remote-list | grep -q flathub; then
+        flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
+      fi
 
-    for app in ${flatpakAppList}; do
-      flatpak install -y --noninteractive flathub "$app" || true
-    done
+      for app in ${flatpakAppList}; do
+        flatpak install -y --noninteractive flathub "$app" || true
+      done
+    else
+      echo "Flatpak not available during activation, skipping install."
     fi
   '';
 
@@ -55,6 +55,10 @@ in {
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  # Set your time zone
+  time.timeZone = "America/New_York";
+  #time.timeZone = "America/Denver";
 
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
@@ -107,6 +111,7 @@ in {
   ];
 
   programs.hyprland.enable = true;
+  programs.hyprland.xwayland.enable = true;
 
   services.displayManager.defaultSession = "plasma";
 
@@ -164,103 +169,6 @@ in {
     description = "Nate Stott";
     extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
     shell = pkgs.fish;
-    packages = with pkgs; [
-      neovim # Highly extensible text editor for coding
-      tree-sitter # Parser generator for syntax highlighting and code analysis
-      lazygit # Simple terminal UI for git commands
-      luajitPackages.luarocks-nix # LuaJIT support for LuaRocks package manager
-      fd # Fast and user-friendly alternative to 'find'
-      lsof
-      go # Go programming language
-      fish # User-friendly command-line shell
-      kitty # Fast, feature-rich, GPU-based terminal emulator
-      webcord
-      cloc # Counts lines of code in programming projects
-      lsd # Modern alternative to 'ls' with better formatting
-      bat # 'cat' command with syntax highlighting and Git integration
-      tldr # Simplified and community-contributed man pages
-      unstable.wikiman # Wiki-based markdown documentation viewer
-      fzf # Command-line fuzzy finder
-      wireshark # Network protocol analyzer
-      zoom-us # Video conferencing tool
-      alpaca # Simple CLI for working with large codebases
-      imaginer
-      chance
-      memorado
-      varia
-      keypunch
-      devtoolbox
-      concessio
-      obsidian # Knowledge management and note-taking application
-      blanket # Minimalistic note-taking app for programmers
-      drawio # Diagramming tool for creating flowcharts and UML diagrams
-      lazydocker # Terminal UI for managing Docker containers
-      proton-pass # Password manager integrated with Proton services
-      # protonmail-desktop # Desktop client for ProtonMail secure email
-      protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
-      protonvpn-gui # GUI for ProtonVPN for secure internet connections
-      yazi # TUI file viewer
-      timg # Image viewer for the terminal
-      asciinema # Record and share terminal sessions
-      # aalib # ASCII art library for image and video rendering
-      # oneko # Classic Japanese cat chasing a mouse on the screen
-      espeak # Compact open-source software speech synthesizer
-      asciiquarium # Fun aquarium screensaver in ASCII art
-      nix-tour # Educational tour through Nix and NixOS
-      lynx # Text-based web browser
-      gh # GitHub CLI tool for managing GitHub repositories
-      github-desktop
-      vscodium
-      pomodoro-gtk # Pomodoro technique timer for productivity
-      jq # Command-line JSON processor
-      yq
-      unetbootin # Tool for creating bootable USB drives
-      deskreen # Share your desktop to any device over the network
-      rclone # Command-line program for managing cloud storage
-      rclone-browser # GUI for managing cloud storage with Rclone
-      signal-desktop # Secure messaging app for desktop
-      pandoc # Universal document converter
-      texliveTeTeX # TeXLive distribution for typesetting documents
-      unixtools.xxd # Hexdump tool for examining binary files
-      black # Python code formatter
-      sbcl # Steel Bank Common Lisp compiler
-      gfortran # GNU Fortran compiler for compiling Fortran programs.
-      git-filter-repo
-      ascii
-      mpv
-      glow
-      chess-tui
-      stockfish
-      poppler_utils
-      file
-      zoxide
-      jump
-      ripgrep
-      imagemagick
-      zathura
-      xfce.thunar
-      gparted
-
-      tor-browser
-      deluge
-      dumptorrent
-      buildtorrent
-
-      safeeyes
-
-      gitbutler
-
-      libstdcxx5
-
-      jetbrains.datagrip
-      jetbrains.webstorm # JetBrains IDE for JavaScript and web development
-      jetbrains.rust-rover # JetBrains IDE for Rust development
-      jetbrains.rider # JetBrains IDE for .NET development
-      jetbrains.pycharm-professional # Professional IDE for Python development
-      jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
-      jetbrains.goland # JetBrains IDE for Go programming language
-      jetbrains.clion # JetBrains IDE for C and C++ development
-    ];
   };
 
   virtualisation.virtualbox.host.enable = true;
@@ -272,129 +180,220 @@ in {
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
+    # ─── Programming Languages ───
+    go
+    julia
+    lua51Packages.lua
+    php
+    python313
+    python312Packages.pip
+    rustup
+    sbcl
+    zulu23
+    dotnetCorePackages.sdk_9_0
+
+    # ─── Compilers, Build Systems, and Low-Level Tools ───
+    asmjit
+    asmrepl
+    bison
+    cmake
+    flex
+    gfortran
+    gmp
+    gnat14
+    gradle
+    maven
+    gnumake
+    imhex
+    libmpc
+    mpfr
+    nasm
+    nasmfmt
+    open-watcom-v2
+    texinfo
+    uasm
+    gdb
+    gdbgui
+
+    # ─── Development Tools ───
+    alejandra
+    bat
+    cloc
+    fastfetch
+    fd
+    fzf
+    gh
+    git
+    gitbutler
+    git-filter-repo
+    glow
+    jq
+    lazygit
+    lsd
+    neovim
+    ripgrep
+    stow
+    tree
+    unixtools.xxd
+    yq
+    fnm
+    typescript
+    deno
+    poetry
+    black
+    bruno
+    bruno-cli
+    rustfmt
+    rustlings
+
+    # ─── IDES ───
+    jetbrains.clion
+    jetbrains.datagrip
+    jetbrains.goland
+    jetbrains.idea-ultimate
+    jetbrains.pycharm-professional
+    jetbrains.rider
+    jetbrains.rust-rover
+    jetbrains.webstorm
+    vscodium
+
+    # ─── Database Tools ───
+    dbeaver-bin
+    sqlite
+
+    # ─── Operating System Building and Virtualization ───
+    grub2
+    libisoburn
+    qemu
+
+    # ─── Nix/NixOS Tools ───
+    nix-init
+    nix-tour
+
+    # ─── System Utilities ───
+    bc
+    curl
+    file
+    htop-vim
+    imagemagick
+    ripgrep
+    safeeyes
+    stow
+    wget
+    xclip
+    zip
+    unzip
+    gparted
+
+    # ─── Browsers ───
+    brave
+    chromium
+    firefox
+    ladybird
+    librewolf
+    lynx
+    tor-browser
+
+    # ─── Communication ───
+    signal-desktop
+    webcord
+    zoom-us
+    thunderbird
+
+    # ─── VPN / Security ───
+    proton-pass
+    protonmail-bridge-gui
+    protonvpn-gui
+
+    # ─── Cloud Storage / Backup Tools ───
+    deskreen
+    rclone
+    rclone-browser
+
+    # ─── Office and Productivity ───
+    blanket
+    drawio
+    libreoffice
+    obsidian
+
+    # ─── Multimedia Tools ───
+    asciinema
+    mpv
+    pandoc
+    poppler_utils
+    texliveTeTeX
+    timg
+    zathura
+    ffmpeg
+
+    # ─── Fun / Educational ───
+    asciiquarium
+    chess-tui
+    espeak
+    stockfish
+    aalib
+    oneko
+
+    # ─── File Sharing / Torrenting ───
+    buildtorrent
+    deluge
+    dumptorrent
+    unetbootin
+
+    # ─── Docker / Containers ───
+    docker-compose
+    lazydocker
+
+    # ─── Hyprland / Wayland Ecosystem ───
+    brightnessctl
+    cliphist
+    easyeffects
+    hypridle
+    hyprlock
+    hyprpaper
+    hyprpicker
+    hyprpolkitagent
+    hyprshot
+    hyprsunset
+    hyprlandPlugins.hyprbars
+    hyprlandPlugins.hyprexpo
+    libnotify
+    libsForQt5.xwaylandvideobridge
+    networkmanagerapplet
+    nwg-look
+    pavucontrol
+    playerctl
+    power-profiles-daemon
+    swaynotificationcenter
+    waybar
+    wireplumber
+    wlogout
+    wofi
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-kde
     xdg-desktop-portal-hyprland
 
-    # os building tools
-    qemu
-    imhex
-    open-watcom-v2
-    grub2
-    libisoburn
-    bison
-    flex
-    gmp
-    libmpc
-    mpfr
-    texinfo
-
-    docker-compose
-
-    libreoffice # Full-featured open-source office suite
-    vim # Highly configurable text editor
-    wget # Command-line utility for downloading files from the web
-    curl # Command-line tool for transferring data with URLs
-    firefox
-    librewolf
-    ladybird
-    brave
-    chromium # Open-source version of the Chrome web browser
-    git # Distributed version control system
-    gnat14 # GNAT compiler for Ada and other languages
-    libgcc # GCC runtime library for C and C++ programs
-    gdb # GNU Debugger for debugging applications
-    gdbgui # Web-based interface for GDB
-    zig # Programming language for general-purpose programming
-    rustlings
-    rustup
-    rustfmt # Rust code formatter
-    fnm # Fast Node Manager for managing Node.js versions
-    typescript # JavaScript superset for adding static types
-    deno # Secure runtime for JavaScript and TypeScript
-    dbeaver-bin # Universal database tool for developers
-    bruno-cli # Command-line interface for managing databases with Bruno
-    bruno # Open-source database client and management tool
-    clang-tools # Tools for working with Clang compiler and LLVM
-    python313 # Python 3.13 interpreter
-    python312Packages.pip # Python package installer for Python 3.12
-    php # PHP programming language interpreter
-    php84Packages.composer # Dependency manager for PHP 8.4
-    poetry # Python dependency manager and packaging tool
-    zulu23 # OpenJDK 23 distribution from Azul
-    gradle # Build automation system for Java projects
-    cmake # Build system and compiler configuration tool
-    gnumake # GNU version of the 'make' utility
-    alejandra # JSON and YAML configuration parser for Haskell
-    zip # Compression and file packaging utility
-    unzip # Utility for extracting compressed ZIP files
-    tmux # Terminal multiplexer for managing multiple terminal sessions
-    sqlite # Lightweight relational database management system
-    tree # Command-line utility for displaying directory trees
-    htop-vim # Interactive process viewer with Vim-like keybindings
-    fastfetch # A simple and fast system information tool
-    lua51Packages.lua # Lua programming language interpreter (version 5.1)
-    julia # High-level, high-performance dynamic programming language for technical computing
-    batmon # Battery monitor for Linux
-    xclip # Command-line interface to the X11 clipboard
-    ripgrep # Fast text searching tool
-    dotnetCorePackages.sdk_9_0 # .NET Core SDK for building cross-platform applications
-    ffmpeg # Command-line tool for handling multimedia files
-    nasm # Netwide Assembler, a popular assembler for x86 architectures
-    nasmfmt # Formatter for NASM source code
-    asmrepl # Interactive REPL for assembly language
-    asmjit # Library for machine code generation in assembly language
-    uasm # UASM assembler for x86 and x64 architectures
-    nix-init # NixOS system initialization tool
-    stow # Sym-link manager
-
-    unixtools.quota
-    thunderbird
-
+    # ─── KDE and Themes ───
+    catppuccin-cursors
+    catppuccin-papirus-folders
+    font-awesome
+    kdePackages.breeze
     kdePackages.breeze-gtk
     kdePackages.breeze-icons
     kdePackages.breeze.qt5
-    kdePackages.breeze
-    catppuccin-cursors
-    catppuccin-papirus-folders
     papirus-folders
 
-    font-awesome
-
-    # hyprland software
-    wofi
-    hyprsunset
-    waybar
-    pavucontrol
-    playerctl
-    hyprpaper
-    hyprpicker
-    hyprlandPlugins.hyprbars
-    hyprlandPlugins.hyprexpo
-    networkmanagerapplet
-    power-profiles-daemon
-    swaynotificationcenter
-    libnotify
-    easyeffects
-    hyprpolkitagent
-    hypridle
-    brightnessctl
-    hyprlock
-    nwg-look
-    wireplumber
-    libsForQt5.xwaylandvideobridge
-    cliphist
-    wlogout
-    hyprshot
-    ethtool
-    wirelesstools
-    iw
-    bc
-    sysstat
+    # ─── Miscellaneous Utilities ───
+    alpaca
+    concessio
+    devtoolbox
+    imaginer
+    keypunch
+    memorado
+    varia
+    unstable.wikiman
   ];
-
-  services.automatic-timezoned.enable = true;
 
   services.locate.enable = true;
 
