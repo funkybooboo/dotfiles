@@ -180,6 +180,7 @@ in {
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
+    flatpak
     viewnior
     maven
     neovim # Highly extensible text editor for coding
