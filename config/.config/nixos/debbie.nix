@@ -387,6 +387,8 @@ in {
     bc
 
     sysstat
+
+    jami
   ];
 
   services.locate.enable = true;

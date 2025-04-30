@@ -11,11 +11,10 @@ function fish_greeting
     # Add greeting code here if needed
 end
 
-# Set global PATH to include nix config directory
-set -gx PATH /home/nate/.config/nixos/ $PATH
-
 # Add Cargo bin directory to PATH permanently
 set -Ux PATH $HOME/.cargo/bin $PATH
+
+set -gx PATH /run/current-system/sw/bin/git $PATH
 
 # Function for interacting with dotfiles using git
 function dotfiles
