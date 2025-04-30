@@ -1,3 +1,12 @@
 [user]
 	email = nate.stott@pm.me
-	name = funkybooboo
+	name = Nate Stott
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[gitbutler]
+	aiModelProvider = openai
+[credential]
+	helper = store
