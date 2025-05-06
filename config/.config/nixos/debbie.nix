@@ -201,7 +201,7 @@ in {
     lazydocker # Terminal UI for managing Docker containers
     proton-pass # Password manager integrated with Proton services
     protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
-    protonvpn-gui # GUI for ProtonVPN for secure internet connections
+    # protonvpn-gui # GUI for ProtonVPN for secure internet connections
     yazi # TUI file viewer
     timg # Image viewer for the terminal
     asciinema # Record and share terminal sessions
