@@ -307,6 +307,8 @@ in {
     dbeaver-bin # Universal database tool for developers
     bruno-cli # Command-line interface for managing databases with Bruno
     bruno # Open-source database client and management tool
+    postman
+    newman
     clang-tools # Tools for working with Clang compiler and LLVM
     python313 # Python 3.13 interpreter
     python312Packages.pip # Python package installer for Python 3.12
