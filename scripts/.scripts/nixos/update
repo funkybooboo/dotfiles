@@ -12,9 +12,14 @@ sudo nix-channel --update
 echo "⚙️ Rebuilding NixOS..."
 sudo nixos-rebuild switch --upgrade
 
-# Step 3: Clean up old generations
-echo "🧹 Cleaning up old packages..."
-sudo nix-collect-garbage -d
+# Ask if user wants to clear old generations
+read -p "Do you want to clear old generations? (y/N) " CLEAR
+if [[ "$CLEAR" =~ ^[Yy]$ ]]; then
+    echo "🧹 Cleaning up old packages..."
+    sudo nix-collect-garbage -d
+else
+    echo "Skipping clearing old generations."
+fi
 
 # Step 4: Show current version
 echo "✅ NixOS version after update:"
