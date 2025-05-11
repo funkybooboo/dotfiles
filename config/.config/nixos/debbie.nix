@@ -95,19 +95,19 @@ in {
     krdp
   ];
 
-  #  programs.hyprland.enable = true;
-  #  programs.hyprland.xwayland.enable = true;
+  programs.hyprland.enable = true;
+  programs.hyprland.xwayland.enable = true;
 
   services.displayManager.defaultSession = "plasma";
 
   # Enable CUPS to print documents
   services.printing.enable = true;
 
-  #  services.mysql = {
-  #    enable = true;
-  #    package = pkgs.mariadb;
-  #    initialScript = toString mysqlInitScript;
-  #  };
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    initialScript = toString mysqlInitScript;
+  };
 
   # Enable sound with pipewire
   hardware.pulseaudio.enable = false;
@@ -122,24 +122,24 @@ in {
 
   programs.fish.enable = true;
 
-  #  services.systembus-notify.enable = true;
+  services.systembus-notify.enable = true;
 
-  #  services.flatpak.enable = true;
+  services.flatpak.enable = true;
 
-  #  hardware.graphics.enable = true;
-  #  hardware.graphics.enable32Bit = true;
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
 
-  #  xdg.portal = {
-  #    enable = true;
-  #    extraPortals = [
-  #      pkgs.xdg-desktop-portal
-  #      pkgs.xdg-desktop-portal-gtk
-  #      pkgs.xdg-desktop-portal-kde
-  #      pkgs.xdg-desktop-portal-hyprland
-  #    ];
-  #  };
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-kde
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+  };
 
-  #  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.variables = {
     EDITOR = "nvim";
   };
@@ -156,13 +156,13 @@ in {
     shell = pkgs.fish;
   };
 
-  #  virtualisation.virtualbox.host.enable = true;
-  #  users.extraGroups.vboxusers.members = ["nate"];
-  #  virtualisation.virtualbox.host.enableExtensionPack = true;
-  #  virtualisation.virtualbox.guest.enable = true;
-  #  virtualisation.virtualbox.guest.dragAndDrop = true;
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = ["nate"];
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
 
-  #  virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
     flatpak
@@ -415,65 +415,74 @@ in {
     # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
   ];
 
-  #  systemd.services.install-flatpaks = {
-  #    description = "Install Flatpak apps from Flathub";
-  #    wantedBy = ["multi-user.target"];
-  #    after = ["network-online.target" "flatpak-system-helper.service"];
-  #    serviceConfig = {
-  #      Type = "oneshot";
-  #
-  #      # Inject PATH so flatpak is found
-  #      Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
-  #
-  #      ExecStart = pkgs.writeShellScript "install-flatpaks" ''
-  #        set -e
-  #
-  #        # Ensure flatpak is installed
-  #        if ! command -v flatpak >/dev/null; then
-  #          echo "Flatpak command not found! Skipping Flatpak app installation."
-  #          exit 0
-  #        fi
-  #
-  #        # Make sure flathub is added
-  #        if ! flatpak remote-list | grep -q flathub; then
-  #          echo "Adding Flathub remote..."
-  #          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  #        fi
-  #
-  #        # Install apps
-  #        for app in ${flatpakAppList}; do
-  #          echo "Installing $app..."
-  #          if ! flatpak info "$app" >/dev/null 2>&1; then
-  #            flatpak install -y --noninteractive flathub "$app"
-  #          else
-  #            echo "$app already installed."
-  #          fi
-  #        done
-  #      '';
-  #
-  #      StandardOutput = "append:/var/log/install-flatpaks.log";
-  #      StandardError = "append:/var/log/install-flatpaks.log";
-  #    };
-  #  };
+  systemd.services.install-flatpaks = {
+    description = "Install Flatpak apps from Flathub";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "flatpak-system-helper.service"];
+    serviceConfig = {
+      Type = "oneshot";
 
-  #  systemd.services.flatpak-update = {
-  #    description = "Update all Flatpak apps";
-  #    serviceConfig = {
-  #      Type = "oneshot";
-  #      ExecStart = "${pkgs.flatpak}/bin/flatpak update --noninteractive";
-  #      StandardOutput = "append:/var/log/flatpak-update.log";
-  #      StandardError = "append:/var/log/flatpak-update.log";
-  #    };
-  #  };
+      # Inject PATH so flatpak is found
+      Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
 
-  #  systemd.timers.flatpak-update = {
-  #    description = "Run daily Flatpak updates";
-  #    wantedBy = ["timers.target"];
-  #    timerConfig = {
-  #      OnCalendar = "daily";
-  #      Persistent = true;
-  #    };
-  #  };
+      ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+        set -e
+
+        # Ensure flatpak is installed
+        if ! command -v flatpak >/dev/null; then
+          echo "Flatpak command not found! Skipping Flatpak app installation."
+          exit 0
+        fi
+
+        # Make sure flathub is added
+        if ! flatpak remote-list | grep -q flathub; then
+          echo "Adding Flathub remote..."
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        fi
+
+        # Install apps
+        for app in ${flatpakAppList}; do
+          echo "Installing $app..."
+          if ! flatpak info "$app" >/dev/null 2>&1; then
+            flatpak install -y --noninteractive flathub "$app"
+          else
+            echo "$app already installed."
+          fi
+        done
+
+        # Cleanup apps not in list
+        echo "Checking for orphaned Flatpak apps..."
+        for installed in $(flatpak list --app --columns=application); do
+          if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+            echo "Removing orphaned app: $installed"
+            flatpak uninstall -y "$installed"
+          fi
+        done
+      '';
+
+      StandardOutput = "append:/var/log/install-flatpaks.log";
+      StandardError = "append:/var/log/install-flatpaks.log";
+    };
+  };
+
+  systemd.services.flatpak-update = {
+    description = "Update all Flatpak apps";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.flatpak}/bin/flatpak update --noninteractive";
+      StandardOutput = "append:/var/log/flatpak-update.log";
+      StandardError = "append:/var/log/flatpak-update.log";
+    };
+  };
+
+  systemd.timers.flatpak-update = {
+    description = "Run daily Flatpak updates";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
