@@ -32,10 +32,6 @@ HOME_PACKAGES=(
     alejandra
 )
 
-ROOT_PACKAGES=(
-    etc
-)
-
 # Debugging output to check package names
 echo "Home packages to be stowed: ${HOME_PACKAGES[*]}"
 echo "Root packages to be stowed: ${ROOT_PACKAGES[*]}"
@@ -74,19 +70,6 @@ for pkg in "${HOME_PACKAGES[@]}"; do
     done
 done
 
-# 2) Root-targeted packages
-for pkg in "${ROOT_PACKAGES[@]}"; do
-    find "$DOTFILES_DIR/$pkg" -mindepth 1 | while read -r src; do
-        rel=${src#"$DOTFILES_DIR/$pkg/"} # path under /etc
-        dest="/$rel"
-        if [ -e "$dest" ]; then
-            sudo mkdir -p "$BACKUP_DIR/etc/$(dirname "$rel")"
-            sudo cp -r "$dest" "$BACKUP_DIR/etc/$rel" # Copy instead of move
-            echo "  backed up: $dest → $BACKUP_DIR/etc/$rel"
-        fi
-    done
-done
-
 echo ""
 
 # ─── Stow into $HOME, force-overwriting any existing files/links ───────────────
@@ -100,21 +83,6 @@ for pkg in "${HOME_PACKAGES[@]}"; do
     stow \
         --verbose \
         --target="$HOME" \
-        --restow \
-        "$pkg"
-done
-
-# ─── Clean out existing /etc targets and stow etc into /etc ────────────────────
-echo ""
-echo "🗑  Cleaning out /etc targets for your etc/ tree"
-# remove entire /etc/nixos (we already backed it up)
-sudo rm -rf /etc/nixos
-
-echo "🔗  Stowing 'etc' to /etc (requires sudo)"
-for pkg in "${ROOT_PACKAGES[@]}"; do
-    sudo stow \
-        --verbose \
-        --target=/etc \
         --restow \
         "$pkg"
 done
