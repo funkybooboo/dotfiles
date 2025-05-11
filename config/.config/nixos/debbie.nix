@@ -7,7 +7,6 @@
   unstableTarball = fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   };
-
   flatpakApps = [
     "dev.zelikos.rollit"
     "io.github.voxelcubes.hand-tex"
@@ -29,9 +28,9 @@ in {
   nixpkgs.config = {
     allowUnfree = true;
     packageOverrides = pkgs: {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
+        unstable = import unstableTarball {
+            config = config.nixpkgs.config;
+        };
     };
   };
 
@@ -121,6 +120,9 @@ in {
     jack.enable = true;
   };
 
+  security.sudo.enable = true;
+  security.sudo.wheelNeedsPassword = false;
+
   programs.fish.enable = true;
 
   services.systembus-notify.enable = true;
@@ -201,7 +203,8 @@ in {
     lazydocker # Terminal UI for managing Docker containers
     proton-pass # Password manager integrated with Proton services
     protonmail-bridge-gui # GUI for ProtonMail Bridge, integrates ProtonMail with email clients
-    # protonvpn-gui # GUI for ProtonVPN for secure internet connections
+    protonvpn-gui # GUI for ProtonVPN for secure internet connections
+    openssl
     yazi # TUI file viewer
     timg # Image viewer for the terminal
     asciinema # Record and share terminal sessions
