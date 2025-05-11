@@ -34,7 +34,6 @@ HOME_PACKAGES=(
 
 # Debugging output to check package names
 echo "Home packages to be stowed: ${HOME_PACKAGES[*]}"
-echo "Root packages to be stowed: ${ROOT_PACKAGES[*]}"
 
 # ─── Backup any existing targets before we touch them ────────────────────────────
 TS=$(date +%Y%m%d%H%M%S)
