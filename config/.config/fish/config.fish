@@ -14,9 +14,6 @@ end
 # Add Cargo bin directory to PATH permanently
 set -Ux PATH $HOME/.cargo/bin $PATH
 
-set -gx PATH /run/current-system/sw/bin $PATH
-set -gx PATH /run/current-system/sw/bin/git $PATH
-
 # Function for interacting with dotfiles using git
 function dotfiles
     /usr/bin/env git --git-dir=$HOME/dotfiles/.git --work-tree=$HOME/dotfiles $argv
