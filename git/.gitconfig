@@ -10,3 +10,5 @@
 	aiModelProvider = openai
 [credential]
 	helper = store
+[init]
+	defaultBranch = main

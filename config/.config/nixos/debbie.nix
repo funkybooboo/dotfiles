@@ -182,7 +182,7 @@ in {
     lsd # Modern alternative to 'ls' with better formatting
     bat # 'cat' command with syntax highlighting and Git integration
     tldr # Simplified and community-contributed man pages
-    #    unstable.wikiman # Wiki-based markdown documentation viewer
+    unstable.wikiman # Wiki-based markdown documentation viewer
     fzf # Command-line fuzzy finder
     wireshark # Network protocol analyzer
     zoom-us # Video conferencing tool
@@ -260,7 +260,7 @@ in {
     jetbrains.rust-rover # JetBrains IDE for Rust development
     jetbrains.rider # JetBrains IDE for .NET development
     jetbrains.pycharm-professional # Professional IDE for Python development
-    jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
+    unstable.jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
     jetbrains.goland # JetBrains IDE for Go programming language
     jetbrains.clion # JetBrains IDE for C and C++ development
 
