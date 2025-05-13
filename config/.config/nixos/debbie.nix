@@ -244,14 +244,16 @@ in {
     #    xfce.thunar
     gparted
 
-    #    tor-browser
-    #    deluge
-    #    dumptorrent
-    #    buildtorrent
+    # tor-browser
+    deluge
+    # dumptorrent
+    # buildtorrent
 
-    #    safeeyes
+    safeeyes
 
     gitbutler
+
+    stripe-cli
 
     libstdcxx5
 
