@@ -8,12 +8,10 @@
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   };
   flatpakApps = [
-    "dev.zelikos.rollit"
     "io.github.voxelcubes.hand-tex"
     "io.github.dman95.SASM"
     "io.github.hamza_algohary.Coulomb"
     "io.gitlab.persiangolf.voicegen"
-    "com.play0ad.zeroad"
   ];
   flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -241,7 +239,6 @@ in {
     ripgrep
     imagemagick
     zathura
-    #    xfce.thunar
     gparted
 
     # tor-browser
@@ -250,11 +247,8 @@ in {
     # buildtorrent
 
     safeeyes
-
     gitbutler
-
     stripe-cli
-
     libstdcxx5
 
     jetbrains.datagrip
@@ -343,7 +337,6 @@ in {
     uasm # UASM assembler for x86 and x64 architectures
     nix-init # NixOS system initialization tool
     stow # Sym-link manager
-
     unixtools.quota
     thunderbird
 
@@ -354,7 +347,6 @@ in {
     catppuccin-cursors # Mouse cursor theme
     catppuccin-papirus-folders # Icon theme, e.g. for pcmanfm-qt
     papirus-folders # For the catppucing stuff work
-
     font-awesome
 
     # hyprland software
@@ -378,20 +370,15 @@ in {
     hyprlock
     nwg-look
     wireplumber
-
     libsForQt5.xwaylandvideobridge
-
     cliphist
     wlogout
     hyprshot
-
     ethtool
     wirelesstools
     iw
     bc
-
     sysstat
-
     jami
   ];
 
