@@ -251,14 +251,14 @@ in {
     stripe-cli
     libstdcxx5
 
-    jetbrains.datagrip
-    jetbrains.webstorm # JetBrains IDE for JavaScript and web development
-    jetbrains.rust-rover # JetBrains IDE for Rust development
-    jetbrains.rider # JetBrains IDE for .NET development
-    jetbrains.pycharm-professional # Professional IDE for Python development
+    unstable.jetbrains.datagrip
+    unstable.jetbrains.webstorm # JetBrains IDE for JavaScript and web development
+    unstable.jetbrains.rust-rover # JetBrains IDE for Rust development
+    unstable.jetbrains.rider # JetBrains IDE for .NET development
+    unstable.jetbrains.pycharm-professional # Professional IDE for Python development
     unstable.jetbrains.idea-ultimate # Ultimate edition of JetBrains IntelliJ IDEA, for Java, Kotlin, and other languages
-    jetbrains.goland # JetBrains IDE for Go programming language
-    jetbrains.clion # JetBrains IDE for C and C++ development
+    unstable.jetbrains.goland # JetBrains IDE for Go programming language
+    unstable.jetbrains.clion # JetBrains IDE for C and C++ development
 
     xdg-desktop-portal
     xdg-desktop-portal-gtk
