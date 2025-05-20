@@ -385,6 +385,9 @@ in {
     bc
     sysstat
     jami
+
+    kondo
+    wiper
   ];
 
   services.locate.enable = true;
