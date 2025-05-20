@@ -159,6 +159,7 @@ in {
   virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.virtualbox.guest.enable = true;
   virtualisation.virtualbox.guest.dragAndDrop = true;
+  #virtualisation.virtualbox.host.enableKvm = true;
 
   virtualisation.docker.enable = true;
 
@@ -387,6 +388,8 @@ in {
   ];
 
   services.locate.enable = true;
+
+  #services.fwupd.enable = true;
 
   programs.neovim.enable = true;
   programs.neovim.viAlias = true;
