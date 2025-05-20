@@ -162,6 +162,10 @@ in {
 
   virtualisation.docker.enable = true;
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-33.4.11"
+  ];
+
   environment.systemPackages = with pkgs; [
     flatpak
     viewnior
