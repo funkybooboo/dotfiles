@@ -389,7 +389,7 @@ in {
 
   services.locate.enable = true;
 
-  #services.fwupd.enable = true;
+  services.fwupd.enable = true;
 
   programs.neovim.enable = true;
   programs.neovim.viAlias = true;
