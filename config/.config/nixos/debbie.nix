@@ -159,7 +159,8 @@ in {
   virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.virtualbox.guest.enable = true;
   virtualisation.virtualbox.guest.dragAndDrop = true;
-  #virtualisation.virtualbox.host.enableKvm = true;
+  virtualisation.virtualbox.host.addNetworkInterface = false;
+  virtualisation.virtualbox.host.enableKvm = true;
 
   virtualisation.docker.enable = true;
 
