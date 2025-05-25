@@ -12,6 +12,7 @@
     "io.github.dman95.SASM"
     "io.github.hamza_algohary.Coulomb"
     "io.gitlab.persiangolf.voicegen"
+    "com.play0ad.zeroad"
   ];
   flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
