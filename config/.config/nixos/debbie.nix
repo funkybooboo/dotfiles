@@ -210,10 +210,8 @@ in {
       imagemagick
       zathura
       gparted
-
       gitbutler
       stripe-cli
-
       unstable.jetbrains.datagrip
       unstable.jetbrains.webstorm
       unstable.jetbrains.rust-rover
@@ -222,12 +220,13 @@ in {
       unstable.jetbrains.idea-ultimate
       unstable.jetbrains.goland
       unstable.jetbrains.clion
-
       xdg-desktop-portal
       xdg-desktop-portal-gtk
       xdg-desktop-portal-hyprland
-
       libreoffice
+      unstable.jami
+      kondo
+      wiper
       vim
       wget
       curl
@@ -286,7 +285,6 @@ in {
       stow
       unixtools.quota
       thunderbird
-
       kdePackages.breeze-gtk
       kdePackages.breeze-icons
       kdePackages.breeze.qt5
@@ -295,7 +293,6 @@ in {
       catppuccin-papirus-folders
       papirus-folders
       font-awesome
-
       wofi
       hyprsunset
       waybar
@@ -325,10 +322,6 @@ in {
       iw
       bc
       sysstat
-
-      unstable.jami
-      kondo
-      wiper
     ];
   };
 
