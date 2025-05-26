@@ -1,22 +1,29 @@
 building Nix...
 building the system configuration...
-these 14 derivations will be built:
-  /nix/store/whvzqs0d3nz015gc44bchmjhczq7zba5-man-cache.drv
-  /nix/store/0b32hbddvkaw4nad5hypndqx9fdyii54-etc-man_db.conf.drv
-  /nix/store/fbwhqr1di9krcpai825cn0aqf9pwpkj3-system-path.drv
-  /nix/store/xx8hzyi558ixacdjbb5if0w9p83i8l22-dbus-1.drv
-  /nix/store/5712i3n44a8h290sdbhh6v15iya2qcrn-X-Restart-Triggers-dbus.drv
-  /nix/store/f17mrvb0xph1wbc9h4rglsaj45w2427d-unit-dbus.service.drv
-  /nix/store/hacxkmh1hmhmlsfkgk1gl8qp3c9s5d4k-unit-accounts-daemon.service.drv
-  /nix/store/dq2xqkz8ynlix5kiy29qzk9n4zprcf69-X-Restart-Triggers-polkit.drv
-  /nix/store/mvbsdisgnmr795n69jvns6bpd07rnqk9-unit-polkit.service.drv
-  /nix/store/12av1xaflalf7ll79qrx3cxzfldvamag-system-units.drv
-  /nix/store/3yri5a6f5apq9aj5dj74fys9qnqc21if-unit-dbus.service.drv
-  /nix/store/aw64000qyvjwbjjrsgmkkjnigfmx4q5w-user-units.drv
-  /nix/store/2g5x9xwkm4al610q8d6r14rbccygc163-etc.drv
-  /nix/store/z7wyrv5sjzw52jk8f9h1g0rxfn54bk2s-nixos-system-debbie-25.05.802491.7c43f080a7f2.drv
-building '/nix/store/fbwhqr1di9krcpai825cn0aqf9pwpkj3-system-path.drv'...
-building '/nix/store/whvzqs0d3nz015gc44bchmjhczq7zba5-man-cache.drv'...
+unpacking 'https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz' into the Git cache...
+these 18 derivations will be built:
+  /nix/store/4c89i2wlli4dqg1lina7qpcbhzg2k8gk-system-path.drv
+  /nix/store/nw2421q1hz5wfkk8n2kxw2s963nd5i71-dbus-1.drv
+  /nix/store/fg5bzz1d707qy3cds70nw49qahzdp5ss-X-Restart-Triggers-dbus.drv
+  /nix/store/l2f4rk74f73l142k5rsg6zj24pv8wcyk-unit-dbus.service.drv
+  /nix/store/31wrs4qqf3mbv1gxadmb86f98700hb81-user-units.drv
+  /nix/store/rx2lb0cr75lrnhkf8c3v50jaszwcdnbq-clion-2025.1.1_fish-completions.drv
+  /nix/store/vj7amc8b0gsdhymhv3bwacckqr9is1y7-rider-2025.1.2_fish-completions.drv
+  /nix/store/8axni4kqml0cppfv3ks24gh7s3q6yavb-system_fish-completions.drv
+  /nix/store/bg0j7j6hk8qm87gw3wh0p46wgwhsfvbb-unit-accounts-daemon.service.drv
+  /nix/store/m12p9lq3n39xd5362wqqbqv5lm4a6gna-unit-dbus.service.drv
+  /nix/store/vqj691fxaxix2z8rhzlanbi6pp4m00lq-X-Restart-Triggers-polkit.drv
+  /nix/store/x5a9jhccxzc15zyavpb037kdqw90gjl8-unit-polkit.service.drv
+  /nix/store/djv0hr50bp3k633zhrd84jzyljsif3im-system-units.drv
+  /nix/store/zsc1znd5a8dcpb73gc836bdwz2ax8g4m-man-paths.drv
+  /nix/store/kfblaa55l6gv1073q3yqinihb2p9g083-man-cache.drv
+  /nix/store/ycq9wnsvhp3mxygiflqvlkr92l9hxnwb-etc-man_db.conf.drv
+  /nix/store/i48k1javr2g9ah82vrizrwbq8i803nfh-etc.drv
+  /nix/store/7rbl5wy3w1zqysx8fcrjdjxr7qgkwlpc-nixos-system-debbie-25.05.802491.7c43f080a7f2.drv
+building '/nix/store/4c89i2wlli4dqg1lina7qpcbhzg2k8gk-system-path.drv'...
+building '/nix/store/rx2lb0cr75lrnhkf8c3v50jaszwcdnbq-clion-2025.1.1_fish-completions.drv'...
+building '/nix/store/vj7amc8b0gsdhymhv3bwacckqr9is1y7-rider-2025.1.2_fish-completions.drv'...
+building '/nix/store/zsc1znd5a8dcpb73gc836bdwz2ax8g4m-man-paths.drv'...
 warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/g++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/g++'
 warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/c++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/c++'
 warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/cc' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/cc'
@@ -34,6 +41,7 @@ warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wra
 warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libquadmath.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libquadmath.info'
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cppinternals.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cppinternals.info'
+building '/nix/store/8axni4kqml0cppfv3ks24gh7s3q6yavb-system_fish-completions.drv'...
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cpp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cpp.info'
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gcc.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gcc.info'
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libgomp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libgomp.info'
@@ -42,6 +50,19 @@ warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wra
 warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gccinstall.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gccinstall.info'
 warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/rustfmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/rustfmt'
 warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/cargo-fmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/cargo-fmt'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+warning: collision between `/nix/store/sd43rx86jf3lb72s8sjmkbs8gq3k27n8-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/a6br5k7hw4lxr0n772dipyqzsmwjgy79-xorg-server-21.1.16_fish-completions/Xserver.fish'
+created 743 symlinks in user environment
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop'
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge'
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped'
@@ -74,6 +95,8 @@ warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwayland
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo'
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo'
 warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop'
+created 13287 symlinks in user environment
+building '/nix/store/kfblaa55l6gv1073q3yqinihb2p9g083-man-cache.drv'...
 warning: collision between `/nix/store/4gwg4dwk2his4nyrkm2az74kl340ifss-VirtualBox-GuestAdditions-7.1.8-6.12.30/lib/modules' and `/nix/store/hd2p8n6lwsljz5yyhnff9dsg96nl65b5-zulu-ca-jdk-23.0.0/lib/modules'
 warning: collision between `/nix/store/y9mjgmcab7sb5fnbwnaqapm2hp84knq8-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/4gwg4dwk2his4nyrkm2az74kl340ifss-VirtualBox-GuestAdditions-7.1.8-6.12.30/bin/mount.vboxsf'
 warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/lib/xorg/protocol.txt' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/lib/xorg/protocol.txt'
@@ -81,7 +104,7 @@ warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland
 warning: collision between `/nix/store/mggcac7pw9wjrzwy00h4glb16vbdj12x-neovim-0.11.1/bin/nvim' and `/nix/store/vvsc7mbc7di7mqpvb5c0l2hhxs65qz31-neovim-0.11.1/bin/nvim'
 warning: collision between `/nix/store/mggcac7pw9wjrzwy00h4glb16vbdj12x-neovim-0.11.1/bin/nvim-python3' and `/nix/store/vvsc7mbc7di7mqpvb5c0l2hhxs65qz31-neovim-0.11.1/bin/nvim-python3'
 warning: collision between `/nix/store/mggcac7pw9wjrzwy00h4glb16vbdj12x-neovim-0.11.1/share/applications/nvim.desktop' and `/nix/store/vvsc7mbc7di7mqpvb5c0l2hhxs65qz31-neovim-0.11.1/share/applications/nvim.desktop'
-created 55436 symlinks in user environment
+created 55434 symlinks in user environment
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
@@ -91,26 +114,24 @@ gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
 gtk-update-icon-cache: Cache file created successfully.
-building '/nix/store/dq2xqkz8ynlix5kiy29qzk9n4zprcf69-X-Restart-Triggers-polkit.drv'...
-building '/nix/store/xx8hzyi558ixacdjbb5if0w9p83i8l22-dbus-1.drv'...
-building '/nix/store/hacxkmh1hmhmlsfkgk1gl8qp3c9s5d4k-unit-accounts-daemon.service.drv'...
-building '/nix/store/5712i3n44a8h290sdbhh6v15iya2qcrn-X-Restart-Triggers-dbus.drv'...
-building '/nix/store/mvbsdisgnmr795n69jvns6bpd07rnqk9-unit-polkit.service.drv'...
-building '/nix/store/3yri5a6f5apq9aj5dj74fys9qnqc21if-unit-dbus.service.drv'...
-building '/nix/store/f17mrvb0xph1wbc9h4rglsaj45w2427d-unit-dbus.service.drv'...
-building '/nix/store/aw64000qyvjwbjjrsgmkkjnigfmx4q5w-user-units.drv'...
-building '/nix/store/12av1xaflalf7ll79qrx3cxzfldvamag-system-units.drv'...
-building '/nix/store/0b32hbddvkaw4nad5hypndqx9fdyii54-etc-man_db.conf.drv'...
-building '/nix/store/2g5x9xwkm4al610q8d6r14rbccygc163-etc.drv'...
-building '/nix/store/z7wyrv5sjzw52jk8f9h1g0rxfn54bk2s-nixos-system-debbie-25.05.802491.7c43f080a7f2.drv'...
-stopping the following units: accounts-daemon.service, systemd-tmpfiles-resetup.service
+building '/nix/store/vqj691fxaxix2z8rhzlanbi6pp4m00lq-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/nw2421q1hz5wfkk8n2kxw2s963nd5i71-dbus-1.drv'...
+building '/nix/store/bg0j7j6hk8qm87gw3wh0p46wgwhsfvbb-unit-accounts-daemon.service.drv'...
+building '/nix/store/fg5bzz1d707qy3cds70nw49qahzdp5ss-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/x5a9jhccxzc15zyavpb037kdqw90gjl8-unit-polkit.service.drv'...
+building '/nix/store/l2f4rk74f73l142k5rsg6zj24pv8wcyk-unit-dbus.service.drv'...
+building '/nix/store/m12p9lq3n39xd5362wqqbqv5lm4a6gna-unit-dbus.service.drv'...
+building '/nix/store/31wrs4qqf3mbv1gxadmb86f98700hb81-user-units.drv'...
+building '/nix/store/djv0hr50bp3k633zhrd84jzyljsif3im-system-units.drv'...
+building '/nix/store/ycq9wnsvhp3mxygiflqvlkr92l9hxnwb-etc-man_db.conf.drv'...
+building '/nix/store/i48k1javr2g9ah82vrizrwbq8i803nfh-etc.drv'...
+building '/nix/store/7rbl5wy3w1zqysx8fcrjdjxr7qgkwlpc-nixos-system-debbie-25.05.802491.7c43f080a7f2.drv'...
+stopping the following units: accounts-daemon.service
 activating the configuration...
 setting up /etc...
-restarting systemd...
 reloading user units for nate...
 restarting sysinit-reactivation.target
-reloading the following units: dbus.service, firewall.service
+reloading the following units: dbus.service
 restarting the following units: polkit.service
-starting the following units: accounts-daemon.service, systemd-tmpfiles-resetup.service
-the following new units were started: sshd-unix-local.socket, sshd.service
-Done. The new configuration is /nix/store/rx7k3c9m07mlw0d1mzz8k8zv0wsbw6i2-nixos-system-debbie-25.05.802491.7c43f080a7f2
+starting the following units: accounts-daemon.service
+Done. The new configuration is /nix/store/z6a7037kmhlq7gfb63i6dhvd313pycxk-nixos-system-debbie-25.05.802491.7c43f080a7f2
