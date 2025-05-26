@@ -63,14 +63,14 @@ in {
             # Editors & IDEs
             neovim
             vscodium
-            jetbrains.datagrip
-            jetbrains.webstorm
-            jetbrains.rust-rover
-            jetbrains.rider
-            jetbrains.pycharm-professional
-            jetbrains.idea-ultimate
-            jetbrains.goland
-            jetbrains.clion
+            unstable.jetbrains.datagrip
+            unstable.jetbrains.webstorm
+            unstable.jetbrains.rust-rover
+            unstable.jetbrains.rider
+            unstable.jetbrains.pycharm-professional
+            unstable.jetbrains.idea-ultimate
+            unstable.jetbrains.goland
+            unstable.jetbrains.clion
 
             # Shell & CLI Utilities
             fish
