@@ -8,6 +8,7 @@
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   };
   flatpakApps = [
+    "com.play0ad.zeroad"
     "io.github.voxelcubes.hand-tex"
     "io.github.dman95.SASM"
     "io.gitlab.persiangolf.voicegen"
