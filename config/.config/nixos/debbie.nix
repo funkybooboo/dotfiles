@@ -146,7 +146,6 @@ in {
     nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
   ];
-
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’
@@ -381,7 +380,7 @@ in {
     bc
     sysstat
 
-    jami
+    unstable.jami
     kondo
     wiper
   ];
