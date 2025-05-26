@@ -107,7 +107,7 @@ in {
   };
 
   # Enable sound with pipewire
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -131,7 +131,6 @@ in {
     extraPortals = [
       pkgs.xdg-desktop-portal
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-kde
       pkgs.xdg-desktop-portal-hyprland
     ];
   };
@@ -142,7 +141,12 @@ in {
   };
 
   fonts.enableDefaultPackages = true;
-  fonts.packages = with pkgs; [nerdfonts];
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+  ];
+
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’
@@ -165,11 +169,10 @@ in {
   virtualisation.docker.enable = true;
 
   nixpkgs.config.permittedInsecurePackages = [
-    "electron-33.4.11"
   ];
 
   environment.systemPackages = with pkgs; [
-    unstable.zeroad-unwrapped
+    zeroad-unwrapped
 
     flatpak
     viewnior
@@ -188,7 +191,7 @@ in {
     lsd # Modern alternative to 'ls' with better formatting
     bat # 'cat' command with syntax highlighting and Git integration
     tldr # Simplified and community-contributed man pages
-    unstable.wikiman # Wiki-based markdown documentation viewer
+    wikiman # Wiki-based markdown documentation viewer
     fzf # Command-line fuzzy finder
     wireshark # Network protocol analyzer
     zoom-us # Video conferencing tool
@@ -251,7 +254,6 @@ in {
 
     gitbutler
     stripe-cli
-    libstdcxx5
 
     unstable.jetbrains.datagrip
     unstable.jetbrains.webstorm # JetBrains IDE for JavaScript and web development
@@ -264,7 +266,6 @@ in {
 
     xdg-desktop-portal
     xdg-desktop-portal-gtk
-    xdg-desktop-portal-kde
     xdg-desktop-portal-hyprland
 
     # qemu
@@ -414,7 +415,7 @@ in {
   systemd.services.install-flatpaks = {
     description = "Install Flatpak apps from Flathub";
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "flatpak-system-helper.service"];
+    after = ["flatpak-system-helper.service"];
     serviceConfig = {
       Type = "oneshot";
 
@@ -497,5 +498,6 @@ in {
     ];
     dates = "2:00";
     randomizedDelaySec = "45min";
+    allowReboot = true;
   };
 }
