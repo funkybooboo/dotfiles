@@ -22,86 +22,244 @@
         ];
     };
 in {
-    # Nixpkgs
-    nixpkgs.config = {
-        permittedInsecurePackages = [];
+    # Environment
+    environment = {
+        systemPackages = with pkgs; [
+            # Development
+            go
+            python313
+            python312Packages.pip
+            php
+            php84Packages.composer
+            typescript
+            deno
+            julia
+            sbcl
+            gfortran
+            gnat14
+            zig
+            rustlings
+            rustup
+            rustfmt
+            fnm
+            zulu23
+            lua51Packages.lua
+            luajitPackages.luarocks-nix
+            dotnetCorePackages.sdk_9_0
+            maven
+            gradle
+            cmake
+            gnumake
+            poetry
+            black
+            clang-tools
+            tree-sitter
+            postman
+            newman
+            bruno-cli
+            bruno
+            stripe-cli
 
-        allowUnfree = true;
-        packageOverrides = pkgs: {
-            unstable = import unstableTarball {
-                config = config.nixpkgs.config;
-            };
-        };
-    };
+            # Editors & IDEs
+            neovim
+            vim
+            vscodium
+            jetbrains.datagrip
+            jetbrains.webstorm
+            jetbrains.rust-rover
+            jetbrains.rider
+            jetbrains.pycharm-professional
+            jetbrains.idea-ultimate
+            jetbrains.goland
+            jetbrains.clion
 
-    # Bootloader
-    boot.loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
-    };
+            # Shell & CLI Utilities
+            fish
+            kitty
+            fzf
+            fd
+            ripgrep
+            jump
+            zoxide
+            tmux
+            tree
+            bat
+            cloc
+            lsd
+            ascii
+            file
+            unixtools.xxd
+            unixtools.quota
+            bc
+            zip
+            unzip
+            xclip
+            cliphist
+            jq
+            yq
+            tldr
+            wikiman
+            glow
+            fastfetch
+            htop-vim
+            sysstat
+            yazi
+            batmon
+            kondo
+            wiper
 
-    # Security
-    security = {
-        rtkit.enable = true;
-        sudo = {
-            enable = true;
-            wheelNeedsPassword = false;
-        };
-    };
+            # Version Control
+            git
+            gh
+            github-desktop
+            lazygit
+            git-filter-repo
+            gitbutler
 
-    # Networking
-    networking = {
-        networkmanager.enable = true;
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
-    };
+            # Containerization & Deployment
+            flatpak
+            lazydocker
+            nix-init
+            stow
+            unetbootin
+            rclone
+            rclone-browser
 
-    # Time
-    time.timeZone = "America/New_York";
-    #time.timeZone = "America/Denver";
+            # Browsers & Communication
+            firefox
+            librewolf
+            brave
+            chromium
+            lynx
+            signal-desktop
+            unstable.jami
+            protonmail-bridge-gui
+            proton-pass
+            protonvpn-gui
+            webcord
+            zoom-us
+            thunderbird
 
-    # Internationalisation
-    i18n = {
-        defaultLocale = "en_US.UTF-8";
-        extraLocaleSettings = {
-            LC_ADDRESS = "en_US.UTF-8";
-            LC_IDENTIFICATION = "en_US.UTF-8";
-            LC_MEASUREMENT = "en_US.UTF-8";
-            LC_MONETARY = "en_US.UTF-8";
-            LC_NAME = "en_US.UTF-8";
-            LC_NUMERIC = "en_US.UTF-8";
-            LC_PAPER = "en_US.UTF-8";
-            LC_TELEPHONE = "en_US.UTF-8";
-            LC_TIME = "en_US.UTF-8";
-        };
-    };
+            # Networking & Security
+            openssl
+            curl
+            wget
+            wireshark
+            ethtool
+            iw
+            wirelesstools
+            wireplumber
 
-    # Hardware
-    hardware = {
-        bluetooth = {
-            enable = true;
-            powerOnBoot = true;
-        };
-        graphics = {
-            enable = true;
-            enable32Bit = true;
-        };
-    };
+            # Media & Graphics
+            mpv
+            ffmpeg
+            asciinema
+            espeak
+            viewnior
+            imagemagick
+            timg
+            drawio
+            zathura
+            poppler_utils
+            asciiquarium
+            aalib
+            oneko
+            easyeffects
+            playerctl
+            pavucontrol
+            imaginer
 
-    # Fonts
-    fonts = {
-        enableDefaultPackages = true;
-        packages = with pkgs; [
-            nerd-fonts.fira-code
-            nerd-fonts.droid-sans-mono
-            nerd-fonts.jetbrains-mono
+            # Office & Productivity
+            libreoffice
+            obsidian
+            pomodoro-gtk
+            pandoc
+            texliveTeTeX
+            deskreen
+            memorado
+            varia
+            blanket
+
+            # System & Desktop
+            gparted
+            xdg-desktop-portal
+            xdg-desktop-portal-gtk
+            xdg-desktop-portal-hyprland
+            networkmanagerapplet
+            wofi
+            waybar
+            hyprsunset
+            hyprpaper
+            hyprpicker
+            hyprlandPlugins.hyprbars
+            hyprlandPlugins.hyprexpo
+            power-profiles-daemon
+            swaynotificationcenter
+            libnotify
+            hyprpolkitagent
+            hypridle
+            brightnessctl
+            hyprlock
+            nwg-look
+            wlogout
+            hyprshot
+            libsForQt5.xwaylandvideobridge
+
+            # Fonts & Themes
+            alejandra
+            font-awesome
+            catppuccin-cursors
+            catppuccin-papirus-folders
+            papirus-folders
+            kdePackages.breeze-gtk
+            kdePackages.breeze-icons
+            kdePackages.breeze.qt5
+            kdePackages.breeze
+
+            # Assembly & Low-level Tools
+            nasm
+            nasmfmt
+            asmrepl
+            asmjit
+            uasm
+            gdb
+            gdbgui
+            libgcc
+
+            # Database & Data Tools
+            sqlite
+            dbeaver-bin
+
+            # Gaming
+            chess-tui
+            stockfish
+
+            # AI
+            alpaca
+
+            # Learning
+            nix-tour
+            keypunch
+
+            # Miscellaneous
+            chance
+            devtoolbox
+            concessio
         ];
-        fontconfig = {
-            useEmbeddedBitmaps = true;
+        sessionVariables = {
+            NIXOS_OZONE_WL = "1";
         };
+        variables = {
+            EDITOR = "nvim";
+        };
+        plasma6.excludePackages = with pkgs.kdePackages; [
+            plasma-browser-integration
+            konsole
+            khelpcenter
+            baloo-widgets
+            ffmpegthumbs
+            krdp
+        ];
     };
 
     # Users
@@ -122,215 +280,20 @@ in {
         };
     };
 
-    # Environment
-    environment = {
-        sessionVariables = {
-            NIXOS_OZONE_WL = "1";
-        };
-        variables = {
-            EDITOR = "nvim";
-        };
-        plasma6.excludePackages = with pkgs.kdePackages; [
-            plasma-browser-integration
-            konsole
-            khelpcenter
-            baloo-widgets
-            ffmpegthumbs
-            krdp
+    # Fonts
+    fonts = {
+        enableDefaultPackages = true;
+        packages = with pkgs; [
+            nerd-fonts.fira-code
+            nerd-fonts.droid-sans-mono
+            nerd-fonts.jetbrains-mono
         ];
-        systemPackages = with pkgs; [
-            flatpak
-            viewnior
-            maven
-            neovim
-            tree-sitter
-            lazygit
-            luajitPackages.luarocks-nix
-            fd
-            lsof
-            go
-            fish
-            kitty
-            webcord
-            cloc
-            lsd
-            bat
-            tldr
-            wikiman
-            fzf
-            wireshark
-            zoom-us
-            alpaca
-            imaginer
-            chance
-            memorado
-            varia
-            keypunch
-            devtoolbox
-            concessio
-            obsidian
-            blanket
-            drawio
-            lazydocker
-            proton-pass
-            protonmail-bridge-gui
-            protonvpn-gui
-            openssl
-            yazi
-            timg
-            asciinema
-            aalib
-            oneko
-            espeak
-            asciiquarium
-            nix-tour
-            lynx
-            gh
-            github-desktop
-            vscodium
-            pomodoro-gtk
-            jq
-            yq
-            unetbootin
-            deskreen
-            rclone
-            rclone-browser
-            signal-desktop
-            pandoc
-            texliveTeTeX
-            unixtools.xxd
-            black
-            sbcl
-            gfortran
-            git-filter-repo
-            ascii
-            mpv
-            glow
-            chess-tui
-            stockfish
-            poppler_utils
-            file
-            zoxide
-            jump
-            ripgrep
-            imagemagick
-            zathura
-            gparted
-            gitbutler
-            stripe-cli
-            unstable.jetbrains.datagrip
-            unstable.jetbrains.webstorm
-            unstable.jetbrains.rust-rover
-            unstable.jetbrains.rider
-            unstable.jetbrains.pycharm-professional
-            unstable.jetbrains.idea-ultimate
-            unstable.jetbrains.goland
-            unstable.jetbrains.clion
-            xdg-desktop-portal
-            xdg-desktop-portal-gtk
-            xdg-desktop-portal-hyprland
-            libreoffice
-            unstable.jami
-            kondo
-            wiper
-            vim
-            wget
-            curl
-            firefox
-            librewolf
-            brave
-            chromium
-            git
-            gnat14
-            libgcc
-            gdb
-            gdbgui
-            zig
-            rustlings
-            rustup
-            rustfmt
-            fnm
-            typescript
-            deno
-            dbeaver-bin
-            bruno-cli
-            bruno
-            postman
-            newman
-            clang-tools
-            python313
-            python312Packages.pip
-            php
-            php84Packages.composer
-            poetry
-            zulu23
-            gradle
-            cmake
-            gnumake
-            alejandra
-            zip
-            unzip
-            tmux
-            sqlite
-            tree
-            htop-vim
-            fastfetch
-            lua51Packages.lua
-            julia
-            batmon
-            xclip
-            dotnetCorePackages.sdk_9_0
-            ffmpeg
-            nasm
-            nasmfmt
-            asmrepl
-            asmjit
-            uasm
-            nix-init
-            stow
-            unixtools.quota
-            thunderbird
-            kdePackages.breeze-gtk
-            kdePackages.breeze-icons
-            kdePackages.breeze.qt5
-            kdePackages.breeze
-            catppuccin-cursors
-            catppuccin-papirus-folders
-            papirus-folders
-            font-awesome
-            wofi
-            hyprsunset
-            waybar
-            pavucontrol
-            playerctl
-            hyprpaper
-            hyprpicker
-            hyprlandPlugins.hyprbars
-            hyprlandPlugins.hyprexpo
-            networkmanagerapplet
-            power-profiles-daemon
-            swaynotificationcenter
-            libnotify
-            easyeffects
-            hyprpolkitagent
-            hypridle
-            brightnessctl
-            hyprlock
-            nwg-look
-            wireplumber
-            libsForQt5.xwaylandvideobridge
-            cliphist
-            wlogout
-            hyprshot
-            ethtool
-            wirelesstools
-            iw
-            bc
-            sysstat
-        ];
+        fontconfig = {
+            useEmbeddedBitmaps = true;
+        };
     };
 
-    # Program
+    # Programs
     programs = {
         fish = {
             enable = true;
@@ -403,7 +366,6 @@ in {
         printing.enable = true;
         pulseaudio.enable = false;
         openssh.enable = true;
-
         pipewire = {
             enable = true;
             alsa.enable = true;
@@ -411,13 +373,11 @@ in {
             pulse.enable = true;
             jack.enable = true;
         };
-
         mysql = {
             enable = true;
             package = pkgs.mariadb;
             initialScript = toString mysqlInitScript;
         };
-
         xserver = {
             enable = true;
             xkb = {
@@ -425,9 +385,7 @@ in {
                 variant = "";
             };
         };
-
         libinput.enable = true;
-
         displayManager = {
             sddm = {
                 enable = true;
@@ -435,7 +393,6 @@ in {
             };
             defaultSession = "plasma";
         };
-
         desktopManager.plasma6.enable = true;
     };
 
@@ -488,7 +445,6 @@ in {
                     StandardError = "append:/var/log/install-flatpaks.log";
                 };
             };
-
             flatpak-update = {
                 description = "Update all Flatpak apps";
                 serviceConfig = {
@@ -499,7 +455,6 @@ in {
                 };
             };
         };
-
         timers = {
             flatpak-update = {
                 description = "Run daily Flatpak updates";
@@ -509,6 +464,74 @@ in {
                     Persistent = true;
                 };
             };
+        };
+    };
+
+    # Nixpkgs
+    nixpkgs.config = {
+        permittedInsecurePackages = [];
+        allowUnfree = true;
+        packageOverrides = pkgs: {
+            unstable = import unstableTarball {
+                config = config.nixpkgs.config;
+            };
+        };
+    };
+
+    # Bootloader
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+    };
+
+    # Security
+    security = {
+        rtkit.enable = true;
+        sudo = {
+            enable = true;
+            wheelNeedsPassword = false;
+        };
+    };
+
+    # Networking
+    networking = {
+        networkmanager.enable = true;
+        firewall = {
+            enable = true;
+            allowedTCPPorts = [];
+            allowedUDPPorts = [];
+        };
+    };
+
+    # Time
+    time.timeZone = "America/New_York";
+    #time.timeZone = "America/Denver";
+
+    # Internationalisation
+    i18n = {
+        defaultLocale = "en_US.UTF-8";
+        extraLocaleSettings = {
+            LC_ADDRESS = "en_US.UTF-8";
+            LC_IDENTIFICATION = "en_US.UTF-8";
+            LC_MEASUREMENT = "en_US.UTF-8";
+            LC_MONETARY = "en_US.UTF-8";
+            LC_NAME = "en_US.UTF-8";
+            LC_NUMERIC = "en_US.UTF-8";
+            LC_PAPER = "en_US.UTF-8";
+            LC_TELEPHONE = "en_US.UTF-8";
+            LC_TIME = "en_US.UTF-8";
+        };
+    };
+
+    # Hardware
+    hardware = {
+        bluetooth = {
+            enable = true;
+            powerOnBoot = true;
+        };
+        graphics = {
+            enable = true;
+            enable32Bit = true;
         };
     };
 
