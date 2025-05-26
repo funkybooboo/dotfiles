@@ -8,10 +8,8 @@
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   };
   flatpakApps = [
-    "com.play0ad.zeroad"
     "io.github.voxelcubes.hand-tex"
     "io.github.dman95.SASM"
-    "io.github.hamza_algohary.Coulomb"
     "io.gitlab.persiangolf.voicegen"
   ];
   flatpakAppList = lib.concatStringsSep " " flatpakApps;
@@ -171,6 +169,8 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
+    unstable.zeroad-unwrapped
+
     flatpak
     viewnior
     maven
@@ -249,12 +249,6 @@ in {
     zathura
     gparted
 
-    # tor-browser
-    deluge
-    # dumptorrent
-    # buildtorrent
-
-    safeeyes
     gitbutler
     stripe-cli
     libstdcxx5
@@ -273,19 +267,19 @@ in {
     xdg-desktop-portal-kde
     xdg-desktop-portal-hyprland
 
-    qemu
-    imhex
-    open-watcom-v2
-    grub2
-    libisoburn
-    bison
-    flex
-    gmp
-    libmpc
-    mpfr
-    texinfo
+    # qemu
+    # imhex
+    # open-watcom-v2
+    # grub2
+    # libisoburn
+    # bison
+    # flex
+    # gmp
+    # libmpc
+    # mpfr
+    # texinfo
 
-    docker-compose
+    # docker-compose
 
     libreoffice # Full-featured open-source office suite
     vim # Highly configurable text editor
@@ -293,7 +287,7 @@ in {
     curl # Command-line tool for transferring data with URLs
     firefox
     librewolf
-    #    ladybird
+    # ladybird
     brave
     chromium # Open-source version of the Chrome web browser
     git # Distributed version control system
@@ -387,8 +381,8 @@ in {
     iw
     bc
     sysstat
-    jami
 
+    jami
     kondo
     wiper
   ];
