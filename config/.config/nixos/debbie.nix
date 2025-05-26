@@ -172,9 +172,6 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
-    zeroad-unwrapped
-    zeroad-data
-
     flatpak
     viewnior
     maven
