@@ -62,7 +62,6 @@ in {
 
             # Editors & IDEs
             neovim
-            vim
             vscodium
             jetbrains.datagrip
             jetbrains.webstorm
@@ -262,37 +261,6 @@ in {
         ];
     };
 
-    # Users
-    ## Don't forget to set a password with ‘passwd’
-    users = {
-        users = {
-            nate = {
-                isNormalUser = true;
-                description = "Nate Stott";
-                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
-                shell = pkgs.fish;
-            };
-        };
-        extraGroups = {
-            vboxusers = {
-                members = ["nate"];
-            };
-        };
-    };
-
-    # Fonts
-    fonts = {
-        enableDefaultPackages = true;
-        packages = with pkgs; [
-            nerd-fonts.fira-code
-            nerd-fonts.droid-sans-mono
-            nerd-fonts.jetbrains-mono
-        ];
-        fontconfig = {
-            useEmbeddedBitmaps = true;
-        };
-    };
-
     # Programs
     programs = {
         fish = {
@@ -324,6 +292,37 @@ in {
             xwayland = {
                 enable = true;
             };
+        };
+    };
+
+    # Users
+    ## Don't forget to set a password with ‘passwd’
+    users = {
+        users = {
+            nate = {
+                isNormalUser = true;
+                description = "Nate Stott";
+                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
+                shell = pkgs.fish;
+            };
+        };
+        extraGroups = {
+            vboxusers = {
+                members = ["nate"];
+            };
+        };
+    };
+
+    # Fonts
+    fonts = {
+        enableDefaultPackages = true;
+        packages = with pkgs; [
+            nerd-fonts.fira-code
+            nerd-fonts.droid-sans-mono
+            nerd-fonts.jetbrains-mono
+        ];
+        fontconfig = {
+            useEmbeddedBitmaps = true;
         };
     };
 
