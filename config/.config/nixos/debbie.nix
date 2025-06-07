@@ -453,6 +453,16 @@ in {
                     StandardError = "append:/var/log/flatpak-update.log";
                 };
             };
+            syncDocuments = {
+                description = "One‐shot sync of ~/Documents ↔ Proton Drive";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "oneshot";
+                    User = "nate";
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
+                };
+            };
         };
         timers = {
             flatpak-update = {
@@ -462,6 +472,18 @@ in {
                     OnCalendar = "daily";
                     Persistent = true;
                 };
+            };
+            syncDocumentsTimer = {
+                description = "Hourly bidirectional sync of ~/Documents with Proton Drive";
+                wants = ["syncDocuments.service"];
+                timerConfig = {
+                    OnCalendar = "hourly";
+                    Persistent = true; # run on next boot if missed
+                };
+                unitConfig = {
+                    Unit = "syncDocuments.service";
+                };
+                wantedBy = ["timers.target"];
             };
         };
     };

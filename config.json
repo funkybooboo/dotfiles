@@ -1,7 +1,8 @@
 {
   "add-to-path": [
     "scripts/.scripts/nixos/rebuild",
-    "scripts/.scripts/nixos/update"
+    "scripts/.scripts/nixos/update",
+    "scripts/.scripts/nixos/syncDocuments"
   ]
 }
 
