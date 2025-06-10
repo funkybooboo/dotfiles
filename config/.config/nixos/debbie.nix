@@ -344,6 +344,9 @@ in {
         docker = {
             enable = true;
         };
+        multipass = {
+            enable = true;
+        };
     };
 
     xdg.portal = {
