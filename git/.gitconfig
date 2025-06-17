@@ -9,6 +9,6 @@
 [gitbutler]
 	aiModelProvider = openai
 [credential]
-	helper = store
+	helper = cache
 [init]
 	defaultBranch = main
