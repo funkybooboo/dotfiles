@@ -4,7 +4,8 @@
     "scripts/.scripts/nixos/update",
     "scripts/.scripts/nixos/syncDocuments",
     "scripts/.scripts/nixos/2fa",
-    "scripts/.scripts/nixos/update-rclone-2fa"
+    "scripts/.scripts/nixos/update-rclone-2fa",
+    "scripts/.scripts/nixos/nixos-auto-update"
   ]
 }
 
