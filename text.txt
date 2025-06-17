@@ -1,0 +1,105 @@
+Jun 17 17:40:40 debbie systemd[1]: Starting Display Manager...
+░░ Subject: A start job for unit display-manager.service has begun execution
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit display-manager.service has begun execution.
+░░ 
+░░ The job identifier is 132.
+Jun 17 17:40:40 debbie systemd[1]: Started Display Manager.
+░░ Subject: A start job for unit display-manager.service has finished successfully
+░░ Defined-By: systemd
+░░ Support: https://lists.freedesktop.org/mailman/listinfo/systemd-devel
+░░ 
+░░ A start job for unit display-manager.service has finished successfully.
+░░ 
+░░ The job identifier is 132.
+Jun 17 17:40:40 debbie sddm[1489]: Initializing...
+Jun 17 17:40:40 debbie sddm[1489]: Starting...
+Jun 17 17:40:40 debbie sddm[1489]: Logind interface found
+Jun 17 17:40:40 debbie sddm[1489]: Adding new display...
+Jun 17 17:40:40 debbie sddm[1489]: Loaded empty theme configuration
+Jun 17 17:40:40 debbie sddm[1489]: Using VT 7
+Jun 17 17:40:40 debbie sddm[1489]: Display server started.
+Jun 17 17:40:40 debbie sddm[1489]: Socket server starting...
+Jun 17 17:40:40 debbie sddm[1489]: Socket server started.
+Jun 17 17:40:40 debbie sddm[1489]: Loading theme configuration from "/run/current-system/sw/share/sddm/themes/breeze/theme.conf"
+Jun 17 17:40:40 debbie sddm[1489]: Greeter starting...
+Jun 17 17:40:40 debbie sddm-helper[1495]: Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
+                                          Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
+                                          If this causes problems, reconfigure your locale. See the locale(1) manual
+                                          for more information.
+Jun 17 17:40:40 debbie sddm-helper[1495]: [PAM] Starting...
+Jun 17 17:40:40 debbie sddm-helper[1495]: [PAM] Authenticating...
+Jun 17 17:40:40 debbie sddm-helper[1495]: [PAM] returning.
+Jun 17 17:40:40 debbie sddm[1489]: Greeter session started successfully
+Jun 17 17:40:43 debbie sddm[1489]: Message received from greeter: Connect
+Jun 17 17:40:48 debbie sddm[1489]: Message received from greeter: Login
+Jun 17 17:40:48 debbie sddm[1489]: Reading from "/nix/store/j2hrx8pdpznb6jrqrj2r2k7dcqn1imdy-desktops/share/wayland-sessions/plasma.desktop"
+Jun 17 17:40:48 debbie sddm[1489]: Session "/nix/store/j2hrx8pdpznb6jrqrj2r2k7dcqn1imdy-desktops/share/wayland-sessions/plasma.desktop" selected, command: "/nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/libexec/plasma-dbus-run-session-if-needed /nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/bin/startplasma-wayland" for VT 2
+Jun 17 17:40:48 debbie sddm-helper[1996]: Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
+                                          Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
+                                          If this causes problems, reconfigure your locale. See the locale(1) manual
+                                          for more information.
+Jun 17 17:40:48 debbie sddm-helper[1996]: [PAM] Starting...
+Jun 17 17:40:48 debbie sddm-helper[1996]: [PAM] Authenticating...
+Jun 17 17:40:48 debbie sddm-helper[1996]: [PAM] Preparing to converse...
+Jun 17 17:40:48 debbie sddm-helper[1996]: [PAM] Conversation with 1 messages
+Jun 17 17:40:48 debbie sddm-helper[1996]: pam_kwallet5(sddm:auth): pam_kwallet5: pam_sm_authenticate
+Jun 17 17:40:48 debbie sddm-helper[1996]: [PAM] returning.
+Jun 17 17:40:48 debbie sddm[1489]: Authentication for user  "nate"  successful
+Jun 17 17:40:48 debbie sddm-helper[1996]: pam_kwallet5(sddm:setcred): pam_kwallet5: pam_sm_setcred
+Jun 17 17:40:48 debbie sddm-helper[1996]: pam_unix(sddm:session): session opened for user nate(uid=1000) by (uid=0)
+Jun 17 17:40:48 debbie sddm[1489]: Auth: sddm-helper exited successfully
+Jun 17 17:40:48 debbie sddm[1489]: Greeter stopped. SDDM::Auth::HELPER_SUCCESS
+Jun 17 17:40:48 debbie sddm-helper[1996]: pam_kwallet5(sddm:session): pam_kwallet5: pam_sm_open_session
+Jun 17 17:40:48 debbie sddm-helper[1996]: Starting Wayland user session: "/nix/store/wsshnnyza8d2wm4bkpkrss1v53yzka6b-sddm-unwrapped-0.21.0/share/sddm/scripts/wayland-session" "/nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/libexec/plasma-dbus-run-session-if-needed /nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/bin/startplasma-wayland"
+Jun 17 17:40:48 debbie sddm[1489]: Session started true
+Jun 17 17:41:07 debbie sddm[1489]: Auth: sddm-helper exited with 64
+Jun 17 17:41:07 debbie sddm[1489]: Socket server stopping...
+Jun 17 17:41:07 debbie sddm[1489]: Socket server stopped.
+Jun 17 17:41:07 debbie sddm[1489]: Removing display SDDM::Display(0x1a553150) ...
+Jun 17 17:41:07 debbie sddm[1489]: Adding new display...
+Jun 17 17:41:07 debbie sddm[1489]: Loaded empty theme configuration
+Jun 17 17:41:07 debbie sddm[1489]: Using VT 7
+Jun 17 17:41:07 debbie sddm[1489]: Display server started.
+Jun 17 17:41:07 debbie sddm[1489]: Socket server starting...
+Jun 17 17:41:07 debbie sddm[1489]: Socket server started.
+Jun 17 17:41:07 debbie sddm[1489]: Loading theme configuration from "/run/current-system/sw/share/sddm/themes/breeze/theme.conf"
+Jun 17 17:41:07 debbie sddm[1489]: Greeter starting...
+Jun 17 17:41:07 debbie sddm-helper[2121]: Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
+                                          Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
+                                          If this causes problems, reconfigure your locale. See the locale(1) manual
+                                          for more information.
+Jun 17 17:41:07 debbie sddm-helper[2121]: [PAM] Starting...
+Jun 17 17:41:07 debbie sddm-helper[2121]: [PAM] Authenticating...
+Jun 17 17:41:07 debbie sddm-helper[2121]: [PAM] returning.
+Jun 17 17:41:07 debbie sddm[1489]: Greeter session started successfully
+Jun 17 17:41:08 debbie sddm[1489]: Message received from greeter: Connect
+Jun 17 17:41:12 debbie sddm[1489]: Message received from greeter: Login
+Jun 17 17:41:12 debbie sddm[1489]: Reading from "/nix/store/j2hrx8pdpznb6jrqrj2r2k7dcqn1imdy-desktops/share/wayland-sessions/plasma.desktop"
+Jun 17 17:41:12 debbie sddm[1489]: Session "/nix/store/j2hrx8pdpznb6jrqrj2r2k7dcqn1imdy-desktops/share/wayland-sessions/plasma.desktop" selected, command: "/nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/libexec/plasma-dbus-run-session-if-needed /nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/bin/startplasma-wayland" for VT 2
+Jun 17 17:41:12 debbie sddm-helper[2262]: Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
+                                          Qt depends on a UTF-8 locale, and has switched to "C.UTF-8" instead.
+                                          If this causes problems, reconfigure your locale. See the locale(1) manual
+                                          for more information.
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Starting...
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Authenticating...
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Preparing to converse...
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Conversation with 1 messages
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_kwallet5(sddm:auth): pam_kwallet5: pam_sm_authenticate
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] returning.
+Jun 17 17:41:12 debbie sddm[1489]: Authentication for user  "nate"  successful
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_kwallet5(sddm:setcred): pam_kwallet5: pam_sm_setcred
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_unix(sddm:session): session opened for user nate(uid=1000) by (uid=0)
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_kwallet5(sddm:session): pam_kwallet5: pam_sm_open_session
+Jun 17 17:41:12 debbie sddm-helper[2262]: Starting Wayland user session: "/nix/store/wsshnnyza8d2wm4bkpkrss1v53yzka6b-sddm-unwrapped-0.21.0/share/sddm/scripts/wayland-session" "/nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/libexec/plasma-dbus-run-session-if-needed /nix/store/ssfkvxrd68vrzaq4vdqgsb8zibhrymh1-plasma-workspace-6.3.5/bin/startplasma-wayland"
+Jun 17 17:41:12 debbie sddm[1489]: Session started true
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Closing session
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_unix(sddm:session): session closed for user nate
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_kwallet5(sddm:session): pam_kwallet5: pam_sm_close_session
+Jun 17 17:41:12 debbie sddm-helper[2262]: pam_kwallet5(sddm:setcred): pam_kwallet5: pam_sm_setcred
+Jun 17 17:41:12 debbie sddm-helper[2262]: [PAM] Ended.
+Jun 17 17:41:12 debbie sddm[1489]: Auth: sddm-helper exited successfully
+Jun 17 17:41:12 debbie sddm[1489]: Greeter stopped. SDDM::Auth::HELPER_SUCCESS
+Jun 17 17:41:12 debbie sddm[1489]: Auth: sddm-helper exited with 1

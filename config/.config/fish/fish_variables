@@ -1,6 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export --path PATH:/home/nate/\x2ecargo/bin\x1e/home/nate/\x2elocal/bin\x1e/nix/store/805a5wv1cyah5awij184yfad1ksmbh9f\x2dgit\x2d2\x2e49\x2e0/libexec/git\x2dcore\x1e/nix/store/805a5wv1cyah5awij184yfad1ksmbh9f\x2dgit\x2d2\x2e49\x2e0/libexec/git\x2dcore\x1e/run/user/1000/fnm_multishells/2479_1750196500059/bin\x1e/home/nate/\x2elocal/bin\x1e/run/wrappers/bin\x1e/home/nate/\x2elocal/share/flatpak/exports/bin\x1e/var/lib/flatpak/exports/bin\x1e/home/nate/\x2enix\x2dprofile/bin\x1e/nix/profile/bin\x1e/home/nate/\x2elocal/state/nix/profile/bin\x1e/etc/profiles/per\x2duser/nate/bin\x1e/nix/var/nix/profiles/default/bin\x1e/run/current\x2dsystem/sw/bin
+SETUVAR --export --path PATH:/home/nate/\x2ecargo/bin\x1e/home/nate/\x2elocal/bin\x1e/nix/store/805a5wv1cyah5awij184yfad1ksmbh9f\x2dgit\x2d2\x2e49\x2e0/libexec/git\x2dcore\x1e/run/user/1000/fnm_multishells/2479_1750196500059/bin\x1e/home/nate/\x2elocal/bin\x1e/run/wrappers/bin\x1e/home/nate/\x2elocal/share/flatpak/exports/bin\x1e/var/lib/flatpak/exports/bin\x1e/home/nate/\x2enix\x2dprofile/bin\x1e/nix/profile/bin\x1e/home/nate/\x2elocal/state/nix/profile/bin\x1e/etc/profiles/per\x2duser/nate/bin\x1e/nix/var/nix/profiles/default/bin\x1e/run/current\x2dsystem/sw/bin
 SETUVAR --export SSH_AGENT_PID:setenv\x20SSH_AGENT_PID\x2016770\x3b
 SETUVAR --export SSH_AUTH_SOCK:setenv\x20SSH_AUTH_SOCK\x20/tmp/ssh\x2dXXXXXXagBmGq/agent\x2e16748\x3b
 SETUVAR __fish_initialized:3800
