@@ -470,21 +470,21 @@ in {
                     StandardError = "append:/var/log/syncDocuments.log";
                 };
             };
-            auto-update = {
-                description = "Run NixOS update when idle and on AC power";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Restart = "always";
-                    RestartSec = "3600s";
-                    User = "nate";
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
-                    Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/nate/bin:/home/nate/.local/bin";
-                    StandardOutput = "append:/var/log/auto-update.log";
-                    StandardError = "append:/var/log/auto-update.log";
-                };
-            };
+            # auto-update = {
+            #    description = "Run NixOS update when idle and on AC power";
+            #    wants = ["network-online.target"];
+            #    after = ["network-online.target"];
+            #    serviceConfig = {
+            #        Type = "simple";
+            #        Restart = "always";
+            #        RestartSec = "3600s";
+            #        User = "nate";
+            #        ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
+            #        Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/nate/bin:/home/nate/.local/bin";
+            #        StandardOutput = "append:/var/log/auto-update.log";
+            #        StandardError = "append:/var/log/auto-update.log";
+            #    };
+            # };
         };
     };
 
