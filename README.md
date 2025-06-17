@@ -1,136 +1,158 @@
-````markdown
-# dotfiles
+# 🗂️ Dotfiles
 
-This repository manages your personal dotfiles, NixOS system configuration, and utility scripts using [GNU Stow]. It:
+This repository manages your personal dotfiles, NixOS system configuration, and utility scripts using \[GNU Stow]. It:
 
-- **Keeps** your home-directory dotfiles neatly organized into Stow packages  
-- **Deploys** your NixOS `configuration.nix` into `/etc/nixos` (manually, see below)  
-- **Backs up** any conflicting files before linking  
-- **Registers** custom scripts (e.g. `rebuild`, `update`, `syncDocuments`) into `~/.local/bin`
+* **Organizes** your home-directory dotfiles into clean, modular Stow packages
+* **Deploys** your NixOS system config (`configuration.nix`) into `/etc/nixos` manually
+* **Backs up** conflicting files before replacing them with symlinks
+* **Registers** your personal scripts (e.g. `rebuild`, `update`, `syncDocuments`) into `~/.local/bin`
 
 ---
 
-## 🚀 Quick Start (Brand-New Machine)
+## 🚀 Quick Start (Brand-New NixOS Setup)
 
-These steps assume a fresh NixOS install and that you’ve already partitioned, formatted, etc.
+These steps assume a fresh NixOS installation (disk partitioning and formatting already completed).
 
-### 1. Enable `git` (and optionally `vim`) in your system
+### 1. Enable `git` and an editor (`vim`, `nano`, etc.)
 
-1. Open your NixOS configuration:
+1. Edit your NixOS system config:
 
    ```bash
    sudo nano /etc/nixos/configuration.nix
-````
+   ```
 
-2. Locate the `environment.systemPackages` list (create it if missing) and add:
+2. Add essential packages:
 
    ```nix
    environment.systemPackages = with pkgs; [
      git
-     vim      # optional—remove if you prefer another editor
-     # …any other packages you want
+     vim  # optional—use your preferred editor
+     # ...add more here
    ];
    ```
 
-3. Rebuild & switch:
+3. Rebuild your system:
 
    ```bash
    sudo nixos-rebuild switch
    ```
 
-### 2. Clone this repo
+---
+
+### 2. Create your 2FA secrets file
+
+Create a file named `~/.2fa_secrets` with your TOTP secrets.
+
+**Example:**
+
+```ini
+# ~/.2fa_secrets
+proton="<the TOTP secret for proton>"
+```
+
+This file is used by automation scripts (e.g. `syncDocuments`).
+
+---
+
+### 3. Clone the dotfiles repo
 
 ```bash
 git clone https://your.git.repo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ```
 
-### 3. Install your NixOS configuration
+---
 
-Before running the setup script, copy the provided NixOS config into place:
+### 4. Install NixOS configuration manually
 
 ```bash
 sudo mkdir -p /etc/nixos
 sudo cp etc/nixos/configuration.nix /etc/nixos/configuration.nix
 ```
 
-*(If you have custom overlays or use a different filename, adjust accordingly.)*
+> If you're using overlays or a custom config file, adjust this step.
 
-### 4. Make the setup script executable
+---
+
+### 5. Make the setup script executable
 
 ```bash
 chmod +x setup.sh
 ```
 
-### 5. Preview changes (dry-run)
+---
+
+### 6. Preview actions (dry-run mode)
 
 ```bash
 ./setup.sh --dry-run
 ```
 
-You should see “DRY RUN:” messages showing which symlinks and backups *would* be created.
+This shows which files *would* be linked and which backups would be created.
 
-### 6. Apply for real
+---
+
+### 7. Apply the dotfiles setup
 
 ```bash
 ./setup.sh
 ```
 
-* **One sudo prompt** upfront
-* Conflicting files moved to `~/dotfiles/stow-backups/<timestamp>/…`
-* Home dotfiles linked into your `$HOME`
-* Scripts listed in `config.json` symlinked into `~/.local/bin`
+* Prompts once for `sudo`
+* Conflicting files are backed up into `stow-backups/<timestamp>/`
+* Dotfiles are symlinked into `$HOME`
+* Scripts listed in `config.json` are symlinked into `~/.local/bin`
 
-### 7. Set up Proton Drive sync
+---
 
-1. Run the interactive `rclone` config:
+### 8. Set up Proton Drive sync (optional)
+
+1. Launch rclone configuration:
 
    ```bash
    rclone config
    ```
 
-2. Create a new remote, name it `proton`, and follow the prompts.
+2. Create a new remote named `proton`, follow the prompts.
 
-3. Verify you can list your drive:
+3. Verify the remote:
 
    ```bash
    rclone lsd proton:
    ```
 
-4. Run the sync script:
+4. Sync your documents:
 
    ```bash
    update
    ```
 
-   *(This invokes `syncDocuments` as defined in `config.json`.)*
-
 ---
 
-## 📦 Repository Layout
+## 📁 Repository Layout
 
 ```
 .
-├── bash/                   # ~/.bashrc
+├── bash/                   # ~/.bashrc and related shell files
 ├── config/.config/…        # ~/.config/*
-├── etc/nixos/              # NixOS config templates
+├── etc/nixos/              # System configuration templates
 │   └── configuration.nix
 ├── gdbinit/                # ~/.gdbinit
 ├── ideavim/                # ~/.ideavimrc
-├── scripts/.scripts/…      # utility scripts
+├── scripts/.scripts/…      # Custom utility scripts
 ├── vim/                    # ~/.vimrc
-├── config.json             # scripts to add to PATH
-├── shell.nix               # nix-shell environment (stow, jq)
-└── setup.sh                # orchestrates backups, stow, script registration
+├── config.json             # List of helper scripts to add to PATH
+├── shell.nix               # nix-shell environment for setup
+└── setup.sh                # Main bootstrap script
 ```
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Configuration Details
 
 ### `config.json`
 
-List any scripts you want exposed on your `PATH`. Paths are **relative** to repo root:
+Defines which scripts to expose in `~/.local/bin`. Paths are **relative to repo root**:
 
 ```json
 {
@@ -142,34 +164,41 @@ List any scripts you want exposed on your `PATH`. Paths are **relative** to repo
 }
 ```
 
-After adding a new helper, re-run `./setup.sh`.
-
-### `shell.nix`
-
-Provides a throwaway environment with:
-
-* `stow`  (for symlink management)
-* `jq`    (for parsing `config.json`)
-
-No global installs needed—just `nix-shell`.
+To add a new helper, update this file and re-run `./setup.sh`.
 
 ---
 
-## 🔍 Verification
+### `shell.nix`
 
-After running `./setup.sh`, confirm:
+Provides an isolated shell environment with:
+
+* `stow` – symlink manager
+* `jq` – JSON parsing utility
+
+Use with:
+
+```bash
+nix-shell
+```
+
+No need to install globally.
+
+---
+
+## ✅ Post-Setup Verification
+
+Ensure everything is correctly linked:
 
 ```bash
 # Home dotfiles
 ls -l ~/.bashrc
 ls -l ~/.config/nixos/debbie.nix
 
-# System config (manual copy)
+# System config
 ls -l /etc/nixos/configuration.nix
 
-# Scripts on your PATH
+# Scripts on PATH
 which rebuild update syncDocuments
 ```
 
-Each should point back into your `~/dotfiles` repo.
-
+Each path should resolve to a file inside your `~/dotfiles` repo.
