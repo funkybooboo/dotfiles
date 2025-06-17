@@ -251,7 +251,6 @@ in {
             concessio
         ];
         sessionVariables = {
-            QT_QPA_PLATFORM = "wayland";
             NIXOS_OZONE_WL = "1";
         };
         variables = {
@@ -406,70 +405,67 @@ in {
 
     # Systemd
     systemd = {
-        user.extraConfig = ''
-            DefaultEnvironment=LANG=en_US.UTF-8
-        '';
         services = {
-            install-flatpaks = {
-                description = "Install Flatpak apps from Flathub";
-                wantedBy = ["multi-user.target"];
-                after = ["flatpak-system-helper.service"];
-                serviceConfig = {
-                    Type = "oneshot";
-                    # Inject PATH so flatpak is found
-                    Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
-                    ExecStart = pkgs.writeShellScript "install-flatpaks" ''
-                        set -e
-
-                        # Ensure flatpak is installed
-                        if ! command -v flatpak >/dev/null; then
-                          echo "Flatpak command not found! Skipping Flatpak app installation."
-                          exit 0
-                        fi
-
-                        # Make sure flathub is added
-                        if ! flatpak remote-list | grep -q flathub; then
-                          echo "Adding Flathub remote..."
-                          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-                        fi
-
-                        # Install apps
-                        for app in ${flatpakAppList}; do
-                          echo "Installing $app..."
-                          if ! flatpak info "$app" >/dev/null 2>&1; then
-                            flatpak install -y --noninteractive flathub "$app"
-                          else
-                            echo "$app already installed."
-                          fi
-                        done
-
-                        # Cleanup apps not in list
-                        echo "Checking for orphaned Flatpak apps..."
-                        for installed in $(flatpak list --app --columns=application); do
-                          if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
-                            echo "Removing orphaned app: $installed"
-                            flatpak uninstall -y "$installed"
-                          fi
-                        done
-                    '';
-                    StandardOutput = "append:/var/log/install-flatpaks.log";
-                    StandardError = "append:/var/log/install-flatpaks.log";
-                };
-            };
-            syncDocuments = {
-                description = "Hourly sync of ~/Documents with Proton Drive";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Restart = "always";
-                    RestartSec = "3600s";
-                    User = "nate";
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
-                    StandardOutput = "append:/var/log/syncDocuments.log";
-                    StandardError = "append:/var/log/syncDocuments.log";
-                };
-            };
+            # install-flatpaks = {
+            #    description = "Install Flatpak apps from Flathub";
+            #    wantedBy = ["multi-user.target"];
+            #    after = ["flatpak-system-helper.service"];
+            #    serviceConfig = {
+            #        Type = "oneshot";
+            #        # Inject PATH so flatpak is found
+            #        Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+            #        ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+            #            set -e
+	    #
+            #            # Ensure flatpak is installed
+            #            if ! command -v flatpak >/dev/null; then
+            #              echo "Flatpak command not found! Skipping Flatpak app installation."
+            #              exit 0
+            #            fi
+	    #
+            #            # Make sure flathub is added
+            #            if ! flatpak remote-list | grep -q flathub; then
+            #              echo "Adding Flathub remote..."
+            #              flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+            #            fi
+	    #
+            #            # Install apps
+            #            for app in ${flatpakAppList}; do
+            #              echo "Installing $app..."
+            #              if ! flatpak info "$app" >/dev/null 2>&1; then
+            #                flatpak install -y --noninteractive flathub "$app"
+            #              else
+            #                echo "$app already installed."
+            #              fi
+            #            done
+	    #
+            #            # Cleanup apps not in list
+            #            echo "Checking for orphaned Flatpak apps..."
+            #            for installed in $(flatpak list --app --columns=application); do
+            #              if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+            #                echo "Removing orphaned app: $installed"
+            #                flatpak uninstall -y "$installed"
+            #              fi
+            #            done
+            #        '';
+            #        StandardOutput = "append:/var/log/install-flatpaks.log";
+            #        StandardError = "append:/var/log/install-flatpaks.log";
+            #    };
+            # };
+            # syncDocuments = {
+            #    description = "Hourly sync of ~/Documents with Proton Drive";
+            #    wants = ["network-online.target"];
+            #    after = ["network-online.target"];
+            #    serviceConfig = {
+            #        Type = "simple";
+            #        Restart = "always";
+            #        RestartSec = "3600s";
+            #        User = "nate";
+            #        ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
+            #        StandardOutput = "append:/var/log/syncDocuments.log";
+            #        StandardError = "append:/var/log/syncDocuments.log";
+            #    };
+            # };
             # auto-update = {
             #    description = "Run NixOS update when idle and on AC power";
             #    wants = ["network-online.target"];
@@ -543,8 +539,6 @@ in {
             LC_TIME = "en_US.UTF-8";
         };
     };
-
-    console.keyMap = "us";
 
     # Hardware
     hardware = {
