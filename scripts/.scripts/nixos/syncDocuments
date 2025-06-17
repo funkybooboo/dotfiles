@@ -1,23 +1,16 @@
 #!/run/current-system/sw/bin/bash
 #
 # sync.sh
-#
 # Bidirectional sync between ~/Documents and the "Documents" folder
 # on Proton Drive using rclone bisync.
 #
-# On the very first invocation, it automatically does a one-time “--resync”
-# so that bisync can build its baseline listings. In subsequent runs it
-# just does an incremental sync.
-#
-# Requirements:
-#   • rclone installed and a “proton” remote configured
-#   • A folder named “Documents” in Proton Drive (if not, rclone will create it)
-#
-# Usage:
-#   ./sync.sh
-#   (or let systemd trigger it via timer)
-#
 set -euo pipefail
+
+# 0) Refresh Proton Drive 2FA via CLI
+if ! /home/nate/.local/bin/update-rclone-2fa; then
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ❌ Failed to update 2FA — sync aborted" >>"${HOME}/.local/state/sync.log"
+    exit 1
+fi
 
 # 1) Local directory to sync
 LOCAL_DIR="${HOME}/Documents"
@@ -30,7 +23,6 @@ LOG_DIR="${HOME}/.local/state"
 LOGFILE="${LOG_DIR}/sync.log"
 
 # 4) Bisync cache‐listing path under ~/.cache/rclone
-#    Adjust “home_nate_Documents..proton_Documents” if your $HOME or folder names differ
 CACHE_BASE="${HOME}/.cache/rclone/bisync"
 PATH1_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path1.lst"
 PATH2_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path2.lst"
@@ -48,20 +40,18 @@ if [ ! -d "${LOG_DIR}" ]; then
 fi
 
 # 7) Ensure the remote “Documents” directory exists on Proton Drive
-#    (rclone mkdir does nothing if it already exists)
 if ! /run/current-system/sw/bin/rclone lsd "${REMOTE_PATH}" >/dev/null 2>&1; then
     /run/current-system/sw/bin/rclone mkdir "${REMOTE_PATH}"
 fi
 
-# 8) Decide whether we need a one-time “--resync” (i.e. if bisync cache is missing)
+# 8) Determine if this is the first run and needs --resync
 USE_RESYNC=""
 if [ ! -f "${PATH1_LIST}" ] || [ ! -f "${PATH2_LIST}" ]; then
-    # No prior listing, so we need to initialize bisync with --resync
     USE_RESYNC="--resync"
     echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] First run: initializing bisync state (using --resync)" >>"${LOGFILE}"
 fi
 
-# 9) Run rclone bisync (one-time --resync if needed, then normal thereafter)
+# 9) Run rclone bisync
 /run/current-system/sw/bin/rclone bisync \
     "${LOCAL_DIR}" \
     "${REMOTE_PATH}" \
@@ -70,5 +60,5 @@ fi
     --log-file="${LOGFILE}" \
     ${USE_RESYNC:+$USE_RESYNC}
 
-# 10) Record a timestamp each time
+# 10) Record completion
 echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] Sync completed" >>"${LOGFILE}"
