@@ -83,6 +83,7 @@ in {
             tmux
             tree
             bat
+            imgcat
             cloc
             lsd
             ascii
@@ -232,6 +233,8 @@ in {
             # Gaming
             chess-tui
             stockfish
+            # nbsdgames
+            # raylib-games
 
             # AI
             alpaca
@@ -447,46 +450,19 @@ in {
                     StandardError = "append:/var/log/install-flatpaks.log";
                 };
             };
-            flatpak-update = {
-                description = "Update all Flatpak apps";
-                serviceConfig = {
-                    Type = "oneshot";
-                    ExecStart = "${pkgs.flatpak}/bin/flatpak update --noninteractive";
-                    StandardOutput = "append:/var/log/flatpak-update.log";
-                    StandardError = "append:/var/log/flatpak-update.log";
-                };
-            };
             syncDocuments = {
-                description = "One‐shot sync of ~/Documents ↔ Proton Drive";
+                description = "Hourly sync of ~/Documents with Proton Drive";
                 wants = ["network-online.target"];
                 after = ["network-online.target"];
                 serviceConfig = {
-                    Type = "oneshot";
+                    Type = "simple";
+                    Restart = "always";
+                    RestartSec = "3600s";
                     User = "nate";
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
+                    StandardOutput = "append:/var/log/syncDocuments.log";
+                    StandardError = "append:/var/log/syncDocuments.log";
                 };
-            };
-        };
-        timers = {
-            flatpak-update = {
-                description = "Run daily Flatpak updates";
-                wantedBy = ["timers.target"];
-                timerConfig = {
-                    OnCalendar = "daily";
-                    Persistent = true;
-                };
-            };
-            syncDocumentsTimer = {
-                description = "Hourly bidirectional sync of ~/Documents with Proton Drive";
-                wants = ["syncDocuments.service"];
-                timerConfig = {
-                    OnCalendar = "hourly";
-                    Persistent = true; # run on next boot if missed
-                };
-                unitConfig = {
-                    Unit = "syncDocuments.service";
-                };
-                wantedBy = ["timers.target"];
             };
         };
     };
@@ -562,16 +538,5 @@ in {
     # System
     system = {
         stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
-        autoUpgrade = {
-            enable = true;
-            flags = [
-                "--update-input"
-                "nixpkgs"
-                "-L" # print build logs
-            ];
-            dates = "2:00";
-            randomizedDelaySec = "45min";
-            allowReboot = true;
-        };
     };
 }

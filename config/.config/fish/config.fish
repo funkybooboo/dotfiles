@@ -32,13 +32,25 @@ function y
     rm -f -- "$tmp"
 end
 
+# Start ssh-agent if it's not already running
+if not pgrep -u (whoami) ssh-agent >/dev/null
+    eval (ssh-agent -c)
+end
+
+# Add SSH key if not already added and agent socket is valid
+if test -S $SSH_AUTH_SOCK
+    ssh-add -l >/dev/null
+    or ssh-add ~/.ssh/id_ed25519 ^/dev/null
+end
+
+# Initialize zoxide for directory jumping
+zoxide init fish | source
+
 # Jump to the previous directory or add jump alias
 jump shell fish | source
 
-# Zoxide for easy directory navigation
+# Alias jump and zoxide commands
 alias z='zoxide'
-
-# Jump alias for 'jump' command
 alias j='jump'
 
 # Initialize fnm (Fast Node Manager) environment
