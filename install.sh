@@ -8,7 +8,7 @@ echo "Creating the 2FA secrets file..."
 read -p "Enter your TOTP secret for Proton (e.g., 'proton=SECRET'): " totp_secret
 
 # Create the .2fa_secrets file
-echo "proton=\"$totp_secret\"" > ~/.2fa_secrets
+echo "proton=$totp_secret" >~/.2fa_secrets
 chmod 600 ~/.2fa_secrets
 
 # --- Step 1: Run only steps 3-6 inside the nix-shell ---
