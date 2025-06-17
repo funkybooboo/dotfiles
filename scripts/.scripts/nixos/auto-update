@@ -1,0 +1,26 @@
+#!/run/current-system/sw/bin/bash
+set -euo pipefail
+
+# --- Check if on battery ---
+if grep -q "Discharging" /sys/class/power_supply/BAT*/status 2>/dev/null; then
+    echo "On battery, skipping update."
+    exit 0
+fi
+
+# --- Check if idle (600000 ms = 10 minutes) ---
+IDLE_MS=$(xprintidle)
+if [[ "$IDLE_MS" -lt 600000 ]]; then
+    echo "User is active, skipping update."
+    exit 0
+fi
+
+# --- Optional: check system load ---
+LOAD=$(cut -d. -f1 /proc/loadavg)
+if [[ "$LOAD" -gt 2 ]]; then
+    echo "System under load, skipping update."
+    exit 0
+fi
+
+# --- Run your update logic ---
+echo "Running NixOS update at $(date)"
+/home/nate/.local/bin/update
