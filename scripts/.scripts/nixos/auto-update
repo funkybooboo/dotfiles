@@ -23,4 +23,4 @@ fi
 
 # --- Run your update logic ---
 echo "Running NixOS update at $(date)"
-/home/nate/.local/bin/update
+yes N | head -n 3 | /home/nate/.local/bin/update

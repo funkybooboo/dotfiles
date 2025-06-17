@@ -468,17 +468,14 @@ in {
             };
             auto-update = {
                 description = "Run NixOS update when idle and on AC power";
-                wantedBy = ["multi-user.target"];
+                wants = ["network-online.target"];
                 after = ["network-online.target"];
-
                 serviceConfig = {
                     Type = "simple";
                     Restart = "always";
                     RestartSec = "3600s";
                     User = "nate";
-                    # You can hardcode the path or reference it via your link
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
-                    # Ensure these paths are set in case your script needs them
                     Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/nate/bin:/home/nate/.local/bin";
                     StandardOutput = "append:/var/log/auto-update.log";
                     StandardError = "append:/var/log/auto-update.log";
