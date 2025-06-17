@@ -109,6 +109,7 @@ in {
             wiper
             oath-toolkit
             xprintidle
+            pciutils
 
             # Version Control
             git
@@ -206,6 +207,9 @@ in {
             wlogout
             hyprshot
             libsForQt5.xwaylandvideobridge
+            kdePackages.plasma-workspace
+            kdePackages.breeze
+            kdePackages.plasma-desktop
 
             # Fonts & Themes
             alejandra
@@ -257,12 +261,12 @@ in {
             EDITOR = "nvim";
         };
         plasma6.excludePackages = with pkgs.kdePackages; [
-            plasma-browser-integration
-            konsole
-            khelpcenter
-            baloo-widgets
-            ffmpegthumbs
-            krdp
+            # plasma-browser-integration
+            # konsole
+            # khelpcenter
+            # baloo-widgets
+            # ffmpegthumbs
+            # krdp
         ];
     };
 
@@ -468,6 +472,9 @@ in {
         graphics = {
             enable = true;
             enable32Bit = true;
+        };
+        opengl = {
+            enable = true;
         };
     };
 

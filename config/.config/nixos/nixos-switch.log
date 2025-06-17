@@ -1,14 +1,147 @@
 building Nix...
 building the system configuration...
-these 3 derivations will be built:
-  /nix/store/ski8c663zwzpr4gvlchcf8fnlyj7k89p-etc-systemd-user.conf.drv
-  /nix/store/90klizvmwqr90bas44r6d0v2l6jaz4qc-etc.drv
-  /nix/store/3cky5m33nrlfda76iimpp72cqjs1xbka-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv
-building '/nix/store/ski8c663zwzpr4gvlchcf8fnlyj7k89p-etc-systemd-user.conf.drv'...
-building '/nix/store/90klizvmwqr90bas44r6d0v2l6jaz4qc-etc.drv'...
-building '/nix/store/3cky5m33nrlfda76iimpp72cqjs1xbka-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv'...
+evaluation warning: The option `hardware.opengl.enable' defined in `/home/nate/.config/nixos/debbie.nix' has been renamed to `hardware.graphics.enable'.
+these 23 derivations will be built:
+  /nix/store/0mgwgd9pq12va8k43zw8sip27g83kjqz-ffmpegthumbs-25.04.2_fish-completions.drv
+  /nix/store/63asq7jfjjrnpxns0kvxm4hxaywh2pzw-system-path.drv
+  /nix/store/3wvh766f2ca68wra8jasccmfjp18bvyd-khelpcenter-25.04.2_fish-completions.drv
+  /nix/store/6n1v6hz4mf9lh98ifdzm3421qsrh0vs4-pciutils-3.13.0_fish-completions.drv
+  /nix/store/n4axs9xbnkbfrhapbp34b5s5546blrw8-krdp-6.3.5_fish-completions.drv
+  /nix/store/qvxvqqf3cm0ri7pw7h73hnnqf3ji7vzp-konsole-25.04.2_fish-completions.drv
+  /nix/store/yl3m08zmlyzfr7vf296xyk7f6g0w7zw6-baloo-widgets-25.04.2_fish-completions.drv
+  /nix/store/ymnpmf1jjhf1v2z8bxjs7c7h16la2dwy-plasma-browser-integration-6.3.5_fish-completions.drv
+  /nix/store/cs34yp0yqbany6wf2dkc9awardck3rha-system_fish-completions.drv
+  /nix/store/gv7000wrjnd2rzsyvdj64hk8ih8lhh31-man-paths.drv
+  /nix/store/rv85q537bd18vdjnjj1w1wqd4sb4pr67-man-cache.drv
+  /nix/store/dxp8waknndvnjc1qj6fg57dw3my3rs9g-etc-man_db.conf.drv
+  /nix/store/qzgzximck7b7f4ci2v331krlbijixgwx-dbus-1.drv
+  /nix/store/riqzy8v5a229izjl87fww98s2p7yag8p-X-Restart-Triggers-dbus.drv
+  /nix/store/5psnnh40qfadvvfwx9mf13acw34w06yf-unit-dbus.service.drv
+  /nix/store/gdj9lgv5a6wsai8hkmy8vwsiglbb6fyc-user-units.drv
+  /nix/store/wpa4xy5q1d98jvbi3h396wi7n4qmq5s8-X-Restart-Triggers-polkit.drv
+  /nix/store/dnvphvgbvzh0vljc4j6rcas4906xrs10-unit-polkit.service.drv
+  /nix/store/q0qc0ml1w1pb84grvwg6ng5178pvqci6-unit-dbus.service.drv
+  /nix/store/rvm24vh3dww7mhghvma3xzk7cc7bg7ww-unit-accounts-daemon.service.drv
+  /nix/store/sw5gs79qz80b6z2mrjd23lsz3k80qyh8-system-units.drv
+  /nix/store/275l0648524mqvjpi34yq7svpyyrmbx1-etc.drv
+  /nix/store/sd1ydi4h0cwjnm1q761zq5nh4kb9j7gk-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv
+building '/nix/store/63asq7jfjjrnpxns0kvxm4hxaywh2pzw-system-path.drv'...
+building '/nix/store/yl3m08zmlyzfr7vf296xyk7f6g0w7zw6-baloo-widgets-25.04.2_fish-completions.drv'...
+building '/nix/store/0mgwgd9pq12va8k43zw8sip27g83kjqz-ffmpegthumbs-25.04.2_fish-completions.drv'...
+building '/nix/store/3wvh766f2ca68wra8jasccmfjp18bvyd-khelpcenter-25.04.2_fish-completions.drv'...
+building '/nix/store/qvxvqqf3cm0ri7pw7h73hnnqf3ji7vzp-konsole-25.04.2_fish-completions.drv'...
+building '/nix/store/n4axs9xbnkbfrhapbp34b5s5546blrw8-krdp-6.3.5_fish-completions.drv'...
+building '/nix/store/6n1v6hz4mf9lh98ifdzm3421qsrh0vs4-pciutils-3.13.0_fish-completions.drv'...
+building '/nix/store/ymnpmf1jjhf1v2z8bxjs7c7h16la2dwy-plasma-browser-integration-6.3.5_fish-completions.drv'...
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/g++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/g++'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/c++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/c++'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/gcc' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/gcc'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/cpp' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/cpp'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/cc' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/cc'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gcc.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gcc.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gccint.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gccint.info'
+building '/nix/store/gv7000wrjnd2rzsyvdj64hk8ih8lhh31-man-paths.drv'...
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libgomp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libgomp.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libitm.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libitm.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gccinstall.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gccinstall.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cppinternals.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cppinternals.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libquadmath.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libquadmath.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cpp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cpp.info'
+warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/rustfmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/rustfmt'
+warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/cargo-fmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/cargo-fmt'
+building '/nix/store/cs34yp0yqbany6wf2dkc9awardck3rha-system_fish-completions.drv'...
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz'
+warning: collision between `/nix/store/sd43rx86jf3lb72s8sjmkbs8gq3k27n8-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/a6br5k7hw4lxr0n772dipyqzsmwjgy79-xorg-server-21.1.16_fish-completions/Xserver.fish'
+created 747 symlinks in user environment
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+created 13196 symlinks in user environment
+building '/nix/store/rv85q537bd18vdjnjj1w1wqd4sb4pr67-man-cache.drv'...
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/icons/hicolor/scalable/apps/xwaylandvideobridge.svg' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/icons/hicolor/scalable/apps/xwaylandvideobridge.svg'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/appdata/org.kde.xwaylandvideobridge.appdata.xml' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/appdata/org.kde.xwaylandvideobridge.appdata.xml'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/it/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/it/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ko/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ko/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/cs/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/cs/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/eo/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/eo/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/es/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/es/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/en_GB/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/en_GB/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pt_BR/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pt_BR/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/nl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/nl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/tr/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/tr/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/nn/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/nn/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/fr/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/fr/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sv/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sv/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pt/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pt/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/de/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/de/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/fi/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/fi/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/gl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/gl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/zh_CN/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/zh_CN/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ja/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ja/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ca@valencia/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ca@valencia/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/eu/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/eu/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sk/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sk/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ka/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ka/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge'
+warning: collision between `/nix/store/k9kjzfwh10zs0jk7z3a3gy45369a99nd-VirtualBox-GuestAdditions-7.1.10-6.12.33/lib/modules' and `/nix/store/hd2p8n6lwsljz5yyhnff9dsg96nl65b5-zulu-ca-jdk-23.0.0/lib/modules'
+warning: collision between `/nix/store/d70zyyd8xpll92by66a4il2dn285ki3y-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/k9kjzfwh10zs0jk7z3a3gy45369a99nd-VirtualBox-GuestAdditions-7.1.10-6.12.33/bin/mount.vboxsf'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/lib/xorg/protocol.txt' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/lib/xorg/protocol.txt'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/share/applications/nvim.desktop' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/share/applications/nvim.desktop'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/bin/nvim' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/bin/nvim'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/bin/nvim-python3' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/bin/nvim-python3'
+created 55927 symlinks in user environment
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+building '/nix/store/wpa4xy5q1d98jvbi3h396wi7n4qmq5s8-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/qzgzximck7b7f4ci2v331krlbijixgwx-dbus-1.drv'...
+building '/nix/store/rvm24vh3dww7mhghvma3xzk7cc7bg7ww-unit-accounts-daemon.service.drv'...
+building '/nix/store/riqzy8v5a229izjl87fww98s2p7yag8p-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/dnvphvgbvzh0vljc4j6rcas4906xrs10-unit-polkit.service.drv'...
+building '/nix/store/5psnnh40qfadvvfwx9mf13acw34w06yf-unit-dbus.service.drv'...
+building '/nix/store/q0qc0ml1w1pb84grvwg6ng5178pvqci6-unit-dbus.service.drv'...
+building '/nix/store/gdj9lgv5a6wsai8hkmy8vwsiglbb6fyc-user-units.drv'...
+building '/nix/store/sw5gs79qz80b6z2mrjd23lsz3k80qyh8-system-units.drv'...
+building '/nix/store/dxp8waknndvnjc1qj6fg57dw3my3rs9g-etc-man_db.conf.drv'...
+building '/nix/store/275l0648524mqvjpi34yq7svpyyrmbx1-etc.drv'...
+building '/nix/store/sd1ydi4h0cwjnm1q761zq5nh4kb9j7gk-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv'...
+stopping the following units: accounts-daemon.service
 activating the configuration...
 setting up /etc...
 reloading user units for nate...
 restarting sysinit-reactivation.target
-Done. The new configuration is /nix/store/0kw1k00hx9wyw94dymcwkaxvgvnsz9p9-nixos-system-debbie-25.05.804113.6c64dabd3aa8
+reloading the following units: dbus.service
+restarting the following units: polkit.service
+starting the following units: accounts-daemon.service
+the following new units were started: sysinit-reactivation.target, systemd-tmpfiles-resetup.service
+Done. The new configuration is /nix/store/f333wg9znrqaqsc1mxv4bn9pk0xhrr97-nixos-system-debbie-25.05.804113.6c64dabd3aa8
