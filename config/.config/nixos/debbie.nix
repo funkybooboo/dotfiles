@@ -108,6 +108,7 @@ in {
             kondo
             wiper
             oath-toolkit
+            xprintidle
 
             # Version Control
             git
