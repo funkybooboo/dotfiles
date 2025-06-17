@@ -45,16 +45,7 @@ echo "Rebuilding the NixOS system..."
 
 sudo nixos-rebuild switch
 
-# --- Step 8: Optionally Run System Update ---
-read -p "Would you like to run the system update? (y/N): " run_update
-if [[ "$run_update" == "y" || "$run_update" == "Y" ]]; then
-    echo "Running the system update..."
-
-    # Automatically send 3 "no" responses to the update prompt
-    yes N | head -n 3 | sudo update
-fi
-
-# --- Step 9: Set Up Proton Drive Sync (Optional) ---
+# --- Step 8: Set Up Proton Drive Sync (Optional) ---
 read -p "Do you want to set up Proton Drive sync with rclone? (y/N): " setup_sync
 if [[ "$setup_sync" == "y" || "$setup_sync" == "Y" ]]; then
     echo "Setting up Proton Drive sync..."
@@ -69,7 +60,7 @@ fi
 # Final message before reboot prompt
 echo "Installation complete! Please verify everything is set up correctly."
 
-# --- Step 10: Optionally Reboot the System ---
+# --- Step 9: Optionally Reboot the System ---
 read -p "Would you like to reboot the system now? (y/N): " reboot_system
 if [[ "$reboot_system" == "y" || "$reboot_system" == "Y" ]]; then
     echo "Rebooting the system..."
