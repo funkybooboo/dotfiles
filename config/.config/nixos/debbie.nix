@@ -406,6 +406,9 @@ in {
 
     # Systemd
     systemd = {
+        user.extraConfig = ''
+            DefaultEnvironment=LANG=en_US.UTF-8
+        '';
         services = {
             install-flatpaks = {
                 description = "Install Flatpak apps from Flathub";
@@ -540,6 +543,8 @@ in {
             LC_TIME = "en_US.UTF-8";
         };
     };
+
+    console.keyMap = "us";
 
     # Hardware
     hardware = {
