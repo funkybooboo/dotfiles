@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# --- Step 1: Enable Git in the Nix Shell ---
-echo "Enabling Git in the Nix Shell..."
+# --- Step 1: Ensure Git, Stow, and jq are Available ---
+echo "Ensuring Git, Stow, and jq are available..."
 
-# Launch the Nix shell to install Git
-nix-shell -p git <<EOF
-# Git will be available in this environment
-EOF
+# Use nix-shell to install Git, Stow, and jq within the script's environment
+nix-shell -p git stow jq --run "echo 'Git, Stow, and jq are now available!'"
 
 # --- Step 2: Create the 2FA Secrets File ---
 echo "Creating the 2FA secrets file..."
@@ -36,33 +34,26 @@ echo "Making setup.sh executable..."
 
 chmod +x setup.sh
 
-# --- Step 6: Launch the Nix Shell Environment ---
-echo "Launching the Nix shell environment..."
-
-nix-shell <<EOF
-# Install stow and jq without polluting the global system
-EOF
-
-# --- Step 7: Apply the Dotfiles Setup ---
+# --- Step 6: Apply the Dotfiles Setup ---
 echo "Applying the dotfiles setup..."
 
 ./setup.sh
 
-# --- Step 8: Rebuild NixOS System ---
+# --- Step 7: Rebuild NixOS System ---
 echo "Rebuilding the NixOS system..."
 
 sudo nixos-rebuild switch
 
-# --- Step 9: Optionally Run System Update ---
+# --- Step 8: Optionally Run System Update ---
 read -p "Would you like to run the system update? (y/N): " run_update
 if [[ "$run_update" == "y" || "$run_update" == "Y" ]]; then
     echo "Running the system update..."
 
-    # Automatically send 3 "no" responses to update
+    # Automatically send 3 "no" responses to the update prompt
     yes N | head -n 3 | sudo update
 fi
 
-# --- Step 10: Set Up Proton Drive Sync (Optional) ---
+# --- Step 9: Set Up Proton Drive Sync (Optional) ---
 read -p "Do you want to set up Proton Drive sync with rclone? (y/N): " setup_sync
 if [[ "$setup_sync" == "y" || "$setup_sync" == "Y" ]]; then
     echo "Setting up Proton Drive sync..."
@@ -77,7 +68,7 @@ fi
 # Final message before reboot prompt
 echo "Installation complete! Please verify everything is set up correctly."
 
-# --- Step 11: Optionally Reboot the System ---
+# --- Step 10: Optionally Reboot the System ---
 read -p "Would you like to reboot the system now? (y/N): " reboot_system
 if [[ "$reboot_system" == "y" || "$reboot_system" == "Y" ]]; then
     echo "Rebooting the system..."
