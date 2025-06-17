@@ -1,6 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export --path PATH:/home/nate/\x2ecargo/bin\x1e/home/nate/\x2elocal/bin\x1e/run/wrappers/bin\x1e/home/nate/\x2elocal/share/flatpak/exports/bin\x1e/var/lib/flatpak/exports/bin\x1e/home/nate/\x2enix\x2dprofile/bin\x1e/nix/profile/bin\x1e/home/nate/\x2elocal/state/nix/profile/bin\x1e/etc/profiles/per\x2duser/nate/bin\x1e/nix/var/nix/profiles/default/bin\x1e/run/current\x2dsystem/sw/bin
+SETUVAR --export --path PATH:/home/nate/\x2ecargo/bin\x1e/home/nate/\x2elocal/bin\x1e/run/user/1000/fnm_multishells/1836_1750172449054/bin\x1e/home/nate/\x2elocal/bin\x1e/run/wrappers/bin\x1e/home/nate/\x2elocal/share/flatpak/exports/bin\x1e/var/lib/flatpak/exports/bin\x1e/home/nate/\x2enix\x2dprofile/bin\x1e/nix/profile/bin\x1e/home/nate/\x2elocal/state/nix/profile/bin\x1e/etc/profiles/per\x2duser/nate/bin\x1e/nix/var/nix/profiles/default/bin\x1e/run/current\x2dsystem/sw/bin\x1e/nix/store/dyyifi0w2g0ddfxv5xs6ihkgbr435qp2\x2dkitty\x2d0\x2e42\x2e1/bin\x1e/nix/store/z4jnh4k7lmydfp6zcin84qy2j2v4w19i\x2dimagemagick\x2d7\x2e1\x2e1\x2d47/bin\x1e/nix/store/myw381bc9yqd709hpray9lp7l98qmlm1\x2dncurses\x2d6\x2e5\x2ddev/bin
 SETUVAR --export SSH_AGENT_PID:setenv\x20SSH_AGENT_PID\x2016770\x3b
 SETUVAR --export SSH_AUTH_SOCK:setenv\x20SSH_AUTH_SOCK\x20/tmp/ssh\x2dXXXXXXagBmGq/agent\x2e16748\x3b
 SETUVAR __fish_initialized:3800

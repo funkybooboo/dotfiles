@@ -107,6 +107,7 @@ in {
             batmon
             kondo
             wiper
+            oath-toolkit
 
             # Version Control
             git
