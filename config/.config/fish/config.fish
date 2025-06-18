@@ -4,6 +4,7 @@ set -gx PATH $HOME/.local/bin $PATH
 # Alias ls to use lsd for interactive sessions
 if status is-interactive
     alias ls=lsd
+    alias mp='multipass'
 end
 
 # Empty fish_greeting function placeholder (remove if unnecessary)

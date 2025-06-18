@@ -153,6 +153,10 @@ in {
             wirelesstools
             wireplumber
 
+            # Bluetooth
+            bluez
+            bluez-alsa
+
             # Media & Graphics
             mpv
             ffmpeg
@@ -515,6 +519,14 @@ in {
         bluetooth = {
             enable = true;
             powerOnBoot = true;
+            settings = {
+                General = {
+                    Enable = lib.mkDefault "Source,Sink,Media,Socket";
+                    Class = lib.mkDefault "0x240404";
+                    ControllerMode = lib.mkDefault "dual";
+                    FastConnectable = lib.mkDefault "true";
+                };
+            };
         };
         graphics = {
             enable = true;
