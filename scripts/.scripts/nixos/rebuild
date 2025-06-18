@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/run/current-system/sw/bin/bash
 
 # Check if ~/.bashrc exists and source it, or panic if it's missing
 if [ ! -f "$HOME/.bashrc" ]; then

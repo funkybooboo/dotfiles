@@ -407,6 +407,53 @@ in {
         desktopManager.plasma6.enable = true;
     };
 
+    # Systemd
+    systemd = {
+        services = {
+            install-flatpaks = {
+                description = "Install Flatpak apps from Flathub";
+                wantedBy = ["multi-user.target"];
+                after = ["flatpak-system-helper.service"];
+                serviceConfig = {
+                    Type = "oneshot";
+                    Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+                    ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+                        set -e
+
+                        if ! command -v flatpak >/dev/null; then
+                          echo "Flatpak command not found! Skipping Flatpak app installation."
+                          exit 0
+                        fi
+
+                        if ! flatpak remote-list | grep -q flathub; then
+                          echo "Adding Flathub remote..."
+                          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+                        fi
+
+                        for app in ${flatpakAppList}; do
+                          echo "Installing $app..."
+                          if ! flatpak info "$app" >/dev/null 2>&1; then
+                            flatpak install -y --noninteractive flathub "$app"
+                          else
+                            echo "$app already installed."
+                          fi
+                        done
+
+                        echo "Checking for orphaned Flatpak apps..."
+                        for installed in $(flatpak list --app --columns=application); do
+                          if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+                            echo "Removing orphaned app: $installed"
+                            flatpak uninstall -y "$installed"
+                          fi
+                        done
+                    '';
+                    StandardOutput = "append:/var/log/install-flatpaks.log";
+                    StandardError = "append:/var/log/install-flatpaks.log";
+                };
+            };
+        };
+    };
+
     # Nixpkgs
     nixpkgs.config = {
         permittedInsecurePackages = [];
@@ -472,9 +519,6 @@ in {
         graphics = {
             enable = true;
             enable32Bit = true;
-        };
-        opengl = {
-            enable = true;
         };
     };
 

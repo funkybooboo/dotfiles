@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/run/current-system/sw/bin/bash
 
 # Path to your 2FA generator script
 TOTP_SCRIPT="$HOME/.local/bin/2fa"
@@ -10,8 +10,8 @@ REMOTE_NAME="proton"
 TOTP_CODE="$($TOTP_SCRIPT proton)"
 
 if [[ -z "$TOTP_CODE" ]]; then
-  echo "Error: Failed to retrieve 2FA code from $TOTP_SCRIPT"
-  exit 1
+    echo "Error: Failed to retrieve 2FA code from $TOTP_SCRIPT"
+    exit 1
 fi
 
 echo "Updating rclone config with 2FA code: $TOTP_CODE"
@@ -20,9 +20,8 @@ echo "Updating rclone config with 2FA code: $TOTP_CODE"
 rclone config update "$REMOTE_NAME" 2fa "$TOTP_CODE"
 
 if [[ $? -eq 0 ]]; then
-  echo "✅ 2FA code updated successfully for rclone remote '$REMOTE_NAME'"
+    echo "✅ 2FA code updated successfully for rclone remote '$REMOTE_NAME'"
 else
-  echo "❌ Failed to update 2FA code"
-  exit 1
+    echo "❌ Failed to update 2FA code"
+    exit 1
 fi
-

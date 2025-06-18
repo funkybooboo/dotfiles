@@ -1,8 +1,6 @@
 #!/run/current-system/sw/bin/bash
 #
-# sync.sh
-# Bidirectional sync between ~/Documents and the "Documents" folder
-# on Proton Drive using rclone bisync.
+# syncDocuments.sh — Sync ~/Documents <=> Proton Drive Documents via rclone bisync
 #
 set -euo pipefail
 
@@ -12,53 +10,60 @@ if ! /home/nate/.local/bin/update-rclone-2fa; then
     exit 1
 fi
 
-# 1) Local directory to sync
+# 1) Paths
 LOCAL_DIR="${HOME}/Documents"
-
-# 2) Remote path on Proton Drive
 REMOTE_PATH="proton:Documents"
-
-# 3) Log directory + file
 LOG_DIR="${HOME}/.local/state"
 LOGFILE="${LOG_DIR}/sync.log"
-
-# 4) Bisync cache‐listing path under ~/.cache/rclone
 CACHE_BASE="${HOME}/.cache/rclone/bisync"
+LOCKFILE="${CACHE_BASE}/home_nate_Documents..proton_Documents.lck"
 PATH1_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path1.lst"
 PATH2_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path2.lst"
 
-# 5) Ensure the local folder exists
-if [ ! -d "${LOCAL_DIR}" ]; then
+# 2) Ensure local + log dirs exist
+[[ -d "$LOCAL_DIR" ]] || {
     echo "Error: Local directory ${LOCAL_DIR} does not exist." >&2
     exit 1
+}
+mkdir -p "${LOG_DIR}" && chmod 755 "${LOG_DIR}"
+
+# 3) Ensure remote dir exists
+if ! rclone lsd "${REMOTE_PATH}" >/dev/null 2>&1; then
+    rclone mkdir "${REMOTE_PATH}"
 fi
 
-# 6) Ensure the log directory exists
-if [ ! -d "${LOG_DIR}" ]; then
-    mkdir -p "${LOG_DIR}"
-    chmod 755 "${LOG_DIR}"
+# 4) Safe stale lockfile removal (30 min timeout or dead PID)
+if [[ -f "$LOCKFILE" ]]; then
+    PID=$(grep '"PID"' "$LOCKFILE" | sed -E 's/.*"PID": ?"([0-9]+)".*/\1/')
+    LOCK_TIME=$(stat -c %Y "$LOCKFILE")
+    NOW_TIME=$(date +%s)
+    AGE_MIN=$(((NOW_TIME - LOCK_TIME) / 60))
+
+    if ! ps -p "$PID" >/dev/null 2>&1 || [[ "$AGE_MIN" -ge 30 ]]; then
+        echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ⚠ Removing stale lockfile (PID=${PID}, Age=${AGE_MIN}min)" >>"${LOGFILE}"
+        rclone deletefile "$LOCKFILE"
+    fi
 fi
 
-# 7) Ensure the remote “Documents” directory exists on Proton Drive
-if ! /run/current-system/sw/bin/rclone lsd "${REMOTE_PATH}" >/dev/null 2>&1; then
-    /run/current-system/sw/bin/rclone mkdir "${REMOTE_PATH}"
-fi
-
-# 8) Determine if this is the first run and needs --resync
+# 5) Detect first-time --resync
 USE_RESYNC=""
-if [ ! -f "${PATH1_LIST}" ] || [ ! -f "${PATH2_LIST}" ]; then
+if [[ ! -f "$PATH1_LIST" || ! -f "$PATH2_LIST" ]]; then
     USE_RESYNC="--resync"
     echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] First run: initializing bisync state (using --resync)" >>"${LOGFILE}"
 fi
 
-# 9) Run rclone bisync
-/run/current-system/sw/bin/rclone bisync \
+# 6) Run bisync
+if ! rclone bisync \
     "${LOCAL_DIR}" \
     "${REMOTE_PATH}" \
     --delete-during \
     --verbose \
     --log-file="${LOGFILE}" \
-    ${USE_RESYNC:+$USE_RESYNC}
+    ${USE_RESYNC:+$USE_RESYNC}; then
 
-# 10) Record completion
-echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] Sync completed" >>"${LOGFILE}"
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ❌ rclone bisync failed — check log at ${LOGFILE}" >>"${LOGFILE}"
+    exit 1
+fi
+
+# 7) Success
+echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ✅ Sync completed successfully" >>"${LOGFILE}"
