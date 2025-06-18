@@ -274,6 +274,19 @@ in {
         ];
     };
 
+    systemd.tmpfiles.rules = [
+        "d /etc/wireplumber/bluetooth.lua.d 0755 root root -"
+        "f /etc/wireplumber/bluetooth.lua.d/50-bluez-config.lua 0644 root root - ${pkgs.writeText "bluetooth.lua" ''
+            bluez_monitor.properties = {
+              ["bluez5.enable-sbc-xq"] = true,
+              ["bluez5.enable-msbc"] = true,
+              ["bluez5.enable-hw-volume"] = true,
+              ["bluez5.enable-a2dp"] = true;
+              ["bluez5.enable-hfp"] = true;
+            }
+        ''}"
+    ];
+
     # Programs
     programs = {
         fish = {
