@@ -1,21 +1,20 @@
-#!/usr/bin/env bash
+#!/run/current-system/sw/bin/bash
 
 SECRETS_FILE="$HOME/.2fa_secrets"
 
 # Check for required input
 if [ -z "$1" ]; then
-  echo "Usage: 2fa <service>"
-  exit 1
+    echo "Usage: 2fa <service>"
+    exit 1
 fi
 
 SERVICE="$1"
 SECRET=$(grep "^$SERVICE=" "$SECRETS_FILE" | cut -d '=' -f 2)
 
 if [ -z "$SECRET" ]; then
-  echo "Service '$SERVICE' not found in $SECRETS_FILE"
-  exit 2
+    echo "Service '$SERVICE' not found in $SECRETS_FILE"
+    exit 2
 fi
 
 # Generate and output the TOTP code
 oathtool --totp -b "$SECRET"
-

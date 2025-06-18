@@ -7,14 +7,25 @@ if grep -q "Discharging" /sys/class/power_supply/BAT*/status 2>/dev/null; then
     exit 0
 fi
 
-# --- Check if idle (600000 ms = 10 minutes) ---
-IDLE_MS=$(xprintidle)
-if [[ "$IDLE_MS" -lt 600000 ]]; then
-    echo "User is active, skipping update."
-    exit 0
+# --- Check if idle (Wayland + X11 compatible) ---
+if command -v xprintidle >/dev/null 2>&1; then
+    IDLE_MS=$(xprintidle 2>/dev/null || echo 0)
+    if [[ "$IDLE_MS" -eq 0 ]]; then
+        echo "xprintidle failed (Wayland?), falling back to loginctl..."
+    elif [[ "$IDLE_MS" -lt 600000 ]]; then
+        echo "User is active (X11 idle time: ${IDLE_MS}ms), skipping update."
+        exit 0
+    fi
+else
+    SESSION_ID=$(loginctl | awk -v user="$USER" '$3 == user && $4 ~ /^seat/ && $6 == "user" { print $1; exit }')
+    IDLE_STATE=$(loginctl show-session "$SESSION_ID" -p IdleHint | cut -d= -f2)
+    if [[ "$IDLE_STATE" != "yes" ]]; then
+        echo "User is active (IdleHint=no), skipping update."
+        exit 0
+    fi
 fi
 
-# --- Optional: check system load ---
+# --- Check system load ---
 LOAD=$(cut -d. -f1 /proc/loadavg)
 if [[ "$LOAD" -gt 2 ]]; then
     echo "System under load, skipping update."
@@ -24,3 +35,5 @@ fi
 # --- Run your update logic ---
 echo "Running NixOS update at $(date)"
 yes N | head -n 3 | /home/nate/.local/bin/update
+
+notify-send "Auto Update" "NixOS update completed successfully"
