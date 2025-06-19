@@ -1,0 +1,320 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, lib, ... }: let
+    unstableTarball = fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+    };
+
+    # mysqlInitScript = pkgs.writeTextFile {
+    #    name = "mariadb-init";
+    #    text = lib.concatStringsSep "\n" [
+    #        "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+    #        "FLUSH PRIVILEGES;"
+    #    ];
+    # };
+
+    # flatpakApps = [
+    #     "io.github.voxelcubes.hand-tex"
+    #     "io.github.dman95.SASM"
+    #     "io.gitlab.persiangolf.voicegen"
+    # ];
+    # flatpakAppList = lib.concatStringsSep " " flatpakApps;
+in {
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
+
+  # Bootloader
+  boot.loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+  };
+
+  networking.hostName = "nixos";
+
+  # Networking
+  networking = {
+      networkmanager.enable = true;
+      firewall = {
+          enable = true;
+          allowedTCPPorts = [];
+          allowedUDPPorts = [];
+      };
+  };
+
+  # Time
+  time.timeZone = "America/New_York";
+  #time.timeZone = "America/Denver";
+
+  # Internationalisation
+  i18n = {
+      defaultLocale = "en_US.UTF-8";
+      extraLocaleSettings = {
+          LC_ADDRESS = "en_US.UTF-8";
+          LC_IDENTIFICATION = "en_US.UTF-8";
+          LC_MEASUREMENT = "en_US.UTF-8";
+          LC_MONETARY = "en_US.UTF-8";
+          LC_NAME = "en_US.UTF-8";
+          LC_NUMERIC = "en_US.UTF-8";
+          LC_PAPER = "en_US.UTF-8";
+          LC_TELEPHONE = "en_US.UTF-8";
+          LC_TIME = "en_US.UTF-8";
+      };
+  };
+
+  # Security
+  security.rtkit.enable = true;
+
+  # Services
+  services = {
+    xserver = {
+          enable = true;
+          xkb = {
+             layout = "us";
+             variant = "";
+          };
+    };
+    displayManager = {
+        sddm = {
+            enable = true;
+            wayland.enable = true;
+        };
+        defaultSession = "plasma";
+    };
+    desktopManager.plasma6.enable = true;
+    pulseaudio.enable = false;
+    pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+    };
+    printing.enable = true;
+    # systembus-notify.enable = true;
+    # locate.enable = true;
+    # fwupd.enable = true;
+    # openssh.enable = true;
+    mtr-exporter.enable = true;
+    # mysql = {
+    #    enable = true;
+    #    package = pkgs.mariadb;
+    #    initialScript = toString mysqlInitScript;
+    # };
+    # libinput.enable = true;
+  };
+
+  # Hardware
+  hardware = {
+      bluetooth = {
+          enable = true;
+          powerOnBoot = true;
+      };
+      graphics = {
+          enable = true;
+          enable32Bit = true;
+      };
+  };
+
+  # Users
+  ## Don't forget to set a password with ‘passwd’
+  users = {
+      users = {
+          nate = {
+              isNormalUser = true;
+              description = "Nate Stott";
+              extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
+              shell = pkgs.fish;
+          };
+      };
+      extraGroups = {
+         vboxusers = {
+             members = ["nate"];
+         };
+      };
+  };
+
+  # Nixpkgs
+  nixpkgs.config = {
+      permittedInsecurePackages = [];
+      allowUnfree = true;
+      packageOverrides = pkgs: {
+          unstable = import unstableTarball {
+              config = config.nixpkgs.config;
+          };
+      };
+  };
+
+  xdg.portal = {
+        enable = true;
+        extraPortals = [
+            pkgs.xdg-desktop-portal
+            pkgs.xdg-desktop-portal-gtk
+            pkgs.xdg-desktop-portal-hyprland
+        ];
+    };
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    git
+    vscodium
+    firefox
+  ];
+
+  # Programs
+  programs = {
+      fish = {
+          enable = true;
+      };
+      mtr.enable = true;
+      neovim = {
+          enable = true;
+          viAlias = true;
+          vimAlias = true;
+      };
+      gnupg = {
+          agent = {
+              enable = true;
+              enableSSHSupport = true;
+          };
+      };
+      nix-ld = {
+          enable = true;
+          libraries = with pkgs; [
+              # Add any missing dynamic libraries for unpackaged programs here,
+              # NOT in environment.systemPackages
+          ];
+      };
+    #   hyprland = {
+    #      enable = true;
+    #      xwayland = {
+    #          enable = true;
+    #      };
+    #   };
+  };
+
+  # Virtualization
+#   virtualisation = {
+#     virtualbox = {
+#        host = {
+#            enable = true;
+#            enableExtensionPack = true;
+#            addNetworkInterface = false;
+#            enableKvm = true;
+#        };
+#        guest = {
+#            enable = true;
+#            dragAndDrop = true;
+#            clipboard = true;
+#        };
+#     };
+#     docker = {
+#        enable = true;
+#     };
+#     multipass = {
+#        enable = true;
+#     };
+#   };
+
+  # Fonts
+  fonts = {
+      enableDefaultPackages = true;
+      packages = with pkgs; [
+          nerd-fonts.fira-code
+          nerd-fonts.droid-sans-mono
+          nerd-fonts.jetbrains-mono
+      ];
+      fontconfig = {
+          useEmbeddedBitmaps = true;
+      };
+  };
+
+    # Systemd
+    # systemd = {
+    #     services = {
+    #         install-flatpaks = {
+    #            description = "Install Flatpak apps from Flathub";
+    #            wantedBy = ["multi-user.target"];
+    #            after = ["flatpak-system-helper.service"];
+    #            serviceConfig = {
+    #                Type = "oneshot";
+    #                Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+    #                ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+    #                    set -e
+        
+    #                    # Ensure flatpak is installed
+    #                    if ! command -v flatpak >/dev/null; then
+    #                      echo "Flatpak command not found! Skipping Flatpak app installation."
+    #                      exit 0
+    #                    fi
+        
+    #                    # Make sure flathub is added
+    #                    if ! flatpak remote-list | grep -q flathub; then
+    #                      echo "Adding Flathub remote..."
+    #                      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    #                    fi
+        
+    #                    # Install apps
+    #                    for app in ${flatpakAppList}; do
+    #                      echo "Installing $app..."
+    #                      if ! flatpak info "$app" >/dev/null 2>&1; then
+    #                        flatpak install -y --noninteractive flathub "$app"
+    #                      else
+    #                        echo "$app already installed."
+    #                      fi
+    #                    done
+        
+    #                    # Cleanup apps not in list
+    #                    echo "Checking for orphaned Flatpak apps..."
+    #                    for installed in $(flatpak list --app --columns=application); do
+    #                      if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+    #                        echo "Removing orphaned app: $installed"
+    #                        flatpak uninstall -y "$installed"
+    #                      fi
+    #                    done
+    #                '';
+    #                StandardOutput = "append:/var/log/install-flatpaks.log";
+    #                StandardError = "append:/var/log/install-flatpaks.log";
+    #            };
+    #         };
+    #         syncDocuments = {
+    #            description = "Hourly sync of ~/Documents with Proton Drive";
+    #            wants = ["network-online.target"];
+    #            after = ["network-online.target"];
+    #            serviceConfig = {
+    #                Type = "simple";
+    #                Restart = "always";
+    #                RestartSec = "3600s";
+    #                User = "nate";
+    #                ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
+    #                StandardOutput = "append:/var/log/syncDocuments.log";
+    #                StandardError = "append:/var/log/syncDocuments.log";
+    #            };
+    #         };
+    #         auto-update = {
+    #            description = "Run NixOS update when idle and on AC power";
+    #            wants = ["network-online.target"];
+    #            after = ["network-online.target"];
+    #            serviceConfig = {
+    #                Type = "simple";
+    #                Restart = "always";
+    #                RestartSec = "3600s";
+    #                User = "nate";
+    #                ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
+    #                Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/nate/bin:/home/nate/.local/bin";
+    #                StandardOutput = "append:/var/log/auto-update.log";
+    #                StandardError = "append:/var/log/auto-update.log";
+    #            };
+    #         };
+    #     };
+    # };
+
+  # System
+  system = {
+      stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
+  };
+}
