@@ -101,4 +101,8 @@ dest="$HOME/Pictures/wallpapers"
 check_conflict "$dest"
 run_cmd ln -s "$PWD/Pictures/wallpapers" "$dest"
 
-echo ">>> Done${DRY_RUN:+ (dry-run)}."
+suffix=""
+if [[ $DRY_RUN -eq 1 ]]; then
+  suffix=" (dry-run)"
+fi
+echo ">>> Done${suffix}."
