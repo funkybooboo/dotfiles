@@ -1,26 +1,353 @@
 building Nix...
 building the system configuration...
-these 8 derivations will be built:
-  /nix/store/ly1wkpqj4izc58d21wj7i1cyc6vb4xpp-bluetooth.lua.drv
-  /nix/store/6wsvikpz0fnrlg45ajsif160axslzkx1-nixos-tmpfiles.d.drv
-  /nix/store/4a6z0hdx9slz12ps8cf11x5hlrdn994l-tmpfiles.d.drv
-  /nix/store/wz9x0cdxbkp7zx02apzzn1bqbphwrgqy-X-Restart-Triggers-systemd-tmpfiles-resetup.drv
-  /nix/store/7mzcmgrphmp49fh9cdybsdci3wmrfgcx-unit-systemd-tmpfiles-resetup.service.drv
-  /nix/store/f67509fy5fniwcr4hd10nxikcspgixb3-system-units.drv
-  /nix/store/sd9pabk5slvavfjmg0w2q0zx2sv1b0wc-etc.drv
-  /nix/store/7zf5hdkfpljmys0rfsqqq63wqhi5hs92-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv
-building '/nix/store/ly1wkpqj4izc58d21wj7i1cyc6vb4xpp-bluetooth.lua.drv'...
-building '/nix/store/6wsvikpz0fnrlg45ajsif160axslzkx1-nixos-tmpfiles.d.drv'...
-building '/nix/store/4a6z0hdx9slz12ps8cf11x5hlrdn994l-tmpfiles.d.drv'...
-building '/nix/store/wz9x0cdxbkp7zx02apzzn1bqbphwrgqy-X-Restart-Triggers-systemd-tmpfiles-resetup.drv'...
-building '/nix/store/7mzcmgrphmp49fh9cdybsdci3wmrfgcx-unit-systemd-tmpfiles-resetup.service.drv'...
-building '/nix/store/f67509fy5fniwcr4hd10nxikcspgixb3-system-units.drv'...
-building '/nix/store/sd9pabk5slvavfjmg0w2q0zx2sv1b0wc-etc.drv'...
-building '/nix/store/7zf5hdkfpljmys0rfsqqq63wqhi5hs92-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv'...
-stopping the following units: systemd-tmpfiles-resetup.service
+these 62 derivations will be built:
+  /nix/store/05z0pp2fi5piyay2j0lcrvi45f39b0x7-login.pam.drv
+  /nix/store/13jkn99mzh7w54a8hp887j4vqkg2bv5g-default.pa.drv
+  /nix/store/1dc7zxia0n5c22kf6izq6wczwspm1d1g-set-environment.drv
+  /nix/store/5fhjkz5l598lv2bmgjhshwzwqqlmq2zv-system-path.drv
+  /nix/store/1fasancy13jv3s85014pvqah2139x8yw-unit-accounts-daemon.service.drv
+  /nix/store/1nxb9lf5c7v9p0q9p5kvi8rda3y17phq-chfn.pam.drv
+  /nix/store/1xy2242fav4sf0s4l8qcdv1226z5aglh-chpasswd.pam.drv
+  /nix/store/21gf4mmy7ad483pszkpfxmwy8866nl4c-system-shutdown.drv
+  /nix/store/2q79s3gr2hv7gy91m432lq6z4hpfbz0g-users-groups.json.drv
+  /nix/store/2q7y151n6fs3n1kx52frrkzgcrw340hy-polkit-1.pam.drv
+  /nix/store/2x5y6xf91w1l7nx8a349as8gw4fgw054-cups.pam.drv
+  /nix/store/3x25ga4w13pca6mqf4jkaf8hwp9mag5d-vlock.pam.drv
+  /nix/store/40snlsb3sd564wjib9xdffzyg5lqqxmz-passwd.pam.drv
+  /nix/store/4b4q6bswl6vr7w10rby9qw3d3xgmm0bn-groupdel.pam.drv
+  /nix/store/59qy26cwmaj153pijcnk688m7pa8njmq-useradd.pam.drv
+  /nix/store/5kxc7hwgwi0ddabw0kny782mfcisjr9y-etc-profile.drv
+  /nix/store/6kf9vd2k3rgln91pfals83k9z223wg88-X-Restart-Triggers-polkit.drv
+  /nix/store/8mad31i4bl72hwiicgzbwjyhhwhx8yiv-unit-polkit.service.drv
+  /nix/store/v90skb9mi1hfalaaxrcl6vwrda9fjx1w-udev-rules.drv
+  /nix/store/z45yqgybsl3w4sci75sf9m57y51r6jx5-X-Restart-Triggers-systemd-udevd.drv
+  /nix/store/jk6njdgwy4fzbc67i9nja54hw70hq7x3-unit-systemd-udevd.service.drv
+  /nix/store/yhmjzchjicjdssvjnk2yf1blfmarzlz3-dbus-1.drv
+  /nix/store/dnwflpfdgl30qp1hvvpl3z7jpv2kknm2-X-Restart-Triggers-dbus.drv
+  /nix/store/pdj10r7q6ahl1pv47349i5r26dl0sy2i-unit-dbus.service.drv
+  /nix/store/76qqy9p3xxpkj9la4jdqzf5sf7wrylg3-system-units.drv
+  /nix/store/78hxdlmv7lf86y3bjkbclpck6kn8s1zz-groupmems.pam.drv
+  /nix/store/86wb9bidmj31yawji2zv61m3lz451gxc-usermod.pam.drv
+  /nix/store/932fpkpr79gxl59b7ski2bb6x8s7nrm0-main.conf.drv
+  /nix/store/9bpq68rfgws35a1ghbamq31mhz11m0c1-unit-pulseaudio.socket.drv
+  /nix/store/ambqwmfjwmd0z57imrm3j117klqsb5my-unit-pulseaudio.service.drv
+  /nix/store/f2jmc4x19bg16s5absjm4yqddc6rcr9s-pulseaudio-17.0_fish-completions.drv
+  /nix/store/avsg4qi6wq0a70y1ck0768s0mfdz5lma-system_fish-completions.drv
+  /nix/store/azshhscrzsnzlqv7nd578x23mc4jp9ln-runuser.pam.drv
+  /nix/store/b2yl3hvmryd9sajl9ycgm5lh12m8zmld-groupadd.pam.drv
+  /nix/store/f6q2qq49lrd5azsclpy670zxi41ld8x4-swaylock.pam.drv
+  /nix/store/gkk0b9yda64l5zvqgfzjs83qls06z9ms-daemon.conf.drv
+  /nix/store/i9didh6634zk9r16jvi8zxhylgypb10d-xlock.pam.drv
+  /nix/store/i9n2fl9jscdnqvkvkdwmsfp2921s2bcd-alsoft.conf.drv
+  /nix/store/jc9gkgs7q3nwrvvqkqlk19apply11mkw-groupmod.pam.drv
+  /nix/store/ksk3kbzjx5ka6ck0yz4k4vb9725zrfmn-user-generators.drv
+  /nix/store/kwr6a31y8gppshhim7j5gszys08gm373-kde.pam.drv
+  /nix/store/m7v9w8zskmhcn3wx6j6ws5ncpgv5nilp-etc-fish-nixos-env-preinit.fish.drv
+  /nix/store/sfwljpwkn3dqgx5ayzh3c4pz02k8hmc3-man-paths.drv
+  /nix/store/kx6z40bwzz1azxjwsfc3r9m7zhzz6yng-man-cache.drv
+  /nix/store/nmfmd8lzjr8y7lfxqgi145ggyk0i4hma-etc-man_db.conf.drv
+  /nix/store/p2lxa2gh8802qwvmi0rc7pipdmkzp3x1-system-generators.drv
+  /nix/store/pwslpl3yi29k9x7ypmiw51rg8aikp08v-su.pam.drv
+  /nix/store/q3gkh0i98syfhpl7mpcdckp8nk369l0f-systemd-user.pam.drv
+  /nix/store/q6vsrfpmic307jq7hsn723z4pr669j5i-client.conf.drv
+  /nix/store/rpyifnidz5yjgp15xzw2dmb4j18ry62q-libao.conf.drv
+  /nix/store/s0n7jdzq03wfkn76d27ypq6zx4v2cbw1-hwdb.bin.drv
+  /nix/store/si735xj2s3dfgqy5jppfp4zjz2cgqyb0-sshd.pam.drv
+  /nix/store/vq66iwxjvyrc71pskvpr20zhrydbmlsx-sudo.pam.drv
+  /nix/store/xinvyr4l8jxyb656105al2gzn2m050sj-runuser-l.pam.drv
+  /nix/store/xqvnlwf6smskfjmq74lvkk2lsgch6qfl-etc-pam-environment.drv
+  /nix/store/nx3cpf8siamiflss6byivdvh5i30cwq0-unit-dbus.service.drv
+  /nix/store/xry9rmxyjk7njsfh2k0lzd5g5a3gfbh8-user-units.drv
+  /nix/store/yagxkmpw100873d5jblr31ndffdwpc63-etc-alsa-conf.d-99-pulseaudio.conf.drv
+  /nix/store/yi45wd7l0wphwiiad707c5xdg9456ic9-userdel.pam.drv
+  /nix/store/zxd93gvzmwc7p0fikvpwzwi5i6hys12f-chsh.pam.drv
+  /nix/store/rbpr1h50pbyckbd5831sryqqvbkag05d-etc.drv
+  /nix/store/kn6d3pgl58r6fs2bbyabfmvig4dh76q1-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv
+these 6 paths will be fetched (3.22 MiB download, 18.10 MiB unpacked):
+  /nix/store/gbxlh82crkbicfciz0ksaaak0qx7xzyq-libconfuse-3.3
+  /nix/store/gv5np1jkspljp0s050rff53gvhj6f464-libftdi-1.5-unstable-2023-12-21
+  /nix/store/vzd83gmzzmy19vqarxr0lys91lnybd7g-libusb-1.0.28-dev
+  /nix/store/9y1dpcid9qzz4ym7fxr4jgmjrysm5qsq-lirc-0.10.2
+  /nix/store/sds1rqwc9mjf7acpbn0ill6srpxilrqx-pulseaudio-17.0
+  /nix/store/7n7mr4cxl8mqb0ygqxw2yqibbn2mr2sj-python3-3.12.10-env
+building '/nix/store/i9n2fl9jscdnqvkvkdwmsfp2921s2bcd-alsoft.conf.drv'...
+building '/nix/store/2q79s3gr2hv7gy91m432lq6z4hpfbz0g-users-groups.json.drv'...
+building '/nix/store/1nxb9lf5c7v9p0q9p5kvi8rda3y17phq-chfn.pam.drv'...
+building '/nix/store/1xy2242fav4sf0s4l8qcdv1226z5aglh-chpasswd.pam.drv'...
+building '/nix/store/zxd93gvzmwc7p0fikvpwzwi5i6hys12f-chsh.pam.drv'...
+building '/nix/store/q6vsrfpmic307jq7hsn723z4pr669j5i-client.conf.drv'...
+building '/nix/store/2x5y6xf91w1l7nx8a349as8gw4fgw054-cups.pam.drv'...
+building '/nix/store/gkk0b9yda64l5zvqgfzjs83qls06z9ms-daemon.conf.drv'...
+copying path '/nix/store/7n7mr4cxl8mqb0ygqxw2yqibbn2mr2sj-python3-3.12.10-env' from 'https://cache.nixos.org'...
+copying path '/nix/store/gbxlh82crkbicfciz0ksaaak0qx7xzyq-libconfuse-3.3' from 'https://cache.nixos.org'...
+copying path '/nix/store/vzd83gmzzmy19vqarxr0lys91lnybd7g-libusb-1.0.28-dev' from 'https://cache.nixos.org'...
+building '/nix/store/yagxkmpw100873d5jblr31ndffdwpc63-etc-alsa-conf.d-99-pulseaudio.conf.drv'...
+building '/nix/store/xqvnlwf6smskfjmq74lvkk2lsgch6qfl-etc-pam-environment.drv'...
+building '/nix/store/b2yl3hvmryd9sajl9ycgm5lh12m8zmld-groupadd.pam.drv'...
+building '/nix/store/4b4q6bswl6vr7w10rby9qw3d3xgmm0bn-groupdel.pam.drv'...
+building '/nix/store/78hxdlmv7lf86y3bjkbclpck6kn8s1zz-groupmems.pam.drv'...
+building '/nix/store/jc9gkgs7q3nwrvvqkqlk19apply11mkw-groupmod.pam.drv'...
+building '/nix/store/kwr6a31y8gppshhim7j5gszys08gm373-kde.pam.drv'...
+building '/nix/store/rpyifnidz5yjgp15xzw2dmb4j18ry62q-libao.conf.drv'...
+copying path '/nix/store/gv5np1jkspljp0s050rff53gvhj6f464-libftdi-1.5-unstable-2023-12-21' from 'https://cache.nixos.org'...
+building '/nix/store/05z0pp2fi5piyay2j0lcrvi45f39b0x7-login.pam.drv'...
+building '/nix/store/932fpkpr79gxl59b7ski2bb6x8s7nrm0-main.conf.drv'...
+building '/nix/store/40snlsb3sd564wjib9xdffzyg5lqqxmz-passwd.pam.drv'...
+building '/nix/store/2q7y151n6fs3n1kx52frrkzgcrw340hy-polkit-1.pam.drv'...
+building '/nix/store/xinvyr4l8jxyb656105al2gzn2m050sj-runuser-l.pam.drv'...
+building '/nix/store/azshhscrzsnzlqv7nd578x23mc4jp9ln-runuser.pam.drv'...
+building '/nix/store/1dc7zxia0n5c22kf6izq6wczwspm1d1g-set-environment.drv'...
+building '/nix/store/si735xj2s3dfgqy5jppfp4zjz2cgqyb0-sshd.pam.drv'...
+building '/nix/store/pwslpl3yi29k9x7ypmiw51rg8aikp08v-su.pam.drv'...
+building '/nix/store/vq66iwxjvyrc71pskvpr20zhrydbmlsx-sudo.pam.drv'...
+building '/nix/store/f6q2qq49lrd5azsclpy670zxi41ld8x4-swaylock.pam.drv'...
+building '/nix/store/q3gkh0i98syfhpl7mpcdckp8nk369l0f-systemd-user.pam.drv'...
+building '/nix/store/ambqwmfjwmd0z57imrm3j117klqsb5my-unit-pulseaudio.service.drv'...
+building '/nix/store/9bpq68rfgws35a1ghbamq31mhz11m0c1-unit-pulseaudio.socket.drv'...
+copying path '/nix/store/9y1dpcid9qzz4ym7fxr4jgmjrysm5qsq-lirc-0.10.2' from 'https://cache.nixos.org'...
+building '/nix/store/59qy26cwmaj153pijcnk688m7pa8njmq-useradd.pam.drv'...
+building '/nix/store/yi45wd7l0wphwiiad707c5xdg9456ic9-userdel.pam.drv'...
+building '/nix/store/86wb9bidmj31yawji2zv61m3lz451gxc-usermod.pam.drv'...
+building '/nix/store/3x25ga4w13pca6mqf4jkaf8hwp9mag5d-vlock.pam.drv'...
+building '/nix/store/i9didh6634zk9r16jvi8zxhylgypb10d-xlock.pam.drv'...
+building '/nix/store/m7v9w8zskmhcn3wx6j6ws5ncpgv5nilp-etc-fish-nixos-env-preinit.fish.drv'...
+building '/nix/store/5kxc7hwgwi0ddabw0kny782mfcisjr9y-etc-profile.drv'...
+copying path '/nix/store/sds1rqwc9mjf7acpbn0ill6srpxilrqx-pulseaudio-17.0' from 'https://cache.nixos.org'...
+building '/nix/store/13jkn99mzh7w54a8hp887j4vqkg2bv5g-default.pa.drv'...
+building '/nix/store/s0n7jdzq03wfkn76d27ypq6zx4v2cbw1-hwdb.bin.drv'...
+building '/nix/store/sfwljpwkn3dqgx5ayzh3c4pz02k8hmc3-man-paths.drv'...
+building '/nix/store/f2jmc4x19bg16s5absjm4yqddc6rcr9s-pulseaudio-17.0_fish-completions.drv'...
+building '/nix/store/p2lxa2gh8802qwvmi0rc7pipdmkzp3x1-system-generators.drv'...
+building '/nix/store/5fhjkz5l598lv2bmgjhshwzwqqlmq2zv-system-path.drv'...
+building '/nix/store/21gf4mmy7ad483pszkpfxmwy8866nl4c-system-shutdown.drv'...
+building '/nix/store/v90skb9mi1hfalaaxrcl6vwrda9fjx1w-udev-rules.drv'...
+Adding hwdb files for package /nix/store/if9z6wmzmb07j63c02mvfkhn1mw1w5p4-systemd-257.5
+Adding hwdb files for package /nix/store/p7ard82jl759znmlf1za3va3hcggs706-libmtp-1.1.22
+Adding hwdb files for package /nix/store/brsd805yvll7ivy9h249ixyqxwnsl0bl-media-player-info-26
+Adding hwdb files for package /nix/store/pw1mhi8mlrlp6xbcq4hrznq22mhr8ira-ipv6-privacy-extensions.rules
+Adding hwdb files for package /nix/store/vipbn69wqsdsiddzk7wjfr4r5m94f854-ipv6-privacy-extensions.rules
+Adding hwdb files for package /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31
+Adding hwdb files for package /nix/store/77z9fh96318kyjmmidi558hyyssv00s8-bcache-tools-1.0.8
+Adding hwdb files for package /nix/store/4jwa8pq2vi8cbng30rvcjj4ry6xvpghn-networkmanager-1.52.0
+Adding hwdb files for package /nix/store/78j5vcq32ky2xvsa9rmshamx7gwy4fqc-NetworkManager-fortisslvpn-gnome-1.4.0
+Adding hwdb files for package /nix/store/5gbqv7jvqrjlmlk446na561crj6s7c1j-NetworkManager-iodine-gnome-1.2.0-unstable-2024-11-02
+Adding hwdb files for package /nix/store/12hzbg2n7hlabcgangmxq6zndhaxh2g6-NetworkManager-l2tp-gnome-1.20.20
+Adding hwdb files for package /nix/store/8ymikjs028a0ppg0cm84mz10gcp4qzn5-NetworkManager-openconnect-1.2.10
+Adding hwdb files for package /nix/store/npkhyy3kfqpwkw8yna1m97zhrpavzg7q-NetworkManager-openvpn-1.12.0
+Adding hwdb files for package /nix/store/kj9py6jvwzxqqr6d8ab8zfld3wifxwkh-NetworkManager-vpnc-1.4.0
+Adding hwdb files for package /nix/store/sbx537dj5hhr4n4kxzq885bizb041nfa-NetworkManager-sstp-gnome-1.3.2
+Adding hwdb files for package /nix/store/cr7x031nkwa044ypd5wilz424iq3j22m-wpa_supplicant-2.11
+Adding hwdb files for package /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0
+Adding hwdb files for package /nix/store/dm4c25prscvlg1vgsldjjp8jnm5l57pz-upower-1.90.6
+Adding hwdb files for package /nix/store/8yrv3bmfqcfwj34vgwziawngpk5qm40q-udisks-2.10.1
+Adding hwdb files for package /nix/store/s8ibzlpd5bywd0nviappjyb7xxblhakn-extra-udev-rules
+Adding hwdb files for package /nix/store/vg08c6y162mrg3z15d741f197vm38yz2-extra-hwdb-file
+Adding hwdb files for package /nix/store/y9ai5c54ggiknk151khzffwic8lpvcl0-power-profiles-daemon-0.30
+Adding hwdb files for package /nix/store/g7g52y9qg6s1rasrc4z7nlid9ish8za3-libinput-1.27.1
+Adding hwdb files for package /nix/store/k9cfwgw4jl3qzdx9n0a78wrskgapp9gd-fwupd-2.0.9
+Adding hwdb files for package /nix/store/0yrsbfdkv9an3qqy6z6904s9a1b368rv-bluez-5.80
+Adding hwdb files for package /nix/store/9xz8pahr7s8z9mfh2cg9p6ks996bji9h-system-config-printer-1.5.18
+Adding hwdb files for package /nix/store/sds1rqwc9mjf7acpbn0ill6srpxilrqx-pulseaudio-17.0
+Generating hwdb database...
+
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+created 13085 symlinks in user environment
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/g++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/g++'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/c++' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/c++'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/gcc' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/gcc'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/cpp' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/cpp'
+warning: collision between `/nix/store/99rl9s051s0shajahcb2kny8vckw9vir-gnat-wrapper-14.2.1.20250322/bin/cc' and `/nix/store/d14kdvpdb3jzjgx9ih4lcniqy813fnr2-gfortran-wrapper-14.2.1.20250322/bin/cc'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gfdl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/gpl.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man7/fsf-funding.7.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/g++.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/lto-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcc.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-tool.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/cpp.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov-dump.1.gz'
+warning: collision between `/nix/store/2fms2asgms1cj7b5g4ml5fzrs871iwxj-gnat-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz' and `/nix/store/qb3scl9czyq0pchvpqlqch5iz9b70v9x-gfortran-wrapper-14.2.1.20250322-man/share/man/man1/gcov.1.gz'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gcc.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gcc.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gccint.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gccint.info'
+building '/nix/store/ksk3kbzjx5ka6ck0yz4k4vb9725zrfmn-user-generators.drv'...
+building '/nix/store/avsg4qi6wq0a70y1ck0768s0mfdz5lma-system_fish-completions.drv'...
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libgomp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libgomp.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libitm.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libitm.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/gccinstall.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/gccinstall.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cppinternals.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cppinternals.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/libquadmath.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/libquadmath.info'
+warning: collision between `/nix/store/vmz5gfmw80s9dv74yh5c7cm8bri7i4cg-gnat-wrapper-14.2.1.20250322-info/share/info/cpp.info' and `/nix/store/j8qzz2a7cpgzpcr7hzmb68v3lzlhafgs-gfortran-wrapper-14.2.1.20250322-info/share/info/cpp.info'
+warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/rustfmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/rustfmt'
+warning: collision between `/nix/store/xrmj38rzl081wqsp9y2bl2mkl2q2jxd5-rustfmt-1.86.0/bin/cargo-fmt' and `/nix/store/vg6d0qm7mpmsmm03h8fm68cffxjkqrvr-rustup-1.27.1/bin/cargo-fmt'
+Adding rules for package /nix/store/p7ard82jl759znmlf1za3va3hcggs706-libmtp-1.1.22
+Copying /nix/store/p7ard82jl759znmlf1za3va3hcggs706-libmtp-1.1.22/lib/udev/rules.d/69-libmtp.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/69-libmtp.rules
+Adding rules for package /nix/store/brsd805yvll7ivy9h249ixyqxwnsl0bl-media-player-info-26
+Copying /nix/store/brsd805yvll7ivy9h249ixyqxwnsl0bl-media-player-info-26/lib/udev/rules.d/40-usb-media-players.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/40-usb-media-players.rules
+Adding rules for package /nix/store/pw1mhi8mlrlp6xbcq4hrznq22mhr8ira-ipv6-privacy-extensions.rules
+Copying /nix/store/pw1mhi8mlrlp6xbcq4hrznq22mhr8ira-ipv6-privacy-extensions.rules/etc/udev/rules.d/98-ipv6-privacy-extensions.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/98-ipv6-privacy-extensions.rules
+Adding rules for package /nix/store/vipbn69wqsdsiddzk7wjfr4r5m94f854-ipv6-privacy-extensions.rules
+Copying /nix/store/vipbn69wqsdsiddzk7wjfr4r5m94f854-ipv6-privacy-extensions.rules/etc/udev/rules.d/99-ipv6-privacy-extensions.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/99-ipv6-privacy-extensions.rules
+Adding rules for package /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31
+Copying /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31/lib/udev/rules.d/10-dm.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/10-dm.rules
+Copying /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31/lib/udev/rules.d/11-dm-lvm.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/11-dm-lvm.rules
+Copying /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31/lib/udev/rules.d/13-dm-disk.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/13-dm-disk.rules
+Copying /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31/lib/udev/rules.d/69-dm-lvm.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/69-dm-lvm.rules
+Copying /nix/store/sm4b1vl7578rl2yiss62acs7ls7qinad-lvm2-2.03.31/lib/udev/rules.d/95-dm-notify.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/95-dm-notify.rules
+Adding rules for package /nix/store/77z9fh96318kyjmmidi558hyyssv00s8-bcache-tools-1.0.8
+Copying /nix/store/77z9fh96318kyjmmidi558hyyssv00s8-bcache-tools-1.0.8/lib/udev/rules.d/69-bcache.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/69-bcache.rules
+Adding rules for package /nix/store/4jwa8pq2vi8cbng30rvcjj4ry6xvpghn-networkmanager-1.52.0
+Copying /nix/store/4jwa8pq2vi8cbng30rvcjj4ry6xvpghn-networkmanager-1.52.0/lib/udev/rules.d/84-nm-drivers.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/84-nm-drivers.rules
+Copying /nix/store/4jwa8pq2vi8cbng30rvcjj4ry6xvpghn-networkmanager-1.52.0/lib/udev/rules.d/85-nm-unmanaged.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/85-nm-unmanaged.rules
+Copying /nix/store/4jwa8pq2vi8cbng30rvcjj4ry6xvpghn-networkmanager-1.52.0/lib/udev/rules.d/90-nm-thunderbolt.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/90-nm-thunderbolt.rules
+Adding rules for package /nix/store/78j5vcq32ky2xvsa9rmshamx7gwy4fqc-NetworkManager-fortisslvpn-gnome-1.4.0
+Adding rules for package /nix/store/5gbqv7jvqrjlmlk446na561crj6s7c1j-NetworkManager-iodine-gnome-1.2.0-unstable-2024-11-02
+Adding rules for package /nix/store/12hzbg2n7hlabcgangmxq6zndhaxh2g6-NetworkManager-l2tp-gnome-1.20.20
+Adding rules for package /nix/store/8ymikjs028a0ppg0cm84mz10gcp4qzn5-NetworkManager-openconnect-1.2.10
+Adding rules for package /nix/store/npkhyy3kfqpwkw8yna1m97zhrpavzg7q-NetworkManager-openvpn-1.12.0
+Adding rules for package /nix/store/kj9py6jvwzxqqr6d8ab8zfld3wifxwkh-NetworkManager-vpnc-1.4.0
+Adding rules for package /nix/store/sbx537dj5hhr4n4kxzq885bizb041nfa-NetworkManager-sstp-gnome-1.3.2
+Adding rules for package /nix/store/cr7x031nkwa044ypd5wilz424iq3j22m-wpa_supplicant-2.11
+Adding rules for package /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0
+building '/nix/store/kx6z40bwzz1azxjwsfc3r9m7zhzz6yng-man-cache.drv'...
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/etc/xdg/autostart/org.kde.xwaylandvideobridge.desktop'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/icons/hicolor/scalable/apps/xwaylandvideobridge.svg' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/icons/hicolor/scalable/apps/xwaylandvideobridge.svg'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/appdata/org.kde.xwaylandvideobridge.appdata.xml' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/appdata/org.kde.xwaylandvideobridge.appdata.xml'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/applications/org.kde.xwaylandvideobridge.desktop'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/it/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/it/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ko/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ko/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/cs/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/cs/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/eo/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/eo/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/es/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/es/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/en_GB/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/en_GB/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pt_BR/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pt_BR/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/nl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/nl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/tr/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/tr/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/nn/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/nn/LC_MESSAGES/xwaylandvideobridge.mo'
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-broadmobi-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-broadmobi-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-cinterion-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-cinterion-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-dell-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-dell-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-dlink-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-dlink-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-ericsson-mbm.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-ericsson-mbm.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-fibocom-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-fibocom-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-foxconn-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-foxconn-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-gosuncn-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-gosuncn-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-haier-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-haier-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-huawei-net-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-huawei-net-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-linktop-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-linktop-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-longcheer-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-longcheer-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-mtk-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-mtk-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-nokia-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-nokia-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-qcom-soc.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-qcom-soc.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-quectel-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-quectel-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-sierra.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-sierra.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-simtech-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-simtech-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-telit-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-telit-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-tplink-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-tplink-port-types.rules
+warning: collision between `/nix/store/sd43rx86jf3lb72s8sjmkbs8gq3k27n8-xwayland-24.1.6_fish-completions/Xserver.fish' and `/nix/store/a6br5k7hw4lxr0n772dipyqzsmwjgy79-xorg-server-21.1.16_fish-completions/Xserver.fish'
+created 754 symlinks in user environment
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/fr/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/fr/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sv/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sv/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pt/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pt/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ca/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/uk/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/de/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/de/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/fi/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/fi/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/gl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/gl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/zh_CN/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/zh_CN/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ja/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ja/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ca@valencia/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ca@valencia/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/eu/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/eu/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sk/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sk/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/ka/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/ka/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/pl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/pl/LC_MESSAGES/xwaylandvideobridge.mo'
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-ublox-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-ublox-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-x22x-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-x22x-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/77-mm-zte-port-types.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-zte-port-types.rules
+Copying /nix/store/xjwrmbp86816kd2gck0z2nyar90y1v65-modemmanager-1.22.0/lib/udev/rules.d/80-mm-candidate.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/80-mm-candidate.rules
+Adding rules for package /nix/store/dm4c25prscvlg1vgsldjjp8jnm5l57pz-upower-1.90.6
+Copying /nix/store/dm4c25prscvlg1vgsldjjp8jnm5l57pz-upower-1.90.6/lib/udev/rules.d/60-upower-battery.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/60-upower-battery.rules
+Copying /nix/store/dm4c25prscvlg1vgsldjjp8jnm5l57pz-upower-1.90.6/lib/udev/rules.d/95-upower-hid.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/95-upower-hid.rules
+Copying /nix/store/dm4c25prscvlg1vgsldjjp8jnm5l57pz-upower-1.90.6/lib/udev/rules.d/95-upower-wup.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/95-upower-wup.rules
+Adding rules for package /nix/store/8yrv3bmfqcfwj34vgwziawngpk5qm40q-udisks-2.10.1
+Copying /nix/store/8yrv3bmfqcfwj34vgwziawngpk5qm40q-udisks-2.10.1/lib/udev/rules.d/80-udisks2.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/80-udisks2.rules
+Adding rules for package /nix/store/s8ibzlpd5bywd0nviappjyb7xxblhakn-extra-udev-rules
+Copying /nix/store/s8ibzlpd5bywd0nviappjyb7xxblhakn-extra-udev-rules/etc/udev/rules.d/99-local.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/99-local.rules
+Adding rules for package /nix/store/vg08c6y162mrg3z15d741f197vm38yz2-extra-hwdb-file
+Adding rules for package /nix/store/y9ai5c54ggiknk151khzffwic8lpvcl0-power-profiles-daemon-0.30
+Adding rules for package /nix/store/g7g52y9qg6s1rasrc4z7nlid9ish8za3-libinput-1.27.1
+Copying /nix/store/g7g52y9qg6s1rasrc4z7nlid9ish8za3-libinput-1.27.1/lib/udev/rules.d/80-libinput-device-groups.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/80-libinput-device-groups.rules
+Copying /nix/store/g7g52y9qg6s1rasrc4z7nlid9ish8za3-libinput-1.27.1/lib/udev/rules.d/90-libinput-fuzz-override.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/90-libinput-fuzz-override.rules
+Adding rules for package /nix/store/k9cfwgw4jl3qzdx9n0a78wrskgapp9gd-fwupd-2.0.9
+Adding rules for package /nix/store/0yrsbfdkv9an3qqy6z6904s9a1b368rv-bluez-5.80
+Copying /nix/store/0yrsbfdkv9an3qqy6z6904s9a1b368rv-bluez-5.80/lib/udev/rules.d/97-hid2hci.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/97-hid2hci.rules
+Adding rules for package /nix/store/9xz8pahr7s8z9mfh2cg9p6ks996bji9h-system-config-printer-1.5.18
+Copying /nix/store/9xz8pahr7s8z9mfh2cg9p6ks996bji9h-system-config-printer-1.5.18/etc/udev/rules.d/70-printers.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/70-printers.rules
+Adding rules for package /nix/store/sds1rqwc9mjf7acpbn0ill6srpxilrqx-pulseaudio-17.0
+Copying /nix/store/sds1rqwc9mjf7acpbn0ill6srpxilrqx-pulseaudio-17.0/lib/udev/rules.d/90-pulseaudio.rules to /nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/90-pulseaudio.rules
+Checking that all programs called by relative paths in udev rules exist in /nix/store/if9z6wmzmb07j63c02mvfkhn1mw1w5p4-systemd-257.5/lib/udev... OK
+Checking that all programs called by absolute paths in udev rules exist... OK
+Verifying udev rules using udevadm verify...
+/nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-huawei-net-port-types.rules:25 style: whitespace after comma is expected.
+/nix/store/5pf81nwizbir0h2ik2nsl9wfzigwh1cq-udev-rules/77-mm-huawei-net-port-types.rules:26 style: whitespace after comma is expected.
+
+48 udev rules files have been checked.
+  Success: 48
+  Fail:    0
+OK
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/share/locale/sl/LC_MESSAGES/xwaylandvideobridge.mo' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/share/locale/sl/LC_MESSAGES/xwaylandvideobridge.mo'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/.xwaylandvideobridge-wrapped'
+warning: collision between `/nix/store/ldadn2ksjwq1blz62dwlvbzj87yvrs17-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge' and `/nix/store/yvsxxd11kkhc7gmkg4fl7ann1fkw2sbb-xwaylandvideobridge-0.4.0/bin/xwaylandvideobridge'
+warning: collision between `/nix/store/k9kjzfwh10zs0jk7z3a3gy45369a99nd-VirtualBox-GuestAdditions-7.1.10-6.12.33/lib/modules' and `/nix/store/hd2p8n6lwsljz5yyhnff9dsg96nl65b5-zulu-ca-jdk-23.0.0/lib/modules'
+warning: collision between `/nix/store/d70zyyd8xpll92by66a4il2dn285ki3y-mount.vboxsf/bin/mount.vboxsf' and `/nix/store/k9kjzfwh10zs0jk7z3a3gy45369a99nd-VirtualBox-GuestAdditions-7.1.10-6.12.33/bin/mount.vboxsf'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/lib/xorg/protocol.txt' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/lib/xorg/protocol.txt'
+warning: collision between `/nix/store/pn06r98wmj73sqrfxbiv13mxcpf2aryh-xwayland-24.1.6/share/man/man1/Xserver.1.gz' and `/nix/store/pl2mapfil2bi7bdsypqyi6xa7b7asmjm-xorg-server-21.1.16/share/man/man1/Xserver.1.gz'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/share/applications/nvim.desktop' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/share/applications/nvim.desktop'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/bin/nvim' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/bin/nvim'
+warning: collision between `/nix/store/i2hlkf84qzr7mjzcrffjq31lpyzvgknc-neovim-0.11.2/bin/nvim-python3' and `/nix/store/icnvw9kj9pg0sqfpghdq55pr85ygg1yn-neovim-0.11.2/bin/nvim-python3'
+building '/nix/store/z45yqgybsl3w4sci75sf9m57y51r6jx5-X-Restart-Triggers-systemd-udevd.drv'...
+building '/nix/store/jk6njdgwy4fzbc67i9nja54hw70hq7x3-unit-systemd-udevd.service.drv'...
+created 55894 symlinks in user environment
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+gtk-update-icon-cache: Cache file created successfully.
+building '/nix/store/6kf9vd2k3rgln91pfals83k9z223wg88-X-Restart-Triggers-polkit.drv'...
+building '/nix/store/yhmjzchjicjdssvjnk2yf1blfmarzlz3-dbus-1.drv'...
+building '/nix/store/1fasancy13jv3s85014pvqah2139x8yw-unit-accounts-daemon.service.drv'...
+building '/nix/store/dnwflpfdgl30qp1hvvpl3z7jpv2kknm2-X-Restart-Triggers-dbus.drv'...
+building '/nix/store/8mad31i4bl72hwiicgzbwjyhhwhx8yiv-unit-polkit.service.drv'...
+building '/nix/store/nx3cpf8siamiflss6byivdvh5i30cwq0-unit-dbus.service.drv'...
+building '/nix/store/pdj10r7q6ahl1pv47349i5r26dl0sy2i-unit-dbus.service.drv'...
+building '/nix/store/xry9rmxyjk7njsfh2k0lzd5g5a3gfbh8-user-units.drv'...
+building '/nix/store/76qqy9p3xxpkj9la4jdqzf5sf7wrylg3-system-units.drv'...
+building '/nix/store/nmfmd8lzjr8y7lfxqgi145ggyk0i4hma-etc-man_db.conf.drv'...
+building '/nix/store/rbpr1h50pbyckbd5831sryqqvbkag05d-etc.drv'...
+building '/nix/store/kn6d3pgl58r6fs2bbyabfmvig4dh76q1-nixos-system-debbie-25.05.804113.6c64dabd3aa8.drv'...
+stopping the following units: accounts-daemon.service, systemd-tmpfiles-resetup.service
 activating the configuration...
+removing group ‘pipewire’
 setting up /etc...
+removing obsolete symlink ‘/etc/pipewire’...
+removing obsolete symlink ‘/etc/alsa/conf.d/99-pipewire-default.conf’...
+removing obsolete symlink ‘/etc/alsa/conf.d/50-pipewire.conf’...
+removing obsolete symlink ‘/etc/alsa/conf.d/49-pipewire-modules.conf’...
 reloading user units for nate...
 restarting sysinit-reactivation.target
-starting the following units: systemd-tmpfiles-resetup.service
-Done. The new configuration is /nix/store/wsj1dmxq2r5lk0rzs2zw0jchrgz6855x-nixos-system-debbie-25.05.804113.6c64dabd3aa8
+reloading the following units: dbus.service
+restarting the following units: polkit.service, systemd-udevd.service
+starting the following units: accounts-daemon.service, systemd-tmpfiles-resetup.service
+Done. The new configuration is /nix/store/rmim209fn78ajdj0qwp8skpcfpi596q6-nixos-system-debbie-25.05.804113.6c64dabd3aa8
