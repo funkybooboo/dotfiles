@@ -439,27 +439,27 @@ in {
   };
 
   # Virtualization
-#   virtualisation = {
-#     virtualbox = {
-#        host = {
-#            enable = true;
-#            enableExtensionPack = true;
-#            addNetworkInterface = false;
-#            enableKvm = true;
-#        };
-#        guest = {
-#            enable = true;
-#            dragAndDrop = true;
-#            clipboard = true;
-#        };
-#     };
-#     docker = {
-#        enable = true;
-#     };
-#     multipass = {
-#        enable = true;
-#     };
-#   };
+  virtualisation = {
+    # virtualbox = {
+    #    host = {
+    #        enable = true;
+    #        enableExtensionPack = true;
+    #        addNetworkInterface = false;
+    #        enableKvm = true;
+    #    };
+    #    guest = {
+    #        enable = true;
+    #        dragAndDrop = true;
+    #        clipboard = true;
+    #    };
+    # };
+    docker = {
+       enable = true;
+    };
+    multipass = {
+       enable = true;
+    };
+  };
 
   # Fonts
   fonts = {
