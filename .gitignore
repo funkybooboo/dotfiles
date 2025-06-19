@@ -1,3 +1,14 @@
 nix-switch.log
-*~
 stow-backups/
+
+# backups & editor temp
+*~ 
+*.bak 
+*.swp
+
+# nixos backup
+etc/nixos/*.bak
+
+# fish state
+config/.config/fish/fish_plugins/
+config/.config/fish/fish_variables/

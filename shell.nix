@@ -3,12 +3,11 @@
 pkgs.mkShell {
   buildInputs = [
     pkgs.git
-    pkgs.stow
     pkgs.jq
   ];
 
   shellHook = ''
-    echo "🛠  Entered nix-shell with git, stow and jq available"
+    echo "🛠  Entered nix-shell with git and jq available"
   '';
 }
 
