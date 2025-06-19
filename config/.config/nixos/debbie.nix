@@ -104,7 +104,7 @@ in {
         #fwupd.enable = true;
         printing.enable = true;
         #openssh.enable = true;
-	blueman.enable = true;
+        blueman.enable = true;
         pulseaudio.enable = false;
         pipewire = {
             enable = true;
@@ -371,10 +371,20 @@ in {
         plasma6.excludePackages = with pkgs.kdePackages; [
             plasma-browser-integration
             konsole
+            #(lib.getBin qttools) # Expose qdbus in PATH
+            ark
+            elisa
+            #gwenview
+            #okular
+            kate
             khelpcenter
-            baloo-widgets
+            #dolphin
+            baloo-widgets # baloo information in Dolphin
+            dolphin-plugins
+            #spectacle
             ffmpegthumbs
             krdp
+            #xwaylandvideobridge # exposes Wayland windows to X11 screen capture
         ];
     };
 
@@ -423,25 +433,25 @@ in {
 
     # Virtualization
     #virtualisation = {
-        #virtualbox = {
-        #    host = {
-        #        enable = true;
-        #        enableExtensionPack = true;
-        #        addNetworkInterface = false;
-        #        enableKvm = true;
-        #    };
-        #    guest = {
-        #        enable = true;
-        #        dragAndDrop = true;
-        #        clipboard = true;
-        #    };
-        #};
-        #docker = {
-        #    enable = true;
-        #};
-        #multipass = {
-        #    enable = true;
-        #};
+    #virtualbox = {
+    #    host = {
+    #        enable = true;
+    #        enableExtensionPack = true;
+    #        addNetworkInterface = false;
+    #        enableKvm = true;
+    #    };
+    #    guest = {
+    #        enable = true;
+    #        dragAndDrop = true;
+    #        clipboard = true;
+    #    };
+    #};
+    #docker = {
+    #    enable = true;
+    #};
+    #multipass = {
+    #    enable = true;
+    #};
     #};
 
     # Fonts
