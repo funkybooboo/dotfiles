@@ -47,27 +47,13 @@ If you'd like to automate the entire process, use the `install.sh` script. This 
 
 ### 🔧 **Manual Setup**
 
-#### 1. **Enable Git & Your Preferred Editor**
+#### 1. **Launch the Nix Shell Environment**
 
-1. Open your system config:
+```bash
+nix-shell
+```
 
-   ```bash
-   sudo nano /etc/nixos/configuration.nix
-   ```
-
-2. Add essential packages:
-
-   ```nix
-   environment.systemPackages = with pkgs; [
-     git
-   ];
-   ```
-
-3. Rebuild the system:
-
-   ```bash
-   sudo nixos-rebuild switch
-   ```
+> Installs `git`, `stow`, `jq`, and other setup tools **without** polluting the global system.
 
 #### 2. **Create Your 2FA Secrets File**
 
@@ -100,14 +86,6 @@ sudo cp etc/nixos/configuration.nix /etc/nixos/configuration.nix
 ```bash
 chmod +x setup.sh
 ```
-
-#### 6. **Launch the Nix Shell Environment**
-
-```bash
-nix-shell
-```
-
-> Installs `stow`, `jq`, and other setup tools **without** polluting the global system.
 
 #### 7. **Preview Dotfile Actions (Dry-Run)**
 
@@ -168,38 +146,3 @@ Defines helper scripts to symlink into `~/.local/bin`.
 ```
 
 > Add new tools by updating this file and re-running `./setup.sh`.
-
----
-
-### `shell.nix`
-
-Used for bootstrapping your setup tools in an isolated environment:
-
-* `stow` – symlink manager
-* `jq` – JSON parser
-
-Launch it with:
-
-```bash
-nix-shell
-```
-
----
-
-## ✅ Post-Setup Checklist
-
-Ensure everything is properly linked and on your PATH:
-
-```bash
-# Check symlinked dotfiles
-ls -l ~/.bashrc
-ls -l ~/.config/nixos/debbie.nix
-
-# Check system config
-ls -l /etc/nixos/configuration.nix
-
-# Confirm scripts are accessible
-which rebuild update syncDocuments
-```
-
-Each path should point into your `~/dotfiles` folder.
