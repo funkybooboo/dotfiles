@@ -88,6 +88,14 @@ rclone config
 syncDocuments
 ```
 
+#### 11. **Update and reboot**
+
+Follow the prompts 
+
+```bash
+update
+```
+
 ---
 
 ## 🗂️ Repository Layout
