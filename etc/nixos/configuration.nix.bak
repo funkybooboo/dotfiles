@@ -3,13 +3,13 @@
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
     };
 
-    # mysqlInitScript = pkgs.writeTextFile {
-    #    name = "mariadb-init";
-    #    text = lib.concatStringsSep "\n" [
-    #        "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
-    #        "FLUSH PRIVILEGES;"
-    #    ];
-    # };
+    mysqlInitScript = pkgs.writeTextFile {
+       name = "mariadb-init";
+       text = lib.concatStringsSep "\n" [
+           "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+           "FLUSH PRIVILEGES;"
+       ];
+    };
 
     # flatpakApps = [
     #     "io.github.voxelcubes.hand-tex"
@@ -94,11 +94,11 @@ in {
     # fwupd.enable = true;
     # openssh.enable = true;
     # mtr-exporter.enable = true;
-    # mysql = {
-    #    enable = true;
-    #    package = pkgs.mariadb;
-    #    initialScript = toString mysqlInitScript;
-    # };
+    mysql = {
+       enable = true;
+       package = pkgs.mariadb;
+       initialScript = toString mysqlInitScript;
+    };
     # libinput.enable = true;
   };
 
