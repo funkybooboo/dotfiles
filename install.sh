@@ -52,9 +52,6 @@ if [[ "$setup_sync" == "y" || "$setup_sync" == "Y" ]]; then
 
     # Start rclone config
     rclone config
-
-    # Sync documents
-    syncDocuments
 fi
 
 # Final message before reboot prompt
