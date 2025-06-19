@@ -369,12 +369,12 @@ in {
             EDITOR = "nvim";
         };
         plasma6.excludePackages = with pkgs.kdePackages; [
-            # plasma-browser-integration
-            # konsole
-            # khelpcenter
-            # baloo-widgets
-            # ffmpegthumbs
-            # krdp
+            plasma-browser-integration
+            konsole
+            khelpcenter
+            baloo-widgets
+            ffmpegthumbs
+            krdp
         ];
     };
 
