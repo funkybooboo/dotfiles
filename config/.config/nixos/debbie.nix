@@ -22,6 +22,128 @@
         ];
     };
 in {
+    # System
+    system = {
+        stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
+    };
+
+    # Hardware
+    hardware = {
+        bluetooth = {
+            enable = true;
+            powerOnBoot = true;
+        };
+        graphics = {
+            enable = true;
+            enable32Bit = true;
+        };
+    };
+
+    # Bootloader
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+    };
+
+    # Nixpkgs
+    nixpkgs.config = {
+        permittedInsecurePackages = [];
+        allowUnfree = true;
+        packageOverrides = pkgs: {
+            unstable = import unstableTarball {
+                config = config.nixpkgs.config;
+            };
+        };
+    };
+
+    # Networking
+    networking = {
+        networkmanager.enable = true;
+        firewall = {
+            enable = true;
+            allowedTCPPorts = [];
+            allowedUDPPorts = [];
+        };
+    };
+
+    # Time
+    time.timeZone = "America/New_York";
+    #time.timeZone = "America/Denver";
+
+    # Internationalisation
+    i18n = {
+        defaultLocale = "en_US.UTF-8";
+        extraLocaleSettings = {
+            LC_ADDRESS = "en_US.UTF-8";
+            LC_IDENTIFICATION = "en_US.UTF-8";
+            LC_MEASUREMENT = "en_US.UTF-8";
+            LC_MONETARY = "en_US.UTF-8";
+            LC_NAME = "en_US.UTF-8";
+            LC_NUMERIC = "en_US.UTF-8";
+            LC_PAPER = "en_US.UTF-8";
+            LC_TELEPHONE = "en_US.UTF-8";
+            LC_TIME = "en_US.UTF-8";
+        };
+    };
+
+    # Users
+    ## Don't forget to set a password with ‘passwd’
+    users = {
+        users = {
+            nate = {
+                isNormalUser = true;
+                description = "Nate Stott";
+                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
+                shell = pkgs.fish;
+            };
+        };
+        extraGroups = {
+            vboxusers = {
+                members = ["nate"];
+            };
+        };
+    };
+
+    # Services
+    services = {
+        systembus-notify.enable = true;
+        flatpak.enable = true;
+        locate.enable = true;
+        fwupd.enable = true;
+        printing.enable = true;
+        openssh.enable = true;
+        pulseaudio.enable = false;
+        pipewire = {
+            enable = true;
+            alsa.enable = true;
+            alsa.support32Bit = true;
+            pulse.enable = true;
+            jack.enable = true;
+            media-session.enable = true;
+        };
+        mysql = {
+            enable = true;
+            package = pkgs.mariadb;
+            initialScript = toString mysqlInitScript;
+        };
+        xserver = {
+            enable = true;
+            xkb = {
+                layout = "us";
+                variant = "";
+            };
+        };
+        libinput.enable = true;
+        displayManager = {
+            sddm = {
+                enable = true;
+                wayland.enable = true;
+            };
+            defaultSession = "plasma";
+        };
+        desktopManager.plasma6.enable = true;
+    };
+
     # Environment
     environment = {
         systemPackages = with pkgs; [
@@ -274,6 +396,15 @@ in {
         ];
     };
 
+    xdg.portal = {
+        enable = true;
+        extraPortals = [
+            pkgs.xdg-desktop-portal
+            pkgs.xdg-desktop-portal-gtk
+            pkgs.xdg-desktop-portal-hyprland
+        ];
+    };
+
     # Programs
     programs = {
         fish = {
@@ -308,37 +439,6 @@ in {
         };
     };
 
-    # Users
-    ## Don't forget to set a password with ‘passwd’
-    users = {
-        users = {
-            nate = {
-                isNormalUser = true;
-                description = "Nate Stott";
-                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
-                shell = pkgs.fish;
-            };
-        };
-        extraGroups = {
-            vboxusers = {
-                members = ["nate"];
-            };
-        };
-    };
-
-    # Fonts
-    fonts = {
-        enableDefaultPackages = true;
-        packages = with pkgs; [
-            nerd-fonts.fira-code
-            nerd-fonts.droid-sans-mono
-            nerd-fonts.jetbrains-mono
-        ];
-        fontconfig = {
-            useEmbeddedBitmaps = true;
-        };
-    };
-
     # Virtualization
     virtualisation = {
         virtualbox = {
@@ -362,57 +462,17 @@ in {
         };
     };
 
-    xdg.portal = {
-        enable = true;
-        extraPortals = [
-            pkgs.xdg-desktop-portal
-            pkgs.xdg-desktop-portal-gtk
-            pkgs.xdg-desktop-portal-hyprland
+    # Fonts
+    fonts = {
+        enableDefaultPackages = true;
+        packages = with pkgs; [
+            nerd-fonts.fira-code
+            nerd-fonts.droid-sans-mono
+            nerd-fonts.jetbrains-mono
         ];
-    };
-
-    # Services
-    services = {
-        systembus-notify.enable = true;
-        flatpak.enable = true;
-        locate.enable = true;
-        fwupd.enable = true;
-        blueman.enable = true;
-        printing.enable = true;
-        openssh.enable = true;
-        pulseaudio = {
-            enable = true;
-            package = pkgs.pulseaudioFull;
-            extraConfig = ''
-                load-module module-switch-on-connect
-                load-module module-bluetooth-policy
-                load-module module-bluetooth-discover
-            '';
+        fontconfig = {
+            useEmbeddedBitmaps = true;
         };
-        pipewire = {
-            enable = false;
-        };
-        mysql = {
-            enable = true;
-            package = pkgs.mariadb;
-            initialScript = toString mysqlInitScript;
-        };
-        xserver = {
-            enable = true;
-            xkb = {
-                layout = "us";
-                variant = "";
-            };
-        };
-        libinput.enable = true;
-        displayManager = {
-            sddm = {
-                enable = true;
-                wayland.enable = true;
-            };
-            defaultSession = "plasma";
-        };
-        desktopManager.plasma6.enable = true;
     };
 
     # Systemd
@@ -424,6 +484,7 @@ in {
                 after = ["flatpak-system-helper.service"];
                 serviceConfig = {
                     Type = "oneshot";
+                    Restart=on-failure;
                     Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
                     ExecStart = pkgs.writeShellScript "install-flatpaks" ''
                         set -e
@@ -460,83 +521,5 @@ in {
                 };
             };
         };
-    };
-
-    # Nixpkgs
-    nixpkgs.config = {
-        permittedInsecurePackages = [];
-        allowUnfree = true;
-        packageOverrides = pkgs: {
-            unstable = import unstableTarball {
-                config = config.nixpkgs.config;
-            };
-        };
-    };
-
-    # Bootloader
-    boot.loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
-    };
-
-    # Security
-    security = {
-        rtkit.enable = true;
-        sudo = {
-            enable = true;
-            wheelNeedsPassword = false;
-        };
-    };
-
-    # Networking
-    networking = {
-        networkmanager.enable = true;
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
-    };
-
-    # Time
-    time.timeZone = "America/New_York";
-    #time.timeZone = "America/Denver";
-
-    # Internationalisation
-    i18n = {
-        defaultLocale = "en_US.UTF-8";
-        extraLocaleSettings = {
-            LC_ADDRESS = "en_US.UTF-8";
-            LC_IDENTIFICATION = "en_US.UTF-8";
-            LC_MEASUREMENT = "en_US.UTF-8";
-            LC_MONETARY = "en_US.UTF-8";
-            LC_NAME = "en_US.UTF-8";
-            LC_NUMERIC = "en_US.UTF-8";
-            LC_PAPER = "en_US.UTF-8";
-            LC_TELEPHONE = "en_US.UTF-8";
-            LC_TIME = "en_US.UTF-8";
-        };
-    };
-
-    # Hardware
-    hardware = {
-        bluetooth = {
-            enable = true;
-            powerOnBoot = true;
-            settings = {
-                General = {
-                    Experimental = true;
-                };
-            };
-        };
-        graphics = {
-            enable = true;
-            enable32Bit = true;
-        };
-    };
-
-    # System
-    system = {
-        stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
     };
 }
