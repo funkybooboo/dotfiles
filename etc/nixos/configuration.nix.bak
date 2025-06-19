@@ -99,6 +99,7 @@ in {
     fwupd.enable = true;
     openssh.enable = true;
     libinput.enable = true;
+    flatpak.enable = true;
   };
 
   # Hardware
