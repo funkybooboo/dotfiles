@@ -7,14 +7,20 @@
     unstableTarball = fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
     };
-    mysqlInitScript = pkgs.writeTextFile {
-        name = "mariadb-init";
-        text = lib.concatStringsSep "\n" [
-            "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
-            "FLUSH PRIVILEGES;"
-        ];
-    };
+    #mysqlInitScript = pkgs.writeTextFile {
+    #    name = "mariadb-init";
+    #    text = lib.concatStringsSep "\n" [
+    #        "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+    #        "FLUSH PRIVILEGES;"
+    #    ];
+    #};
 in {
+    # Bootloader
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+    };
+
     # System
     system = {
         stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
@@ -26,16 +32,11 @@ in {
             enable = true;
             powerOnBoot = true;
         };
+        pulseaudio.enable = true;
         graphics = {
             enable = true;
             enable32Bit = true;
         };
-    };
-
-    # Bootloader
-    boot.loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
     };
 
     # Nixpkgs
@@ -90,20 +91,21 @@ in {
                 shell = pkgs.fish;
             };
         };
-        extraGroups = {
-            vboxusers = {
-                members = ["nate"];
-            };
-        };
+        #extraGroups = {
+        #    vboxusers = {
+        #        members = ["nate"];
+        #    };
+        #};
     };
 
     # Services
     services = {
-        systembus-notify.enable = true;
-        locate.enable = true;
-        fwupd.enable = true;
+        #systembus-notify.enable = true;
+        #locate.enable = true;
+        #fwupd.enable = true;
         printing.enable = true;
-        openssh.enable = true;
+        #openssh.enable = true;
+	blueman.enable = true;
         pulseaudio.enable = false;
         pipewire = {
             enable = true;
@@ -111,19 +113,19 @@ in {
             alsa.support32Bit = true;
             pulse.enable = true;
         };
-        mysql = {
-            enable = true;
-            package = pkgs.mariadb;
-            initialScript = toString mysqlInitScript;
-        };
+        #mysql = {
+        #    enable = true;
+        #    package = pkgs.mariadb;
+        #    initialScript = toString mysqlInitScript;
+        #};
         xserver = {
             enable = true;
-            xkb = {
-                layout = "us";
-                variant = "";
-            };
+            #xkb = {
+            #    layout = "us";
+            #    variant = "";
+            #};
         };
-        libinput.enable = true;
+        #libinput.enable = true;
         displayManager = {
             sddm = {
                 enable = true;
@@ -175,14 +177,14 @@ in {
             # Editors & IDEs
             neovim
             vscodium
-            unstable.jetbrains.datagrip
-            unstable.jetbrains.webstorm
-            unstable.jetbrains.rust-rover
-            unstable.jetbrains.rider
-            unstable.jetbrains.pycharm-professional
-            unstable.jetbrains.idea-ultimate
-            unstable.jetbrains.goland
-            unstable.jetbrains.clion
+            #unstable.jetbrains.datagrip
+            #unstable.jetbrains.webstorm
+            #unstable.jetbrains.rust-rover
+            #unstable.jetbrains.rider
+            #unstable.jetbrains.pycharm-professional
+            #unstable.jetbrains.idea-ultimate
+            #unstable.jetbrains.goland
+            #unstable.jetbrains.clion
 
             # Shell & CLI Utilities
             fish
@@ -225,33 +227,33 @@ in {
 
             # Version Control
             git
-            gh
-            github-desktop
-            lazygit
-            git-filter-repo
-            gitbutler
+            #gh
+            #github-desktop
+            #lazygit
+            #git-filter-repo
+            #gitbutler
 
             # Containerization & Deployment
-            lazydocker
-            nix-init
+            #lazydocker
+            #nix-init
             stow
-            unetbootin
+            #unetbootin
             rclone
 
             # Browsers & Communication
             firefox
-            librewolf
-            brave
-            chromium
-            lynx
-            signal-desktop
-            unstable.jami
-            protonmail-bridge-gui
+            #librewolf
+            #brave
+            #chromium
+            #lynx
+            #signal-desktop
+            #unstable.jami
+            #protonmail-bridge-gui
             proton-pass
-            protonvpn-gui
-            webcord
-            zoom-us
-            thunderbird
+            #protonvpn-gui
+            #webcord
+            #zoom-us
+            #thunderbird
 
             # Networking & Security
             openssl
@@ -261,37 +263,36 @@ in {
             ethtool
             iw
             wirelesstools
-            wireplumber
 
             # Media & Graphics
-            mpv
-            ffmpeg
-            asciinema
-            espeak
-            viewnior
-            imagemagick
-            timg
-            drawio
-            zathura
-            poppler_utils
-            asciiquarium
-            aalib
-            oneko
-            easyeffects
-            playerctl
-            pavucontrol
-            imaginer
+            #mpv
+            #ffmpeg
+            #asciinema
+            #espeak
+            #viewnior
+            #imagemagick
+            #timg
+            #drawio
+            #zathura
+            #poppler_utils
+            #asciiquarium
+            #aalib
+            #oneko
+            #easyeffects
+            #playerctl
+            #pavucontrol
+            #imaginer
 
             # Office & Productivity
-            libreoffice
-            obsidian
-            pomodoro-gtk
-            pandoc
-            texliveTeTeX
-            deskreen
-            memorado
-            varia
-            blanket
+            #libreoffice
+            #obsidian
+            #pomodoro-gtk
+            #pandoc
+            #texliveTeTeX
+            #deskreen
+            #memorado
+            #varia
+            #blanket
 
             # System & Desktop
             gparted
@@ -333,34 +334,34 @@ in {
             kdePackages.breeze
 
             # Assembly & Low-level Tools
-            nasm
-            nasmfmt
-            asmrepl
-            asmjit
-            uasm
-            gdb
-            gdbgui
-            libgcc
+            #nasm
+            #nasmfmt
+            #asmrepl
+            #asmjit
+            #uasm
+            #gdb
+            #gdbgui
+            #libgcc
 
             # Database & Data Tools
-            sqlite
-            dbeaver-bin
+            #sqlite
+            #dbeaver-bin
 
             # Gaming
-            chess-tui
-            stockfish
+            #chess-tui
+            #stockfish
 
             # AI
-            alpaca
+            #alpaca
 
             # Learning
-            nix-tour
-            keypunch
+            #nix-tour
+            #keypunch
 
             # Miscellaneous
-            chance
-            devtoolbox
-            concessio
+            #chance
+            #devtoolbox
+            #concessio
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
@@ -413,36 +414,36 @@ in {
                 # NOT in environment.systemPackages
             ];
         };
-        hyprland = {
-            enable = true;
-            xwayland = {
-                enable = true;
-            };
-        };
+        #hyprland = {
+        #    enable = true;
+        #    xwayland = {
+        #        enable = true;
+        #    };
+        #};
     };
 
     # Virtualization
-    virtualisation = {
-        virtualbox = {
-            host = {
-                enable = true;
-                enableExtensionPack = true;
-                addNetworkInterface = false;
-                enableKvm = true;
-            };
-            guest = {
-                enable = true;
-                dragAndDrop = true;
-                clipboard = true;
-            };
-        };
-        docker = {
-            enable = true;
-        };
-        multipass = {
-            enable = true;
-        };
-    };
+    #virtualisation = {
+        #virtualbox = {
+        #    host = {
+        #        enable = true;
+        #        enableExtensionPack = true;
+        #        addNetworkInterface = false;
+        #        enableKvm = true;
+        #    };
+        #    guest = {
+        #        enable = true;
+        #        dragAndDrop = true;
+        #        clipboard = true;
+        #    };
+        #};
+        #docker = {
+        #    enable = true;
+        #};
+        #multipass = {
+        #    enable = true;
+        #};
+    #};
 
     # Fonts
     fonts = {
