@@ -40,8 +40,8 @@ end
 
 # Add SSH key if not already added and agent socket is valid
 if test -S $SSH_AUTH_SOCK
-    ssh-add -l >/dev/null
-    or ssh-add ~/.ssh/id_ed25519 ^/dev/null
+    ssh-add -l >/dev/null 2>&1
+    or ssh-add ~/.ssh/id_ed25519 >/dev/null 2>&1
 end
 
 # Initialize zoxide for directory jumping
