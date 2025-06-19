@@ -183,12 +183,12 @@ in {
               # NOT in environment.systemPackages
           ];
       };
-    #   hyprland = {
-    #      enable = true;
-    #      xwayland = {
-    #          enable = true;
-    #      };
-    #   };
+      hyprland = {
+         enable = true;
+         xwayland = {
+             enable = true;
+         };
+      };
   };
 
   # Virtualization
