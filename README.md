@@ -26,7 +26,9 @@ If you'd like to automate the entire process, use the `install.sh` script. This 
 1. Run the script with the following command:
 
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/funkybooboo/dotfiles/main/install.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/funkybooboo/dotfiles/main/install.sh -o install.sh
+   chmod +x install.sh
+   ./install.sh
    ```
 
 2. The script will:
