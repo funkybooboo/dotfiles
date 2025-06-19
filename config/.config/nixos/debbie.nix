@@ -232,13 +232,11 @@ in {
             gitbutler
 
             # Containerization & Deployment
-            flatpak
             lazydocker
             nix-init
             stow
             unetbootin
             rclone
-            rclone-browser
 
             # Browsers & Communication
             firefox
@@ -264,10 +262,6 @@ in {
             iw
             wirelesstools
             wireplumber
-
-            # Bluetooth
-            bluez
-            bluez-alsa
 
             # Media & Graphics
             mpv
@@ -355,8 +349,6 @@ in {
             # Gaming
             chess-tui
             stockfish
-            # nbsdgames
-            # raylib-games
 
             # AI
             alpaca
