@@ -1,113 +1,104 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ─── Locate this script and cd into its directory ──────────────────────────────
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$DOTFILES_DIR"
+# -----------------------------------------------------------------------------
+# setup.sh — symlink your dotfiles, .scripts, wallpapers, and binaries into $HOME
+#            but abort on any conflict (no auto-removal)
+# -----------------------------------------------------------------------------
 
-# ─── Prerequisites ──────────────────────────────────────────────────────────────
+DRY_RUN=0
+
+usage() {
+  cat <<EOF
+Usage: $0 [--dry-run|-n]
+
+  --dry-run, -n   Print the commands that would be run, but do not execute them.
+  --help, -h      Show this help message.
+EOF
+  exit 1
+}
+
+# parse args
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -n|--dry-run) DRY_RUN=1; shift ;;
+    -h|--help)    usage ;;
+    *)            usage ;;
+  esac
+done
+
+# helper: run or echo
+run_cmd() {
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "+ $*"
+  else
+    "$@"
+  fi
+}
+
+# helper: ensure DEST does not exist
+check_conflict() {
+  local dest="$1"
+  if [[ -e "$dest" ]]; then
+    echo "⛔ conflict: '$dest' already exists.  Aborting."
+    exit 1
+  fi
+}
+
+# 1) cd into repo
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# 2) need jq
 if ! command -v jq &>/dev/null; then
-    echo "❌  jq not found. Install it (e.g. 'sudo apt install jq') and re-run."
-    exit 1
+  echo "Error: jq not installed."
+  exit 1
 fi
 
-if ! command -v stow &>/dev/null; then
-    echo "❌  GNU stow not found. Install it (e.g. 'sudo apt install stow') and re-run."
-    exit 1
-fi
+# 3) load binaries list
+bins=( $(jq -r '.["add-to-path"][]' config.json) )
 
-# ─── Read config.json for binaries to expose ────────────────────────────────────
-BINARIES=($(jq -r '.["add-to-path"][]' config.json))
-
-# ─── Define HOME and ROOT package arrays ────────────────────────────────────────
-HOME_PACKAGES=(
-    bash
-    config
-    gdbinit
-    ideavim
-    scripts
-    vim
-    git
-    jump
-    alejandra
-)
-
-# Debugging output to check package names
-echo "Home packages to be stowed: ${HOME_PACKAGES[*]}"
-
-# ─── Backup any existing targets before we touch them ────────────────────────────
-TS=$(date +%Y%m%d%H%M%S)
-BACKUP_DIR="$HOME/dotfiles/stow-backups/$TS"
-echo "💾  Backing up existing files to $BACKUP_DIR …"
-mkdir -p "$BACKUP_DIR"
-
-# 1) Home-targeted packages
-for pkg in "${HOME_PACKAGES[@]}"; do
-    find "$DOTFILES_DIR/$pkg" -mindepth 1 | while read -r src; do
-        rel=${src#"$DOTFILES_DIR/$pkg/"} # path relative inside package
-        dest="$HOME/$rel"
-        if [ -e "$dest" ]; then # Only backup if it exists
-            if [ -L "$dest" ]; then
-                # Handle symlinks separately
-                echo "Skipping symlink: $dest"
-            else
-                backup_dest="$BACKUP_DIR/$rel"
-                # Check if the destination is a file or directory
-                if [ -d "$dest" ]; then
-                    timestamped_backup="$BACKUP_DIR/${rel}_$(date +%Y%m%d%H%M%S)"
-                    mkdir -p "$(dirname "$timestamped_backup")"
-                    cp -r "$dest" "$timestamped_backup" # Copy directory
-                    echo "  backed up: $dest → $timestamped_backup"
-                elif [ -f "$dest" ]; then
-                    timestamped_backup="$BACKUP_DIR/${rel}_$(date +%Y%m%d%H%M%S)"
-                    mkdir -p "$(dirname "$timestamped_backup")"
-                    cp "$dest" "$timestamped_backup" # Copy file
-                    echo "  backed up: $dest → $timestamped_backup"
-                fi
-            fi
-        fi
-    done
+# 4) link each whole folder under config/.config → ~/.config/*
+echo ">>> Linking full ~/.config sub-folders"
+run_cmd mkdir -p "$HOME/.config"
+for entry in config/.config/*; do
+  dest="$HOME/.config/$(basename "$entry")"
+  check_conflict "$dest"
+  run_cmd ln -s "$PWD/$entry" "$dest"
 done
 
-echo ""
+# 5) link entire scripts/.scripts → ~/.scripts
+echo ">>> Linking full ~/.scripts"
+check_conflict "$HOME/.scripts"
+run_cmd ln -s "$PWD/scripts/.scripts" "$HOME/.scripts"
 
-# ─── Stow into $HOME, force-overwriting any existing files/links ───────────────
-echo "🔗  Stowing to \$HOME: ${HOME_PACKAGES[*]}"
-for pkg in "${HOME_PACKAGES[@]}"; do
-    echo "Stowing package: $pkg" # Debugging output
-    if [ -z "$pkg" ]; then
-        echo "Skipping empty package: $pkg"
-        continue
-    fi
-    stow \
-        --verbose \
-        --target="$HOME" \
-        --restow \
-        "$pkg"
+# 6) per-file dotfiles from other pkgs → $HOME
+pkgs=( bash gdbinit ideavim vim git alejandra )
+echo ">>> Linking files into \$HOME"
+for pkg in "${pkgs[@]}"; do
+  while IFS= read -r src; do
+    rel="${src#"$PWD/$pkg/"}"
+    dest="$HOME/$rel"
+    check_conflict "$dest"
+    run_cmd mkdir -p "$(dirname "$dest")"
+    run_cmd ln -s "$src" "$dest"
+  done < <(find "$PWD/$pkg" -type f)
 done
 
-# ─── Link only Pictures/wallpapers into ~/Pictures/wallpapers ─────────────────
-echo ""
-echo "🔗  Linking wallpapers into \$HOME/Pictures/wallpapers"
-mkdir -p "$HOME/Pictures"
-rm -rf "$HOME/Pictures/wallpapers"
-ln -s "$DOTFILES_DIR/Pictures/wallpapers" "$HOME/Pictures/wallpapers"
-
-# ─── Expose configured scripts into ~/.local/bin ────────────────────────────────
-echo ""
-echo "🔧  Adding scripts from config.json into ~/.local/bin"
-mkdir -p "$HOME/.local/bin"
-for rel in "${BINARIES[@]}"; do
-    if [ -z "$rel" ]; then
-        echo "Skipping empty binary: $rel"
-        continue
-    fi
-    src="$DOTFILES_DIR/$rel"
-    dst="$HOME/.local/bin/$(basename "$rel")"
-    rm -f "$dst"
-    ln -s "$src" "$dst"
-    echo "  LINK: $dst → $src"
+# 7) link binaries → ~/.local/bin
+echo ">>> Linking into ~/.local/bin"
+run_cmd mkdir -p "$HOME/.local/bin"
+for rel in "${bins[@]}"; do
+  src="$PWD/$rel"
+  dest="$HOME/.local/bin/$(basename "$rel")"
+  check_conflict "$dest"
+  run_cmd ln -s "$src" "$dest"
 done
 
-echo ""
-echo "✅  All done!  (backups in $BACKUP_DIR)"
+# 8) link full wallpapers folder → ~/Pictures/wallpapers
+echo ">>> Linking full wallpapers folder"
+run_cmd mkdir -p "$HOME/Pictures"
+dest="$HOME/Pictures/wallpapers"
+check_conflict "$dest"
+run_cmd ln -s "$PWD/Pictures/wallpapers" "$dest"
+
+echo ">>> Done${DRY_RUN:+ (dry-run)}."

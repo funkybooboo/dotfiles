@@ -17,35 +17,8 @@ It helps you:
 
 ---
 
-### 🛠️ **Automatic Setup with `install.sh`**
 
-If you'd like to automate the entire process, use the `install.sh` script. This will handle enabling Git, setting up your 2FA secrets, cloning the dotfiles repo, installing the system configuration, applying the dotfiles, and optionally setting up Proton Drive sync.
-
-#### How to Run the Install Script
-
-1. Run the script with the following command:
-
-   ```bash
-   curl -fsSL https://raw.githubusercontent.com/funkybooboo/dotfiles/main/install.sh -o install.sh
-   chmod +x install.sh
-   ./install.sh
-   rm install.sh
-   ```
-
-2. The script will:
-
-   * Enable Git in your NixOS system.
-   * Prompt for your Proton TOTP secret and store it securely in `~/.2fa_secrets`.
-   * Clone the dotfiles repository.
-   * Install your NixOS configuration.
-   * Make the `setup.sh` script executable and apply the dotfiles setup.
-   * Optionally, run a system update (`update` command).
-   * Optionally, set up Proton Drive sync using **rclone**.
-   * Optionally, reboot the system.
-
----
-
-### 🔧 **Manual Setup**
+### 🔧 **Setup**
 
 #### 1. **Launch the Nix Shell Environment**
 
@@ -53,7 +26,7 @@ If you'd like to automate the entire process, use the `install.sh` script. This 
 nix-shell
 ```
 
-> Installs `git`, `stow`, `jq`, and other setup tools **without** polluting the global system.
+> Installs `git`, `jq`, and other setup tools **without** polluting the global system.
 
 #### 2. **Create Your 2FA Secrets File**
 
@@ -106,6 +79,13 @@ chmod +x setup.sh
 
 ```bash
 sudo nixos-rebuild switch
+```
+
+#### 10. **Setup rclone to populate the documents folder**
+
+```bash
+rclone config
+syncDocuments
 ```
 
 ---
