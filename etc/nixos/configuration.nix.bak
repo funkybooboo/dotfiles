@@ -109,7 +109,7 @@ in {
       };
       graphics = {
           enable = true;
-          enable32Bit = true;c
+          enable32Bit = true;
       };
   };
 
