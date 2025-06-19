@@ -440,19 +440,19 @@ in {
 
   # Virtualization
   virtualisation = {
-    # virtualbox = {
-    #    host = {
-    #        enable = true;
-    #        enableExtensionPack = true;
-    #        addNetworkInterface = false;
-    #        enableKvm = true;
-    #    };
-    #    guest = {
-    #        enable = true;
-    #        dragAndDrop = true;
-    #        clipboard = true;
-    #    };
-    # };
+    virtualbox = {
+       host = {
+           enable = true;
+           enableExtensionPack = true;
+           addNetworkInterface = false;
+           enableKvm = true;
+       };
+       guest = {
+           enable = true;
+           dragAndDrop = true;
+           clipboard = true;
+       };
+    };
     docker = {
        enable = true;
     };
