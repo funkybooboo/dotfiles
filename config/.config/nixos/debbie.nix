@@ -100,7 +100,6 @@ in {
     # Services
     services = {
         systembus-notify.enable = true;
-        flatpak.enable = true;
         locate.enable = true;
         fwupd.enable = true;
         printing.enable = true;
