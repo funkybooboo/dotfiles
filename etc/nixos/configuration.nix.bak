@@ -93,7 +93,7 @@ in {
     # locate.enable = true;
     # fwupd.enable = true;
     # openssh.enable = true;
-    mtr-exporter.enable = true;
+    # mtr-exporter.enable = true;
     # mysql = {
     #    enable = true;
     #    package = pkgs.mariadb;
@@ -164,7 +164,7 @@ in {
   # Programs
   programs = {
       fish.enable = true;
-      mtr.enable = true;
+      # mtr.enable = true;
       neovim = {
           enable = true;
           viAlias = true;
