@@ -1,138 +1,150 @@
-{
-    config,
-    pkgs,
-    lib,
-    ...
-}: let
+{ config, pkgs, lib, ... }: let
     unstableTarball = fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
     };
-    #mysqlInitScript = pkgs.writeTextFile {
-    #    name = "mariadb-init";
-    #    text = lib.concatStringsSep "\n" [
-    #        "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
-    #        "FLUSH PRIVILEGES;"
-    #    ];
-    #};
+
+    mysqlInitScript = pkgs.writeTextFile {
+       name = "mariadb-init";
+       text = lib.concatStringsSep "\n" [
+           "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+           "FLUSH PRIVILEGES;"
+       ];
+    };
+
+    flatpakApps = [
+        "io.github.voxelcubes.hand-tex"
+        "io.github.dman95.SASM"
+        "io.gitlab.persiangolf.voicegen"
+    ];
+    flatpakAppList = lib.concatStringsSep " " flatpakApps;
 in {
-    # Bootloader
-    boot.loader = {
-        systemd-boot.enable = true;
-        efi.canTouchEfiVariables = true;
-    };
+  # Bootloader
+  boot.loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+  };
 
-    # System
-    system = {
-        stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
-    };
+  networking.hostName = "nixos";
 
-    # Hardware
-    hardware = {
-        bluetooth = {
+  # Networking
+  networking = {
+      networkmanager.enable = true;
+      firewall = {
+          enable = true;
+          allowedTCPPorts = [];
+          allowedUDPPorts = [];
+      };
+  };
+
+  # Time
+  time.timeZone = "America/New_York";
+  #time.timeZone = "America/Denver";
+
+  # Internationalisation
+  i18n = {
+      defaultLocale = "en_US.UTF-8";
+      extraLocaleSettings = {
+          LC_ADDRESS = "en_US.UTF-8";
+          LC_IDENTIFICATION = "en_US.UTF-8";
+          LC_MEASUREMENT = "en_US.UTF-8";
+          LC_MONETARY = "en_US.UTF-8";
+          LC_NAME = "en_US.UTF-8";
+          LC_NUMERIC = "en_US.UTF-8";
+          LC_PAPER = "en_US.UTF-8";
+          LC_TELEPHONE = "en_US.UTF-8";
+          LC_TIME = "en_US.UTF-8";
+      };
+  };
+
+  # Security
+  security.rtkit.enable = true;
+
+  # Services
+  services = {
+    xserver = {
+          enable = true;
+          xkb = {
+             layout = "us";
+             variant = "";
+          };
+    };
+    displayManager = {
+        sddm = {
             enable = true;
-            powerOnBoot = true;
+            wayland.enable = true;
         };
-        graphics = {
-            enable = true;
-            enable32Bit = true;
-        };
+        defaultSession = "plasma";
     };
-
-    # Nixpkgs
-    nixpkgs.config = {
-        permittedInsecurePackages = [];
-        allowUnfree = true;
-        packageOverrides = pkgs: {
-            unstable = import unstableTarball {
-                config = config.nixpkgs.config;
-            };
-        };
+    desktopManager.plasma6.enable = true;
+    pulseaudio.enable = false;
+    pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
     };
-
-    # Networking
-    networking = {
-        networkmanager.enable = true;
-        firewall = {
-            enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
-        };
+    printing.enable = true;
+    mysql = {
+       enable = true;
+       package = pkgs.mariadb;
+       initialScript = toString mysqlInitScript;
     };
+    systembus-notify.enable = true;
+    locate.enable = true;
+    fwupd.enable = true;
+    openssh.enable = true;
+    libinput.enable = true;
+    flatpak.enable = true;
+  };
 
-    # Time
-    time.timeZone = "America/New_York";
-    #time.timeZone = "America/Denver";
+  # Hardware
+  hardware = {
+      bluetooth = {
+          enable = true;
+          powerOnBoot = true;
+      };
+      graphics = {
+          enable = true;
+          enable32Bit = true;
+      };
+  };
 
-    # Internationalisation
-    i18n = {
-        defaultLocale = "en_US.UTF-8";
-        extraLocaleSettings = {
-            LC_ADDRESS = "en_US.UTF-8";
-            LC_IDENTIFICATION = "en_US.UTF-8";
-            LC_MEASUREMENT = "en_US.UTF-8";
-            LC_MONETARY = "en_US.UTF-8";
-            LC_NAME = "en_US.UTF-8";
-            LC_NUMERIC = "en_US.UTF-8";
-            LC_PAPER = "en_US.UTF-8";
-            LC_TELEPHONE = "en_US.UTF-8";
-            LC_TIME = "en_US.UTF-8";
-        };
-    };
+  # Users
+  ## Don't forget to set a password with ‘passwd’
+  users = {
+      users = {
+          nate = {
+              isNormalUser = true;
+              description = "Nate Stott";
+              extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
+              shell = pkgs.fish;
+          };
+      };
+      extraGroups = {
+         vboxusers = {
+             members = ["nate"];
+         };
+      };
+  };
 
-    # Users
-    ## Don't forget to set a password with ‘passwd’
-    users = {
-        users = {
-            nate = {
-                isNormalUser = true;
-                description = "Nate Stott";
-                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
-                shell = pkgs.fish;
-            };
-        };
-        #extraGroups = {
-        #    vboxusers = {
-        #        members = ["nate"];
-        #    };
-        #};
-    };
+  # Nixpkgs
+  nixpkgs.config = {
+      permittedInsecurePackages = [];
+      allowUnfree = true;
+      packageOverrides = pkgs: {
+          unstable = import unstableTarball {
+              config = config.nixpkgs.config;
+          };
+      };
+  };
 
-    # Services
-    services = {
-        #systembus-notify.enable = true;
-        #locate.enable = true;
-        #fwupd.enable = true;
-        printing.enable = true;
-        #openssh.enable = true;
-        blueman.enable = true;
-        pulseaudio.enable = false;
-        pipewire = {
-            enable = true;
-            alsa.enable = true;
-            alsa.support32Bit = true;
-            pulse.enable = true;
-        };
-        #mysql = {
-        #    enable = true;
-        #    package = pkgs.mariadb;
-        #    initialScript = toString mysqlInitScript;
-        #};
-        xserver = {
-            enable = true;
-            #xkb = {
-            #    layout = "us";
-            #    variant = "";
-            #};
-        };
-        #libinput.enable = true;
-        displayManager = {
-            sddm = {
-                enable = true;
-                wayland.enable = true;
-            };
-            defaultSession = "plasma";
-        };
-        desktopManager.plasma6.enable = true;
+  xdg.portal = {
+        enable = true;
+        extraPortals = [
+            pkgs.xdg-desktop-portal
+            pkgs.xdg-desktop-portal-gtk
+            pkgs.xdg-desktop-portal-hyprland
+        ];
     };
 
     # Environment
@@ -176,14 +188,14 @@ in {
             # Editors & IDEs
             neovim
             vscodium
-            #unstable.jetbrains.datagrip
-            #unstable.jetbrains.webstorm
-            #unstable.jetbrains.rust-rover
-            #unstable.jetbrains.rider
-            #unstable.jetbrains.pycharm-professional
-            #unstable.jetbrains.idea-ultimate
-            #unstable.jetbrains.goland
-            #unstable.jetbrains.clion
+            unstable.jetbrains.datagrip
+            unstable.jetbrains.webstorm
+            unstable.jetbrains.rust-rover
+            unstable.jetbrains.rider
+            unstable.jetbrains.pycharm-professional
+            unstable.jetbrains.idea-ultimate
+            unstable.jetbrains.goland
+            unstable.jetbrains.clion
 
             # Shell & CLI Utilities
             fish
@@ -223,37 +235,40 @@ in {
             oath-toolkit
             xprintidle
             pciutils
+            direnv
+            mtr
+            mtr-gui
 
             # Version Control
             git
-            #gh
-            #github-desktop
-            #lazygit
-            #git-filter-repo
-            #gitbutler
+            gh
+            github-desktop
+            lazygit
+            git-filter-repo
+            gitbutler
             delta
 
             # Containerization & Deployment
-            #lazydocker
-            #nix-init
+            lazydocker
+            nix-init
             stow
-            #unetbootin
+            unetbootin
             rclone
 
             # Browsers & Communication
             firefox
-            #librewolf
-            #brave
-            #chromium
-            #lynx
-            #signal-desktop
-            #unstable.jami
-            #protonmail-bridge-gui
+            librewolf
+            brave
+            chromium
+            lynx
+            signal-desktop
+            unstable.jami
+            protonmail-bridge-gui
             proton-pass
-            #protonvpn-gui
-            #webcord
-            #zoom-us
-            #thunderbird
+            protonvpn-gui
+            webcord
+            zoom-us
+            thunderbird
 
             # Networking & Security
             openssl
@@ -265,34 +280,34 @@ in {
             wirelesstools
 
             # Media & Graphics
-            #mpv
-            #ffmpeg
-            #asciinema
-            #espeak
-            #viewnior
-            #imagemagick
-            #timg
-            #drawio
-            #zathura
-            #poppler_utils
-            #asciiquarium
-            #aalib
-            #oneko
-            #easyeffects
-            #playerctl
-            #pavucontrol
-            #imaginer
+            mpv
+            ffmpeg
+            asciinema
+            espeak
+            viewnior
+            imagemagick
+            timg
+            drawio
+            zathura
+            poppler_utils
+            asciiquarium
+            aalib
+            oneko
+            easyeffects
+            playerctl
+            pavucontrol
+            imaginer
 
             # Office & Productivity
-            #libreoffice
-            #obsidian
-            #pomodoro-gtk
-            #pandoc
-            #texliveTeTeX
-            #deskreen
-            #memorado
-            #varia
-            #blanket
+            libreoffice
+            obsidian
+            pomodoro-gtk
+            pandoc
+            texliveTeTeX
+            deskreen
+            memorado
+            varia
+            blanket
 
             # System & Desktop
             gparted
@@ -334,34 +349,34 @@ in {
             kdePackages.breeze
 
             # Assembly & Low-level Tools
-            #nasm
-            #nasmfmt
-            #asmrepl
-            #asmjit
-            #uasm
-            #gdb
-            #gdbgui
-            #libgcc
+            nasm
+            nasmfmt
+            asmrepl
+            asmjit
+            uasm
+            gdb
+            gdbgui
+            libgcc
 
             # Database & Data Tools
-            #sqlite
-            #dbeaver-bin
+            sqlite
+            dbeaver-bin
 
             # Gaming
-            #chess-tui
-            #stockfish
+            chess-tui
+            stockfish
 
             # AI
-            #alpaca
+            alpaca
 
             # Learning
-            #nix-tour
-            #keypunch
+            nix-tour
+            keypunch
 
             # Miscellaneous
-            #chance
-            #devtoolbox
-            #concessio
+            chance
+            devtoolbox
+            concessio
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
@@ -389,82 +404,154 @@ in {
         ];
     };
 
-    xdg.portal = {
-        enable = true;
-        extraPortals = [
-            pkgs.xdg-desktop-portal
-            pkgs.xdg-desktop-portal-gtk
-            pkgs.xdg-desktop-portal-hyprland
-        ];
-    };
+  # Programs
+  programs = {
+      fish.enable = true;
+      mtr.enable = true;
+      neovim = {
+          enable = true;
+          viAlias = true;
+          vimAlias = true;
+      };
+      gnupg = {
+          agent = {
+              enable = true;
+              enableSSHSupport = true;
+          };
+      };
+      nix-ld = {
+          enable = true;
+          libraries = with pkgs; [
+              # Add any missing dynamic libraries for unpackaged programs here,
+              # NOT in environment.systemPackages
+          ];
+      };
+      hyprland = {
+         enable = true;
+         xwayland = {
+             enable = true;
+         };
+      };
+  };
 
-    # Programs
-    programs = {
-        fish = {
-            enable = true;
-        };
-        neovim = {
-            enable = true;
-            viAlias = true;
-            vimAlias = true;
-        };
-        mtr = {
-            enable = true;
-        };
-        gnupg = {
-            agent = {
-                enable = true;
-                enableSSHSupport = true;
+  # Virtualization
+  virtualisation = {
+    virtualbox = {
+       host = {
+           enable = true;
+           enableExtensionPack = true;
+           addNetworkInterface = false;
+           enableKvm = true;
+       };
+       guest = {
+           enable = true;
+           dragAndDrop = true;
+           clipboard = true;
+       };
+    };
+    docker = {
+       enable = true;
+    };
+    multipass = {
+       enable = true;
+    };
+  };
+
+  # Fonts
+  fonts = {
+      enableDefaultPackages = true;
+      packages = with pkgs; [
+          nerd-fonts.fira-code
+          nerd-fonts.droid-sans-mono
+          nerd-fonts.jetbrains-mono
+      ];
+      fontconfig = {
+          useEmbeddedBitmaps = true;
+      };
+  };
+
+    # Systemd
+    systemd = {
+        services = {
+            install-flatpaks = {
+               description = "Install Flatpak apps from Flathub";
+               wantedBy = ["multi-user.target"];
+               after = ["flatpak-system-helper.service"];
+               serviceConfig = {
+                   Type = "oneshot";
+                   Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+                   ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+                       set -e
+        
+                       # Ensure flatpak is installed
+                       if ! command -v flatpak >/dev/null; then
+                         echo "Flatpak command not found! Skipping Flatpak app installation."
+                         exit 0
+                       fi
+        
+                       # Make sure flathub is added
+                       if ! flatpak remote-list | grep -q flathub; then
+                         echo "Adding Flathub remote..."
+                         flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+                       fi
+        
+                       # Install apps
+                       for app in ${flatpakAppList}; do
+                         echo "Installing $app..."
+                         if ! flatpak info "$app" >/dev/null 2>&1; then
+                           flatpak install -y --noninteractive flathub "$app"
+                         else
+                           echo "$app already installed."
+                         fi
+                       done
+        
+                       # Cleanup apps not in list
+                       echo "Checking for orphaned Flatpak apps..."
+                       for installed in $(flatpak list --app --columns=application); do
+                         if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+                           echo "Removing orphaned app: $installed"
+                           flatpak uninstall -y "$installed"
+                         fi
+                       done
+                   '';
+                   StandardOutput = "append:/var/log/install-flatpaks.log";
+                   StandardError = "append:/var/log/install-flatpaks.log";
+               };
             };
-        };
-        nix-ld = {
-            enable = true;
-            libraries = with pkgs; [
-                # Add any missing dynamic libraries for unpackaged programs here,
-                # NOT in environment.systemPackages
-            ];
-        };
-        #hyprland = {
-        #    enable = true;
-        #    xwayland = {
-        #        enable = true;
-        #    };
-        #};
-    };
-
-    # Virtualization
-    #virtualisation = {
-    #virtualbox = {
-    #    host = {
-    #        enable = true;
-    #        enableExtensionPack = true;
-    #        addNetworkInterface = false;
-    #        enableKvm = true;
-    #    };
-    #    guest = {
-    #        enable = true;
-    #        dragAndDrop = true;
-    #        clipboard = true;
-    #    };
-    #};
-    #docker = {
-    #    enable = true;
-    #};
-    #multipass = {
-    #    enable = true;
-    #};
-    #};
-
-    # Fonts
-    fonts = {
-        enableDefaultPackages = true;
-        packages = with pkgs; [
-            nerd-fonts.fira-code
-            nerd-fonts.droid-sans-mono
-            nerd-fonts.jetbrains-mono
-        ];
-        fontconfig = {
-            useEmbeddedBitmaps = true;
+            # syncDocuments = {
+            #    description = "Hourly sync of ~/Documents with Proton Drive";
+            #    wants = ["network-online.target"];
+            #    after = ["network-online.target"];
+            #    serviceConfig = {
+            #        Type = "simple";
+            #        Restart = "always";
+            #        RestartSec = "3600s";
+            #        User = "nate";
+            #        ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/syncDocuments";
+            #        StandardOutput = "append:/var/log/syncDocuments.log";
+            #        StandardError = "append:/var/log/syncDocuments.log";
+            #    };
+            # };
+            # auto-update = {
+            #    description = "Run NixOS update when idle and on AC power";
+            #    wants = ["network-online.target"];
+            #    after = ["network-online.target"];
+            #    serviceConfig = {
+            #        Type = "simple";
+            #        Restart = "always";
+            #        RestartSec = "3600s";
+            #        User = "nate";
+            #        ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
+            #        Environment = "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/nate/bin:/home/nate/.local/bin";
+            #        StandardOutput = "append:/var/log/auto-update.log";
+            #        StandardError = "append:/var/log/auto-update.log";
+            #    };
+            # };
         };
     };
+
+  # System
+  system = {
+      stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
+  };
 }
