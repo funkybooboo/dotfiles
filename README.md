@@ -33,7 +33,7 @@ nix-shell
 Create a file named `~/.2fa_secrets` to store your TOTP secrets:
 
 ```ini
-proton="<the TOTP secret for proton>"
+proton=<the TOTP secret for proton>
 ```
 
 This file will be used by automation scripts like `syncDocuments`.
