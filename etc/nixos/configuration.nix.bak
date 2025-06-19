@@ -89,17 +89,16 @@ in {
         pulse.enable = true;
     };
     printing.enable = true;
-    # systembus-notify.enable = true;
-    # locate.enable = true;
-    # fwupd.enable = true;
-    # openssh.enable = true;
-    # mtr-exporter.enable = true;
     mysql = {
        enable = true;
        package = pkgs.mariadb;
        initialScript = toString mysqlInitScript;
     };
-    # libinput.enable = true;
+    systembus-notify.enable = true;
+    locate.enable = true;
+    fwupd.enable = true;
+    openssh.enable = true;
+    libinput.enable = true;
   };
 
   # Hardware
@@ -164,7 +163,7 @@ in {
   # Programs
   programs = {
       fish.enable = true;
-      # mtr.enable = true;
+      mtr.enable = true;
       neovim = {
           enable = true;
           viAlias = true;
