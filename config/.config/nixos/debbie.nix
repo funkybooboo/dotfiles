@@ -274,19 +274,6 @@ in {
         ];
     };
 
-    systemd.tmpfiles.rules = [
-        "d /etc/wireplumber/bluetooth.lua.d 0755 root root -"
-        "f /etc/wireplumber/bluetooth.lua.d/50-bluez-config.lua 0644 root root - ${pkgs.writeText "bluetooth.lua" ''
-            bluez_monitor.properties = {
-              ["bluez5.enable-sbc-xq"] = true,
-              ["bluez5.enable-msbc"] = true,
-              ["bluez5.enable-hw-volume"] = true,
-              ["bluez5.enable-a2dp"] = true;
-              ["bluez5.enable-hfp"] = true;
-            }
-        ''}"
-    ];
-
     # Programs
     programs = {
         fish = {
@@ -392,15 +379,18 @@ in {
         fwupd.enable = true;
         blueman.enable = true;
         printing.enable = true;
-        pulseaudio.enable = false;
         openssh.enable = true;
-        pipewire = {
+        pulseaudio = {
             enable = true;
-            alsa.enable = true;
-            alsa.support32Bit = true;
-            pulse.enable = true;
-            jack.enable = true;
-            wireplumber.enable = true;
+            package = pkgs.pulseaudioFull;
+            extraConfig = ''
+                load-module module-switch-on-connect
+                load-module module-bluetooth-policy
+                load-module module-bluetooth-discover
+            '';
+        };
+        pipewire = {
+            enable = false;
         };
         mysql = {
             enable = true;
@@ -535,10 +525,7 @@ in {
             powerOnBoot = true;
             settings = {
                 General = {
-                    Enable = lib.mkDefault "Source,Sink,Media,Socket";
-                    Class = lib.mkDefault "0x240404";
-                    ControllerMode = lib.mkDefault "dual";
-                    FastConnectable = lib.mkDefault "true";
+                    Experimental = true;
                 };
             };
         };
