@@ -32,7 +32,6 @@ in {
             enable = true;
             powerOnBoot = true;
         };
-        pulseaudio.enable = true;
         graphics = {
             enable = true;
             enable32Bit = true;
