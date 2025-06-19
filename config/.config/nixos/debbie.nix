@@ -231,6 +231,7 @@ in {
             #lazygit
             #git-filter-repo
             #gitbutler
+            delta
 
             # Containerization & Deployment
             #lazydocker
