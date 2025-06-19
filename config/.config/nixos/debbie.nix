@@ -484,7 +484,7 @@ in {
                 after = ["flatpak-system-helper.service"];
                 serviceConfig = {
                     Type = "oneshot";
-                    Restart=on-failure;
+                    Restart="on-failure";
                     Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
                     ExecStart = pkgs.writeShellScript "install-flatpaks" ''
                         set -e
