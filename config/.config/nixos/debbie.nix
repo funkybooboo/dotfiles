@@ -264,7 +264,7 @@ in {
 
             # Browsers & Communication
             firefox
-            librewolf
+            unstable.librewolf
             brave
             chromium
             lynx
