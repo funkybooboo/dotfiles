@@ -395,11 +395,11 @@ in {
             plasma-browser-integration
             konsole
             #(lib.getBin qttools) # Expose qdbus in PATH
-            ark
+            # ark
             elisa
             #gwenview
             #okular
-            kate
+            # kate
             khelpcenter
             #dolphin
             baloo-widgets # baloo information in Dolphin
