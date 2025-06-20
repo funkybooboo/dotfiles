@@ -1,142 +1,151 @@
-{ config, pkgs, lib, ... }: let
+{
+    config,
+    pkgs,
+    lib,
+    ...
+}: let
     unstableTarball = fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
     };
 
     mysqlInitScript = pkgs.writeTextFile {
-       name = "mariadb-init";
-       text = lib.concatStringsSep "\n" [
-           "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
-           "FLUSH PRIVILEGES;"
-       ];
+        name = "mariadb-init";
+        text = lib.concatStringsSep "\n" [
+            "ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';"
+            "FLUSH PRIVILEGES;"
+        ];
     };
 
     flatpakApps = [
         "io.github.voxelcubes.hand-tex"
         "io.github.dman95.SASM"
         "io.gitlab.persiangolf.voicegen"
+        "org.kde.kgeography"
+        "org.kde.isoimagewriter"
+        "io.github.josephmawa.EncodingExplorer"
+        "eu.jumplink.Learn6502"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 in {
-  # Bootloader
-  boot.loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-  };
-
-  # Networking
-  networking = {
-      networkmanager.enable = true;
-      firewall = {
-          enable = true;
-          allowedTCPPorts = [];
-          allowedUDPPorts = [];
-      };
-  };
-
-  # Time
-  time.timeZone = "America/New_York";
-  #time.timeZone = "America/Denver";
-
-  # Internationalisation
-  i18n = {
-      defaultLocale = "en_US.UTF-8";
-      extraLocaleSettings = {
-          LC_ADDRESS = "en_US.UTF-8";
-          LC_IDENTIFICATION = "en_US.UTF-8";
-          LC_MEASUREMENT = "en_US.UTF-8";
-          LC_MONETARY = "en_US.UTF-8";
-          LC_NAME = "en_US.UTF-8";
-          LC_NUMERIC = "en_US.UTF-8";
-          LC_PAPER = "en_US.UTF-8";
-          LC_TELEPHONE = "en_US.UTF-8";
-          LC_TIME = "en_US.UTF-8";
-      };
-  };
-
-  # Security
-  security.rtkit.enable = true;
-
-  # Services
-  services = {
-    xserver = {
-          enable = true;
-          xkb = {
-             layout = "us";
-             variant = "";
-          };
+    # Bootloader
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
     };
-    displayManager = {
-        sddm = {
+
+    # Networking
+    networking = {
+        networkmanager.enable = true;
+        firewall = {
             enable = true;
-            wayland.enable = true;
+            allowedTCPPorts = [];
+            allowedUDPPorts = [];
         };
-        defaultSession = "plasma";
     };
-    desktopManager.plasma6.enable = true;
-    pulseaudio.enable = false;
-    pipewire = {
-        enable = true;
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
+
+    # Time
+    time.timeZone = "America/New_York";
+    #time.timeZone = "America/Denver";
+
+    # Internationalisation
+    i18n = {
+        defaultLocale = "en_US.UTF-8";
+        extraLocaleSettings = {
+            LC_ADDRESS = "en_US.UTF-8";
+            LC_IDENTIFICATION = "en_US.UTF-8";
+            LC_MEASUREMENT = "en_US.UTF-8";
+            LC_MONETARY = "en_US.UTF-8";
+            LC_NAME = "en_US.UTF-8";
+            LC_NUMERIC = "en_US.UTF-8";
+            LC_PAPER = "en_US.UTF-8";
+            LC_TELEPHONE = "en_US.UTF-8";
+            LC_TIME = "en_US.UTF-8";
+        };
     };
-    printing.enable = true;
-    mysql = {
-       enable = true;
-       package = pkgs.mariadb;
-       initialScript = toString mysqlInitScript;
+
+    # Security
+    security.rtkit.enable = true;
+
+    # Services
+    services = {
+        xserver = {
+            enable = true;
+            xkb = {
+                layout = "us";
+                variant = "";
+            };
+        };
+        displayManager = {
+            sddm = {
+                enable = true;
+                wayland.enable = true;
+            };
+            defaultSession = "plasma";
+        };
+        desktopManager.plasma6.enable = true;
+        pulseaudio.enable = false;
+        pipewire = {
+            enable = true;
+            alsa.enable = true;
+            alsa.support32Bit = true;
+            pulse.enable = true;
+        };
+        printing.enable = true;
+        mysql = {
+            enable = true;
+            package = pkgs.mariadb;
+            initialScript = toString mysqlInitScript;
+        };
+        systembus-notify.enable = true;
+        locate.enable = true;
+        fwupd.enable = true;
+        openssh.enable = true;
+        libinput.enable = true;
+        flatpak.enable = true;
     };
-    systembus-notify.enable = true;
-    locate.enable = true;
-    fwupd.enable = true;
-    openssh.enable = true;
-    libinput.enable = true;
-    flatpak.enable = true;
-  };
 
-  # Hardware
-  hardware = {
-      bluetooth = {
-          enable = true;
-          powerOnBoot = true;
-      };
-      graphics = {
-          enable = true;
-          enable32Bit = true;
-      };
-  };
+    # Hardware
+    hardware = {
+        bluetooth = {
+            enable = true;
+            powerOnBoot = true;
+        };
+        graphics = {
+            enable = true;
+            enable32Bit = true;
+        };
+    };
 
-  # Users
-  ## Don't forget to set a password with ‘passwd’
-  users = {
-      users = {
-          nate = {
-              isNormalUser = true;
-              description = "Nate Stott";
-              extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
-              shell = pkgs.fish;
-          };
-      };
-      extraGroups = {
-         vboxusers = {
-             members = ["nate"];
-         };
-      };
-  };
+    # Users
+    ## Don't forget to set a password with ‘passwd’
+    users = {
+        users = {
+            nate = {
+                isNormalUser = true;
+                description = "Nate Stott";
+                extraGroups = ["networkmanager" "wheel" "wireshark" "docker"];
+                shell = pkgs.fish;
+            };
+        };
+        extraGroups = {
+            vboxusers = {
+                members = ["nate"];
+            };
+        };
+    };
 
-  # Nixpkgs
-  nixpkgs.config = {
-      permittedInsecurePackages = [];
-      allowUnfree = true;
-      packageOverrides = pkgs: {
-          unstable = import unstableTarball {
-              config = config.nixpkgs.config;
-          };
-      };
-  };
+    # Nixpkgs
+    nixpkgs.config = {
+        permittedInsecurePackages = [];
+        allowUnfree = true;
+        packageOverrides = pkgs: {
+            unstable = import unstableTarball {
+                config = config.nixpkgs.config;
+            };
+        };
+    };
 
-  xdg.portal = {
+    xdg.portal = {
         enable = true;
         extraPortals = [
             pkgs.xdg-desktop-portal
@@ -402,119 +411,119 @@ in {
         ];
     };
 
-  # Programs
-  programs = {
-      fish.enable = true;
-      mtr.enable = true;
-      neovim = {
-          enable = true;
-          viAlias = true;
-          vimAlias = true;
-      };
-      gnupg = {
-          agent = {
-              enable = true;
-              enableSSHSupport = true;
-          };
-      };
-      nix-ld = {
-          enable = true;
-          libraries = with pkgs; [
-              # Add any missing dynamic libraries for unpackaged programs here,
-              # NOT in environment.systemPackages
-          ];
-      };
-      hyprland = {
-         enable = true;
-         xwayland = {
-             enable = true;
-         };
-      };
-  };
+    # Programs
+    programs = {
+        fish.enable = true;
+        mtr.enable = true;
+        neovim = {
+            enable = true;
+            viAlias = true;
+            vimAlias = true;
+        };
+        gnupg = {
+            agent = {
+                enable = true;
+                enableSSHSupport = true;
+            };
+        };
+        nix-ld = {
+            enable = true;
+            libraries = with pkgs; [
+                # Add any missing dynamic libraries for unpackaged programs here,
+                # NOT in environment.systemPackages
+            ];
+        };
+        hyprland = {
+            enable = true;
+            xwayland = {
+                enable = true;
+            };
+        };
+    };
 
-  # Virtualization
-  virtualisation = {
-    virtualbox = {
-       host = {
-           enable = true;
-           enableExtensionPack = true;
-           addNetworkInterface = false;
-           enableKvm = true;
-       };
-       guest = {
-           enable = true;
-           dragAndDrop = true;
-           clipboard = true;
-       };
+    # Virtualization
+    virtualisation = {
+        virtualbox = {
+            host = {
+                enable = true;
+                enableExtensionPack = true;
+                addNetworkInterface = false;
+                enableKvm = true;
+            };
+            guest = {
+                enable = true;
+                dragAndDrop = true;
+                clipboard = true;
+            };
+        };
+        docker = {
+            enable = true;
+        };
+        multipass = {
+            enable = true;
+        };
     };
-    docker = {
-       enable = true;
-    };
-    multipass = {
-       enable = true;
-    };
-  };
 
-  # Fonts
-  fonts = {
-      enableDefaultPackages = true;
-      packages = with pkgs; [
-          nerd-fonts.fira-code
-          nerd-fonts.droid-sans-mono
-          nerd-fonts.jetbrains-mono
-      ];
-      fontconfig = {
-          useEmbeddedBitmaps = true;
-      };
-  };
+    # Fonts
+    fonts = {
+        enableDefaultPackages = true;
+        packages = with pkgs; [
+            nerd-fonts.fira-code
+            nerd-fonts.droid-sans-mono
+            nerd-fonts.jetbrains-mono
+        ];
+        fontconfig = {
+            useEmbeddedBitmaps = true;
+        };
+    };
 
     # Systemd
     systemd = {
         services = {
             install-flatpaks = {
-               description = "Install Flatpak apps from Flathub";
-               wantedBy = ["multi-user.target"];
-               after = ["flatpak-system-helper.service"];
-               serviceConfig = {
-                   Type = "oneshot";
-                   Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
-                   ExecStart = pkgs.writeShellScript "install-flatpaks" ''
-                       set -e
-        
-                       # Ensure flatpak is installed
-                       if ! command -v flatpak >/dev/null; then
-                         echo "Flatpak command not found! Skipping Flatpak app installation."
-                         exit 0
-                       fi
-        
-                       # Make sure flathub is added
-                       if ! flatpak remote-list | grep -q flathub; then
-                         echo "Adding Flathub remote..."
-                         flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-                       fi
-        
-                       # Install apps
-                       for app in ${flatpakAppList}; do
-                         echo "Installing $app..."
-                         if ! flatpak info "$app" >/dev/null 2>&1; then
-                           flatpak install -y --noninteractive flathub "$app"
-                         else
-                           echo "$app already installed."
-                         fi
-                       done
-        
-                       # Cleanup apps not in list
-                       echo "Checking for orphaned Flatpak apps..."
-                       for installed in $(flatpak list --app --columns=application); do
-                         if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
-                           echo "Removing orphaned app: $installed"
-                           flatpak uninstall -y "$installed"
-                         fi
-                       done
-                   '';
-                   StandardOutput = "append:/var/log/install-flatpaks.log";
-                   StandardError = "append:/var/log/install-flatpaks.log";
-               };
+                description = "Install Flatpak apps from Flathub";
+                wantedBy = ["multi-user.target"];
+                after = ["flatpak-system-helper.service"];
+                serviceConfig = {
+                    Type = "oneshot";
+                    Environment = "PATH=/run/current-system/sw/bin:/run/wrappers/bin:/etc/profiles/per-user/root/bin";
+                    ExecStart = pkgs.writeShellScript "install-flatpaks" ''
+                        set -e
+
+                        # Ensure flatpak is installed
+                        if ! command -v flatpak >/dev/null; then
+                          echo "Flatpak command not found! Skipping Flatpak app installation."
+                          exit 0
+                        fi
+
+                        # Make sure flathub is added
+                        if ! flatpak remote-list | grep -q flathub; then
+                          echo "Adding Flathub remote..."
+                          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+                        fi
+
+                        # Install apps
+                        for app in ${flatpakAppList}; do
+                          echo "Installing $app..."
+                          if ! flatpak info "$app" >/dev/null 2>&1; then
+                            flatpak install -y --noninteractive flathub "$app"
+                          else
+                            echo "$app already installed."
+                          fi
+                        done
+
+                        # Cleanup apps not in list
+                        echo "Checking for orphaned Flatpak apps..."
+                        for installed in $(flatpak list --app --columns=application); do
+                          if ! echo "${flatpakAppList}" | grep -qw "$installed"; then
+                            echo "Removing orphaned app: $installed"
+                            flatpak uninstall -y "$installed"
+                          fi
+                        done
+                    '';
+                    StandardOutput = "append:/var/log/install-flatpaks.log";
+                    StandardError = "append:/var/log/install-flatpaks.log";
+                };
             };
             # syncDocuments = {
             #    description = "Hourly sync of ~/Documents with Proton Drive";
@@ -548,8 +557,8 @@ in {
         };
     };
 
-  # System
-  system = {
-      stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
-  };
+    # System
+    system = {
+        stateVersion = "25.05"; # see https://ostechnix.com/upgrade-nixos/
+    };
 }
