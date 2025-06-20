@@ -2,7 +2,7 @@
   "add-to-path": [
     "scripts/.scripts/nixos/rebuild",
     "scripts/.scripts/nixos/update",
-    "scripts/.scripts/nixos/syncDocuments",
+    "scripts/.scripts/nixos/sync-docs",
     "scripts/.scripts/nixos/2fa",
     "scripts/.scripts/nixos/update-rclone-2fa",
     "scripts/.scripts/nixos/auto-update",
