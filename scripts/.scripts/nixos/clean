@@ -1,0 +1,42 @@
+#!/run/current-system/sw/bin/bash
+set -euo pipefail
+
+echo "=== Starting system cleanup ==="
+echo ""
+
+# 1) Garbage-collect old Nix generations and their store paths
+echo "Step 1: Garbage-collect obsolete Nix generations..."
+sudo nix-collect-garbage -d
+echo "→ Nix store pruned of all but current generations."
+echo ""
+
+# 2) Uninstall unused Flatpak runtimes and applications
+echo "Step 2: Removing unused Flatpak runtimes and apps..."
+sudo flatpak uninstall --unused -y
+echo "→ Unused Flatpak content removed."
+echo ""
+
+# 3) Vacuum systemd journal logs older than 7 days
+echo "Step 3: Vacuuming journal logs older than 7 days..."
+sudo journalctl --vacuum-time=7d
+echo "→ Old journal entries purged."
+echo ""
+
+# 4) Prune all unused Docker objects (images, containers, volumes, networks)
+echo "Step 4: Pruning unused Docker objects..."
+if command -v docker >/dev/null 2>&1; then
+  sudo docker system prune --all --volumes --force
+  echo "→ Docker cache cleaned."
+else
+  echo "→ Docker CLI not found; skipping Docker cleanup."
+fi
+echo ""
+
+# 5) Remove files in /tmp older than 7 days
+echo "Step 5: Deleting /tmp files older than 7 days..."
+sudo find /tmp -mindepth 1 -mtime +7 -print -delete
+echo "→ /tmp cleaned."
+echo ""
+
+echo "=== System cleanup complete! ==="
+
