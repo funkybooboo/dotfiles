@@ -1,0 +1,114 @@
+#!/run/current-system/sw/bin/bash
+set -euo pipefail
+
+# ─── 0) Check required commands ──────────────────────────────────────────────
+for cmd in gh git curl jq rclone flock; do
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "Error: '$cmd' not found." >&2
+    exit 1
+  }
+done
+
+# ─── 1) Load & export tokens ─────────────────────────────────────────────────
+if [[ -f "${HOME}/.tokens" ]]; then
+  set -a; source "${HOME}/.tokens"; set +a
+else
+  echo "Error: ~/.tokens not found." >&2
+  exit 1
+fi
+: "${GH_TOKEN:?need GH_TOKEN in ~/.tokens}"
+: "${GITLAB_TOKEN:?need GITLAB_TOKEN in ~/.tokens}"
+
+# ─── 2) Prevent overlapping runs ──────────────────────────────────────────────
+BACKUP_DIR="${HOME}/backups/github"
+mkdir -p "$BACKUP_DIR"
+LOCKFILE="${BACKUP_DIR}/backup-github.lock"
+exec 200>"$LOCKFILE"
+flock -n 200 || { echo "Already running; exiting."; exit 0; }
+
+# ─── 3) Verify Proton remote ─────────────────────────────────────────────────
+rclone listremotes | grep -q '^proton:' || {
+  echo "Error: rclone remote 'proton:' missing." >&2
+  exit 1
+}
+
+# ─── 4) Identities ────────────────────────────────────────────────────────────
+GH_USER="$(gh api user --jq .login)"
+GL_USER_ID="$(curl -s -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" \
+  https://gitlab.com/api/v4/user | jq -r .id)"
+GL_NAMESPACE="$GH_USER"
+
+# ─── 5) List your GitHub repos ───────────────────────────────────────────────
+echo "⏳ Listing GitHub repos for $GH_USER…"
+mapfile -t REPOS < <(
+  gh repo list "$GH_USER" --limit 1000 --json name -q '.[].name'
+)
+
+# ─── 6) Mirror & push each repo ──────────────────────────────────────────────
+for repo in "${REPOS[@]}"; do
+  echo; echo "📦 Processing $repo"
+  REPO_DIR="${BACKUP_DIR}/${repo}.git"
+
+  # Clone or fetch
+  if [[ ! -d "$REPO_DIR" ]]; then
+    echo "  → Cloning mirror via HTTPS…"
+    git clone --mirror \
+      "https://${GH_TOKEN}@github.com/${GH_USER}/${repo}.git" \
+      "$REPO_DIR"
+  else
+    echo "  → Fetching updates…"
+    git --git-dir="$REPO_DIR" fetch --all --prune
+  fi
+
+  # Fetch or create project
+  ENCODED_PATH="$(printf '%s/%s' "$GL_NAMESPACE" "$repo" | sed 's_/_%2F_g')"
+  PROJ_INFO="$(curl -s -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" \
+    "https://gitlab.com/api/v4/projects/${ENCODED_PATH}")"
+  if ! echo "$PROJ_INFO" | jq -e .id >/dev/null; then
+    echo "  → Creating $repo on GitLab…"
+    PROJ_INFO="$(curl -s -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" -X POST \
+      "https://gitlab.com/api/v4/projects" \
+      -d "name=${repo}" \
+      -d "namespace_id=${GL_USER_ID}" \
+      -d "visibility=private" \
+      -d "import_url=https://github.com/${GH_USER}/${repo}.git")"
+  fi
+
+  PROJ_ID="$(echo "$PROJ_INFO" | jq -r .id)"
+  DEFAULT_BRANCH="$(echo "$PROJ_INFO" | jq -r '.default_branch // "main"')"
+  echo "  → default branch is $DEFAULT_BRANCH"
+
+  # ─── 7) Unprotect the default branch safely ──────────────────────────────────
+  # Try to fetch protected branches; fall back to empty array on error
+  PROTECTED_JSON="$(curl -sf -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" \
+    "https://gitlab.com/api/v4/projects/${PROJ_ID}/protected_branches" \
+    || echo '[]')"
+
+  # Look up any rule ID
+  RULE_ID="$(echo "$PROTECTED_JSON" | jq -r \
+    ".[] | select(.name==\"${DEFAULT_BRANCH}\") | .id")"
+
+  if [[ -n "$RULE_ID" && "$RULE_ID" != "null" ]]; then
+    echo "  → Unprotecting branch via rule ID $RULE_ID…"
+    curl -s -X DELETE -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" \
+      "https://gitlab.com/api/v4/projects/${PROJ_ID}/protected_branches/${RULE_ID}" \
+      >/dev/null || true
+  fi
+
+  # Also delete by branch name endpoint (idempotent)
+  echo "  → Ensuring unprotected by branch-name endpoint…"
+  curl -s -X DELETE -H "PRIVATE-TOKEN:${GITLAB_TOKEN}" \
+    "https://gitlab.com/api/v4/projects/${PROJ_ID}/protected_branches/${DEFAULT_BRANCH}" \
+    >/dev/null || true
+
+  # ─── 8) Push the mirror ─────────────────────────────────────────────────────
+  echo "  → Pushing mirror to GitLab…"
+  git --git-dir="$REPO_DIR" push --mirror \
+    "https://oauth2:${GITLAB_TOKEN}@gitlab.com/${GL_NAMESPACE}/${repo}.git"
+done
+
+# ─── 9) Snapshot to Proton Drive ─────────────────────────────────────────────
+echo; echo "☁️  Syncing to Proton Drive…"
+rclone sync "$BACKUP_DIR" proton:Backups/GitHub --create-empty-src-dirs
+
+echo "✅ Backup complete!"

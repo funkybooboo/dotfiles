@@ -1,0 +1,80 @@
+#!/run/current-system/sw/bin/bash
+#
+# update-firmware.sh — refresh and apply firmware updates via fwupd,
+#                     prompt before reboot if running interactively
+#
+
+set -euo pipefail
+
+# timestamp helper
+TS() { date '+%F %T'; }
+
+echo "[$(TS)] Starting firmware update run"
+
+# 1) Ensure fwupdmgr is available
+if ! command -v fwupdmgr >/dev/null 2>&1; then
+  echo "[$(TS)] ERROR: fwupdmgr not found in PATH; aborting" >&2
+  exit 1
+fi
+
+# 2) Refresh metadata
+echo "[$(TS)] Refreshing firmware metadata"
+if ! sudo fwupdmgr refresh; then
+  echo "[$(TS)] ERROR: fwupdmgr refresh failed" >&2
+  exit 1
+fi
+
+# 3) Check for updates
+echo "[$(TS)] Checking for firmware updates"
+if ! updates=$(fwupdmgr get-updates 2>&1); then
+  echo "[$(TS)] ERROR: failed to check for updates" >&2
+  exit 1
+fi
+
+if echo "$updates" | grep -iqE 'no updatable|no updates'; then
+  echo "[$(TS)] No firmware updates available"
+  echo "[$(TS)] Finished (no updates)"
+  exit 0
+fi
+
+echo "[$(TS)] Updates available:"
+echo "$updates"
+
+# 4) Apply updates non-interactively
+echo "[$(TS)] Applying updates"
+if ! sudo fwupdmgr --assumeyes update; then
+  echo "[$(TS)] ERROR: fwupdmgr update failed" >&2
+  exit 1
+fi
+echo "[$(TS)] Firmware update applied successfully"
+
+# 5) Detect if a reboot is required
+if fwupdmgr get-updates --show-details | grep -iqE 'restart|reboot'; then
+  echo "[$(TS)] Reboot required."
+
+  if [ -t 0 ]; then
+    # we have a terminal: ask the user
+    read -p "[$(TS)] OK to reboot now? [y/N] " answer
+    case "$answer" in
+      [Yy]* )
+        echo "[$(TS)] Rebooting now"
+        sudo systemctl reboot
+        ;;
+      * )
+        echo "[$(TS)] Reboot postponed; please reboot manually when convenient"
+        exit 0
+        ;;
+    esac
+
+  else
+    # non-interactive: just warn
+    echo "[$(TS)] Not running in a terminal; please reboot manually to complete firmware installation."
+    exit 0
+  fi
+
+else
+  echo "[$(TS)] No reboot required"
+  echo "[$(TS)] Finished successfully"
+fi
+
+exit 0
