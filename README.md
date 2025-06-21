@@ -1,118 +1,109 @@
-# 🗂️ **Dotfiles**
+# 🗂️ Dotfiles
 
-This repository manages your **personal dotfiles**, **NixOS system configuration**, and **utility scripts** using [GNU Stow].
+This repo manages:
 
-It helps you:
-
-* 🧩 **Organize** home-directory dotfiles into modular Stow packages
-* 🛠️ **Deploy** your NixOS system config (`configuration.nix`) into `/etc/nixos`
-* 📦 **Back up** conflicting files before replacing them with symlinks
-* ⚙️ **Register** personal scripts (`rebuild`, `update`, `syncDocuments`) into `~/.local/bin`
+* 🧩 **Home-directory dotfiles** via GNU Stow
+* ⚙️ **NixOS system configuration** (`configuration.nix`)
+* 📦 **Utility scripts** (`update`, `sync-docs`, `auto-update`, `clean`, etc.) made available in `~/.local/bin`
 
 ---
 
-## 🚀 **Quick Start** (For a Brand-New NixOS Setup)
+## 🚀 Quick Start (Fresh NixOS)
 
-> These steps assume a fresh NixOS install where partitioning & formatting is already done, and your SSH key is set up in GitHub for cloning repositories.
+These steps assume you’ve already installed NixOS, partitioned/bootstrapped, and added your SSH key to GitHub.
 
----
+1. **Clone your dotfiles**
 
+   ```bash
+   git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
+   cd ~/dotfiles
+   ```
 
-### 🔧 **Setup**
+2. **Enter the Nix shell**
 
-#### 1. **Launch the Nix Shell Environment**
+   ```bash
+   nix-shell
+   ```
 
-```bash
-nix-shell
-```
+   This gives you `git`, `jq`, without installing them globally.
 
-> Installs `git`, `jq`, and other setup tools **without** polluting the global system.
+3. **Create your 2FA secrets**
 
-#### 2. **Create Your 2FA Secrets File**
+   ```ini
+   # ~/.2fa_secrets
+   proton=<YOUR_PROTON_TOTP_SECRET>
+   ```
 
-Create a file named `~/.2fa_secrets` to store your TOTP secrets:
+   ```bash
+   chmod 600 ~/.2fa_secrets
+   ```
 
-```ini
-proton=<the TOTP secret for proton>
-```
+4. **Create your tokens file**
 
-This file will be used by automation scripts like `syncDocuments`.
+   ```ini
+   # ~/.tokens
+   GH_TOKEN=ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   GITLAB_TOKEN=glpat-XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   ```
 
-#### 3. **Clone Your Dotfiles Repository**
+   ```bash
+   chmod 600 ~/.tokens
+   ```
 
-```bash
-git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-```
+5. **Install your NixOS configuration**
 
-#### 4. **Install System Configuration**
+   ```bash
+   sudo mkdir -p /etc/nixos
+   sudo cp etc/nixos/configuration.nix /etc/nixos/configuration.nix
+   ```
 
-```bash
-sudo mkdir -p /etc/nixos
-sudo cp etc/nixos/configuration.nix /etc/nixos/configuration.nix
-```
+6. **Bootstrap your dotfiles**
 
-> 🔁 Modify if you're using overlays or multiple config files.
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh --dry-run   # preview which files will be backed up & symlinked
+   ./setup.sh             # apply the changes
+   ```
 
-#### 5. **Make `setup.sh` Executable**
+7. **Rebuild NixOS**
 
-```bash
-chmod +x setup.sh
-```
+   ```bash
+   sudo nixos-rebuild switch
+   ```
 
-#### 7. **Preview Dotfile Actions (Dry-Run)**
+8. **Configure Rclone & sync Documents**
 
-```bash
-./setup.sh --dry-run
-```
+   ```bash
+   rclone config
+   sync-docs
+   ```
 
-* Shows what files would be symlinked
-* Lists what would be backed up to `stow-backups/`
+9. **Run initial system update**
 
-#### 8. **Apply the Dotfiles Setup**
+    ```bash
+    update
+    ```
 
-```bash
-./setup.sh
-```
+10. **Reboot to apply all changes**
 
-#### 9. **Rebuild NixOS System**
-
-```bash
-sudo nixos-rebuild switch
-```
-
-#### 10. **Setup rclone to populate the documents folder**
-
-```bash
-rclone config
-syncDocuments
-```
-
-#### 11. **Update and reboot**
-
-Follow the prompts 
-
-```bash
-update
-```
+  ```bash
+  sudo reboot
+  ```
 
 ---
 
-## 🗂️ Repository Layout
+## 📁 Repository Layout
 
 ```
 .
-├── bash/                   # ~/.bashrc and related shell files
-├── config/.config/…        # ~/.config/*
-├── etc/nixos/              # NixOS system config
+├── bash/                      # ~/.bashrc, etc.
+├── config/                    # ~/.config/*
+├── etc/nixos/                 # NixOS system configuration
 │   └── configuration.nix
-├── gdbinit/                # ~/.gdbinit
-├── ideavim/                # ~/.ideavimrc
-├── scripts/.scripts/…      # Utility scripts
-├── vim/                    # ~/.vimrc
-├── config.json             # Lists scripts to expose in ~/.local/bin
-├── shell.nix               # Nix shell env for setup
-└── setup.sh                # Main bootstrap script
+├── scripts/.scripts/nixos/    # Utility scripts (update, auto-update, clean, sync-docs, rebuild)
+├── setup.sh                   # Stow-based bootstrap script
+├── shell.nix                  # nix-shell definition
+└── config.json                # Lists scripts to symlink into ~/.local/bin
 ```
 
 ---
@@ -121,16 +112,22 @@ update
 
 ### `config.json`
 
-Defines helper scripts to symlink into `~/.local/bin`.
+Defines which scripts get linked into your `~/.local/bin`:
 
 ```json
 {
   "add-to-path": [
     "scripts/.scripts/nixos/rebuild",
     "scripts/.scripts/nixos/update",
-    "scripts/.scripts/nixos/syncDocuments"
+    "scripts/.scripts/nixos/sync-docs",
+    "scripts/.scripts/nixos/auto-update",
+    "scripts/.scripts/nixos/clean"
   ]
 }
 ```
 
-> Add new tools by updating this file and re-running `./setup.sh`.
+Whenever you add a new helper under `scripts/.scripts/nixos/`, update this file and re-run:
+
+```bash
+./setup.sh
+```
