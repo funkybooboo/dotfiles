@@ -1,0 +1,69 @@
+#!/run/current-system/sw/bin/bash
+#
+# sync-docs.sh — Sync ~/Documents <=> Proton Drive Documents via rclone bisync
+#
+set -euo pipefail
+
+# 0) Refresh Proton Drive 2FA via CLI
+if ! /home/nate/.local/bin/update-rclone-2fa; then
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ❌ Failed to update 2FA — sync aborted" >>"${HOME}/.local/state/sync.log"
+    exit 1
+fi
+
+# 1) Paths
+LOCAL_DIR="${HOME}/Documents"
+REMOTE_PATH="proton:Documents"
+LOG_DIR="${HOME}/.local/state"
+LOGFILE="${LOG_DIR}/sync.log"
+CACHE_BASE="${HOME}/.cache/rclone/bisync"
+LOCKFILE="${CACHE_BASE}/home_nate_Documents..proton_Documents.lck"
+PATH1_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path1.lst"
+PATH2_LIST="${CACHE_BASE}/home_nate_Documents..proton_Documents.path2.lst"
+
+# 2) Ensure local + log dirs exist
+[[ -d "$LOCAL_DIR" ]] || {
+    echo "Error: Local directory ${LOCAL_DIR} does not exist." >&2
+    exit 1
+}
+mkdir -p "${LOG_DIR}" && chmod 755 "${LOG_DIR}"
+
+# 3) Ensure remote dir exists
+if ! rclone lsd "${REMOTE_PATH}" >/dev/null 2>&1; then
+    rclone mkdir "${REMOTE_PATH}"
+fi
+
+# 4) Safe stale lockfile removal (30 min timeout or dead PID)
+if [[ -f "$LOCKFILE" ]]; then
+    PID=$(grep '"PID"' "$LOCKFILE" | sed -E 's/.*"PID": ?"([0-9]+)".*/\1/')
+    LOCK_TIME=$(stat -c %Y "$LOCKFILE")
+    NOW_TIME=$(date +%s)
+    AGE_MIN=$(((NOW_TIME - LOCK_TIME) / 60))
+
+    if ! ps -p "$PID" >/dev/null 2>&1 || [[ "$AGE_MIN" -ge 30 ]]; then
+        echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ⚠ Removing stale lockfile (PID=${PID}, Age=${AGE_MIN}min)" >>"${LOGFILE}"
+        rclone deletefile "$LOCKFILE"
+    fi
+fi
+
+# 5) Detect first-time --resync
+USE_RESYNC=""
+if [[ ! -f "$PATH1_LIST" || ! -f "$PATH2_LIST" ]]; then
+    USE_RESYNC="--resync"
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] First run: initializing bisync state (using --resync)" >>"${LOGFILE}"
+fi
+
+# 6) Run bisync
+if ! rclone bisync \
+    "${LOCAL_DIR}" \
+    "${REMOTE_PATH}" \
+    --delete-during \
+    --verbose \
+    --log-file="${LOGFILE}" \
+    ${USE_RESYNC:+$USE_RESYNC}; then
+
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ❌ rclone bisync failed — check log at ${LOGFILE}" >>"${LOGFILE}"
+    exit 1
+fi
+
+# 7) Success
+echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ✅ Sync completed successfully" >>"${LOGFILE}"
