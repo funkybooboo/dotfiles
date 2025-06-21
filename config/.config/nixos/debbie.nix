@@ -537,6 +537,7 @@ in {
           User = "nate";
           Environment = [
             "HOME=/home/nate"
+            "USER=nate"
             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
           ];
           ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
@@ -554,6 +555,8 @@ in {
         serviceConfig = {
           Type = "simple";
           Environment = [
+            "HOME=/home/nate"
+            "USER=nate"
             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
           ];
           ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
@@ -564,25 +567,25 @@ in {
         };
       };
 
-      # backup-github = {
+      #   backup-github = {
       #     description = "Mirror all GitHub repos to GitLab + Proton Drive";
       #     wants = ["network-online.target"];
       #     after = ["network-online.target"];
       #     serviceConfig = {
-      #         Type = "simple";
-      #         User = "nate";
-      #         Environment = [
-      #             "HOME=/home/nate"
-      #             "USER=nate"
-      #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-      #         ];
-      #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
-      #         Restart = "on-failure";
-      #         RestartSec = 3600;
-      #         StandardOutput = "journal";
-      #         StandardError = "journal";
+      #       Type = "simple";
+      #       User = "nate";
+      #       Environment = [
+      #         "HOME=/home/nate"
+      #         "USER=nate"
+      #         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+      #       ];
+      #       ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
+      #       Restart = "on-failure";
+      #       RestartSec = 3600;
+      #       StandardOutput = "journal";
+      #       StandardError = "journal";
       #     };
-      # };
+      #   };
     };
 
     timers = {
@@ -600,18 +603,18 @@ in {
         wantedBy = ["timers.target"];
         timerConfig = {
           OnCalendar = "daily";
-          Persistent = true; # catch up if machine was off
+          Persistent = true;
         };
       };
 
-      # backup-github = {
+      #   backup-github = {
       #     description = "Headless mirror of GitHub repos to GitLab + Proton Drive";
       #     wantedBy = ["timers.target"];
       #     timerConfig = {
-      #         OnCalendar = "weekly";
-      #         Persistent = true; # catch up if machine was off
+      #       OnCalendar = "weekly";
+      #       Persistent = true;
       #     };
-      # };
+      #   };
     };
   };
 

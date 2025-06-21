@@ -110,8 +110,17 @@ for repo in "${REPOS[@]}"; do
     "https://oauth2:${GITLAB_TOKEN}@gitlab.com/${GL_NAMESPACE}/${repo}.git"
 done
 
-# ─── 9) Snapshot to Proton Drive ─────────────────────────────────────────────
-echo; echo "☁️  Syncing to Proton Drive…"
+# ─── 9) Refresh Proton Drive 2FA ──────────────────────────────────────────────
+if ! /home/nate/.local/bin/update-rclone-2fa; then
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%:z')] ❌ Failed to update 2FA — sync aborted" >>"${HOME}/.local/state/sync.log"
+    exit 1
+fi
+
+# ─── 10) Snapshot to Proton Drive ─────────────────────────────────────────────
+echo; echo "☁️  Purging old snapshot…"
+rclone purge proton:Backups/GitHub
+
+echo "☁️  Syncing fresh snapshot…"
 rclone sync "$BACKUP_DIR" proton:Backups/GitHub --create-empty-src-dirs
 
 echo "✅ Backup complete!"
