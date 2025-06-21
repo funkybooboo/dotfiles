@@ -576,8 +576,7 @@ in {
                         "USER=nate"
                         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
                     ];
-                    ExecStartPre = "${pkgs.util-linux}/bin/flock --timeout=0 /var/run/backup-github.lock";
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/bin/backup-github";
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
                     Restart = "on-failure";
                     RestartSec = 3600;
                     StandardOutput = "journal";
