@@ -56,6 +56,9 @@ for repo in "${REPOS[@]}"; do
       "https://${GH_TOKEN}@github.com/${GH_USER}/${repo}.git" \
       "$REPO_DIR"
   else
+    echo "  → Ensuring origin is HTTPS…"
+    git --git-dir="$REPO_DIR" remote set-url origin \
+        "https://${GH_TOKEN}@github.com/${GH_USER}/${repo}.git"
     echo "  → Fetching updates…"
     git --git-dir="$REPO_DIR" fetch --all --prune
   fi
