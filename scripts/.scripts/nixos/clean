@@ -25,13 +25,10 @@ echo ""
 # 4) Prune all unused Docker objects and build cache
 echo "Step 4: Pruning unused Docker objects and build cache..."
 if command -v docker >/dev/null 2>&1; then
-  # remove stopped containers, dangling images, unused networks & volumes
   sudo docker system prune --all --volumes --force
   echo "  → docker system prune complete."
-  # remove build cache (layers, intermediates)
   sudo docker builder prune --all --force
   echo "  → docker builder prune complete."
-  # remove any leftover dangling images older than 24h
   sudo docker image prune --force --filter "until=24h"
   echo "  → docker image prune (older than 24h) complete."
   echo "→ Docker cleanup finished."
@@ -44,6 +41,21 @@ echo ""
 echo "Step 5: Deleting /tmp files older than 7 days..."
 sudo find /tmp -mindepth 1 -mtime +7 -print -delete
 echo "→ /tmp cleaned."
+echo ""
+
+# 6) Delete all Multipass instances and purge images
+echo "Step 6: Cleaning up Multipass VMs and images..."
+if command -v multipass >/dev/null 2>&1; then
+  # delete every instance (running or stopped)
+  multipass delete --all
+  echo "  → multipass delete --all issued."
+  # purge disk images and metadata
+  multipass purge
+  echo "  → multipass purge complete."
+  echo "→ Multipass cleanup finished."
+else
+  echo "→ Multipass CLI not found; skipping Multipass cleanup."
+fi
 echo ""
 
 echo "=== System cleanup complete! ==="
