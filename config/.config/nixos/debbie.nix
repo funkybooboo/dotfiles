@@ -249,6 +249,7 @@ in {
             # Version Control
             git
             glab
+            codeberg-cli
             gh
             github-desktop
             lazygit
@@ -562,6 +563,27 @@ in {
                     StandardError = "journal";
                 };
             };
+
+            backup-github = {
+                description = "Mirror all GitHub repos to GitLab + Proton Drive";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    User = "nate";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "USER=nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
+                    ExecStartPre = "${pkgs.util-linux}/bin/flock --timeout=0 /var/run/backup-github.lock";
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/bin/backup-github";
+                    Restart = "on-failure";
+                    RestartSec = 3600;
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
         };
 
         timers = {
@@ -579,7 +601,16 @@ in {
                 wantedBy = ["timers.target"];
                 timerConfig = {
                     OnCalendar = "daily";
-                    Persistent = true; # catch up if machine was asleep
+                    Persistent = true; # catch up if machine was off
+                };
+            };
+
+            backup-github = {
+                description = "Headless mirror of GitHub repos to GitLab + Proton Drive";
+                wantedBy = ["timers.target"];
+                timerConfig = {
+                    OnCalendar = "weekly";
+                    Persistent = true; # catch up if machine was off
                 };
             };
         };
