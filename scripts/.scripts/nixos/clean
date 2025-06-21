@@ -22,11 +22,19 @@ sudo journalctl --vacuum-time=7d
 echo "→ Old journal entries purged."
 echo ""
 
-# 4) Prune all unused Docker objects (images, containers, volumes, networks)
-echo "Step 4: Pruning unused Docker objects..."
+# 4) Prune all unused Docker objects and build cache
+echo "Step 4: Pruning unused Docker objects and build cache..."
 if command -v docker >/dev/null 2>&1; then
+  # remove stopped containers, dangling images, unused networks & volumes
   sudo docker system prune --all --volumes --force
-  echo "→ Docker cache cleaned."
+  echo "  → docker system prune complete."
+  # remove build cache (layers, intermediates)
+  sudo docker builder prune --all --force
+  echo "  → docker builder prune complete."
+  # remove any leftover dangling images older than 24h
+  sudo docker image prune --force --filter "until=24h"
+  echo "  → docker image prune (older than 24h) complete."
+  echo "→ Docker cleanup finished."
 else
   echo "→ Docker CLI not found; skipping Docker cleanup."
 fi
@@ -39,4 +47,3 @@ echo "→ /tmp cleaned."
 echo ""
 
 echo "=== System cleanup complete! ==="
-
