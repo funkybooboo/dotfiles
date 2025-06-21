@@ -530,10 +530,15 @@ in {
                 description = "Sync ~/Documents with Proton Drive via rclone bisync";
                 wants = ["network-online.target"];
                 after = ["network-online.target"];
+                wantedBy = ["multi-user.target"];
+
                 serviceConfig = {
                     Type = "simple";
                     User = "nate";
-                    Environment = "HOME=/home/nate";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
                     Restart = "on-failure";
                     RestartSec = 300;
