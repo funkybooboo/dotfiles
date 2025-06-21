@@ -34,6 +34,4 @@ fi
 
 # --- Run your update logic ---
 echo "Running NixOS update at $(date)"
-yes N | head -n 3 | /home/nate/.local/bin/update
-
-notify-send "Auto Update" "NixOS update completed successfully"
+/home/nate/.local/bin/update

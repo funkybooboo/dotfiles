@@ -530,8 +530,6 @@ in {
                 description = "Sync ~/Documents with Proton Drive via rclone bisync";
                 wants = ["network-online.target"];
                 after = ["network-online.target"];
-                wantedBy = ["multi-user.target"];
-
                 serviceConfig = {
                     Type = "simple";
                     User = "nate";
@@ -540,6 +538,25 @@ in {
                         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
                     ];
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
+                    Restart = "on-failure";
+                    RestartSec = 300;
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
+
+            auto-update = {
+                description = "Headless NixOS auto-update (battery, idle & load checks)";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    User = "nate";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
                     Restart = "on-failure";
                     RestartSec = 300;
                     StandardOutput = "journal";
@@ -555,6 +572,15 @@ in {
                 timerConfig = {
                     OnCalendar = "hourly";
                     Persistent = true;
+                };
+            };
+
+            auto-update = {
+                description = "Headless NixOS auto-update (battery, idle & load checks)";
+                wantedBy = ["timers.target"];
+                timerConfig = {
+                    OnCalendar = "daily";
+                    Persistent = true; # catch up if machine was asleep
                 };
             };
         };
