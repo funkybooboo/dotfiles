@@ -42,7 +42,7 @@ These steps assume you’ve already installed NixOS, partitioned/bootstrapped, a
 
    ```ini
    # ~/.tokens
-   GITHUB_TOKEN=ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   GH_TOKEN=ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
    GITLAB_TOKEN=glpat-XXXXXXXXXXXXXXXXXXXXXXXXXXXX
    ```
 
