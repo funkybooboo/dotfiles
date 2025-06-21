@@ -1,38 +1,6 @@
 #!/run/current-system/sw/bin/bash
+set -e  # Exit immediately on error
 
-set -e # Exit immediately if any command exits with a non-zero status
-
-# ------------------------------------------------------------------------------
-# Script: update-system.sh
-# Purpose:
-#   1. Prompt the user up front for optional actions (garbage-collect old Nix generations,
-#      remove unused Flatpak runtimes/applications, and reboot after update).
-#   2. Update Nix channels.
-#   3. Rebuild/upgrade NixOS.
-#   4. Clear old Nix generations if requested.
-#   5. Update Flatpak applications and runtimes.
-#   6. Remove unused Flatpak runtimes/applications if requested.
-#   7. Show current NixOS version.
-#   8. Reboot if requested.
-# Usage:
-#   chmod +x update-system.sh
-#   ./update-system.sh
-# ------------------------------------------------------------------------------
-
-echo "=== Preparing NixOS and Flatpak Update ==="
-echo ""
-
-# Ask all questions up front and store responses in variables.
-read -p "Do you want to clear old Nix generations and garbage-collect after rebuilding? (y/N) " CLEAR_NIX
-read -p "Do you want to remove unused Flatpak runtimes and applications after updating? (y/N) " CLEAR_FLATPAK
-read -p "Do you want to reboot the machine after all updates are complete? (y/N) " DO_REBOOT
-
-# Normalize answers to lower-case for easier checks
-CLEAR_NIX="${CLEAR_NIX,,}"
-CLEAR_FLATPAK="${CLEAR_FLATPAK,,}"
-DO_REBOOT="${DO_REBOOT,,}"
-
-echo ""
 echo "=== Starting Update Process ==="
 echo ""
 
@@ -48,41 +16,13 @@ sudo nixos-rebuild switch --upgrade
 echo "Done rebuilding NixOS."
 echo ""
 
-# Step 3: Clear old Nix generations if requested
-if [[ "$CLEAR_NIX" == "y" || "$CLEAR_NIX" == "yes" ]]; then
-    echo "Step 3: Cleaning up old Nix generations and unused GC roots..."
-    sudo nix-collect-garbage -d
-    echo "Old Nix generations garbage-collected."
-else
-    echo "Step 3: Skipping garbage-collection of old Nix generations."
-fi
-echo ""
-
-# Step 4: Update Flatpak applications and runtimes
-echo "Step 4: Updating Flatpak applications and runtimes..."
+# Step 3: Update Flatpak applications and runtimes
+echo "Step 3: Updating Flatpak applications and runtimes..."
 sudo flatpak update -y
 echo "Flatpak applications and runtimes updated."
 echo ""
 
-# Step 5: Remove unused Flatpak runtimes/applications if requested
-if [[ "$CLEAR_FLATPAK" == "y" || "$CLEAR_FLATPAK" == "yes" ]]; then
-    echo "Step 5: Removing unused Flatpak runtimes and applications..."
-    sudo flatpak uninstall --unused -y
-    echo "Unused Flatpak runtimes and applications removed."
-else
-    echo "Step 5: Skipping removal of unused Flatpak runtimes and applications."
-fi
-echo ""
-
-# Step 6: Show current NixOS version after upgrade
-echo "Step 6: Current NixOS version:"
+# Step 4: Show current NixOS version
+echo "Step 4: Current NixOS version:"
 nixos-version
 echo ""
-
-# Step 7: Reboot if requested
-if [[ "$DO_REBOOT" == "y" || "$DO_REBOOT" == "yes" ]]; then
-    echo "Step 7: Rebooting now..."
-    sudo reboot
-else
-    echo "Step 7: Update complete. No reboot performed."
-fi
