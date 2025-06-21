@@ -248,6 +248,7 @@ in {
 
             # Version Control
             git
+            glab
             gh
             github-desktop
             lazygit
