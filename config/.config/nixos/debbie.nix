@@ -551,9 +551,7 @@ in {
                 after = ["network-online.target"];
                 serviceConfig = {
                     Type = "simple";
-                    User = "nate";
                     Environment = [
-                        "HOME=/home/nate"
                         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
                     ];
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
