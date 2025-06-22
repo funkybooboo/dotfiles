@@ -589,6 +589,24 @@ in {
                     StandardError = "journal";
                 };
             };
+
+            # auto-update-firmware = {
+            #   description = "Auto-update firmware via fwupd when idle/on AC";
+            #   wants        = [ "network-online.target" ];
+            #   after        = [ "network-online.target" ];
+            #   serviceConfig = {
+            #     Type        = "oneshot";
+            #     User        = "nate";
+            #     Environment = [
+            #       "HOME=/home/nate"
+            #       "USER=nate"
+            #       "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #     ];
+            #     ExecStart   = "/run/current-system/sw/bin/bash /home/nate/.local/bin/auto-update-firmware";
+            #     StandardOutput = "journal";
+            #     StandardError  = "journal";
+            #   };
+            # };
         };
 
         timers = {
@@ -618,6 +636,15 @@ in {
                     Persistent = true;
                 };
             };
+
+            # auto-update-firmware = {
+            #   description = "Periodic trigger for auto-update-firmware.service";
+            #   wants       = [ "timers.target" ];
+            #   timerConfig = {
+            #     OnCalendar   = "monthly";
+            #     Persistent   = true;
+            #   };
+            # };
         };
     };
 

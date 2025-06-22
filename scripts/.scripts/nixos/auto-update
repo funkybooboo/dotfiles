@@ -1,37 +1,20 @@
 #!/run/current-system/sw/bin/bash
 set -euo pipefail
 
-# --- Check if on battery ---
-if grep -q "Discharging" /sys/class/power_supply/BAT*/status 2>/dev/null; then
-    echo "On battery, skipping update."
-    exit 0
+# where you put your good-time-to-run script:
+CHECKER="${HOME}/.local/bin/good-time-to-run"
+
+# sanity-check that the checker exists
+if [[ ! -x "$CHECKER" ]]; then
+  echo "[$(date +'%F %T')] ERROR: $CHECKER not found or not executable" >&2
+  exit 1
 fi
 
-# --- Check if idle (Wayland + X11 compatible) ---
-if command -v xprintidle >/dev/null 2>&1; then
-    IDLE_MS=$(xprintidle 2>/dev/null || echo 0)
-    if [[ "$IDLE_MS" -eq 0 ]]; then
-        echo "xprintidle failed (Wayland?), falling back to loginctl..."
-    elif [[ "$IDLE_MS" -lt 600000 ]]; then
-        echo "User is active (X11 idle time: ${IDLE_MS}ms), skipping update."
-        exit 0
-    fi
-else
-    SESSION_ID=$(loginctl | awk -v user="$USER" '$3 == user && $4 ~ /^seat/ && $6 == "user" { print $1; exit }')
-    IDLE_STATE=$(loginctl show-session "$SESSION_ID" -p IdleHint | cut -d= -f2)
-    if [[ "$IDLE_STATE" != "yes" ]]; then
-        echo "User is active (IdleHint=no), skipping update."
-        exit 0
-    fi
+echo "[$(date +'%F %T')] Checking if now is a good time to update…"
+if ! "$CHECKER"; then
+  echo "[$(date +'%F %T')] Not a good time — skipping update."
+  exit 0
 fi
 
-# --- Check system load ---
-LOAD=$(cut -d. -f1 /proc/loadavg)
-if [[ "$LOAD" -gt 2 ]]; then
-    echo "System under load, skipping update."
-    exit 0
-fi
-
-# --- Run your update logic ---
-echo "Running NixOS update at $(date)"
+echo "[$(date +'%F %T')] Good time—running NixOS update."
 /home/nate/.local/bin/update
