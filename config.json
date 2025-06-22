@@ -9,6 +9,9 @@
     "scripts/.scripts/nixos/clean",
     "scripts/.scripts/nixos/backup-github",
     "scripts/.scripts/nixos/update-firmware",
-    "scripts/.scripts/nixos/proton-sync"
+    "scripts/.scripts/nixos/proton-sync",
+    "scripts/.scripts/nixos/good-time-to-run",
+    "scripts/.scripts/utils/view_pdf",
+    "scripts/.scripts/utils/pdf_to_md"
   ]
 }

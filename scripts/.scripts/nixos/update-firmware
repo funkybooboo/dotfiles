@@ -1,9 +1,8 @@
 #!/run/current-system/sw/bin/bash
 #
-# update-firmware.sh — refresh and apply firmware updates via fwupd,
+# update-firmware — refresh and apply firmware updates via fwupd,
 #                     prompt before reboot if running interactively
 #
-
 set -euo pipefail
 
 # timestamp helper
