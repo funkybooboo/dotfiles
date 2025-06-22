@@ -1,0 +1,24 @@
+#!/run/current-system/sw/bin/bash
+#
+# auto-update-firmware
+#
+
+set -euo pipefail
+
+# where you put your good-time-to-run script:
+CHECKER="${HOME}/.local/bin/good-time-to-run"
+
+# sanity-check that the checker exists
+if [[ ! -x "$CHECKER" ]]; then
+  echo "[$(date +'%F %T')] ERROR: $CHECKER not found or not executable" >&2
+  exit 1
+fi
+
+echo "[$(date +'%F %T')] Checking if now is a good time to update…"
+if ! "$CHECKER"; then
+  echo "[$(date +'%F %T')] Not a good time — skipping update."
+  exit 0
+fi
+
+echo "[$(date +'%F %T')] Good time—running Firmware update."
+/home/nate/.local/bin/update-firmware
