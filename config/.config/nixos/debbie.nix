@@ -576,7 +576,6 @@ in {
                 after = ["network-online.target"];
                 serviceConfig = {
                     Type = "simple";
-                    User = "nate";
                     Environment = [
                         "HOME=/home/nate"
                         "USER=nate"
@@ -596,10 +595,7 @@ in {
             #   after        = [ "network-online.target" ];
             #   serviceConfig = {
             #     Type        = "oneshot";
-            #     User        = "nate";
             #     Environment = [
-            #       "HOME=/home/nate"
-            #       "USER=nate"
             #       "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
             #     ];
             #     ExecStart   = "/run/current-system/sw/bin/bash /home/nate/.local/bin/auto-update-firmware";
@@ -641,7 +637,7 @@ in {
             #   description = "Periodic trigger for auto-update-firmware.service";
             #   wants       = [ "timers.target" ];
             #   timerConfig = {
-            #     OnCalendar   = "monthly";
+            #     OnCalendar   = "quarterly";
             #     Persistent   = true;
             #   };
             # };

@@ -1,12 +1,41 @@
 #!/run/current-system/sw/bin/bash
 #
 # update-firmware — refresh and apply firmware updates via fwupd,
-#                     prompt before reboot if running interactively
+#                    prompt before reboot if running interactively
 #
 set -euo pipefail
+set -o errtrace
 
 # timestamp helper
 TS() { date '+%F %T'; }
+
+# ensure we never hang on a sudo prompt
+if ! sudo -n true 2>/dev/null; then
+  echo "[$(TS)] ERROR: sudo would prompt for a password; please configure NOPASSWD for fwupdmgr" >&2
+  exit 1
+fi
+
+# trap errors and report line number
+trap 'echo "[$(TS)] ERROR: failure at line $LINENO" >&2' ERR
+
+# prevent overlapping runs
+LOCKFILE=/var/lock/update-firmware.lock
+exec 200>"$LOCKFILE"
+flock -n 200 || {
+  echo "[$(TS)] Another update-firmware is already running; exiting."
+  exit 0
+}
+
+# retry helper for transient failures
+retry() {
+  local cmd=("$@") n=1 max=3 delay=10
+  until "${cmd[@]}"; do
+    (( n>=max )) && return 1
+    echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…" >&2
+    sleep $delay
+    ((n++))
+  done
+}
 
 echo "[$(TS)] Starting firmware update run"
 
@@ -16,12 +45,9 @@ if ! command -v fwupdmgr >/dev/null 2>&1; then
   exit 1
 fi
 
-# 2) Refresh metadata
+# 2) Refresh metadata (with retry)
 echo "[$(TS)] Refreshing firmware metadata"
-if ! sudo fwupdmgr refresh; then
-  echo "[$(TS)] ERROR: fwupdmgr refresh failed" >&2
-  exit 1
-fi
+retry sudo -n fwupdmgr refresh
 
 # 3) Check for updates
 echo "[$(TS)] Checking for firmware updates"
@@ -41,7 +67,7 @@ echo "$updates"
 
 # 4) Apply updates non-interactively
 echo "[$(TS)] Applying updates"
-if ! sudo fwupdmgr --assumeyes update; then
+if ! sudo -n fwupdmgr --assumeyes update; then
   echo "[$(TS)] ERROR: fwupdmgr update failed" >&2
   exit 1
 fi
@@ -52,19 +78,18 @@ if fwupdmgr get-updates --show-details | grep -iqE 'restart|reboot'; then
   echo "[$(TS)] Reboot required."
 
   if [ -t 0 ]; then
-    # we have a terminal: ask the user
+    # interactive terminal: prompt
     read -p "[$(TS)] OK to reboot now? [y/N] " answer
     case "$answer" in
       [Yy]* )
         echo "[$(TS)] Rebooting now"
-        sudo systemctl reboot
+        sudo -n systemctl reboot
         ;;
       * )
         echo "[$(TS)] Reboot postponed; please reboot manually when convenient"
         exit 0
         ;;
     esac
-
   else
     # non-interactive: just warn
     echo "[$(TS)] Not running in a terminal; please reboot manually to complete firmware installation."
