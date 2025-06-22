@@ -8,6 +8,7 @@
     "scripts/.scripts/nixos/auto-update",
     "scripts/.scripts/nixos/clean",
     "scripts/.scripts/nixos/backup-github",
-    "scripts/.scripts/nixos/update-firmware"
+    "scripts/.scripts/nixos/update-firmware",
+    "scripts/.scripts/nixos/proton-sync"
   ]
 }
