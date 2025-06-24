@@ -246,6 +246,7 @@ in {
             mtr
             mtr-gui
             pmutils
+            git-remote-gcrypt
 
             # Version Control
             git
