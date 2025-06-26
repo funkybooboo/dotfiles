@@ -35,11 +35,14 @@ in {
 
     # Networking
     networking = {
-        networkmanager.enable = true;
+        networkmanager = {
+            enable = true;
+            dns = "dnsmasq"; # NetworkManager runs its own dnsmasq
+        };
         firewall = {
             enable = true;
-            allowedTCPPorts = [];
-            allowedUDPPorts = [];
+            allowedTCPPorts = [53];
+            allowedUDPPorts = [53];
         };
     };
 
@@ -247,6 +250,7 @@ in {
             mtr-gui
             pmutils
             git-remote-gcrypt
+            dig
 
             # Version Control
             git

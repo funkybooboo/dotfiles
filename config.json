@@ -11,6 +11,8 @@
     "scripts/.scripts/nixos/update-firmware",
     "scripts/.scripts/nixos/proton-sync",
     "scripts/.scripts/nixos/good-time-to-run",
+    "scripts/.scripts/utils/auto-update-firmware",
+    "scripts/.scripts/utils/block-sites",
     "scripts/.scripts/utils/view_pdf",
     "scripts/.scripts/utils/pdf_to_md"
   ]
