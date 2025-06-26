@@ -41,6 +41,13 @@ in {
             allowedTCPPorts = [];
             allowedUDPPorts = [];
         };
+        hosts = {
+            "127.0.0.1" = [
+                # Block
+                "youtube.com"
+                "www.youtube.com"
+            ];
+        };
     };
 
     # Time
