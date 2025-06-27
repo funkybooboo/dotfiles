@@ -28,7 +28,7 @@
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
     blockSites = [
-        # 🎥 Video & Streaming
+        # Video & Streaming
         "youtube.com"
         "www.youtube.com"
         "m.youtube.com"
@@ -51,7 +51,7 @@
         "peacocktv.com"
         "www.peacocktv.com"
 
-        # 📱 Social Media
+        # Social Media
         "facebook.com"
         "www.facebook.com"
         "instagram.com"
@@ -73,7 +73,7 @@
         "threads.net"
         "www.threads.net"
 
-        # 📰 News & Clickbait
+        # News & Clickbait
         "cnn.com"
         "www.cnn.com"
         "foxnews.com"
@@ -89,7 +89,7 @@
         "news.yahoo.com"
         "yahoo.com"
 
-        # 🛒 Shopping & Marketplace
+        # Shopping & Marketplace
         "ebay.com"
         "www.ebay.com"
         "etsy.com"
@@ -105,7 +105,7 @@
         "shein.com"
         "www.shein.com"
 
-        # 🎮 Casual & Browser Games
+        # Casual & Browser Games
         "store.steampowered.com"
         "steampowered.com"
         "epicgames.com"
@@ -123,7 +123,7 @@
         "miniclip.com"
         "www.miniclip.com"
 
-        # ✨ Misc distractions
+        # Misc distractions
         "9gag.com"
         "imgur.com"
         "buzzfeed.com"
