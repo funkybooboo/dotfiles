@@ -58,8 +58,8 @@
         "youtube.com"
         "www.youtube.com"
         "m.youtube.com"
-        "netflix.com"
-        "www.netflix.com"
+        # "netflix.com"
+        # "www.netflix.com"
         "hulu.com"
         "www.hulu.com"
         "twitch.tv"
@@ -240,18 +240,18 @@ in {
         libinput.enable = true;
         flatpak.enable = true;
         sshguard = {
-            enable           = true;          # turn on the sshguard service
-            services         = [ "sshd" ];    # which systemd unit-logs to watch :contentReference[oaicite:0]{index=0}
-            whitelist        = [              # IPs/networks you never want blocked
+            enable = true; # turn on SSHGuard
+            services = ["sshd"]; # which unit-logs to watch
+            whitelist = [
+                # networks never to block
                 "192.168.0.0/16"
                 "10.0.0.0/8"
             ];
-            attack_threshold = 5;             # how many “points” before blocking :contentReference[oaicite:1]{index=1}
-            detection_time   = 600;           # how long to accumulate points (in seconds)
-            blocktime        = 3600;          # how long to keep an IP blocked (in seconds)
-            # you can also tweak:
-            # blacklist_threshold = 10;       # auto-blacklist after N blocks
-            # blacklist_file      = "/etc/sshguard/blacklist"; 
+            attack_threshold = 5; # points before blocking
+            detection_time = 600; # seconds to accumulate points
+            blocktime = 3600; # seconds to keep an IP blocked
+            blacklist_threshold = 10; # auto-blacklist after N blocks
+            blacklist_file = "/var/lib/sshguard/blacklist.db";
         };
     };
 
