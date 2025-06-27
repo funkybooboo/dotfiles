@@ -36,6 +36,14 @@
             url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
             sha256 = "1ss99k95bbgaasc8v0cg2vb5fwz1lrs4pcy872d1i9s52cr9vhkr";
         }
+        {
+            url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt";
+            sha256 = "1510gizap1rvjs8xm2vvgvr0r8vbsnj9q1cclm5zy3mr48blddr6";
+        }
+        {
+            url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt";
+            sha256 = "19wwnrdn1gmh4rqwj2jxsgmp4j3w46m0bhnpl3dbibxa8nfg50h8";
+        }
     ];
     dynamicHostFiles = builtins.map (
         host:
@@ -231,6 +239,20 @@ in {
         openssh.enable = true;
         libinput.enable = true;
         flatpak.enable = true;
+        sshguard = {
+            enable           = true;          # turn on the sshguard service
+            services         = [ "sshd" ];    # which systemd unit-logs to watch :contentReference[oaicite:0]{index=0}
+            whitelist        = [              # IPs/networks you never want blocked
+                "192.168.0.0/16"
+                "10.0.0.0/8"
+            ];
+            attack_threshold = 5;             # how many “points” before blocking :contentReference[oaicite:1]{index=1}
+            detection_time   = 600;           # how long to accumulate points (in seconds)
+            blocktime        = 3600;          # how long to keep an IP blocked (in seconds)
+            # you can also tweak:
+            # blacklist_threshold = 10;       # auto-blacklist after N blocks
+            # blacklist_file      = "/etc/sshguard/blacklist"; 
+        };
     };
 
     # Hardware
