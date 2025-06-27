@@ -27,6 +27,24 @@
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
+    dynamicHosts = [
+        {
+            url = "https://someonewhocares.org/hosts/zero/hosts";
+            sha256 = "138kpw9k3yl7x1mjv7j1wfbj26ymhpwaj2dsq6afi56s2javbfpk";
+        }
+        {
+            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
+            sha256 = "1ss99k95bbgaasc8v0cg2vb5fwz1lrs4pcy872d1i9s52cr9vhkr";
+        }
+    ];
+    dynamicHostFiles = builtins.map (
+        host:
+            pkgs.fetchurl {
+                inherit (host) url sha256;
+            }
+    )
+    dynamicHosts;
+
     blockSites = [
         # Video & Streaming
         "youtube.com"
@@ -148,8 +166,9 @@ in {
             allowedTCPPorts = [];
             allowedUDPPorts = [];
         };
+        hostFiles = dynamicHostFiles;
         hosts = {
-            "127.0.0.1" = blockSites;
+            "0.0.0.0" = blockSites;
         };
     };
 
