@@ -26,6 +26,113 @@
         "eu.jumplink.Learn6502"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
+
+    blockSites = [
+        # 🎥 Video & Streaming
+        "youtube.com"
+        "www.youtube.com"
+        "m.youtube.com"
+        "netflix.com"
+        "www.netflix.com"
+        "hulu.com"
+        "www.hulu.com"
+        "twitch.tv"
+        "www.twitch.tv"
+        "disneyplus.com"
+        "www.disneyplus.com"
+        "primevideo.com"
+        "www.primevideo.com"
+        "crunchyroll.com"
+        "www.crunchyroll.com"
+        "vimeo.com"
+        "www.vimeo.com"
+        "dailymotion.com"
+        "www.dailymotion.com"
+        "peacocktv.com"
+        "www.peacocktv.com"
+
+        # 📱 Social Media
+        "facebook.com"
+        "www.facebook.com"
+        "instagram.com"
+        "www.instagram.com"
+        "tiktok.com"
+        "www.tiktok.com"
+        "twitter.com"
+        "www.twitter.com"
+        "x.com"
+        "www.x.com"
+        "pinterest.com"
+        "www.pinterest.com"
+        "tumblr.com"
+        "www.tumblr.com"
+        "snapchat.com"
+        "www.snapchat.com"
+        "bereal.com"
+        "www.bereal.com"
+        "threads.net"
+        "www.threads.net"
+
+        # 📰 News & Clickbait
+        "cnn.com"
+        "www.cnn.com"
+        "foxnews.com"
+        "www.foxnews.com"
+        "nytimes.com"
+        "www.nytimes.com"
+        "washingtonpost.com"
+        "www.washingtonpost.com"
+        "buzzfeed.com"
+        "www.buzzfeed.com"
+        "dailymail.co.uk"
+        "www.dailymail.co.uk"
+        "news.yahoo.com"
+        "yahoo.com"
+
+        # 🛒 Shopping & Marketplace
+        "ebay.com"
+        "www.ebay.com"
+        "etsy.com"
+        "www.etsy.com"
+        "aliexpress.com"
+        "www.aliexpress.com"
+        "walmart.com"
+        "www.walmart.com"
+        "target.com"
+        "www.target.com"
+        "temu.com"
+        "www.temu.com"
+        "shein.com"
+        "www.shein.com"
+
+        # 🎮 Casual & Browser Games
+        "store.steampowered.com"
+        "steampowered.com"
+        "epicgames.com"
+        "www.epicgames.com"
+        "roblox.com"
+        "www.roblox.com"
+        "itch.io"
+        "www.itch.io"
+        "poki.com"
+        "www.poki.com"
+        "crazygames.com"
+        "www.crazygames.com"
+        "addictinggames.com"
+        "www.addictinggames.com"
+        "miniclip.com"
+        "www.miniclip.com"
+
+        # ✨ Misc distractions
+        "9gag.com"
+        "imgur.com"
+        "buzzfeed.com"
+        "boredpanda.com"
+        "chess.com"
+        "www.chess.com"
+        "lichess.org"
+        "www.lichess.org"
+    ];
 in {
     # Bootloader
     boot.loader = {
@@ -42,11 +149,7 @@ in {
             allowedUDPPorts = [];
         };
         hosts = {
-            "127.0.0.1" = [
-                # Block
-                "youtube.com"
-                "www.youtube.com"
-            ];
+            "127.0.0.1" = blockSites;
         };
     };
 
