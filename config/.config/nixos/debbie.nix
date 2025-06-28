@@ -57,7 +57,7 @@
         # Video & Streaming
         #"youtube.com"
         #"www.youtube.com"
-        "m.youtube.com"
+        #"m.youtube.com"
         "netflix.com"
         "www.netflix.com"
         "sflix.to"
