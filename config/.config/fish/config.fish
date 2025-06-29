@@ -56,3 +56,5 @@ alias j='jump'
 
 # Initialize fnm (Fast Node Manager) environment
 fnm env | source
+
+fish_vi_key_bindings
