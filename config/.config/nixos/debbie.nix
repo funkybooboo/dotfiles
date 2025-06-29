@@ -60,7 +60,7 @@
         #"m.youtube.com"
         "netflix.com"
         "www.netflix.com"
-        "sflix.to"
+        #"sflix.to"
         "hulu.com"
         "www.hulu.com"
         "twitch.tv"
