@@ -55,9 +55,9 @@
 
     blockSites = [
         # Video & Streaming
-        #"youtube.com"
-        #"www.youtube.com"
-        #"m.youtube.com"
+        "youtube.com"
+        "www.youtube.com"
+        "m.youtube.com"
         "netflix.com"
         "www.netflix.com"
         "sflix.to"
@@ -399,6 +399,21 @@ in {
             mtr-gui
             pmutils
             git-remote-gcrypt
+            awstats
+            linode-cli
+            doctl
+            azure-cli
+            google-cloud-sdk
+            aws-nuke
+            awscli2
+            awsls
+            awsume
+            awsbck
+            awslogs
+            aws-mfa
+            awsebcli
+            aws-gate
+            aws-shell
 
             # Version Control
             git
