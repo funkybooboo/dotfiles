@@ -416,6 +416,7 @@ in {
             aws-gate
             aws-shell
             wireguard-tools
+            openvpn
 
             # Version Control
             git
