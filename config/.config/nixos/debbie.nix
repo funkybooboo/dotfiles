@@ -174,6 +174,7 @@ in {
             enable = true;
             allowedTCPPorts = [];
             allowedUDPPorts = [];
+            checkReversePath = false;
         };
         hostFiles = dynamicHostFiles;
         hosts = {
@@ -414,6 +415,7 @@ in {
             awsebcli
             aws-gate
             aws-shell
+            wireguard-tools
 
             # Version Control
             git
