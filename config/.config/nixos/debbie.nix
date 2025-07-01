@@ -418,6 +418,7 @@ in {
             wireguard-tools
             openvpn
             ipcalc
+            nmap
 
             # Version Control
             git
