@@ -417,6 +417,7 @@ in {
             aws-shell
             wireguard-tools
             openvpn
+            ipcalc
 
             # Version Control
             git
