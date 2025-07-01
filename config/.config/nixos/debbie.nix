@@ -405,7 +405,7 @@ in {
             azure-cli
             google-cloud-sdk
             aws-nuke
-            awscli2
+            awscli
             awsls
             awsume
             awsbck
@@ -444,6 +444,7 @@ in {
             protonmail-bridge-gui
             proton-pass
             protonvpn-gui
+            protonvpn-cli
             webcord
             zoom-us
             thunderbird
