@@ -419,6 +419,7 @@ in {
             openvpn
             ipcalc
             nmap
+            codecrafters-cli
 
             # Version Control
             git
