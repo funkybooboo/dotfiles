@@ -133,8 +133,8 @@
         "www.shein.com"
 
         # Casual & Browser Games
-        "store.steampowered.com"
-        "steampowered.com"
+        #"store.steampowered.com"
+        #"steampowered.com"
         "epicgames.com"
         "www.epicgames.com"
         "roblox.com"
