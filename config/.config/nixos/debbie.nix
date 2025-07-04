@@ -30,11 +30,11 @@
     dynamicHosts = [
         {
             url = "https://someonewhocares.org/hosts/zero/hosts";
-            sha256 = "138kpw9k3yl7x1mjv7j1wfbj26ymhpwaj2dsq6afi56s2javbfpk";
+            sha256 = "1wyw6sa31rclv1wvmz8asfrs8hhgnx64m2c2hymbl0gk99000pnv";
         }
         {
             url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
-            sha256 = "1ss99k95bbgaasc8v0cg2vb5fwz1lrs4pcy872d1i9s52cr9vhkr";
+            sha256 = "0mlx9l8k3mmx41hrlmqk6bibz8fvg6xzzpazkfizkc8ivw2nrgb7";
         }
         {
             url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt";
@@ -42,7 +42,7 @@
         }
         {
             url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt";
-            sha256 = "19wwnrdn1gmh4rqwj2jxsgmp4j3w46m0bhnpl3dbibxa8nfg50h8";
+            sha256 = "156jm8zgx5cgq6kxs73w5q4igwdrlkjs62nb12bwjlcjm4pxmf6b";
         }
     ];
     dynamicHostFiles = builtins.map (
@@ -58,9 +58,9 @@
         #"youtube.com"
         #"www.youtube.com"
         #"m.youtube.com"
-        #"netflix.com"
-        #"www.netflix.com"
-        #"sflix.to"
+        "netflix.com"
+        "www.netflix.com"
+        "sflix.to"
         "hulu.com"
         "www.hulu.com"
         "twitch.tv"
@@ -617,6 +617,12 @@ in {
             xwayland = {
                 enable = true;
             };
+        };
+        steam = {
+            enable = true;
+            remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+            dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+            localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
         };
     };
 
