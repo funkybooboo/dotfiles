@@ -156,7 +156,7 @@
         "buzzfeed.com"
         "boredpanda.com"
         #"chess.com"
-        "www.chess.com"
+        #"www.chess.com"
         "lichess.org"
         "www.lichess.org"
     ];
