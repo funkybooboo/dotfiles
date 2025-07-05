@@ -155,7 +155,7 @@
         "imgur.com"
         "buzzfeed.com"
         "boredpanda.com"
-        "chess.com"
+        #"chess.com"
         "www.chess.com"
         "lichess.org"
         "www.lichess.org"
