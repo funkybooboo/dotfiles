@@ -420,6 +420,7 @@ in {
             ipcalc
             nmap
             codecrafters-cli
+            speedtest-cli
 
             # Version Control
             git
