@@ -58,8 +58,8 @@
         #"youtube.com"
         #"www.youtube.com"
         #"m.youtube.com"
-        #"netflix.com"
-        #"www.netflix.com"
+        "netflix.com"
+        "www.netflix.com"
         "sflix.to"
         "hulu.com"
         "www.hulu.com"
@@ -133,8 +133,8 @@
         "www.shein.com"
 
         # Casual & Browser Games
-        #"store.steampowered.com"
-        #"steampowered.com"
+        "store.steampowered.com"
+        "steampowered.com"
         "epicgames.com"
         "www.epicgames.com"
         "roblox.com"
