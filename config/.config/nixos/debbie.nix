@@ -421,6 +421,7 @@ in {
             nmap
             codecrafters-cli
             speedtest-cli
+            rpi-imager
 
             # Version Control
             git
