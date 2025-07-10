@@ -58,8 +58,8 @@
         #"youtube.com"
         #"www.youtube.com"
         #"m.youtube.com"
-        #"netflix.com"
-        #"www.netflix.com"
+        "netflix.com"
+        "www.netflix.com"
         "sflix.to"
         "hulu.com"
         "www.hulu.com"
@@ -155,11 +155,72 @@
         "imgur.com"
         "buzzfeed.com"
         "boredpanda.com"
-        #"chess.com"
-        #"www.chess.com"
+        "chess.com"
+        "www.chess.com"
         "lichess.org"
         "www.lichess.org"
     ];
+
+    allowedBinaries = [
+        {
+            name = "systemd-resolved";
+            path = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-resolved";
+        }
+        {
+            name = "systemd-timesyncd";
+            path = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-timesyncd";
+        }
+        {
+            name = "nix-daemon";
+            path = "${lib.getBin pkgs.nix}/bin/nix-daemon";
+        }
+        {
+            name = "nix";
+            path = "${pkgs.nix}/bin/nix";
+        }
+        {
+            name = "curl";
+            path = "${pkgs.curl}/bin/curl";
+        }
+        {
+            name = "wget";
+            path = "${pkgs.wget}/bin/wget";
+        }
+        {
+            name = "git";
+            path = "${pkgs.git}/bin/git";
+        }
+        {
+            name = "node";
+            path = "${pkgs.nodejs}/bin/node";
+        }
+        {
+            name = "python3";
+            path = "${pkgs.python3}/bin/python3";
+        }
+        {
+            name = "firefox";
+            path = "${pkgs.firefox}/bin/firefox";
+        }
+    ];
+
+    # Map to OpenSnitch rule format
+    opensnitchRules = builtins.listToAttrs (map (entry: {
+        name = entry.name;
+        value = {
+            name = entry.name;
+            enabled = true;
+            action = "allow";
+            duration = "always";
+            operator = {
+                type = "simple";
+                sensitive = false;
+                operand = "process.path";
+                data = entry.path;
+            };
+        };
+    })
+    allowedBinaries);
 in {
     # Bootloader
     boot.loader = {
@@ -257,58 +318,7 @@ in {
         };
         opensnitch = {
             enable = true;
-            rules = {
-                systemd-timesyncd = {
-                    name = "systemd-timesyncd";
-                    enabled = true;
-                    action = "allow";
-                    duration = "always";
-                    operator = {
-                        type = "simple";
-                        sensitive = false;
-                        operand = "process.path";
-                        data = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-timesyncd";
-                    };
-                };
-                systemd-resolved = {
-                    name = "systemd-resolved";
-                    enabled = true;
-                    action = "allow";
-                    duration = "always";
-                    operator = {
-                        type = "simple";
-                        sensitive = false;
-                        operand = "process.path";
-                        data = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-resolved";
-                    };
-                };
-
-                curl = {
-                    name = "curl";
-                    enabled = true;
-                    action = "allow";
-                    duration = "always";
-                    operator = {
-                        type = "simple";
-                        sensitive = false;
-                        operand = "process.path";
-                        data = "${pkgs.curl}/bin/curl";
-                    };
-                };
-
-                nix-daemon = {
-                    name = "nix-daemon";
-                    enabled = true;
-                    action = "allow";
-                    duration = "always";
-                    operator = {
-                        type = "simple";
-                        sensitive = false;
-                        operand = "process.path";
-                        data = "${lib.getBin pkgs.nix}/bin/nix-daemon";
-                    };
-                };
-            };
+            rules = opensnitchRules;
         };
     };
 
