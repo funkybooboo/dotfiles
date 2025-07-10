@@ -282,6 +282,32 @@ in {
                         data = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-resolved";
                     };
                 };
+
+                curl = {
+                    name = "curl";
+                    enabled = true;
+                    action = "allow";
+                    duration = "always";
+                    operator = {
+                        type = "simple";
+                        sensitive = false;
+                        operand = "process.path";
+                        data = "${pkgs.curl}/bin/curl";
+                    };
+                };
+
+                nix-daemon = {
+                    name = "nix-daemon";
+                    enabled = true;
+                    action = "allow";
+                    duration = "always";
+                    operator = {
+                        type = "simple";
+                        sensitive = false;
+                        operand = "process.path";
+                        data = "${lib.getBin pkgs.nix}/bin/nix-daemon";
+                    };
+                };
             };
         };
     };
