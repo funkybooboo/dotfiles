@@ -255,6 +255,35 @@ in {
             blacklist_threshold = 10; # auto-blacklist after N blocks
             blacklist_file = "/var/lib/sshguard/blacklist.db";
         };
+        opensnitch = {
+            enable = true;
+            rules = {
+                systemd-timesyncd = {
+                    name = "systemd-timesyncd";
+                    enabled = true;
+                    action = "allow";
+                    duration = "always";
+                    operator = {
+                        type = "simple";
+                        sensitive = false;
+                        operand = "process.path";
+                        data = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-timesyncd";
+                    };
+                };
+                systemd-resolved = {
+                    name = "systemd-resolved";
+                    enabled = true;
+                    action = "allow";
+                    duration = "always";
+                    operator = {
+                        type = "simple";
+                        sensitive = false;
+                        operand = "process.path";
+                        data = "${lib.getBin pkgs.systemd}/lib/systemd/systemd-resolved";
+                    };
+                };
+            };
+        };
     };
 
     # Hardware
@@ -422,6 +451,7 @@ in {
             codecrafters-cli
             speedtest-cli
             rpi-imager
+            opensnitch-ui
 
             # Version Control
             git
