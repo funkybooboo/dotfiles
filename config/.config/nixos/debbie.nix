@@ -55,11 +55,11 @@
 
     blockSites = [
         # Video & Streaming
-        #"youtube.com"
-        #"www.youtube.com"
-        #"m.youtube.com"
-        #"netflix.com"
-        #"www.netflix.com"
+        # "youtube.com"
+        # "www.youtube.com"
+        # "m.youtube.com"
+        # "netflix.com"
+        # "www.netflix.com"
         "sflix.to"
         "hulu.com"
         "www.hulu.com"
@@ -77,8 +77,22 @@
         "www.dailymotion.com"
         "peacocktv.com"
         "www.peacocktv.com"
+        "funimation.com"
+        "www.funimation.com"
+        "animelab.com"
+        "www.animelab.com"
+        "kick.com"
+        "www.kick.com"
+        "rumble.com"
+        "www.rumble.com"
+        "odysee.com"
+        "www.odysee.com"
+        "metacafe.com"
+        "www.metacafe.com"
+        "newgrounds.com"
+        "www.newgrounds.com"
 
-        # Social Media
+        # Social Media & Messaging
         "facebook.com"
         "www.facebook.com"
         "instagram.com"
@@ -89,6 +103,14 @@
         "www.twitter.com"
         "x.com"
         "www.x.com"
+        # "reddit.com"
+        # "www.reddit.com"
+        # "old.reddit.com"
+        # "new.reddit.com"
+        # "quora.com"
+        # "www.quora.com"
+        # "linkedin.com"
+        # "www.linkedin.com"
         "pinterest.com"
         "www.pinterest.com"
         "tumblr.com"
@@ -99,8 +121,20 @@
         "www.bereal.com"
         "threads.net"
         "www.threads.net"
+        # "discord.com"
+        # "www.discord.com"
+        "slack.com"
+        "www.slack.com"
+        "kakao.com"
+        "www.kakao.com"
+        "weibo.com"
+        "www.weibo.com"
+        "vk.com"
+        "www.vk.com"
+        "line.me"
+        "www.line.me"
 
-        # News & Clickbait
+        # News, Aggregators & Clickbait
         "cnn.com"
         "www.cnn.com"
         "foxnews.com"
@@ -115,8 +149,22 @@
         "www.dailymail.co.uk"
         "news.yahoo.com"
         "yahoo.com"
+        "msn.com"
+        "www.msn.com"
+        "news.google.com"
+        "flipboard.com"
+        "feedly.com"
+        "apple.news"
+        "drudgereport.com"
+        "breitbart.com"
+        "theguardian.com"
+        "www.theguardian.com"
+        "npr.org"
+        "www.npr.org"
 
-        # Shopping & Marketplace
+        # Shopping & Marketplaces
+        "amazon.com"
+        "www.amazon.com"
         "ebay.com"
         "www.ebay.com"
         "etsy.com"
@@ -131,10 +179,22 @@
         "www.temu.com"
         "shein.com"
         "www.shein.com"
+        "slickdeals.net"
+        "www.slickdeals.net"
+        "dealnews.com"
+        "www.dealnews.com"
+        "groupon.com"
+        "www.groupon.com"
+        "rakuten.com"
+        "www.rakuten.com"
+        "newegg.com"
+        "www.newegg.com"
+        "bhphotovideo.com"
+        "www.bhphotovideo.com"
 
-        # Casual & Browser Games
-        #"store.steampowered.com"
-        #"steampowered.com"
+        # Browser & Casual Games
+        # "store.steampowered.com"
+        # "steampowered.com"
         "epicgames.com"
         "www.epicgames.com"
         "roblox.com"
@@ -149,16 +209,45 @@
         "www.addictinggames.com"
         "miniclip.com"
         "www.miniclip.com"
+        "kongregate.com"
+        "www.kongregate.com"
+        "nitrome.com"
+        "www.nitrome.com"
+        "y8.com"
+        "www.y8.com"
+        "armorgames.com"
+        "www.armorgames.com"
+        "shockwave.com"
+        "www.shockwave.com"
+        "popcap.com"
+        "www.popcap.com"
+        "gameforge.com"
+        "www.gameforge.com"
 
-        # Misc distractions
+        # Humor, Memes & Distractions
         "9gag.com"
         "imgur.com"
-        "buzzfeed.com"
         "boredpanda.com"
-        "chess.com"
-        "www.chess.com"
-        "lichess.org"
-        "www.lichess.org"
+        "theonion.com"
+        "www.theonion.com"
+        "cracked.com"
+        "www.cracked.com"
+        "ebaumsworld.com"
+        "www.ebaumsworld.com"
+        "funnyordie.com"
+        "www.funnyordie.com"
+        "collegehumor.com"
+        "www.collegehumor.com"
+
+        # Forums & Infinite Scroll
+        "4chan.org"
+        "boards.4chan.org"
+        "8kun.top"
+        "slashdot.org"
+        # "hackernews.com"
+        "news.ycombinator.com"
+        # "medium.com"
+        # "www.medium.com"
     ];
 
     allowedBinaries = [
@@ -464,7 +553,16 @@ in {
             mtr
             mtr-gui
             pmutils
-            git-remote-gcrypt
+            wireguard-tools
+            openvpn
+            ipcalc
+            nmap
+            codecrafters-cli
+            speedtest-cli
+            rpi-imager
+            opensnitch-ui
+
+            # Cloud CLI Utilities
             awstats
             linode-cli
             doctl
@@ -480,17 +578,10 @@ in {
             awsebcli
             aws-gate
             aws-shell
-            wireguard-tools
-            openvpn
-            ipcalc
-            nmap
-            codecrafters-cli
-            speedtest-cli
-            rpi-imager
-            opensnitch-ui
 
             # Version Control
             git
+            git-remote-gcrypt
             glab
             codeberg-cli
             gh
@@ -631,6 +722,7 @@ in {
             chance
             devtoolbox
             concessio
+            activitywatch
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
@@ -641,20 +733,20 @@ in {
         plasma6.excludePackages = with pkgs.kdePackages; [
             plasma-browser-integration
             konsole
-            #(lib.getBin qttools) # Expose qdbus in PATH
+            # (lib.getBin qttools) # Expose qdbus in PATH
             # ark
             # elisa
-            #gwenview
-            #okular
+            # gwenview
+            # okular
             # kate
             khelpcenter
-            #dolphin
+            # dolphin
             baloo-widgets # baloo information in Dolphin
             dolphin-plugins
-            #spectacle
+            # spectacle
             ffmpegthumbs
             krdp
-            #xwaylandvideobridge # exposes Wayland windows to X11 screen capture
+            # xwaylandvideobridge # exposes Wayland windows to X11 screen capture
         ];
     };
 
@@ -733,6 +825,23 @@ in {
 
     # Systemd
     systemd = {
+        user.services = {
+            activitywatch = {
+                description = "Start ActivityWatch daemon at login";
+                wantedBy = ["default.target"];
+                after = ["graphical-session.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    ExecStart = "${pkgs.activitywatch}/bin/activitywatch";
+                    Restart = "on-failure";
+                    RestartSec = 10;
+                    Environment = "PATH=/run/current-system/sw/bin:${pkgs.activitywatch}/bin";
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
+        };
+
         services = {
             install-flatpaks = {
                 description = "Install Flatpak apps from Flathub";
