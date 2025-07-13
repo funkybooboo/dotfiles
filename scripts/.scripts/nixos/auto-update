@@ -17,4 +17,4 @@ if ! "$CHECKER"; then
 fi
 
 echo "[$(date +'%F %T')] Good time—running NixOS update."
-/home/nate/.local/bin/update
+${HOME}/.local/bin/update

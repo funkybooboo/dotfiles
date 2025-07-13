@@ -853,24 +853,6 @@ in {
                 };
             };
 
-            sync-docs = {
-                description = "Sync ~/Documents with Proton Drive via rclone bisync";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
-                    Restart = "on-failure";
-                    RestartSec = 300;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
-
             auto-update = {
                 description = "Headless NixOS auto-update (battery, idle & load checks)";
                 wants = ["network-online.target"];
@@ -925,15 +907,6 @@ in {
         };
 
         timers = {
-            sync-docs = {
-                description = "Hourly trigger for sync-docs.service";
-                wantedBy = ["timers.target"];
-                timerConfig = {
-                    OnCalendar = "hourly";
-                    Persistent = true;
-                };
-            };
-
             auto-update = {
                 description = "Headless NixOS auto-update (battery, idle & load checks)";
                 wantedBy = ["timers.target"];

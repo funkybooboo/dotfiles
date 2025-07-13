@@ -21,4 +21,4 @@ if ! "$CHECKER"; then
 fi
 
 echo "[$(date +'%F %T')] Good time—running Firmware update."
-/home/nate/.local/bin/update-firmware
+${HOME}/.local/bin/update-firmware
