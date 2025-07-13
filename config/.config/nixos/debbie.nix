@@ -24,6 +24,10 @@
         "org.kde.isoimagewriter"
         "io.github.josephmawa.EncodingExplorer"
         "eu.jumplink.Learn6502"
+        "com.hunterwittenborn.Celeste"
+        "org.gnome.Calculator"
+        "com.github.arshubham.gitignore"
+        "com.gitbutler.gitbutler"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -266,30 +270,6 @@
         {
             name = "nix";
             path = "${pkgs.nix}/bin/nix";
-        }
-        {
-            name = "curl";
-            path = "${pkgs.curl}/bin/curl";
-        }
-        {
-            name = "wget";
-            path = "${pkgs.wget}/bin/wget";
-        }
-        {
-            name = "git";
-            path = "${pkgs.git}/bin/git";
-        }
-        {
-            name = "node";
-            path = "${pkgs.nodejs}/bin/node";
-        }
-        {
-            name = "python3";
-            path = "${pkgs.python3}/bin/python3";
-        }
-        {
-            name = "firefox";
-            path = "${pkgs.firefox}/bin/firefox";
         }
     ];
 
@@ -588,7 +568,6 @@ in {
             github-desktop
             lazygit
             git-filter-repo
-            gitbutler
             delta
 
             # Containerization & Deployment
@@ -652,6 +631,8 @@ in {
             memorado
             varia
             blanket
+            textcompare
+            licenseclassifier
 
             # System & Desktop
             gparted
@@ -878,10 +859,8 @@ in {
                 after = ["network-online.target"];
                 serviceConfig = {
                     Type = "simple";
-                    User = "nate";
                     Environment = [
                         "HOME=/home/nate"
-                        "USER=nate"
                         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
                     ];
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
@@ -900,7 +879,6 @@ in {
                     Type = "simple";
                     Environment = [
                         "HOME=/home/nate"
-                        "USER=nate"
                         "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
                     ];
                     ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
