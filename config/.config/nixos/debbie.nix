@@ -722,7 +722,7 @@ in {
             chance
             devtoolbox
             concessio
-            activitywatch
+            # activitywatch
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
@@ -825,23 +825,6 @@ in {
 
     # Systemd
     systemd = {
-        user.services = {
-            activitywatch = {
-                description = "Start ActivityWatch daemon at login";
-                wantedBy = ["default.target"];
-                after = ["graphical-session.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    ExecStart = "${pkgs.activitywatch}/bin/activitywatch";
-                    Restart = "on-failure";
-                    RestartSec = 10;
-                    Environment = "PATH=/run/current-system/sw/bin:${pkgs.activitywatch}/bin";
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
-        };
-
         services = {
             install-flatpaks = {
                 description = "Install Flatpak apps from Flathub";
