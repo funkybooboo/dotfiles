@@ -670,7 +670,7 @@ in {
         gnupg = {
             agent = {
                 enable = true;
-                enableSSHSupport = true;
+                enableSSHSupport = false;
             };
         };
         nix-ld = {
