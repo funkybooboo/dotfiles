@@ -3,6 +3,8 @@
     "scripts/.scripts/nixos/rebuild",
     "scripts/.scripts/nixos/update",
     "scripts/.scripts/nixos/sync-docs",
+    "scripts/.scripts/nixos/sync-music",
+    "scripts/.scripts/nixos/sync-audiobooks",
     "scripts/.scripts/nixos/2fa",
     "scripts/.scripts/nixos/update-rclone-2fa",
     "scripts/.scripts/nixos/auto-update",

@@ -890,6 +890,24 @@ in {
                 };
             };
 
+            # sync-docs = {
+            #     description = "Sync ~/Documents with Proton Drive via rclone bisync";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
+            #         Restart = "on-failure";
+            #         RestartSec = 300;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
+
             # auto-update-firmware = {
             #   description = "Auto-update firmware via fwupd when idle/on AC";
             #   wants        = [ "network-online.target" ];
@@ -924,6 +942,15 @@ in {
                     Persistent = true;
                 };
             };
+
+            # sync-docs = {
+            #     description = "Hourly trigger for sync-docs.service";
+            #     wantedBy = ["timers.target"];
+            #     timerConfig = {
+            #         OnCalendar = "hourly";
+            #         Persistent = true;
+            #     };
+            # };
 
             # auto-update-firmware = {
             #   description = "Periodic trigger for auto-update-firmware.service";
