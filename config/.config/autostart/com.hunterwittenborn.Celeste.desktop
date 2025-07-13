@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories=FileTools;FileTransfer;GTK;Utility;
+Comment=GUI file synchronization client that can connect to virtually any cloud provider
+Exec=flatpak run --branch=stable --arch=x86_64 --command=celeste com.hunterwittenborn.Celeste
+GenericName=Folder Sync
+Icon=com.hunterwittenborn.Celeste
+Keywords=backup;cloud;file sync;sharing;syncing;dropbox;nextcloud;owncloud;google drive;webdav;rclone;proton;proton drive;pcloud
+Name=Celeste
+StartupNotify=true
+Terminal=false
+Type=Application
+X-Desktop-File-Install-Version=0.28
+X-Flatpak=com.hunterwittenborn.Celeste

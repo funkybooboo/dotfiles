@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Exec=opensnitch-ui
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-Name=OpenSnitch UI
-Comment=Outbound firewall rule prompt
