@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories=System;Security;Monitor;Network;
+Comment=Interactive application firewall
+Exec=opensnitch-ui
+GenericName=OpenSnitch Firewall
+Icon=opensnitch-ui
+Keywords=system;firewall;policies;security;polkit;policykit;
+Name=OpenSnitch
+NoDisplay=false
+Terminal=false
+Type=Application
+X-GNOME-Autostart-Delay=3
+X-GNOME-Autostart-enabled=true
