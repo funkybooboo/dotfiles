@@ -163,8 +163,8 @@
         "www.npr.org"
 
         # Shopping & Marketplaces
-        "amazon.com"
-        "www.amazon.com"
+        #"amazon.com"
+        #"www.amazon.com"
         "ebay.com"
         "www.ebay.com"
         "etsy.com"
