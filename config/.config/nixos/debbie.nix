@@ -32,22 +32,6 @@
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
     dynamicHosts = [
-        {
-            url = "https://someonewhocares.org/hosts/zero/hosts";
-            sha256 = "1wyw6sa31rclv1wvmz8asfrs8hhgnx64m2c2hymbl0gk99000pnv";
-        }
-        {
-            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
-            sha256 = "0mlx9l8k3mmx41hrlmqk6bibz8fvg6xzzpazkfizkc8ivw2nrgb7";
-        }
-        {
-            url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt";
-            sha256 = "1510gizap1rvjs8xm2vvgvr0r8vbsnj9q1cclm5zy3mr48blddr6";
-        }
-        {
-            url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt";
-            sha256 = "156jm8zgx5cgq6kxs73w5q4igwdrlkjs62nb12bwjlcjm4pxmf6b";
-        }
     ];
     dynamicHostFiles = builtins.map (
         host:
@@ -64,7 +48,7 @@
         # "m.youtube.com"
         # "netflix.com"
         # "www.netflix.com"
-        "sflix.to"
+        # "sflix.to"
         "hulu.com"
         "www.hulu.com"
         "twitch.tv"
