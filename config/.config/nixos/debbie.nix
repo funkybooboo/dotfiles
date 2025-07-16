@@ -19,7 +19,8 @@
     flatpakApps = [
         "io.github.voxelcubes.hand-tex"
         "io.github.dman95.SASM"
-        "io.gitlab.persiangolf.voicegen"
+        "net.mkiol.SpeechNote"
+        "com.hunterwittenborn.Celeste"
         "org.kde.kgeography"
         "org.kde.isoimagewriter"
         "io.github.josephmawa.EncodingExplorer"
@@ -462,6 +463,10 @@ in {
             gibo
             textcompare
             licenseclassifier
+            jsonfmt
+            json2yaml
+            yamlfmt
+            yaml2json
 
             # Editors & IDEs
             neovim
@@ -619,6 +624,10 @@ in {
             varia
             blanket
             gnome-calculator
+            letterpress
+            libsForQt5.kdenlive
+            sly
+            cozy
 
             # System & Desktop
             gparted
@@ -689,8 +698,7 @@ in {
             chance
             devtoolbox
             concessio
-            celeste
-            activitywatch
+            #activitywatch
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
