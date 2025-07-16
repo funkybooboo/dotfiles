@@ -24,10 +24,7 @@
         "org.kde.isoimagewriter"
         "io.github.josephmawa.EncodingExplorer"
         "eu.jumplink.Learn6502"
-        "com.hunterwittenborn.Celeste"
-        "org.gnome.Calculator"
         "com.github.arshubham.gitignore"
-        "com.gitbutler.gitbutler"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -462,6 +459,9 @@ in {
             bruno-cli
             bruno
             stripe-cli
+            gibo
+            textcompare
+            licenseclassifier
 
             # Editors & IDEs
             neovim
@@ -552,6 +552,7 @@ in {
             codeberg-cli
             gh
             github-desktop
+            gitbutler
             lazygit
             git-filter-repo
             delta
@@ -617,8 +618,7 @@ in {
             memorado
             varia
             blanket
-            textcompare
-            licenseclassifier
+            gnome-calculator
 
             # System & Desktop
             gparted
@@ -689,7 +689,8 @@ in {
             chance
             devtoolbox
             concessio
-            # activitywatch
+            celeste
+            activitywatch
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
