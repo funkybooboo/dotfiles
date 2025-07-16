@@ -466,14 +466,14 @@ in {
             # Editors & IDEs
             neovim
             vscodium
-            unstable.jetbrains.datagrip
-            unstable.jetbrains.webstorm
-            unstable.jetbrains.rust-rover
-            unstable.jetbrains.rider
-            unstable.jetbrains.pycharm-professional
-            unstable.jetbrains.idea-ultimate
-            unstable.jetbrains.goland
-            unstable.jetbrains.clion
+            jetbrains.datagrip
+            jetbrains.webstorm
+            jetbrains.rust-rover
+            jetbrains.rider
+            jetbrains.pycharm-professional
+            jetbrains.idea-ultimate
+            jetbrains.goland
+            jetbrains.clion
 
             # Shell & CLI Utilities
             fish
@@ -542,6 +542,8 @@ in {
             awsebcli
             aws-gate
             aws-shell
+            remmina
+            freerdp
 
             # Version Control
             git
@@ -563,12 +565,12 @@ in {
 
             # Browsers & Communication
             firefox
-            unstable.librewolf
+            librewolf
             brave
             chromium
             lynx
             signal-desktop
-            unstable.jami
+            jami
             protonmail-bridge-gui
             proton-pass
             protonvpn-gui
