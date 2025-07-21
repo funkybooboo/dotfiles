@@ -24,11 +24,9 @@
         "org.kde.kgeography"
         "org.kde.isoimagewriter"
         "io.github.josephmawa.EncodingExplorer"
-        "eu.jumplink.Learn6502"
         "com.github.arshubham.gitignore"
         "net.jami.Jami"
         "eu.fortysixandtwo.chessclock"
-        "io.github.josephmawa.SpellingBee"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
