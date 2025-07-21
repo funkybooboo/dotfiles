@@ -630,6 +630,8 @@ in {
             sly
             kazam
             shotcut
+            audacity
+            peek
             cozy
 
             # System & Desktop
