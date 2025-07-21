@@ -627,8 +627,9 @@ in {
             blanket
             gnome-calculator
             letterpress
-            libsForQt5.kdenlive
             sly
+            kazam
+            shotcut
             cozy
 
             # System & Desktop
