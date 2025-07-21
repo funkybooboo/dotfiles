@@ -27,6 +27,8 @@
         "eu.jumplink.Learn6502"
         "com.github.arshubham.gitignore"
         "net.jami.Jami"
+        "eu.fortysixandtwo.chessclock"
+        "io.github.josephmawa.SpellingBee"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -531,6 +533,7 @@ in {
             speedtest-cli
             rpi-imager
             opensnitch-ui
+            whatfiles
 
             # Cloud CLI Utilities
             awstats
@@ -700,6 +703,8 @@ in {
             devtoolbox
             concessio
             #activitywatch
+            ciano
+            raider
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
