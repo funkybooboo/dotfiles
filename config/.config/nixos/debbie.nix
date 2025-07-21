@@ -26,6 +26,7 @@
         "io.github.josephmawa.EncodingExplorer"
         "eu.jumplink.Learn6502"
         "com.github.arshubham.gitignore"
+        "net.jami.Jami"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -576,7 +577,6 @@ in {
             chromium
             lynx
             signal-desktop
-            jami
             protonmail-bridge-gui
             proton-pass
             protonvpn-gui
