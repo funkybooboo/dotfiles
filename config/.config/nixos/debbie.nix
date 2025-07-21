@@ -595,6 +595,7 @@ in {
             wirelesstools
 
             # Media & Graphics
+            alsa-utils
             mpv
             ffmpeg
             asciinema
