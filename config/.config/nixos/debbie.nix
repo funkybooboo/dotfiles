@@ -453,6 +453,7 @@ in {
             cmake
             gnumake
             poetry
+            uv
             black
             clang-tools
             tree-sitter
