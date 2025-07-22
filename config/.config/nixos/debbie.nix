@@ -555,6 +555,8 @@ in {
 
             # Version Control
             git
+            jujutsu
+            lazyjj
             git-remote-gcrypt
             glab
             codeberg-cli
