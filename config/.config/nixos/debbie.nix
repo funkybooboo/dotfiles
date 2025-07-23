@@ -27,6 +27,8 @@
         "com.github.arshubham.gitignore"
         "net.jami.Jami"
         "eu.fortysixandtwo.chessclock"
+        "io.github.amit9838.mousam"
+        "com.github.xournalpp.xournalpp"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
