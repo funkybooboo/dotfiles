@@ -318,7 +318,15 @@ in {
     };
 
     # Security
-    security.rtkit.enable = true;
+    security = {
+        rtkit.enable = true;
+        apparmor.enable = true;
+        auditd.enable = true;
+        sudo.extraConfig = ''
+            Defaults log_input,log_output
+            Defaults timestamp_timeout=5
+        '';
+    };
 
     # Services
     services = {
@@ -353,7 +361,13 @@ in {
         systembus-notify.enable = true;
         locate.enable = true;
         fwupd.enable = true;
-        openssh.enable = true;
+        openssh = {
+            enable = true;
+            settings = {
+                PasswordAuthentication = false;
+                PermitRootLogin = "no";
+            };
+        };
         libinput.enable = true;
         flatpak.enable = true;
         sshguard = {
@@ -373,6 +387,10 @@ in {
         opensnitch = {
             enable = true;
             rules = opensnitchRules;
+        };
+        clamav = {
+            daemon.enable = true;
+            updater.enable = true;
         };
     };
 
@@ -712,6 +730,12 @@ in {
             #activitywatch
             ciano
             raider
+
+            # Security
+            firejail
+            lynis
+            chkrootkit
+            gocryptfs
         ];
         sessionVariables = {
             NIXOS_OZONE_WL = "1";
