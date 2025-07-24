@@ -583,6 +583,7 @@ in {
             chromium
             lynx
             signal-desktop
+            keepassxc
             protonmail-bridge-gui
             proton-pass
             protonvpn-gui
