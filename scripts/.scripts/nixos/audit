@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "🔐 Starting system audit..."
+
+# Log file
+LOG_DIR="$HOME/audit_logs"
+mkdir -p "$LOG_DIR"
+TIMESTAMP="$(date +%F_%T)"
+LOG_FILE="$LOG_DIR/audit_$TIMESTAMP.log"
+
+# Function to run a command and log its output
+run_and_log() {
+    echo "➤ $*" | tee -a "$LOG_FILE"
+    "$@" 2>&1 | tee -a "$LOG_FILE"
+    echo | tee -a "$LOG_FILE"
+}
+
+echo "📝 Audit started at $TIMESTAMP" | tee -a "$LOG_FILE"
+echo "Saving logs to: $LOG_FILE"
+echo | tee -a "$LOG_FILE"
+
+# -----------------------------
+# 🔍 Run chkrootkit
+# -----------------------------
+if command -v chkrootkit &>/dev/null; then
+    run_and_log sudo chkrootkit
+else
+    echo "⚠️ chkrootkit not found!" | tee -a "$LOG_FILE"
+fi
+
+# -----------------------------
+# 🔍 Run Lynis
+# -----------------------------
+if command -v lynis &>/dev/null; then
+    run_and_log sudo lynis audit system --quiet
+else
+    echo "⚠️ lynis not found!" | tee -a "$LOG_FILE"
+fi
+
+# -----------------------------
+# 🦠 Run ClamAV scan (optional)
+# -----------------------------
+if command -v clamscan &>/dev/null; then
+    echo "🦠 Running ClamAV scan (home directory only)..." | tee -a "$LOG_FILE"
+    run_and_log clamscan -r "$HOME"
+else
+    echo "ℹ️ ClamAV not installed or clamscan not found — skipping AV scan." | tee -a "$LOG_FILE"
+fi
+
+# -----------------------------
+# ✅ Finish
+# -----------------------------
+echo "✅ Audit complete. Log file: $LOG_FILE"
+
