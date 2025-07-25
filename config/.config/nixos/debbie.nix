@@ -575,6 +575,7 @@ in {
 
             # Version Control
             git
+            commitlint
             jujutsu
             lazyjj
             git-remote-gcrypt
