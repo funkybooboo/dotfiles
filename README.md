@@ -90,6 +90,13 @@ These steps assume you’ve already installed NixOS, partitioned/bootstrapped, a
   sudo reboot
   ```
 
+11. **Backup/Download Important Keys**
+
+    Make sure you securely download and store the following keys:
+
+    - **PGP Key** – for encrypted communications and code signing
+    - **Recovery Keys** – for disk encryption, 2FA, or account recovery
+
 ---
 
 ## 📁 Repository Layout
