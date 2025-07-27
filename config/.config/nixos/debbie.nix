@@ -644,7 +644,7 @@ in {
             libreoffice
             obsidian
             pomodoro-gtk
-            #safeeyes
+            safeeyes
             pandoc
             texliveTeTeX
             deskreen
