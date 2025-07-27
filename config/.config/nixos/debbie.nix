@@ -644,6 +644,7 @@ in {
             libreoffice
             obsidian
             pomodoro-gtk
+            #safeeyes
             pandoc
             texliveTeTeX
             deskreen
@@ -723,6 +724,8 @@ in {
             # Learning
             nix-tour
             keypunch
+            oh-my-git
+            learn6502
 
             # Miscellaneous
             chance
