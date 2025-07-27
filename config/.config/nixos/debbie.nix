@@ -234,7 +234,7 @@
         "8kun.top"
         "slashdot.org"
         # "hackernews.com"
-        "news.ycombinator.com"
+        # "news.ycombinator.com"
         # "medium.com"
         # "www.medium.com"
     ];
