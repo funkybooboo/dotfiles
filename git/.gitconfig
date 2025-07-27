@@ -2,6 +2,7 @@
 	name = Nate Stott
 	email = nate.stott@pm.me
 	github = funkybooboo
+	signingkey = CD712B0BB8912C24DD8D17B5704CC8C1229A3022
 
 [core]
 	editor = nvim
@@ -313,3 +314,7 @@
 	theirs = "!f() { git checkout --theirs $@ && git add $@; }; f"
 	subrepo= !sh -c 'git filter-branch --prune-empty --subdirectory-filter $1 master' -
 	human  = name-rev --name-only --refs=refs/heads/*
+[commit]
+	gpgsign = true
+[gpg]
+	program = /run/current-system/sw/bin/gpg
