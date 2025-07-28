@@ -646,7 +646,7 @@ in {
             pomodoro-gtk
             safeeyes
             pandoc
-            texliveTeTeX
+            texliveFull
             deskreen
             memorado
             varia
