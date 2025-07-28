@@ -647,6 +647,7 @@ in {
             safeeyes
             pandoc
             texliveFull
+            tectonic
             deskreen
             memorado
             varia
