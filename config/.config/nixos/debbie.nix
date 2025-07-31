@@ -587,6 +587,7 @@ in {
             lazygit
             git-filter-repo
             delta
+            meld
 
             # Containerization & Deployment
             lazydocker
