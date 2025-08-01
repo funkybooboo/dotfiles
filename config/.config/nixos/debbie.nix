@@ -20,7 +20,6 @@
         "io.github.voxelcubes.hand-tex"
         "io.github.dman95.SASM"
         "net.mkiol.SpeechNote"
-        "com.hunterwittenborn.Celeste"
         "org.kde.kgeography"
         "org.kde.isoimagewriter"
         "io.github.josephmawa.EncodingExplorer"
@@ -928,23 +927,59 @@ in {
                 };
             };
 
-            # sync-docs = {
-            #     description = "Sync ~/Documents with Proton Drive via rclone bisync";
-            #     wants = ["network-online.target"];
-            #     after = ["network-online.target"];
-            #     serviceConfig = {
-            #         Type = "simple";
-            #         Environment = [
-            #             "HOME=/home/nate"
-            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-            #         ];
-            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
-            #         Restart = "on-failure";
-            #         RestartSec = 300;
-            #         StandardOutput = "journal";
-            #         StandardError = "journal";
-            #     };
-            # };
+            sync-docs = {
+                description = "Sync ~/Documents with Proton Drive via rclone bisync";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
+                    Restart = "on-failure";
+                    RestartSec = 300;
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
+
+            sync-audiobooks = {
+                description = "Sync ~/Audiobooks with Proton Drive via rclone bisync";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-audiobooks";
+                    Restart = "on-failure";
+                    RestartSec = 300;
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
+
+            sync-music = {
+                description = "Sync ~/Music with Proton Drive via rclone bisync";
+                wants = ["network-online.target"];
+                after = ["network-online.target"];
+                serviceConfig = {
+                    Type = "simple";
+                    Environment = [
+                        "HOME=/home/nate"
+                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+                    ];
+                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-music";
+                    Restart = "on-failure";
+                    RestartSec = 300;
+                    StandardOutput = "journal";
+                    StandardError = "journal";
+                };
+            };
 
             # auto-update-firmware = {
             #   description = "Auto-update firmware via fwupd when idle/on AC";
