@@ -473,21 +473,30 @@ in {
             gnumake
             poetry
             uv
-            black
+            #black
+            alejandra
             clang-tools
             tree-sitter
             postman
             newman
             bruno-cli
             bruno
-            stripe-cli
+            #stripe-cli
             gibo
             textcompare
             licenseclassifier
-            jsonfmt
-            json2yaml
-            yamlfmt
-            yaml2json
+            #jsonfmt
+            #json2yaml
+            #yamlfmt
+            #yaml2json
+            nasm
+            nasmfmt
+            asmrepl
+            asmjit
+            uasm
+            gdb
+            gdbgui
+            libgcc
 
             # Editors & IDEs
             neovim
@@ -518,7 +527,7 @@ in {
             ascii
             file
             unixtools.xxd
-            unixtools.quota
+            #unixtools.quota
             bc
             zip
             unzip
@@ -597,12 +606,11 @@ in {
 
             # Browsers & Communication
             firefox
-            librewolf
+            unstable.librewolf
             brave
             chromium
             lynx
             signal-desktop
-            keepassxc
             protonmail-bridge-gui
             proton-pass
             protonvpn-gui
@@ -619,6 +627,7 @@ in {
             ethtool
             iw
             wirelesstools
+            keepassxc
 
             # Media & Graphics
             alsa-utils
@@ -644,7 +653,7 @@ in {
             libreoffice
             obsidian
             pomodoro-gtk
-            safeeyes
+            #safeeyes
             pandoc
             texliveFull
             tectonic
@@ -690,7 +699,6 @@ in {
             kdePackages.plasma-desktop
 
             # Fonts & Themes
-            alejandra
             font-awesome
             comic-mono
             catppuccin-cursors
@@ -700,16 +708,6 @@ in {
             kdePackages.breeze-icons
             kdePackages.breeze.qt5
             kdePackages.breeze
-
-            # Assembly & Low-level Tools
-            nasm
-            nasmfmt
-            asmrepl
-            asmjit
-            uasm
-            gdb
-            gdbgui
-            libgcc
 
             # Database & Data Tools
             sqlite
@@ -725,8 +723,8 @@ in {
             # Learning
             nix-tour
             keypunch
-            oh-my-git
-            learn6502
+            #oh-my-git
+            #learn6502
 
             # Miscellaneous
             chance
