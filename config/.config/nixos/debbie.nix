@@ -472,8 +472,8 @@ in {
             cmake
             gnumake
             poetry
-            uv
-            #black
+            # uv
+            # black
             alejandra
             clang-tools
             tree-sitter
@@ -481,14 +481,14 @@ in {
             newman
             bruno-cli
             bruno
-            #stripe-cli
+            # stripe-cli
             gibo
             textcompare
             licenseclassifier
-            #jsonfmt
-            #json2yaml
-            #yamlfmt
-            #yaml2json
+            # jsonfmt
+            # json2yaml
+            # yamlfmt
+            # yaml2json
             nasm
             nasmfmt
             asmrepl
@@ -527,7 +527,7 @@ in {
             ascii
             file
             unixtools.xxd
-            #unixtools.quota
+            # unixtools.quota
             bc
             zip
             unzip
@@ -563,44 +563,44 @@ in {
             whatfiles
 
             # Cloud CLI Utilities
-            awstats
-            linode-cli
-            doctl
-            azure-cli
-            google-cloud-sdk
-            aws-nuke
+            # awstats
+            # linode-cli
+            # doctl
+            # azure-cli
+            # google-cloud-sdk
+            # aws-nuke
             awscli
-            awsls
-            awsume
-            awsbck
-            awslogs
-            aws-mfa
-            awsebcli
-            aws-gate
-            aws-shell
-            remmina
-            freerdp
+            # awsls
+            # awsume
+            # awsbck
+            # awslogs
+            # aws-mfa
+            # awsebcli
+            # aws-gate
+            # aws-shell
+            # remmina
+            # freerdp
 
             # Version Control
             git
             commitlint
-            jujutsu
-            lazyjj
+            # jujutsu
+            # lazyjj
             git-remote-gcrypt
-            glab
-            codeberg-cli
+            # glab
+            # codeberg-cli
             gh
             github-desktop
-            gitbutler
+            # gitbutler
             lazygit
             git-filter-repo
             delta
-            meld
+            # meld
 
             # Containerization & Deployment
             lazydocker
-            nix-init
-            stow
+            # nix-init
+            # stow
             unetbootin
             rclone
 
@@ -609,15 +609,15 @@ in {
             unstable.librewolf
             brave
             chromium
-            lynx
+            # lynx
             signal-desktop
-            protonmail-bridge-gui
+            # protonmail-bridge-gui
             proton-pass
             protonvpn-gui
-            protonvpn-cli
+            # protonvpn-cli
             webcord
             zoom-us
-            thunderbird
+            # thunderbird
 
             # Networking & Security
             openssl
@@ -641,9 +641,9 @@ in {
             drawio
             zathura
             poppler_utils
-            asciiquarium
-            aalib
-            oneko
+            # asciiquarium
+            # aalib
+            # oneko
             easyeffects
             playerctl
             pavucontrol
@@ -723,11 +723,11 @@ in {
             # Learning
             nix-tour
             keypunch
-            #oh-my-git
-            #learn6502
+            # oh-my-git
+            # learn6502
 
             # Miscellaneous
-            chance
+            # chance
             devtoolbox
             concessio
             #activitywatch
@@ -888,96 +888,96 @@ in {
                 };
             };
 
-            auto-update = {
-                description = "Headless NixOS auto-update (battery, idle & load checks)";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
-                    Restart = "on-failure";
-                    RestartSec = 300;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
+            # auto-update = {
+            #     description = "Headless NixOS auto-update (battery, idle & load checks)";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
+            #         Restart = "on-failure";
+            #         RestartSec = 300;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
 
-            backup-github = {
-                description = "Mirror all GitHub repos to GitLab + Proton Drive";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "USER=nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
-                    Restart = "on-failure";
-                    RestartSec = 3600;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
+            # backup-github = {
+            #     description = "Mirror all GitHub repos to GitLab + Proton Drive";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "USER=nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
+            #         Restart = "on-failure";
+            #         RestartSec = 3600;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
 
-            sync-docs = {
-                description = "Sync ~/Documents with Proton Drive via rclone bisync";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
-                    Restart = "on-failure";
-                    RestartSec = 300;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
+            # sync-docs = {
+            #     description = "Sync ~/Documents with Proton Drive via rclone bisync";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-docs";
+            #         Restart = "on-failure";
+            #         RestartSec = 300;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
 
-            sync-audiobooks = {
-                description = "Sync ~/Audiobooks with Proton Drive via rclone bisync";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-audiobooks";
-                    Restart = "on-failure";
-                    RestartSec = 300;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
+            # sync-audiobooks = {
+            #     description = "Sync ~/Audiobooks with Proton Drive via rclone bisync";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-audiobooks";
+            #         Restart = "on-failure";
+            #         RestartSec = 300;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
 
-            sync-music = {
-                description = "Sync ~/Music with Proton Drive via rclone bisync";
-                wants = ["network-online.target"];
-                after = ["network-online.target"];
-                serviceConfig = {
-                    Type = "simple";
-                    Environment = [
-                        "HOME=/home/nate"
-                        "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
-                    ];
-                    ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-music";
-                    Restart = "on-failure";
-                    RestartSec = 300;
-                    StandardOutput = "journal";
-                    StandardError = "journal";
-                };
-            };
+            # sync-music = {
+            #     description = "Sync ~/Music with Proton Drive via rclone bisync";
+            #     wants = ["network-online.target"];
+            #     after = ["network-online.target"];
+            #     serviceConfig = {
+            #         Type = "simple";
+            #         Environment = [
+            #             "HOME=/home/nate"
+            #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
+            #         ];
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/sync-music";
+            #         Restart = "on-failure";
+            #         RestartSec = 300;
+            #         StandardOutput = "journal";
+            #         StandardError = "journal";
+            #     };
+            # };
 
             # auto-update-firmware = {
             #   description = "Auto-update firmware via fwupd when idle/on AC";
@@ -996,23 +996,23 @@ in {
         };
 
         timers = {
-            auto-update = {
-                description = "Headless NixOS auto-update (battery, idle & load checks)";
-                wantedBy = ["timers.target"];
-                timerConfig = {
-                    OnCalendar = "daily";
-                    Persistent = true;
-                };
-            };
+            # auto-update = {
+            #     description = "Headless NixOS auto-update (battery, idle & load checks)";
+            #     wantedBy = ["timers.target"];
+            #     timerConfig = {
+            #         OnCalendar = "daily";
+            #         Persistent = true;
+            #     };
+            # };
 
-            backup-github = {
-                description = "Headless mirror of GitHub repos to GitLab + Proton Drive";
-                wantedBy = ["timers.target"];
-                timerConfig = {
-                    OnCalendar = "weekly";
-                    Persistent = true;
-                };
-            };
+            # backup-github = {
+            #     description = "Headless mirror of GitHub repos to GitLab + Proton Drive";
+            #     wantedBy = ["timers.target"];
+            #     timerConfig = {
+            #         OnCalendar = "weekly";
+            #         Persistent = true;
+            #     };
+            # };
 
             # sync-docs = {
             #     description = "Hourly trigger for sync-docs.service";
