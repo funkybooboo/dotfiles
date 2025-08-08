@@ -609,7 +609,7 @@ in {
             unstable.librewolf
             brave
             chromium
-            unstable.ladybird
+            # unstable.ladybird
             # lynx
             signal-desktop
             # protonmail-bridge-gui
