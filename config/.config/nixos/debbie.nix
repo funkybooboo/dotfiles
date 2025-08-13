@@ -153,8 +153,8 @@
         # Shopping & Marketplaces
         #"amazon.com"
         #"www.amazon.com"
-        "ebay.com"
-        "www.ebay.com"
+        #"ebay.com"
+        #"www.ebay.com"
         "etsy.com"
         "www.etsy.com"
         "aliexpress.com"
