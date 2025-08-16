@@ -32,6 +32,18 @@
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
     dynamicHosts = [
+        {
+            url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn/hosts";
+            sha256 = "1g9cjfi529vz1jdxm7z1wj5xvr459334ip1np73w5yklyx0m9c8n";
+        }
+        {
+            url = "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt";
+            sha256 = "06nv4mwfshhb2w0d9qg0nn6vqhh3qkls8nx1ifybkx8jfd1lchxx";
+        }
+        {
+            url = "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt";
+            sha256 = "1c0r0ljjnzial613yzq2lpzr2r3f1mrqaki8r94azz1rwx9zzcsz";
+        }
     ];
     dynamicHostFiles = builtins.map (
         host:
