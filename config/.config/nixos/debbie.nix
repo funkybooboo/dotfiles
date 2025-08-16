@@ -511,6 +511,7 @@ in {
             gdb
             gdbgui
             libgcc
+            fbc
 
             # Editors & IDEs
             neovim
