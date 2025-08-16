@@ -79,6 +79,8 @@
         "www.metacafe.com"
         "newgrounds.com"
         "www.newgrounds.com"
+        "www.pornhub.com"
+        "pornhub.com"
 
         # Social Media & Messaging
         "facebook.com"
@@ -606,15 +608,15 @@ in {
 
             # Browsers & Communication
             firefox
-            unstable.librewolf
-            brave
-            chromium
+            # unstable.librewolf
+            # brave
+            # chromium
             # unstable.ladybird
             # lynx
             signal-desktop
             # protonmail-bridge-gui
             proton-pass
-            protonvpn-gui
+            # protonvpn-gui
             # protonvpn-cli
             webcord
             zoom-us
