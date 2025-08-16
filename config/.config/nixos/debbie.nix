@@ -616,7 +616,7 @@ in {
             signal-desktop
             # protonmail-bridge-gui
             proton-pass
-            # protonvpn-gui
+            protonvpn-gui
             # protonvpn-cli
             webcord
             zoom-us
