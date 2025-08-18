@@ -28,6 +28,7 @@
         "eu.fortysixandtwo.chessclock"
         "io.github.amit9838.mousam"
         "com.github.xournalpp.xournalpp"
+        "fr.handbrake.ghb"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -670,7 +671,7 @@ in {
             libreoffice
             obsidian
             pomodoro-gtk
-            #safeeyes
+            # safeeyes
             pandoc
             texliveFull
             tectonic
