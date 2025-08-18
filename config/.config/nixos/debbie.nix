@@ -28,7 +28,6 @@
         "eu.fortysixandtwo.chessclock"
         "io.github.amit9838.mousam"
         "com.github.xournalpp.xournalpp"
-        "fr.handbrake.ghb"
     ];
     flatpakAppList = lib.concatStringsSep " " flatpakApps;
 
@@ -687,6 +686,8 @@ in {
             audacity
             peek
             cozy
+            handbrake
+            libdvdcss
 
             # System & Desktop
             gparted
