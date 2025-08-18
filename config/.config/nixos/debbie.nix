@@ -686,6 +686,7 @@ in {
             audacity
             peek
             cozy
+            vlc
             handbrake
             libdvdcss
 
