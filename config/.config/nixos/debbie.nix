@@ -624,7 +624,7 @@ in {
             # Browsers & Communication
             firefox
             # unstable.librewolf
-            # brave
+            brave
             # chromium
             # unstable.ladybird
             # lynx
@@ -633,7 +633,7 @@ in {
             proton-pass
             protonvpn-gui
             # protonvpn-cli
-            webcord
+            # webcord
             zoom-us
             # thunderbird
 
