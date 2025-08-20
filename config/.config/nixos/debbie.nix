@@ -437,6 +437,8 @@ in {
         };
     };
 
+    nix.settings.experimental-features = ["nix-command"];
+
     # Nixpkgs
     nixpkgs.config = {
         permittedInsecurePackages = [];
