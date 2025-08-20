@@ -739,6 +739,7 @@ in {
 
             # AI
             alpaca
+            llm
 
             # Learning
             nix-tour
