@@ -622,6 +622,7 @@ in {
             # stow
             unetbootin
             rclone
+            timeshift
 
             # Browsers & Communication
             firefox
