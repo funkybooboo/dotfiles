@@ -479,6 +479,7 @@ in {
             rustup
             rustfmt
             fnm
+            bun
             zulu23
             lua51Packages.lua
             luajitPackages.luarocks-nix
