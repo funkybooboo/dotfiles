@@ -516,6 +516,7 @@ in {
             libgcc
             # fbc
             # ncurses
+            prisma-engines
 
             # Editors & IDEs
             neovim
