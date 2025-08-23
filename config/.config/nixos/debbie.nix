@@ -405,6 +405,9 @@ in {
             daemon.enable = true;
             updater.enable = true;
         };
+        ollama = {
+            enable = true;
+        };
     };
 
     # Hardware
