@@ -743,7 +743,7 @@ in {
             stockfish
 
             # AI
-            alpaca
+            # alpaca
             # llm
             ollama
 
