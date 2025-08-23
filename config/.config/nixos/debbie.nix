@@ -744,7 +744,8 @@ in {
 
             # AI
             alpaca
-            llm
+            # llm
+            ollama
 
             # Learning
             nix-tour
