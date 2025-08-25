@@ -5,6 +5,8 @@ set -gx PATH $HOME/.local/bin $PATH
 if status is-interactive
     alias ls=lsd
     alias mp='multipass'
+    alias raspberrypi_server='ssh nate@192.168.0.146'
+    alias dimension_server='ssh nate@192.168.0.134'
 end
 
 # Empty fish_greeting function placeholder (remove if unnecessary)

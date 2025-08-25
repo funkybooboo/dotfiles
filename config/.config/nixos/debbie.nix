@@ -584,6 +584,7 @@ in {
             rpi-imager
             opensnitch-ui
             whatfiles
+            dconf
 
             # Cloud CLI Utilities
             # awstats
