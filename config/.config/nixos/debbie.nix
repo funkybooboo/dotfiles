@@ -475,6 +475,7 @@ in {
             deno
             julia
             sbcl
+            clisp
             gfortran
             gnat14
             zig
