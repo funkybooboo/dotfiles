@@ -579,6 +579,7 @@ in {
             wireguard-tools
             openvpn
             globalprotect-openconnect
+            # gp-saml-gui
             ipcalc
             nmap
             codecrafters-cli
