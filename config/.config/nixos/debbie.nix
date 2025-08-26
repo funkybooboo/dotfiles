@@ -578,6 +578,7 @@ in {
             pmutils
             wireguard-tools
             openvpn
+            globalprotect-openconnect
             ipcalc
             nmap
             codecrafters-cli
