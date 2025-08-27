@@ -578,8 +578,8 @@ in {
             pmutils
             wireguard-tools
             openvpn
-            gp-saml-gui
-            openconnect
+            # gp-saml-gui
+            # openconnect
             ipcalc
             nmap
             codecrafters-cli
