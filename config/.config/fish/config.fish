@@ -1,5 +1,7 @@
 # Set PATH for local bin directories
 set -gx PATH $HOME/.local/bin $PATH
+set -gx PATH $HOME/.cargo/bin/ $PATH
+set -gx PATH $HOME/go/bin $PATH
 
 # Alias ls to use lsd for interactive sessions
 if status is-interactive
@@ -7,15 +9,13 @@ if status is-interactive
     alias mp='multipass'
     alias raspberrypi_server='ssh nate@192.168.0.146'
     alias dimension_server='ssh nate@192.168.0.134'
+    alias bat='batcat'
 end
 
 # Empty fish_greeting function placeholder (remove if unnecessary)
 function fish_greeting
     # Add greeting code here if needed
 end
-
-# Add Cargo bin directory to PATH permanently
-set -Ux PATH $HOME/.cargo/bin $PATH
 
 # Function for interacting with dotfiles using git
 function dotfiles

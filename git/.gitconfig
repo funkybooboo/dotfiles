@@ -315,6 +315,8 @@
 	subrepo= !sh -c 'git filter-branch --prune-empty --subdirectory-filter $1 master' -
 	human  = name-rev --name-only --refs=refs/heads/*
 [commit]
-	gpgsign = true
+	gpgsign = false
 [gpg]
-	program = /run/current-system/sw/bin/gpg
+	program = gpg
+	format = openpgp
+	passphrase = nate1434
