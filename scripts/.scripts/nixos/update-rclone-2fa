@@ -1,4 +1,4 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
 
 # Path to your 2FA generator script
 TOTP_SCRIPT="$HOME/.local/bin/2fa"

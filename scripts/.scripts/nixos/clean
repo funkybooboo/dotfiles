@@ -1,4 +1,5 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
+
 set -euo pipefail
 
 echo "=== Starting system cleanup ==="
@@ -25,15 +26,15 @@ echo ""
 # 4) Prune all unused Docker objects and build cache
 echo "Step 4: Pruning unused Docker objects and build cache..."
 if command -v docker >/dev/null 2>&1; then
-  sudo docker system prune --all --volumes --force
-  echo "  → docker system prune complete."
-  sudo docker builder prune --all --force
-  echo "  → docker builder prune complete."
-  sudo docker image prune --force --filter "until=24h"
-  echo "  → docker image prune (older than 24h) complete."
-  echo "→ Docker cleanup finished."
+    sudo docker system prune --all --volumes --force
+    echo "  → docker system prune complete."
+    sudo docker builder prune --all --force
+    echo "  → docker builder prune complete."
+    sudo docker image prune --force --filter "until=24h"
+    echo "  → docker image prune (older than 24h) complete."
+    echo "→ Docker cleanup finished."
 else
-  echo "→ Docker CLI not found; skipping Docker cleanup."
+    echo "→ Docker CLI not found; skipping Docker cleanup."
 fi
 echo ""
 
@@ -46,15 +47,15 @@ echo ""
 # 6) Delete all Multipass instances and purge images
 echo "Step 6: Cleaning up Multipass VMs and images..."
 if command -v multipass >/dev/null 2>&1; then
-  # delete every instance (running or stopped)
-  multipass delete --all
-  echo "  → multipass delete --all issued."
-  # purge disk images and metadata
-  multipass purge
-  echo "  → multipass purge complete."
-  echo "→ Multipass cleanup finished."
+    # delete every instance (running or stopped)
+    multipass delete --all
+    echo "  → multipass delete --all issued."
+    # purge disk images and metadata
+    multipass purge
+    echo "  → multipass purge complete."
+    echo "→ Multipass cleanup finished."
 else
-  echo "→ Multipass CLI not found; skipping Multipass cleanup."
+    echo "→ Multipass CLI not found; skipping Multipass cleanup."
 fi
 echo ""
 
