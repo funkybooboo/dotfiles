@@ -1,28 +1,68 @@
-#!/run/current-system/sw/bin/bash
-set -e  # Exit immediately on error
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 echo "=== Starting Update Process ==="
 echo ""
 
-# Step 1: Update Nix channels
-echo "Step 1: Updating Nix channels..."
-sudo nix-channel --update
-echo "Done updating Nix channels."
-echo ""
+# Detect distro
+if command -v nixos-version >/dev/null 2>&1; then
+    DISTRO="NixOS"
+elif command -v apt >/dev/null 2>&1 && [ -f /etc/rhino-release ]; then
+    DISTRO="Rhino Linux"
+else
+    echo "Unsupported distribution."
+    exit 1
+fi
 
-# Step 2: Rebuild NixOS with the latest channels
-echo "Step 2: Rebuilding NixOS with upgrade..."
-sudo nixos-rebuild switch --upgrade
-echo "Done rebuilding NixOS."
-echo ""
+if [ "$DISTRO" = "NixOS" ]; then
+    echo "Detected: NixOS"
+    echo ""
 
-# Step 3: Update Flatpak applications and runtimes
-echo "Step 3: Updating Flatpak applications and runtimes..."
-sudo flatpak update -y
-echo "Flatpak applications and runtimes updated."
-echo ""
+    # Step 1: Update Flatpak applications and runtimes
+    echo "Step 1: Updating Flatpak applications and runtimes..."
+    sudo flatpak update -y
+    echo "Flatpak applications and runtimes updated."
+    echo ""
 
-# Step 4: Show current NixOS version
-echo "Step 4: Current NixOS version:"
-nixos-version
-echo ""
+    # Step 1: Update Nix channels
+    echo "Step 2: Updating Nix channels..."
+    sudo nix-channel --update
+    echo "Done updating Nix channels."
+    echo ""
+
+    # Step 2: Rebuild NixOS with the latest channels
+    echo "Step 3: Rebuilding NixOS with upgrade..."
+    sudo nixos-rebuild switch --upgrade
+    echo "Done rebuilding NixOS."
+    echo ""
+
+    # Step 4: Show current NixOS version
+    echo "Step 4: Current NixOS version:"
+    nixos-version
+    echo ""
+
+elif [ "$DISTRO" = "Rhino Linux" ]; then
+    echo "Detected: Rhino Linux"
+    echo ""
+
+    # Step 1: Update APT packages
+    echo "Step 2: Updating apt/flatpak/snap/pacstall package lists..."
+    sudo rpk update
+    echo ""
+
+    # Step 2: Update nix-env if nix is installed
+    if command -v nix-env >/dev/null 2>&1; then
+        echo "Step 2: Updating nix-env packages..."
+        nix-channel --update
+        nix-env -u '*'
+        echo ""
+    fi
+
+    # Step 3: Show current Rhino Linux release
+    echo "Step 3: Current Rhino Linux version:"
+    cat /etc/rhino-release || lsb_release -d
+    echo ""
+fi
+
+echo "=== Update Process Complete ==="

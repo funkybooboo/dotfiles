@@ -1,4 +1,5 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
+
 #
 # update-firmware — refresh and apply firmware updates via fwupd,
 #                    prompt before reboot if running interactively
@@ -11,8 +12,8 @@ TS() { date '+%F %T'; }
 
 # ensure we never hang on a sudo prompt
 if ! sudo -n true 2>/dev/null; then
-  echo "[$(TS)] ERROR: sudo would prompt for a password; please configure NOPASSWD for fwupdmgr" >&2
-  exit 1
+    echo "[$(TS)] ERROR: sudo would prompt for a password; please configure NOPASSWD for fwupdmgr" >&2
+    exit 1
 fi
 
 # trap errors and report line number
@@ -22,27 +23,27 @@ trap 'echo "[$(TS)] ERROR: failure at line $LINENO" >&2' ERR
 LOCKFILE=/var/lock/update-firmware.lock
 exec 200>"$LOCKFILE"
 flock -n 200 || {
-  echo "[$(TS)] Another update-firmware is already running; exiting."
-  exit 0
+    echo "[$(TS)] Another update-firmware is already running; exiting."
+    exit 0
 }
 
 # retry helper for transient failures
 retry() {
-  local cmd=("$@") n=1 max=3 delay=10
-  until "${cmd[@]}"; do
-    (( n>=max )) && return 1
-    echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…" >&2
-    sleep $delay
-    ((n++))
-  done
+    local cmd=("$@") n=1 max=3 delay=10
+    until "${cmd[@]}"; do
+        ((n >= max)) && return 1
+        echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…" >&2
+        sleep $delay
+        ((n++))
+    done
 }
 
 echo "[$(TS)] Starting firmware update run"
 
 # 1) Ensure fwupdmgr is available
 if ! command -v fwupdmgr >/dev/null 2>&1; then
-  echo "[$(TS)] ERROR: fwupdmgr not found in PATH; aborting" >&2
-  exit 1
+    echo "[$(TS)] ERROR: fwupdmgr not found in PATH; aborting" >&2
+    exit 1
 fi
 
 # 2) Refresh metadata (with retry)
@@ -52,14 +53,14 @@ retry sudo -n fwupdmgr refresh
 # 3) Check for updates
 echo "[$(TS)] Checking for firmware updates"
 if ! updates=$(fwupdmgr get-updates 2>&1); then
-  echo "[$(TS)] ERROR: failed to check for updates" >&2
-  exit 1
+    echo "[$(TS)] ERROR: failed to check for updates" >&2
+    exit 1
 fi
 
 if echo "$updates" | grep -iqE 'no updatable|no updates'; then
-  echo "[$(TS)] No firmware updates available"
-  echo "[$(TS)] Finished (no updates)"
-  exit 0
+    echo "[$(TS)] No firmware updates available"
+    echo "[$(TS)] Finished (no updates)"
+    exit 0
 fi
 
 echo "[$(TS)] Updates available:"
@@ -68,37 +69,37 @@ echo "$updates"
 # 4) Apply updates non-interactively
 echo "[$(TS)] Applying updates"
 if ! sudo -n fwupdmgr --assumeyes update; then
-  echo "[$(TS)] ERROR: fwupdmgr update failed" >&2
-  exit 1
+    echo "[$(TS)] ERROR: fwupdmgr update failed" >&2
+    exit 1
 fi
 echo "[$(TS)] Firmware update applied successfully"
 
 # 5) Detect if a reboot is required
 if fwupdmgr get-updates --show-details | grep -iqE 'restart|reboot'; then
-  echo "[$(TS)] Reboot required."
+    echo "[$(TS)] Reboot required."
 
-  if [ -t 0 ]; then
-    # interactive terminal: prompt
-    read -p "[$(TS)] OK to reboot now? [y/N] " answer
-    case "$answer" in
-      [Yy]* )
-        echo "[$(TS)] Rebooting now"
-        sudo -n systemctl reboot
-        ;;
-      * )
-        echo "[$(TS)] Reboot postponed; please reboot manually when convenient"
+    if [ -t 0 ]; then
+        # interactive terminal: prompt
+        read -p "[$(TS)] OK to reboot now? [y/N] " answer
+        case "$answer" in
+        [Yy]*)
+            echo "[$(TS)] Rebooting now"
+            sudo -n systemctl reboot
+            ;;
+        *)
+            echo "[$(TS)] Reboot postponed; please reboot manually when convenient"
+            exit 0
+            ;;
+        esac
+    else
+        # non-interactive: just warn
+        echo "[$(TS)] Not running in a terminal; please reboot manually to complete firmware installation."
         exit 0
-        ;;
-    esac
-  else
-    # non-interactive: just warn
-    echo "[$(TS)] Not running in a terminal; please reboot manually to complete firmware installation."
-    exit 0
-  fi
+    fi
 
 else
-  echo "[$(TS)] No reboot required"
-  echo "[$(TS)] Finished successfully"
+    echo "[$(TS)] No reboot required"
+    echo "[$(TS)] Finished successfully"
 fi
 
 exit 0

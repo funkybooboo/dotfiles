@@ -1,4 +1,5 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
+
 #
 # good-time-to-run — exit 0 if on AC, idle, and low‐load; else exit 1
 #
@@ -10,44 +11,44 @@ echo "[$(TS)] Checking if this is a good time to run…"
 
 # 1) Must be on AC (not on battery)
 if grep -q "Discharging" /sys/class/power_supply/BAT*/status 2>/dev/null; then
-  echo "[$(TS)] NOT OK: On battery power"
-  exit 1
+    echo "[$(TS)] NOT OK: On battery power"
+    exit 1
 fi
 
 if ! on_ac_power >/dev/null 2>&1; then
-  echo "[$(TS)] NOT OK: AC adapter not detected"
-  exit 1
+    echo "[$(TS)] NOT OK: AC adapter not detected"
+    exit 1
 fi
 
 # 2) Must be idle
 if command -v xprintidle >/dev/null 2>&1; then
-  IDLE_MS=$(xprintidle 2>/dev/null || echo 0)
-  if [[ "$IDLE_MS" -eq 0 ]]; then
-    echo "[$(TS)] xprintidle failed (Wayland?), falling back to loginctl"
-  elif (( IDLE_MS < 600000 )); then
-    echo "[$(TS)] NOT OK: User active (X11 idle ${IDLE_MS}ms)"
-    exit 1
-  fi
+    IDLE_MS=$(xprintidle 2>/dev/null || echo 0)
+    if [[ "$IDLE_MS" -eq 0 ]]; then
+        echo "[$(TS)] xprintidle failed (Wayland?), falling back to loginctl"
+    elif ((IDLE_MS < 600000)); then
+        echo "[$(TS)] NOT OK: User active (X11 idle ${IDLE_MS}ms)"
+        exit 1
+    fi
 fi
 
 if [[ "${IDLE_MS:-0}" -eq 0 ]]; then
-  # fallback via loginctl
-  SESSION_ID=$(loginctl | awk -v user="$USER" \
-    '$3==user && $4~/^seat/ && $6=="user" {print $1; exit}')
-  if [[ -n "$SESSION_ID" ]]; then
-    IdleHint=$(loginctl show-session "$SESSION_ID" -p IdleHint | cut -d= -f2)
-    if [[ "$IdleHint" != "yes" ]]; then
-      echo "[$(TS)] NOT OK: User active (IdleHint=$IdleHint)"
-      exit 1
+    # fallback via loginctl
+    SESSION_ID=$(loginctl | awk -v user="$USER" \
+        '$3==user && $4~/^seat/ && $6=="user" {print $1; exit}')
+    if [[ -n "$SESSION_ID" ]]; then
+        IdleHint=$(loginctl show-session "$SESSION_ID" -p IdleHint | cut -d= -f2)
+        if [[ "$IdleHint" != "yes" ]]; then
+            echo "[$(TS)] NOT OK: User active (IdleHint=$IdleHint)"
+            exit 1
+        fi
     fi
-  fi
 fi
 
 # 3) Must have low load
 LOAD=$(cut -d. -f1 /proc/loadavg)
-if (( LOAD > 2 )); then
-  echo "[$(TS)] NOT OK: System load is high ($LOAD)"
-  exit 1
+if ((LOAD > 2)); then
+    echo "[$(TS)] NOT OK: System load is high ($LOAD)"
+    exit 1
 fi
 
 echo "[$(TS)] OK: Good time to run"
