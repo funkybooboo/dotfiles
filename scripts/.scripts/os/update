@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo "=== Starting Update Process ==="
+echo ""
+
+# Detect distro
+if command -v nixos-version >/dev/null 2>&1; then
+    DISTRO="NixOS"
+elif [ -f /etc/os-release ]; then
+    # Parse NAME from /etc/os-release
+    DISTRO_NAME=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
+    if [[ "$DISTRO_NAME" =~ [Rr]hino ]]; then
+        DISTRO="Rhino Linux"
+    else
+        DISTRO=""
+    fi
+else
+    DISTRO=""
+fi
+
+if [ -z "$DISTRO" ]; then
+    echo "Unsupported distribution."
+    exit 1
+fi
+
+echo "Detected: $DISTRO"
+echo ""
+
+if [ "$DISTRO" = "NixOS" ]; then
+    # Step 1: Update Flatpak applications and runtimes
+    echo "Step 1: Updating Flatpak applications and runtimes..."
+    sudo flatpak update -y
+    echo "Flatpak applications and runtimes updated."
+    echo ""
+
+    # Step 2: Update Nix channels
+    echo "Step 2: Updating Nix channels..."
+    sudo nix-channel --update
+    echo "Done updating Nix channels."
+    echo ""
+
+    # Step 3: Rebuild NixOS with upgrade
+    echo "Step 3: Rebuilding NixOS with upgrade..."
+    sudo nixos-rebuild switch --upgrade
+    echo "Done rebuilding NixOS."
+    echo ""
+
+    # Step 4: Update Rust packages
+    if command -v cargo >/dev/null 2>&1; then
+        echo "Step 4: Updating Rust (cargo) packages..."
+        cargo install-update -a || echo "→ cargo install-update not installed; skipping"
+        echo "Rust packages updated."
+        echo ""
+    fi
+
+    # Step 5: Update Go packages
+    if command -v go >/dev/null 2>&1; then
+        echo "Step 5: Updating Go packages..."
+        for bin in $(ls "$HOME/go/bin" 2>/dev/null || true); do
+            pkg_name=$(go list -m -f '{{.Path}}' "all/$bin" 2>/dev/null || echo "")
+            if [ -n "$pkg_name" ]; then
+                echo "→ Updating $pkg_name..."
+                go install "$pkg_name@latest"
+            fi
+        done
+        echo "Go packages updated."
+        echo ""
+    fi
+
+    # Step 6: Show current NixOS version
+    echo "Step 6: Current NixOS version:"
+    nixos-version
+    echo ""
+
+elif [ "$DISTRO" = "Rhino Linux" ]; then
+    # Step 1: Update APT/Flatpak/Snap/Pacstall packages
+    echo "Step 1: Updating package lists (rpk)..."
+    sudo rpk sync
+    sudo rpk update
+    echo ""
+
+    # Step 2: Update nix-env if installed
+    if command -v nix-env >/dev/null 2>&1; then
+        echo "Step 2: Updating nix-env packages..."
+        nix-channel --update
+        nix-env -u '*'
+        echo ""
+    fi
+
+    # Step 3: Update Rust packages
+    if command -v cargo >/dev/null 2>&1; then
+        echo "Updating Rust (cargo) packages..."
+        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':')
+        for bin in $installed_bins; do
+            echo "→ Updating $bin..."
+            cargo install "$bin" --force
+        done
+        echo "Rust packages updated."
+        echo ""
+    fi
+
+    # Step 4: Update Go packages
+    if command -v go >/dev/null 2>&1; then
+        echo "Updating Go packages..."
+        for bin in "$HOME/go/bin/"*; do
+            pkg_name=$(basename "$bin")
+            echo "→ Reinstalling $pkg_name..."
+            go install "$pkg_name@latest" 2>/dev/null || true
+        done
+        echo "Go packages updated."
+        echo ""
+    fi
+
+    # Step 5: Show current Rhino Linux release
+    echo "Step 5: Current Rhino Linux version:"
+    if [ -f /etc/rhino-release ]; then
+        cat /etc/rhino-release
+    else
+        grep '^PRETTY_NAME=' /etc/os-release | cut -d= -f2 | tr -d '"'
+    fi
+    echo ""
+fi
+
+echo "=== Update Process Complete ==="
