@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+#
+# system-cleanup — clean system depending on distro (Rhino Linux / NixOS)
+#
+set -euo pipefail
+
+TS() { date '+%F %T'; }
+echo "[$(TS)] === Starting system cleanup ==="
+echo ""
+
+# --- Detect distro ---
+DISTRO=""
+if command -v nixos-version >/dev/null 2>&1; then
+    DISTRO="NixOS"
+elif [ -f /etc/os-release ]; then
+    NAME=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
+    if [[ "$NAME" =~ [Rr]hino ]]; then
+        DISTRO="Rhino Linux"
+    fi
+fi
+
+if [ -z "$DISTRO" ]; then
+    echo "[$(TS)] Unsupported distribution. Exiting."
+    exit 1
+fi
+
+echo "[$(TS)] Detected distro: $DISTRO"
+echo ""
+
+# --- Common cleanup steps ---
+
+# 1) Nix garbage collection (for both NixOS and Rhino with Nix)
+if command -v nix-collect-garbage >/dev/null 2>&1; then
+    echo "[$(TS)] Step 1: Garbage-collect obsolete Nix generations..."
+    sudo nix-collect-garbage -d
+    echo "→ Nix store pruned of all but current generations."
+    echo ""
+fi
+
+# 2) Unused Flatpak runtimes and apps
+if command -v flatpak >/dev/null 2>&1; then
+    echo "[$(TS)] Step 2: Removing unused Flatpak runtimes and apps..."
+    sudo flatpak uninstall --unused -y
+    echo "→ Unused Flatpak content removed."
+    echo ""
+fi
+
+# 3) Vacuum systemd journal logs older than 7 days
+echo "[$(TS)] Step 3: Vacuuming journal logs older than 7 days..."
+sudo journalctl --vacuum-time=7d
+echo "→ Old journal entries purged."
+echo ""
+
+# 4) Docker cleanup
+if command -v docker >/dev/null 2>&1; then
+    echo "[$(TS)] Step 4: Pruning unused Docker objects..."
+    sudo docker system prune --all --volumes --force
+    sudo docker builder prune --all --force
+    sudo docker image prune --force --filter "until=24h"
+    echo "→ Docker cleanup finished."
+    echo ""
+fi
+
+# 5) /tmp cleanup
+echo "[$(TS)] Step 5: Deleting /tmp files older than 7 days..."
+sudo find /tmp -mindepth 1 -mtime +7 -print -delete
+echo "→ /tmp cleaned."
+echo ""
+
+# 6) Multipass cleanup
+if command -v multipass >/dev/null 2>&1; then
+    echo "[$(TS)] Step 6: Cleaning up Multipass VMs and images..."
+    multipass delete --all || true
+    multipass purge || true
+    echo "→ Multipass cleanup finished."
+    echo ""
+fi
+
+# --- Distro-specific cleanup ---
+
+if [ "$DISTRO" = "Rhino Linux" ]; then
+    echo "[$(TS)] Step 7: Cleaning Rhino Linux package caches..."
+
+    # rpk/apt update + cleanup
+    if command -v rpk >/dev/null 2>&1; then
+        sudo rpk cleanup
+        echo "→ rpk caches cleaned."
+    fi
+elif [ "$DISTRO" = "NixOS" ]; then
+    echo "[$(TS)] Step 7: NixOS-specific cleanup complete (already handled via nix-collect-garbage)."
+fi
+
+echo "[$(TS)] === System cleanup complete! ==="

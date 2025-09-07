@@ -1,25 +1,28 @@
 #!/usr/bin/env bash
-
 #
-# update-firmware — refresh and apply firmware updates via fwupd,
-#                    prompt before reboot if running interactively
+# update-firmware — refresh and apply firmware updates via fwupd
+#                    with logging, robust reboot detection, and retry
 #
 set -euo pipefail
 set -o errtrace
 
-# timestamp helper
+# --- Logging ---
+LOGFILE="/var/log/update-firmware.log"
+exec > >(tee -a "$LOGFILE") 2>&1
+
+# --- Timestamp helper ---
 TS() { date '+%F %T'; }
 
-# ensure we never hang on a sudo prompt
+# --- Sudo check ---
 if ! sudo -n true 2>/dev/null; then
-    echo "[$(TS)] ERROR: sudo would prompt for a password; please configure NOPASSWD for fwupdmgr" >&2
+    echo "[$(TS)] ERROR: sudo would prompt for a password; please configure NOPASSWD for fwupdmgr and systemctl"
     exit 1
 fi
 
-# trap errors and report line number
-trap 'echo "[$(TS)] ERROR: failure at line $LINENO" >&2' ERR
+# --- Error trap ---
+trap 'echo "[$(TS)] ERROR: failure at line $LINENO"' ERR
 
-# prevent overlapping runs
+# --- Lockfile to prevent overlapping runs ---
 LOCKFILE=/var/lock/update-firmware.lock
 exec 200>"$LOCKFILE"
 flock -n 200 || {
@@ -27,12 +30,12 @@ flock -n 200 || {
     exit 0
 }
 
-# retry helper for transient failures
+# --- Retry helper ---
 retry() {
     local cmd=("$@") n=1 max=3 delay=10
     until "${cmd[@]}"; do
         ((n >= max)) && return 1
-        echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…" >&2
+        echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…"
         sleep $delay
         ((n++))
     done
@@ -40,23 +43,19 @@ retry() {
 
 echo "[$(TS)] Starting firmware update run"
 
-# 1) Ensure fwupdmgr is available
+# --- Ensure fwupdmgr exists ---
 if ! command -v fwupdmgr >/dev/null 2>&1; then
-    echo "[$(TS)] ERROR: fwupdmgr not found in PATH; aborting" >&2
+    echo "[$(TS)] ERROR: fwupdmgr not found in PATH; aborting"
     exit 1
 fi
 
-# 2) Refresh metadata (with retry)
+# --- Refresh metadata ---
 echo "[$(TS)] Refreshing firmware metadata"
 retry sudo -n fwupdmgr refresh
 
-# 3) Check for updates
+# --- Check for updates ---
 echo "[$(TS)] Checking for firmware updates"
-if ! updates=$(fwupdmgr get-updates 2>&1); then
-    echo "[$(TS)] ERROR: failed to check for updates" >&2
-    exit 1
-fi
-
+updates=$(fwupdmgr get-updates 2>&1)
 if echo "$updates" | grep -iqE 'no updatable|no updates'; then
     echo "[$(TS)] No firmware updates available"
     echo "[$(TS)] Finished (no updates)"
@@ -66,20 +65,20 @@ fi
 echo "[$(TS)] Updates available:"
 echo "$updates"
 
-# 4) Apply updates non-interactively
+# --- Apply updates ---
 echo "[$(TS)] Applying updates"
 if ! sudo -n fwupdmgr --assumeyes update; then
-    echo "[$(TS)] ERROR: fwupdmgr update failed" >&2
+    echo "[$(TS)] ERROR: fwupdmgr update failed"
     exit 1
 fi
-echo "[$(TS)] Firmware update applied successfully"
+echo "[$(TS)] Firmware updates applied successfully"
 
-# 5) Detect if a reboot is required
-if fwupdmgr get-updates --show-details | grep -iqE 'restart|reboot'; then
-    echo "[$(TS)] Reboot required."
+# --- Detect if a reboot is required via JSON output ---
+reboot_required=$(fwupdmgr get-updates --json | grep -Po '"reboot":\s*\Ktrue')
+if [[ "$reboot_required" == "true" ]]; then
+    echo "[$(TS)] Reboot required"
 
     if [ -t 0 ]; then
-        # interactive terminal: prompt
         read -p "[$(TS)] OK to reboot now? [y/N] " answer
         case "$answer" in
         [Yy]*)
@@ -92,11 +91,9 @@ if fwupdmgr get-updates --show-details | grep -iqE 'restart|reboot'; then
             ;;
         esac
     else
-        # non-interactive: just warn
         echo "[$(TS)] Not running in a terminal; please reboot manually to complete firmware installation."
         exit 0
     fi
-
 else
     echo "[$(TS)] No reboot required"
     echo "[$(TS)] Finished successfully"
