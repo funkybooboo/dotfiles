@@ -73,6 +73,7 @@ APT_PACKAGES=(
     rustup
     sbcl
     spice-vdagent
+    steam
     strace
     swig
     synergy
