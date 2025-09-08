@@ -1,21 +1,21 @@
 {
   "add-to-path": [
-    "scripts/.scripts/os/rebuild",
-    "scripts/.scripts/os/update",
-    "scripts/.scripts/os/sync-docs",
-    "scripts/.scripts/os/sync-music",
-    "scripts/.scripts/os/sync-audiobooks",
-    "scripts/.scripts/os/2fa",
-    "scripts/.scripts/os/update-rclone-2fa",
-    "scripts/.scripts/os/auto-update",
-    "scripts/.scripts/os/clean",
-    "scripts/.scripts/os/backup-github",
-    "scripts/.scripts/os/update-firmware",
-    "scripts/.scripts/os/proton-sync",
-    "scripts/.scripts/os/good-time-to-run",
-    "scripts/.scripts/os/audit",
-    "scripts/.scripts/os/auto-update-firmware",
-    "scripts/.scripts/utils/view_pdf",
-    "scripts/.scripts/utils/pdf_to_md"
+    "home/.scripts/os/rebuild",
+    "home/.scripts/os/update",
+    "home/.scripts/os/sync-docs",
+    "home/.scripts/os/sync-music",
+    "home/.scripts/os/sync-audiobooks",
+    "home/.scripts/os/2fa",
+    "home/.scripts/os/update-rclone-2fa",
+    "home/.scripts/os/auto-update",
+    "home/.scripts/os/clean",
+    "home/.scripts/os/backup-github",
+    "home/.scripts/os/update-firmware",
+    "home/.scripts/os/proton-sync",
+    "home/.scripts/os/good-time-to-run",
+    "home/.scripts/os/audit",
+    "home/.scripts/os/auto-update-firmware",
+    "home/.scripts/utils/view_pdf",
+    "home/.scripts/utils/pdf_to_md"
   ]
 }
