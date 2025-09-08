@@ -57,32 +57,34 @@ fi
 # 3) load binaries list
 bins=( $(jq -r '.["add-to-path"][]' config.json) )
 
-# 4) link each whole folder under config/.config → ~/.config/*
+# 4) link each whole folder under home/.config → ~/.config/*
 echo ">>> Linking full ~/.config sub-folders"
 run_cmd mkdir -p "$HOME/.config"
-for entry in config/.config/*; do
+for entry in home/.config/*; do
   dest="$HOME/.config/$(basename "$entry")"
   check_conflict "$dest"
   run_cmd ln -s "$PWD/$entry" "$dest"
 done
 
-# 5) link entire scripts/.scripts → ~/.scripts
+# 5) link entire home/.scripts → ~/.scripts
 echo ">>> Linking full ~/.scripts"
 check_conflict "$HOME/.scripts"
-run_cmd ln -s "$PWD/scripts/.scripts" "$HOME/.scripts"
+run_cmd ln -s "$PWD/home/.scripts" "$HOME/.scripts"
 
-# 6) per-file dotfiles from other pkgs → $HOME
-pkgs=( bash gdbinit ideavim vim git alejandra )
-echo ">>> Linking files into \$HOME"
-for pkg in "${pkgs[@]}"; do
-  while IFS= read -r src; do
-    rel="${src#"$PWD/$pkg/"}"
-    dest="$HOME/$rel"
-    check_conflict "$dest"
-    run_cmd mkdir -p "$(dirname "$dest")"
-    run_cmd ln -s "$src" "$dest"
-  done < <(find "$PWD/$pkg" -type f)
-done
+# 6) per-file dotfiles from home/* → $HOME
+echo ">>> Linking dotfiles into \$HOME"
+while IFS= read -r src; do
+  rel="${src#"$PWD/home/"}"
+  dest="$HOME/$rel"
+  check_conflict "$dest"
+  run_cmd mkdir -p "$(dirname "$dest")"
+  run_cmd ln -s "$src" "$dest"
+done < <(
+  find "$PWD/home" -type f \
+    ! -path "$PWD/home/.config/*" \
+    ! -path "$PWD/home/.scripts/*" \
+    ! -path "$PWD/home/Pictures/*"
+)
 
 # 7) link binaries → ~/.local/bin
 echo ">>> Linking into ~/.local/bin"
@@ -99,7 +101,7 @@ echo ">>> Linking full wallpapers folder"
 run_cmd mkdir -p "$HOME/Pictures"
 dest="$HOME/Pictures/wallpapers"
 check_conflict "$dest"
-run_cmd ln -s "$PWD/Pictures/wallpapers" "$dest"
+run_cmd ln -s "$PWD/home/Pictures/wallpapers" "$dest"
 
 suffix=""
 if [[ $DRY_RUN -eq 1 ]]; then

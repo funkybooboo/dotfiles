@@ -86,6 +86,7 @@ APT_PACKAGES=(
     wikiman
     xprintidle
     zoxide
+    jq
 )
 
 # Snap packages
