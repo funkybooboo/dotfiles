@@ -91,3 +91,7 @@ elif [ "$DISTRO" = "NixOS" ]; then
 fi
 
 echo "[$(TS)] === System cleanup complete! ==="
+
+# Launch ncdu
+echo "[$(TS)] Launching ncdu for disk usage analysis..."
+sudo ncdu /
