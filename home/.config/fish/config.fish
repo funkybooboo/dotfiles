@@ -3,6 +3,10 @@ set -gx PATH $HOME/.local/bin $PATH
 set -gx PATH $HOME/.cargo/bin/ $PATH
 set -gx PATH $HOME/go/bin $PATH
 set -gx PATH $HOME/.nix-profile/bin $PATH
+set -x PATH $HOME/.pyenv/bin $PATH
+
+status --is-interactive; and source (pyenv init --path | psub)
+status --is-interactive; and source (pyenv init - | psub)
 
 # Alias ls to use lsd for interactive sessions
 if status is-interactive
