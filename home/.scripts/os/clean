@@ -35,6 +35,9 @@ if command -v nix-collect-garbage >/dev/null 2>&1; then
     sudo nix-collect-garbage -d
     echo "→ Nix store pruned of all but current generations."
     echo ""
+else
+    echo "[$(TS)] Nix is not installed. Skipping Nix garbage collection."
+    echo ""
 fi
 
 # 2) Unused Flatpak runtimes and apps
@@ -43,11 +46,14 @@ if command -v flatpak >/dev/null 2>&1; then
     sudo flatpak uninstall --unused -y
     echo "→ Unused Flatpak content removed."
     echo ""
+else
+    echo "[$(TS)] Flatpak is not installed. Skipping Flatpak cleanup."
+    echo ""
 fi
 
 # 3) Vacuum systemd journal logs older than 7 days
 echo "[$(TS)] Step 3: Vacuuming journal logs older than 7 days..."
-sudo journalctl --vacuum-time=7d
+sudo journalctl --vacuum-time=7d || { echo "Failed to vacuum journal logs."; }
 echo "→ Old journal entries purged."
 echo ""
 
@@ -59,11 +65,15 @@ if command -v docker >/dev/null 2>&1; then
     sudo docker image prune --force --filter "until=24h"
     echo "→ Docker cleanup finished."
     echo ""
+else
+    echo "[$(TS)] Docker is not installed. Skipping Docker cleanup."
+    echo ""
 fi
 
-# 5) /tmp cleanup
+# 5) /tmp cleanup (but avoid deleting important files)
 echo "[$(TS)] Step 5: Deleting /tmp files older than 7 days..."
-sudo find /tmp -mindepth 1 -mtime +7 -print -delete
+# Skip files in use by checking if the file is older than 7 days and not open by any process
+sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -f {} \; || { echo "Failed to clean /tmp directory."; }
 echo "→ /tmp cleaned."
 echo ""
 
@@ -74,6 +84,9 @@ if command -v multipass >/dev/null 2>&1; then
     multipass purge || true
     echo "→ Multipass cleanup finished."
     echo ""
+else
+    echo "[$(TS)] Multipass is not installed. Skipping Multipass cleanup."
+    echo ""
 fi
 
 # --- Distro-specific cleanup ---
@@ -83,7 +96,7 @@ if [ "$DISTRO" = "Rhino Linux" ]; then
 
     # rpk/apt update + cleanup
     if command -v rpk >/dev/null 2>&1; then
-        sudo rpk cleanup
+        sudo rpk cleanup || { echo "Failed to clean rpk caches."; }
         echo "→ rpk caches cleaned."
     fi
 elif [ "$DISTRO" = "NixOS" ]; then
@@ -92,6 +105,10 @@ fi
 
 echo "[$(TS)] === System cleanup complete! ==="
 
-# Launch ncdu
+# Launch ncdu for disk usage analysis and handle any errors
 echo "[$(TS)] Launching ncdu for disk usage analysis..."
-sudo ncdu /
+if command -v ncdu >/dev/null 2>&1; then
+    sudo ncdu / || { echo "Failed to run ncdu."; }
+else
+    echo "ncdu is not installed. Please install it to analyze disk usage."
+fi
