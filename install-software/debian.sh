@@ -87,6 +87,10 @@ APT_PACKAGES=(
     xprintidle
     zoxide
     jq
+    build-essential
+    procps
+    curl
+    file
 )
 
 # Snap packages
