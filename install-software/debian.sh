@@ -216,7 +216,7 @@ PACSTALL_PACKAGES=(
 )
 
 HOMEBREW_PACKAGES=(
-    lazyssh
+    Adembc/homebrew-tap/lazyssh
 )
 
 # ===============================
