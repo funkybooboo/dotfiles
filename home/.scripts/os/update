@@ -92,7 +92,7 @@ elif [ "$DISTRO" = "Rhino Linux" ]; then
     # Step 3: Update Rust packages
     if command -v cargo >/dev/null 2>&1; then
         echo "Updating Rust (cargo) packages..."
-        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':')
+        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':' | sort | uniq | grep -v '^linutil$')
         for bin in $installed_bins; do
             echo "→ Updating $bin..."
             cargo install "$bin" --force
