@@ -109,6 +109,7 @@ SNAP_PACKAGES=(
     snapd
     tldr
     yazi
+    zotero-snap
 )
 
 # Flatpak applications
