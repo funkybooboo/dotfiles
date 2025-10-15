@@ -91,6 +91,8 @@ APT_PACKAGES=(
     procps
     curl
     file
+    termshark
+    duf
 )
 
 # Snap packages
