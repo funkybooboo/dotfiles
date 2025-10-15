@@ -93,6 +93,7 @@ APT_PACKAGES=(
     file
     termshark
     duf
+    lazygit
 )
 
 # Snap packages
@@ -160,11 +161,14 @@ NIX_PACKAGES=(
 # Rust (cargo) packages
 CARGO_PACKAGES=(
     fnm
+    linutil_tui
 )
 
 # Go packages (full import paths)
 GO_PACKAGES=(
     github.com/charmbracelet/glow@latest
+    github.com/jesseduffield/lazydocker@latest
+    github.com/jorgerojas26/lazysql@latest
 )
 
 # Pacstall packages
@@ -178,8 +182,6 @@ PACSTALL_PACKAGES=(
     fake-ubuntu-advantage-tools
     firefox
     hello-rhino
-    lazydocker
-    lazygit
     librewolf
     linux-headers-6.16.1-061601-generic
     linux-headers-6.16.1-061601
@@ -211,6 +213,10 @@ PACSTALL_PACKAGES=(
     ulauncher
     codium
     zoom
+)
+
+HOMEBREW_PACKAGES=(
+    lazyssh
 )
 
 # ===============================
@@ -342,6 +348,17 @@ if command -v pacstall >/dev/null 2>&1; then
     done
 else
     echo "[$(TS)] Pacstall not installed, skipping Pacstall packages."
+fi
+echo ""
+
+# 8) Homebrew packages
+if command -v brew >/dev/null 2>&1; then
+    for pkg in "${HOMEBREW_PACKAGES[@]}"; do
+        echo "[$(TS)] Installing $pkg via Homebrew..."
+        brew install $pkg
+    done
+else
+    echo "[$(TS)] Homebrew not installed, skipping Homebrew packages."
 fi
 echo ""
 

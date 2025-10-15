@@ -113,6 +113,11 @@ elif [ "$DISTRO" = "Rhino Linux" ]; then
         echo ""
     fi
 
+    if command -v brew >/dev/null 2>&1; then
+        echo "Updating Brew packages..."
+        brew update
+    fi
+
     # Step 5: Show current Rhino Linux release
     echo "Step 5: Current Rhino Linux version:"
     if [ -f /etc/rhino-release ]; then
