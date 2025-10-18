@@ -83,22 +83,15 @@ APT_PACKAGES=(
     fd
     glances
     ncdu
+    errno
 )
 
 SNAP_PACKAGES=(
-    bare
-    core
-    core20
-    core22
-    core24
-    gnome-42-2204
-    gnome-46-2404
     gtk-common-themes
     hello-world
     jump
     libreoffice
     mermaid-cli
-    mesa-2404
     multipass
     rclone
     snapd
@@ -110,16 +103,6 @@ SNAP_PACKAGES=(
 FLATPAK_PACKAGES=(
     com.github.tchx84.Flatseal
     com.hunterwittenborn.Celeste
-    com.jetbrains.CLion
-    com.jetbrains.DataGrip
-    com.jetbrains.GoLand
-    com.jetbrains.IntelliJ-IDEA-Ultimate
-    com.jetbrains.PhpStorm
-    com.jetbrains.PyCharm-Professional
-    com.jetbrains.Rider
-    com.jetbrains.RubyMine
-    com.jetbrains.RustRover
-    com.jetbrains.WebStorm
     com.protonvpn.www
     me.proton.Pass
     org.freedesktop.Platform
