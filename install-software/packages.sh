@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+# Package arrays for install-software/os.sh
+
+APT_PACKAGES=(
+    amberol
+    autojump
+    axel
+    balena-etcher
+    bat
+    blanket
+    blueman
+    bubblewrap
+    chkrootkit
+    chrony
+    clamav
+    clang
+    clisp
+    cmake
+    cozy
+    distrobox
+    fdclone
+    fish
+    fzf
+    gh
+    git
+    git-delta
+    git-remote-gcrypt
+    gnome-calculator
+    gnome-disk-utility
+    guvcview
+    handbrake
+    kitty
+    lua5.1
+    luarocks
+    lynis
+    mate-polkit
+    media-types
+    mugshot
+    nano
+    mpv
+    mtools
+    net-tools
+    network-manager-gnome
+    ntfs-3g
+    oathtool
+    openconnect
+    pandoc
+    pipx
+    plocate
+    power-profiles-daemon
+    python3-poetry
+    python3-pygments
+    python3-rich
+    redshift
+    redshift-gtk
+    rustup
+    spice-vdagent
+    steam
+    strace
+    swig
+    synergy
+    texlive-latex-base
+    thunar
+    thunar-volman
+    tree
+    virt-manager
+    wget
+    wikiman
+    xprintidle
+    zoxide
+    jq
+    build-essential
+    procps
+    curl
+    file
+    termshark
+    duf
+    ts
+    mtr
+    eza
+    procs
+    fd
+    glances
+    ncdu
+)
+
+SNAP_PACKAGES=(
+    bare
+    core
+    core20
+    core22
+    core24
+    gnome-42-2204
+    gnome-46-2404
+    gtk-common-themes
+    hello-world
+    jump
+    libreoffice
+    mermaid-cli
+    mesa-2404
+    multipass
+    rclone
+    snapd
+    tldr
+    yazi
+    zotero-snap
+)
+
+FLATPAK_PACKAGES=(
+    com.github.tchx84.Flatseal
+    com.hunterwittenborn.Celeste
+    com.jetbrains.CLion
+    com.jetbrains.DataGrip
+    com.jetbrains.GoLand
+    com.jetbrains.IntelliJ-IDEA-Ultimate
+    com.jetbrains.PhpStorm
+    com.jetbrains.PyCharm-Professional
+    com.jetbrains.Rider
+    com.jetbrains.RubyMine
+    com.jetbrains.RustRover
+    com.jetbrains.WebStorm
+    com.protonvpn.www
+    me.proton.Pass
+    org.freedesktop.Platform
+    org.freedesktop.Platform.GL.default
+    org.freedesktop.Platform.VAAPI.Intel
+    org.freedesktop.Platform.codecs-extra
+    org.freedesktop.Platform.openh264
+    org.freedesktop.Sdk
+    org.freedesktop.Sdk.Compat.i386
+    org.gnome.Platform
+    org.gtk.Gtk3theme.Greybird
+    org.gtk.Gtk3theme.adw-gtk3
+    org.gtk.Gtk3theme.adw-gtk3-dark
+)
+
+NIX_PACKAGES=(
+    tectonic
+    biber
+)
+
+CARGO_PACKAGES=(
+    fnm
+    linutil_tui
+)
+
+GO_PACKAGES=(
+    github.com/charmbracelet/glow@latest
+)
+
+PACSTALL_PACKAGES=(
+    brave-browser
+    brave-keyring
+    docker
+    docker-buildx-plugin
+    docker-compose-plugin
+    fake-ubuntu-advantage-tools
+    firefox
+    hello-rhino
+    librewolf
+    linux-headers-6.16.1-061601-generic
+    linux-headers-6.16.1-061601
+    linux-image-unsigned-6.16.1-061601-generic
+    linux-kernel-6.16.1
+    linux-modules-6.16.1-061601-generic
+    nala
+    neovim
+    nushell
+    nutext
+    obsidian
+    ollama
+    otf-firamono-nerd
+    otf-opendyslexic-nerd
+    protonmail-bridge
+    quintom-cursor-theme
+    rhino-grub-theme
+    rhino-hotfix
+    rhino-kvantum-theme
+    rhino-neofetch
+    rhino-pkg
+    rhino-plymouth-theme
+    rhino-system
+    rhino-ubxi-core
+    signal-desktop
+    timeshift
+    ttf-jetbrains-mono-nerd
+    ubxi-kde-desktop
+    ulauncher
+    codium
+    zoom
+)
+
+HOMEBREW_PACKAGES=(
+    Adembc/homebrew-tap/lazyssh
+    lazydocker
+    lazygit
+)
+
+PIP_PACKAGES=(
+
+)
+
+NPM_PACKAGES=(
+    
+)
+
+GAH_PACKAGES=(
+
+)

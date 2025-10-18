@@ -8,14 +8,8 @@ echo ""
 # Detect distro
 if command -v nixos-version >/dev/null 2>&1; then
     DISTRO="NixOS"
-elif [ -f /etc/os-release ]; then
-    # Parse NAME from /etc/os-release
-    DISTRO_NAME=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
-    if [[ "$DISTRO_NAME" =~ [Rr]hino ]]; then
-        DISTRO="Rhino Linux"
-    else
-        DISTRO=""
-    fi
+elif command -v apt >/dev/null 2>&1; then
+    DISTRO="Ubuntu"
 else
     DISTRO=""
 fi
@@ -74,14 +68,44 @@ if [ "$DISTRO" = "NixOS" ]; then
     nixos-version
     echo ""
 
-elif [ "$DISTRO" = "Rhino Linux" ]; then
-    # Step 1: Update APT/Flatpak/Snap/Pacstall packages
-    echo "Step 1: Updating package lists (rpk)..."
-    sudo rpk sync
-    sudo rpk update
-    echo ""
+elif [ "$DISTRO" = "Ubuntu" ]; then
+    
+    if command -v rpk >/dev/null 2>&1; then
+        echo "Updating RPK packages..."
+        sudo rpk sync
+        sudo rpk update
+        echo "RPK packages updated."
+        echo ""
+    else
+        if command -v apt >/dev/null 2>&1; then
+            echo "Updating APT packages..."
+            sudo apt update && sudo apt upgrade -y
+            echo "APT packages updated."
+            echo ""
+        fi
 
-    # Step 2: Update nix-env if installed
+        if command -v flatpak >/dev/null 2>&1; then
+            echo "Updating Flatpak applications and runtimes..."
+            sudo flatpak update -y
+            echo "Flatpak packages updated."
+            echo ""
+        fi
+
+        if command -v snap >/dev/null 2>&1; then
+            echo "Updating Snap packages..."
+            sudo snap refresh
+            echo "Snap packages updated."
+            echo ""
+        fi
+
+        if command -v pacstall >/dev/null 2>&1; then
+            echo "Updating Pacstall packages..."
+            sudo pacstall -Up
+            echo "Pacstall packages updated."
+            echo ""
+        fi
+    fi
+
     if command -v nix-env >/dev/null 2>&1; then
         echo "Step 2: Updating nix-env packages..."
         nix-channel --update
@@ -89,7 +113,6 @@ elif [ "$DISTRO" = "Rhino Linux" ]; then
         echo ""
     fi
 
-    # Step 3: Update Rust packages
     if command -v cargo >/dev/null 2>&1; then
         echo "Updating Rust (cargo) packages..."
         installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':' | sort | uniq | grep -v '^linutil$')
@@ -101,7 +124,6 @@ elif [ "$DISTRO" = "Rhino Linux" ]; then
         echo ""
     fi
 
-    # Step 4: Update Go packages
     if command -v go >/dev/null 2>&1; then
         echo "Updating Go packages..."
         for bin in "$HOME/go/bin/"*; do
@@ -118,8 +140,12 @@ elif [ "$DISTRO" = "Rhino Linux" ]; then
         brew update
     fi
 
-    # Step 5: Show current Rhino Linux release
-    echo "Step 5: Current Rhino Linux version:"
+    if command -v gah >/dev/null 2>&1; then
+        echo "Updating Gah packages..."
+        gah update
+    fi
+
+    echo "Current Rhino Linux version:"
     if [ -f /etc/rhino-release ]; then
         cat /etc/rhino-release
     else
