@@ -1,11 +1,5 @@
 # 🗂️ Dotfiles
 
-This repo manages:
-
-* 🧩 **Home-directory dotfiles** — like `.bashrc`, `.gitconfig`, `.config/*`, etc.  
-* ⚙️ **System configuration** — optional system setup for NixOS and Ubuntu  
-* 🛠️ **Utility scripts** — installed into `~/.local/bin` for convenience  
-
 ---
 
 ## 🚀 Quick Start (Fresh System)
@@ -16,18 +10,6 @@ This repo manages:
 git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ````
-
----
-
-### 2. (Optional) Enter the Nix shell
-
-If you use Nix:
-
-```bash
-nix-shell
-```
-
-This provides `git`, `jq`, and other tools without installing them globally.
 
 ---
 
@@ -50,7 +32,6 @@ What this does:
 * Symlinks everything from `home/.local/bin/*` → `~/.local/bin/*`
 * Symlinks each folder under `home/.config/*` → `~/.config/*`
 * Symlinks all remaining dotfiles in `home/` → `$HOME`
-  (excluding `.config` and `.local`)
 * Aborts if any destination already exists (safe, no overwrites)
 
 ---
@@ -65,7 +46,7 @@ sudo cp root/etc/nixos/configuration.nix /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 ```
 
-#### 🐧 Ubuntu / Rhino Linux
+#### 🐧 Ubuntu
 
 ```bash
 update
