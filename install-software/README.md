@@ -1,40 +1,106 @@
-# Workstation Setup Scripts
+# Install Software
 
-These scripts work with Ubuntu linux and Macos
+These scripts work on **Ubuntu Linux**
+
+---
 
 ## Automated workflow
 
-- `./part1.sh`
-- reboot
-- `./part2.sh`
-- reboot 
-- You should be good to go!
+1. Run **pre-reboot scripts**:
+
+```bash
+./pre-reboot.sh
+```
+
+2. Reboot your machine.
+
+3. Run **post-reboot scripts**:
+
+```bash
+./post-reboot.sh
+```
+
+4. Reboot again (optional, but recommended for some apps).
+   You should now have your machine fully set up.
+
+---
+
+### Pre-reboot scripts
+
+These scripts install core system components, drivers, runtimes, and package managers:
+
+* `basic.sh`
+* `cuda.sh`
+* `container-runtime.sh`
+* `package-managers.sh`
+
+---
+
+### Post-reboot scripts
+
+These scripts install user applications, tools, and configure Git/SSH/GPG:
+
+* `java.sh`
+* `jetbrains-toolbox.sh`
+* `ollama.sh`
+* `global-protect.sh`
+* `github-desktop.sh`
+* `ssh-key.sh`
+* `gpg-key.sh`
+* `git-repos.sh`
+* `signal-desktop.sh`
+* `zoom.sh`
+* `packages.sh`
+
+---
 
 ## Manual workflow
 
-Run one of the scripts if you only want one part. Example run `java.sh` if you only want to install java.
+You can run individual scripts if you only want specific components.
+For example:
+
+```bash
+./installers/java.sh
+```
+
+---
 
 ## Post workflow run
 
-Check out either .bashrc or .zshrc (whatever one you use), scroll to the bottom, make sure all is well with the world.
-Clean things up as you like, uncomment lines, etc...
+* Check your shell configuration (`.bashrc` or `fish.config`) for any appended lines.
+* Clean things up if necessary (uncomment lines, remove duplicates, etc.).
+
+---
 
 ## Notes
 
-`part1.sh` and `part2.sh` will run different sections of the automated setup. 
-It is intended to reboot (or logout and back in) between the two parts.
+### Folder structure
 
-`reboot.sh` and `append_config.sh` are helper scripts.
+* **`installers/`** – Contains individual installation scripts for each tool or component.
 
-All other scripts are different parts of the workflow.
+  * Pre-reboot scripts handle system-level setup (drivers, runtimes, package managers).
+  * Post-reboot scripts handle user-level applications and configurations (tools, Git/GPG, SSH).
 
-## Todos
+* **`packages/`** – Contains scripts for managing package lists and bulk installations:
 
-### Need
+  * `packages.sh` – Defines packages to install via APT, Snap, Flatpak, etc.
+  * `manage-packages.sh` – Installs the packages defined in `packages.sh`.
 
-### Want
+* **`utils/`** – Contains helper scripts used by installers:
 
+  * `log.sh` – Consistent logging function.
+  * `copy-to-clip-board.sh` – Copies text to the system clipboard.
+  * `reboot.sh` – Safely reboots the system.
+  * `shell-configs.sh` – Updates shell configuration files.
 
-### Would be nice
+### Workflow scripts
 
-setup dataadmintools
+* `pre-reboot.sh` – Runs all pre-reboot installers. **Requires reboot** after running.
+* `post-reboot.sh` – Runs all post-reboot installers. **Should be run after reboot** from pre-reboot phase.
+* `README.md` – Documentation for the setup scripts.
+
+### General notes
+
+* All installers are modular and can be run individually if needed.
+* Pre-reboot scripts install system-level packages; post-reboot scripts install user-level applications and configurations.
+* The workflow ensures your system is fully set up while avoiding conflicts between system and user-level changes.

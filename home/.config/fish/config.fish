@@ -183,3 +183,6 @@ alias zi=__zoxide_zi
 # ~/.config/fish/config.fish):
 #
 zoxide init fish | source
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fish_add_path --prepend "/home/nate/.asdf/shims"
