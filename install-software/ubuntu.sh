@@ -328,4 +328,25 @@ install_jetbrains_toolbox() {
 }
 install_jetbrains_toolbox
 
+install_zoom() {
+    # 1. Install our official public software signing key:
+    if [ ! -f /usr/share/keyrings/signal-desktop-keyring.gpg ]; then
+        wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
+        sudo mv signal-desktop-keyring.gpg /usr/share/keyrings/signal-desktop-keyring.gpg
+    fi
+
+    # 2. Add our repository to your list of repositories:
+    if [ ! -f /etc/apt/sources.list.d/signal-desktop.sources ]; then
+        wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/signal-desktop.sources
+        sudo mv signal-desktop.sources /etc/apt/sources.list.d/signal-desktop.sources
+    fi
+
+    # 3. Update your package database and install Signal:
+    sudo apt update
+    if ! dpkg -l | grep -q signal-desktop; then
+        sudo apt install -y signal-desktop
+    fi
+}
+install_zoom
+
 echo "[$(TS)] ✅ Software installation complete."
