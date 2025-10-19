@@ -78,8 +78,12 @@ SNAP_PACKAGES=(
   multipass
   rclone
   tldr
-  yazi
   zotero-snap
+)
+
+SNAP_CLASSIC_PACKAGES=(
+  yazi
+  codium
 )
 
 FLATPAK_PACKAGES=(
@@ -120,7 +124,6 @@ PACSTALL_PACKAGES=(
   obsidian-deb
   signal-desktop-deb
   timeshift
-  vscodium-bin
 )
 
 HOMEBREW_PACKAGES=(
