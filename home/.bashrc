@@ -116,6 +116,8 @@ if ! shopt -oq posix; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+export PATH="$HOME/.asdf/shims:$PATH"
 
 dotfiles() {
   /usr/bin/env git --git-dir="$HOME/dotfiles/.git" --work-tree="$HOME/dotfiles" "$@"
@@ -128,3 +130,5 @@ fi
 
 alias find='fd'
 alias fd='fdfind'
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

@@ -28,7 +28,6 @@ This repo manages:
 3. **Bootstrap your dotfiles**
 
    ```bash
-   chmod +x setup.sh
    ./setup.sh --dry-run   # preview symlinks
    ./setup.sh             # apply symlinks
    ```
@@ -43,9 +42,12 @@ This repo manages:
    ```
 
    ```bash
-   # Rhino Linux
-   chmod +x ./install-software/rhino_linux.sh
-   sudo ./install-software/rhino_linux.sh
+   # Ubuntu
+   update
+   ./install-software/pre-reboot.sh
+   # The scripts will prompt you to reboot
+   ./install-software/post-reboot.sh
+   update
    ```
 
 5. **Rclone & sync**
@@ -55,18 +57,6 @@ This repo manages:
    sync-docs
    sync-music
    sync-audiobooks
-   ```
-
-6. **System update**
-
-   ```bash
-   update
-   ```
-
-7. **Reboot if needed**
-
-   ```bash
-   sudo reboot
    ```
 
 ---

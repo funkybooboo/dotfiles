@@ -40,7 +40,7 @@ run_cmd() {
 check_conflict() {
   local dest="$1"
   if [[ -e "$dest" ]]; then
-    echo "⛔ conflict: '$dest' already exists.  Aborting."
+    echo "conflict: '$dest' already exists.  Aborting."
     exit 1
   fi
 }

@@ -4,7 +4,6 @@
 
 APT_PACKAGES=(
   bat
-  blanket
   bubblewrap
   chkrootkit
   chrony
@@ -62,7 +61,6 @@ APT_PACKAGES=(
   duf
   mtr
   eza
-  procs
   glances
   ncdu
   errno
@@ -79,11 +77,16 @@ SNAP_PACKAGES=(
   rclone
   tldr
   zotero-snap
+  elisa
+  zoom-client
+  blanket
+  procs
 )
 
 SNAP_CLASSIC_PACKAGES=(
   yazi
   codium
+  emacs
 )
 
 FLATPAK_PACKAGES=(
@@ -91,17 +94,7 @@ FLATPAK_PACKAGES=(
   com.hunterwittenborn.Celeste
   com.protonvpn.www
   me.proton.Pass
-  org.freedesktop.Platform
-  org.freedesktop.Platform.GL.default
-  org.freedesktop.Platform.VAAPI.Intel
-  org.freedesktop.Platform.codecs-extra
-  org.freedesktop.Platform.openh264
-  org.freedesktop.Sdk
-  org.freedesktop.Sdk.Compat.i386
-  org.gnome.Platform
-  org.gtk.Gtk3theme.Greybird
-  org.gtk.Gtk3theme.adw-gtk3
-  org.gtk.Gtk3theme.adw-gtk3-dark
+  io.podman_desktop.PodmanDesktop
 )
 
 NIX_PACKAGES=(
@@ -122,15 +115,14 @@ PACSTALL_PACKAGES=(
   nala-deb
   neovim
   obsidian-deb
-  signal-desktop-deb
   timeshift
 )
 
 HOMEBREW_PACKAGES=(
-  Adembc/homebrew-tap/lazyssh
+  lazyssh
   lazydocker
   lazygit
-  asdf
+  lazysql
   nushell
 )
 
@@ -139,7 +131,7 @@ PIP_PACKAGES=(
 )
 
 NPM_PACKAGES=(
-
+  @anthropic-ai/claude-code
 )
 
 GAH_PACKAGES=(
