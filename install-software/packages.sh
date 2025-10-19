@@ -3,13 +3,8 @@
 # Package arrays for install-software/os.sh
 
 APT_PACKAGES=(
-    amberol
-    autojump
-    axel
-    balena-etcher
     bat
     blanket
-    blueman
     bubblewrap
     chkrootkit
     chrony
@@ -37,11 +32,9 @@ APT_PACKAGES=(
     mate-polkit
     media-types
     mugshot
-    nano
     mpv
     mtools
     net-tools
-    network-manager-gnome
     ntfs-3g
     oathtool
     openconnect
@@ -50,54 +43,44 @@ APT_PACKAGES=(
     plocate
     power-profiles-daemon
     python3-poetry
-    python3-pygments
-    python3-rich
-    redshift
-    redshift-gtk
     rustup
     spice-vdagent
-    steam
     strace
     swig
-    synergy
-    texlive-latex-base
     thunar
     thunar-volman
     tree
     virt-manager
     wget
-    wikiman
     xprintidle
     zoxide
     jq
-    build-essential
     procps
     curl
     file
     termshark
     duf
-    ts
     mtr
     eza
     procs
-    fd
     glances
     ncdu
     errno
+    fd-find
+    ripgrep
+    gdebi
 )
 
 SNAP_PACKAGES=(
-    gtk-common-themes
-    hello-world
     jump
     libreoffice
     mermaid-cli
     multipass
     rclone
-    snapd
     tldr
     yazi
     zotero-snap
+    nuclear
 )
 
 FLATPAK_PACKAGES=(
@@ -121,10 +104,10 @@ FLATPAK_PACKAGES=(
 NIX_PACKAGES=(
     tectonic
     biber
+    wikiman
 )
 
 CARGO_PACKAGES=(
-    fnm
     linutil_tui
 )
 
@@ -133,51 +116,20 @@ GO_PACKAGES=(
 )
 
 PACSTALL_PACKAGES=(
-    brave-browser
-    brave-keyring
-    docker
-    docker-buildx-plugin
-    docker-compose-plugin
-    fake-ubuntu-advantage-tools
-    firefox
-    hello-rhino
-    librewolf
-    linux-headers-6.16.1-061601-generic
-    linux-headers-6.16.1-061601
-    linux-image-unsigned-6.16.1-061601-generic
-    linux-kernel-6.16.1
-    linux-modules-6.16.1-061601-generic
-    nala
+    nala-deb
     neovim
-    nushell
-    nutext
-    obsidian
-    ollama
-    otf-firamono-nerd
-    otf-opendyslexic-nerd
-    protonmail-bridge
-    quintom-cursor-theme
-    rhino-grub-theme
-    rhino-hotfix
-    rhino-kvantum-theme
-    rhino-neofetch
-    rhino-pkg
-    rhino-plymouth-theme
-    rhino-system
-    rhino-ubxi-core
-    signal-desktop
+    obsidian-deb
+    signal-desktop-deb
     timeshift
-    ttf-jetbrains-mono-nerd
-    ubxi-kde-desktop
-    ulauncher
-    codium
-    zoom
+    vscodium-bin
 )
 
 HOMEBREW_PACKAGES=(
     Adembc/homebrew-tap/lazyssh
     lazydocker
     lazygit
+    asdf
+    nushell
 )
 
 PIP_PACKAGES=(
