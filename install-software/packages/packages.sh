@@ -115,7 +115,6 @@ PACSTALL_PACKAGES=(
   nala-deb
   neovim
   obsidian-deb
-  timeshift
 )
 
 HOMEBREW_PACKAGES=(
