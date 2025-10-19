@@ -95,6 +95,8 @@ FLATPAK_PACKAGES=(
   com.protonvpn.www
   me.proton.Pass
   io.podman_desktop.PodmanDesktop
+  io.gitlab.librewolf-community
+  com.brave.Browser
 )
 
 NIX_PACKAGES=(
@@ -122,7 +124,6 @@ HOMEBREW_PACKAGES=(
   lazydocker
   lazygit
   lazysql
-  nushell
 )
 
 PIP_PACKAGES=(
