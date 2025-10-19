@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # -----------------------------------------------------------------------------
-# setup.sh — symlink your dotfiles, .scripts, wallpapers, and binaries into $HOME
+# setup.sh — symlink your dotfiles and local binaries into $HOME
 #            but abort on any conflict (no auto-removal)
 # -----------------------------------------------------------------------------
 
@@ -40,25 +40,25 @@ run_cmd() {
 check_conflict() {
   local dest="$1"
   if [[ -e "$dest" ]]; then
-    echo "conflict: '$dest' already exists.  Aborting."
+    echo "conflict: '$dest' already exists. Aborting."
     exit 1
   fi
 }
 
-# 1) cd into repo
+# 1) cd into repo root
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# 2) need jq
-if ! command -v jq &>/dev/null; then
-  echo "Error: jq not installed."
-  exit 1
-fi
+# 2) link everything from home/.local/bin/* → ~/.local/bin/*
+echo ">>> Linking executables into ~/.local/bin"
+run_cmd mkdir -p "$HOME/.local/bin"
+for entry in home/.local/bin/*; do
+  dest="$HOME/.local/bin/$(basename "$entry")"
+  check_conflict "$dest"
+  run_cmd ln -s "$PWD/$entry" "$dest"
+done
 
-# 3) load binaries list
-bins=( $(jq -r '.["add-to-path"][]' config.json) )
-
-# 4) link each whole folder under home/.config → ~/.config/*
-echo ">>> Linking full ~/.config sub-folders"
+# 3) link each folder under home/.config → ~/.config/*
+echo ">>> Linking config folders into ~/.config"
 run_cmd mkdir -p "$HOME/.config"
 for entry in home/.config/*; do
   dest="$HOME/.config/$(basename "$entry")"
@@ -66,12 +66,7 @@ for entry in home/.config/*; do
   run_cmd ln -s "$PWD/$entry" "$dest"
 done
 
-# 5) link entire home/.scripts → ~/.scripts
-echo ">>> Linking full ~/.scripts"
-check_conflict "$HOME/.scripts"
-run_cmd ln -s "$PWD/home/.scripts" "$HOME/.scripts"
-
-# 6) per-file dotfiles from home/* → $HOME
+# 4) link per-file dotfiles from home/* → $HOME (excluding .config and .local)
 echo ">>> Linking dotfiles into \$HOME"
 while IFS= read -r src; do
   rel="${src#"$PWD/home/"}"
@@ -82,29 +77,12 @@ while IFS= read -r src; do
 done < <(
   find "$PWD/home" -type f \
     ! -path "$PWD/home/.config/*" \
-    ! -path "$PWD/home/.scripts/*" \
-    ! -path "$PWD/home/Pictures/*"
+    ! -path "$PWD/home/.local/*"
 )
-
-# 7) link binaries → ~/.local/bin
-echo ">>> Linking into ~/.local/bin"
-run_cmd mkdir -p "$HOME/.local/bin"
-for rel in "${bins[@]}"; do
-  src="$PWD/$rel"
-  dest="$HOME/.local/bin/$(basename "$rel")"
-  check_conflict "$dest"
-  run_cmd ln -s "$src" "$dest"
-done
-
-# 8) link full wallpapers folder → ~/Pictures/wallpapers
-echo ">>> Linking full wallpapers folder"
-run_cmd mkdir -p "$HOME/Pictures"
-dest="$HOME/Pictures/wallpapers"
-check_conflict "$dest"
-run_cmd ln -s "$PWD/home/Pictures/wallpapers" "$dest"
 
 suffix=""
 if [[ $DRY_RUN -eq 1 ]]; then
   suffix=" (dry-run)"
 fi
+
 echo ">>> Done${suffix}."
