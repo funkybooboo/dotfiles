@@ -4,14 +4,24 @@ set -gx PATH $HOME/.cargo/bin/ $PATH
 set -gx PATH $HOME/go/bin $PATH
 set -gx PATH $HOME/.nix-profile/bin $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
+set -gx PATH $HOME/.asdf/shims $PATH
 
-status --is-interactive; and source (pyenv init --path | psub)
-status --is-interactive; and source (pyenv init - | psub)
+# Initialize pyenv only if installed
+if type -q pyenv
+    pyenv init --path | psub
+    pyenv init - | psub
+end
+
+# Initialize fnm (Fast Node Manager) environment
+if type -q fnm
+    fnm env | source
+end
 
 # Alias ls to use lsd for interactive sessions
 if status is-interactive
     alias ls='eza --icons'
     alias find='fd'
+    alias fd='fdfind'
     alias ping='mtr --report --report-cycles 1'
     alias ps='procs'
     alias cd='z'
@@ -69,9 +79,10 @@ alias z='zoxide'
 alias j='jump'
 
 # Initialize fnm (Fast Node Manager) environment
-fnm env | source
+if type -q fnm
+    fnm env | source
+end
 
-fish_vi_key_bindings
 # =============================================================================
 #
 # Utility functions for zoxide.
@@ -171,6 +182,4 @@ alias zi=__zoxide_zi
 # To initialize zoxide, add this to your configuration (usually
 # ~/.config/fish/config.fish):
 #
-#   zoxide init fish | source
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+zoxide init fish | source
