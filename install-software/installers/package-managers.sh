@@ -30,6 +30,25 @@ install_flatpak() {
     fi
 }
 
+install_nix() {
+    if ! command -v nix-env &>/dev/null; then
+        log "Installing Nix package manager..."
+        
+        # Install Nix multi-user (daemon) mode
+        sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+        
+        # Source Nix daemon environment
+        if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+            . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+        fi
+
+        add_path_bash_and_fish "/nix/var/nix/profiles/default/bin"
+        log "Nix installed successfully: $(nix-env --version)"
+    else
+        log "Nix is already installed."
+    fi
+}
+
 install_pacstall() {
     if ! command -v pacstall &>/dev/null; then
         log "Installing pacstall..."
@@ -119,6 +138,7 @@ install_node() {
 # Install all package managers
 install_snapd
 install_flatpak
+install_nix
 install_pacstall
 install_homebrew
 install_rust
