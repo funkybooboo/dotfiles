@@ -50,6 +50,16 @@ install_snap_classic_pkg() {
   fi
 }
 
+install_nix_pkg() {
+  local pkg=$1
+  if ! nix-env -q | grep -qw "$pkg"; then
+    log "Installing $pkg via nix-env..."
+    nix-env -iA "nixpkgs.$pkg" || log "WARNING: Failed to install $pkg"
+  else
+    log "$pkg already installed (nix-env)."
+  fi
+}
+
 install_pacstall_pkg() {
   local pkg=$1
   if ! pacstall --list | grep -q "^$pkg\$"; then
@@ -108,6 +118,10 @@ done
 
 for pkg in "${SNAP_CLASSIC_PACKAGES[@]:-}"; do
   install_snap_classic_pkg "$pkg"
+done
+
+for pkg in "${NIX_PACKAGES[@]:-}"; do
+  install_nix_pkg "$pkg"
 done
 
 for pkg in "${PACSTALL_PACKAGES[@]:-}"; do
