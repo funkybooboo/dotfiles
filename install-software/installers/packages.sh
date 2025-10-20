@@ -80,6 +80,26 @@ install_brew_pkg() {
   fi
 }
 
+install_rust_pkg() {
+  local pkg=$1
+  if ! cargo search "$pkg" &>/dev/null; then
+    log "Installing Rust package $pkg via Cargo..."
+    cargo install "$pkg" || log "WARNING: Failed to install Rust package $pkg"
+  else
+    log "Rust package $pkg already installed."
+  fi
+}
+
+install_go_pkg() {
+  local pkg=$1
+  if ! go list -m "$pkg" &>/dev/null; then
+    log "Installing Go package $pkg via Go..."
+    go install "$pkg" || log "WARNING: Failed to install Go package $pkg"
+  else
+    log "Go package $pkg already installed."
+  fi
+}
+
 install_pip_pkg() {
   local pkg=$1
   if ! pip3 show "$pkg" &>/dev/null; then
@@ -130,6 +150,14 @@ done
 
 for pkg in "${HOMEBREW_PACKAGES[@]:-}"; do
   install_brew_pkg "$pkg"
+done
+
+for pkg in "${CARGO_PACKAGES[@]:-}"; do
+  install_rust_pkg "$pkg"
+done
+
+for pkg in "${GO_PACKAGES[@]:-}"; do
+  install_go_pkg "$pkg"
 done
 
 for pkg in "${PIP_PACKAGES[@]:-}"; do
