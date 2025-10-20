@@ -9,6 +9,7 @@ SEPARATOR="=============================================================="
 
 # Post-reboot installers
 POST_REBOOT_SCRIPTS=(
+  "lazyvim.sh"
   "java.sh"
   "jetbrains-toolbox.sh"
   "ollama.sh"
