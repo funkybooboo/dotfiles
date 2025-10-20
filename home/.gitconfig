@@ -2,7 +2,7 @@
 	name = Nate Stott
 	email = nate.stott@pm.me
 	github = funkybooboo
-	signingkey = 05BCAF7C448B93F9
+	signingkey = F18646139F7EE31C
 
 [core]
 	editor = nvim
