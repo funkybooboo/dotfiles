@@ -3,6 +3,7 @@ set -gx PATH $HOME/.local/bin $PATH
 set -gx PATH $HOME/.cargo/bin/ $PATH
 set -gx PATH $HOME/go/bin $PATH
 set -gx PATH $HOME/.nix-profile/bin $PATH
+set -gx PATH /nix/var/nix/profiles/default/bin $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
 set -gx PATH $HOME/.asdf/shims $PATH
 
@@ -67,9 +68,6 @@ if test -S $SSH_AUTH_SOCK
     ssh-add -l >/dev/null 2>&1
     or ssh-add ~/.ssh/id_ed25519 >/dev/null 2>&1
 end
-
-# Initialize zoxide for directory jumping
-zoxide init fish | source
 
 # Jump to the previous directory or add jump alias
 jump shell fish | source
