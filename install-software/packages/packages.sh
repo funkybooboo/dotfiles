@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 
-# Package arrays for install-software/os.sh
+# Package arrays for install-software/ubuntu.sh
 
 APT_PACKAGES=(
   bat
-  bubblewrap
   chkrootkit
-  chrony
-  clamav
   clang
   clisp
   cmake
   cozy
-  distrobox
-  fdclone
   fish
   fzf
   gh
@@ -22,15 +17,11 @@ APT_PACKAGES=(
   git-remote-gcrypt
   gnome-calculator
   gnome-disk-utility
-  guvcview
   handbrake
   kitty
   lua5.1
   luarocks
   lynis
-  mate-polkit
-  media-types
-  mugshot
   mpv
   mtools
   net-tools
@@ -38,16 +29,11 @@ APT_PACKAGES=(
   oathtool
   openconnect
   pandoc
-  pipx
   plocate
   power-profiles-daemon
   python3-poetry
-  rustup
-  spice-vdagent
   strace
   swig
-  thunar
-  thunar-volman
   tree
   virt-manager
   wget
@@ -86,7 +72,7 @@ SNAP_PACKAGES=(
 SNAP_CLASSIC_PACKAGES=(
   yazi
   codium
-  emacs
+  #emacs
 )
 
 FLATPAK_PACKAGES=(
