@@ -9,7 +9,6 @@ SEPARATOR="=============================================================="
 
 # Post-reboot installers
 POST_REBOOT_SCRIPTS=(
-  "lazyvim.sh"
   "java.sh"
   "jetbrains-toolbox.sh"
   "ollama.sh"
@@ -22,6 +21,7 @@ POST_REBOOT_SCRIPTS=(
   "packages.sh"
   "nerd-fonts.sh"
   "icons.sh"
+  "lazyvim.sh"
 )
 
 log "Starting post-reboot installations"
