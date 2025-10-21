@@ -115,7 +115,7 @@ elif [ "$DISTRO" = "Ubuntu" ]; then
 
     if command -v cargo >/dev/null 2>&1; then
         echo "Updating Rust (cargo) packages..."
-        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':' | sort | uniq | grep -v '^linutil$')
+        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':' | sort | uniq | grep -v '^linutil_tui$' || true)
         for bin in $installed_bins; do
             echo "→ Updating $bin..."
             cargo install "$bin" --force

@@ -22,6 +22,7 @@ POST_REBOOT_SCRIPTS=(
   "nerd-fonts.sh"
   "icons.sh"
   "lazyvim.sh"
+  "bun.sh"
 )
 
 log "Starting post-reboot installations"
