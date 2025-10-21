@@ -1,4 +1,6 @@
 #/usr/bin/env bash
+set -e
+set -o pipefail
 
 sudo add-apt-repository ppa:papirus/papirus
 sudo apt-get update

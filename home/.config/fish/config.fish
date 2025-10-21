@@ -184,3 +184,7 @@ zoxide init fish | source
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fish_add_path --prepend "/home/nate/.asdf/shims"
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

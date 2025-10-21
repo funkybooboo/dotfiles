@@ -13,3 +13,5 @@ etc/nixos/*.bak
 # fish state
 config/.config/fish/fish_plugins/
 config/.config/fish/fish_variables
+
+CLAUDE.md
