@@ -23,6 +23,7 @@ POST_REBOOT_SCRIPTS=(
   "icons.sh"
   "lazyvim.sh"
   "bun.sh"
+  "vpn.sh"
 )
 
 log "Starting post-reboot installations"
