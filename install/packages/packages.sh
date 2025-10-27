@@ -53,6 +53,7 @@ APT_PACKAGES=(
   fd-find
   ripgrep
   gdebi
+  python-is-python3
 )
 
 SNAP_PACKAGES=(
