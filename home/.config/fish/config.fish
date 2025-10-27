@@ -30,7 +30,7 @@ if status is-interactive
     alias htop='glances'
     alias df='duf'
     alias mp='multipass'
-    alias raspberrypi_server='ssh nate@192.168.0.146'
+    alias raspberrypi_server='ssh nate@raspberrypi.local'
     alias dimension_server='ssh nate@192.168.0.134'
     alias bat='batcat'
 end
