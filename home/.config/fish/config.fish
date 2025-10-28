@@ -1,190 +1,115 @@
-# Set PATH for local bin directories
-set -gx PATH $HOME/.local/bin $PATH
-set -gx PATH $HOME/.cargo/bin/ $PATH
-set -gx PATH $HOME/go/bin $PATH
-set -gx PATH $HOME/.nix-profile/bin $PATH
-set -gx PATH /nix/var/nix/profiles/default/bin $PATH
-set -x PATH $HOME/.pyenv/bin $PATH
-set -gx PATH $HOME/.asdf/shims $PATH
+# Prevent multiple sourcing issues with a guard (optional but recommended)
+if set -q __config_fish_sourced
+    return
+end
+set -g __config_fish_sourced 1
+
+# Add paths to PATH only if they exist (fish_add_path is idempotent)
+function __add_to_path_if_exists
+    test -d $argv[1]; and fish_add_path --path --move $argv[1]
+end
+
+__add_to_path_if_exists $HOME/.local/bin
+__add_to_path_if_exists $HOME/.cargo/bin
+__add_to_path_if_exists $HOME/go/bin
+__add_to_path_if_exists $HOME/.nix-profile/bin
+__add_to_path_if_exists /nix/var/nix/profiles/default/bin
+__add_to_path_if_exists $HOME/.pyenv/bin
+__add_to_path_if_exists $HOME/.asdf/shims
+__add_to_path_if_exists $HOME/.bun/bin
 
 # Initialize pyenv only if installed
 if type -q pyenv
-    pyenv init --path | psub
-    pyenv init - | psub
+    status is-login; and pyenv init --path | source
+    status is-interactive; and pyenv init - | source
 end
 
-# Initialize fnm (Fast Node Manager) environment
-if type -q fnm
+# Initialize fnm (Fast Node Manager) only once
+if type -q fnm; and status is-interactive
     fnm env | source
 end
 
-# Alias ls to use lsd for interactive sessions
+# Set BUN_INSTALL if bun directory exists
+if test -d $HOME/.bun
+    set -gx BUN_INSTALL $HOME/.bun
+end
+
+# Interactive aliases - only set once in interactive sessions
 if status is-interactive
-    alias ls='eza --icons'
-    alias find='fd'
-    alias fd='fdfind'
-    alias ping='mtr --report --report-cycles 1'
-    alias ps='procs'
-    alias cd='z'
-    alias cat='bat'
-    alias htop='glances'
-    alias df='duf'
-    alias mp='multipass'
+    # Only set alias if command exists
+    type -q eza; and alias ls='eza --icons'
+    type -q fd; and alias find='fd'
+    type -q fdfind; and alias fd='fdfind'
+    type -q mtr; and alias ping='mtr --report --report-cycles 1'
+    type -q procs; and alias ps='procs'
+    type -q bat; and alias cat='bat'
+    type -q batcat; and alias bat='batcat'
+    type -q glances; and alias htop='glances'
+    type -q duf; and alias df='duf'
+    type -q multipass; and alias mp='multipass'
+
+    # Server aliases
     alias raspberrypi_server='ssh nate@raspberrypi.local'
     alias dimension_server='ssh nate@192.168.0.134'
-    alias bat='batcat'
+    alias tnas_server='ssh -p 9222 funkybooboo@192.168.0.131'
 end
 
-# Empty fish_greeting function placeholder (remove if unnecessary)
+# Empty fish greeting
 function fish_greeting
-    # Add greeting code here if needed
 end
 
-# Function for interacting with dotfiles using git
+# Dotfiles git function
 function dotfiles
-    /usr/bin/env git --git-dir=$HOME/dotfiles/.git --work-tree=$HOME/dotfiles $argv
-end
-
-# Function for yazi tool with cwd check
-function y
-    set tmp (mktemp -t "yazi-cwd.XXXXXX")
-    yazi $argv --cwd-file="$tmp"
-    if test -f "$tmp"
-        set cwd (command cat -- "$tmp")
-        if test -n "$cwd" -a "$cwd" != "$PWD"
-            builtin cd -- "$cwd"
-        end
-    end
-    rm -f -- "$tmp"
-end
-
-# Start ssh-agent if it's not already running
-if not pgrep -u (whoami) ssh-agent >/dev/null
-    eval (ssh-agent -c)
-end
-
-# Add SSH key if not already added and agent socket is valid
-if test -S $SSH_AUTH_SOCK
-    ssh-add -l >/dev/null 2>&1
-    or ssh-add ~/.ssh/id_ed25519 >/dev/null 2>&1
-end
-
-# Jump to the previous directory or add jump alias
-jump shell fish | source
-
-# Alias jump and zoxide commands
-alias z='zoxide'
-alias j='jump'
-
-# Initialize fnm (Fast Node Manager) environment
-if type -q fnm
-    fnm env | source
-end
-
-# =============================================================================
-#
-# Utility functions for zoxide.
-#
-
-# pwd based on the value of _ZO_RESOLVE_SYMLINKS.
-function __zoxide_pwd
-    builtin pwd -L
-end
-
-# A copy of fish's internal cd function. This makes it possible to use
-# `alias cd=z` without causing an infinite loop.
-if ! builtin functions --query __zoxide_cd_internal
-    string replace --regex -- '^function cd\s' 'function __zoxide_cd_internal ' <$__fish_data_dir/functions/cd.fish | source
-end
-
-# cd + custom logic based on the value of _ZO_ECHO.
-function __zoxide_cd
-    if set -q __zoxide_loop
-        builtin echo "zoxide: infinite loop detected"
-        builtin echo "Avoid aliasing `cd` to `z` directly, use `zoxide init --cmd=cd fish` instead"
+    set -l dotfiles_dir $HOME/dotfiles/.git
+    if test -d $dotfiles_dir
+        /usr/bin/env git --git-dir=$dotfiles_dir --work-tree=$HOME/dotfiles $argv
+    else
+        echo "dotfiles directory not found: $dotfiles_dir" >&2
         return 1
     end
-    __zoxide_loop=1 __zoxide_cd_internal $argv
 end
 
-# =============================================================================
-#
-# Hook configuration for zoxide.
-#
-
-# Initialize hook to add new entries to the database.
-function __zoxide_hook --on-variable PWD
-    test -z "$fish_private_mode"
-    and command zoxide add -- (__zoxide_pwd)
-end
-
-# =============================================================================
-#
-# When using zoxide with --no-cmd, alias these internal functions as desired.
-#
-
-# Jump to a directory using only keywords.
-function __zoxide_z
-    set -l argc (builtin count $argv)
-    if test $argc -eq 0
-        __zoxide_cd $HOME
-    else if test "$argv" = -
-        __zoxide_cd -
-    else if test $argc -eq 1 -a -d $argv[1]
-        __zoxide_cd $argv[1]
-    else if test $argc -eq 2 -a $argv[1] = --
-        __zoxide_cd -- $argv[2]
-    else
-        set -l result (command zoxide query --exclude (__zoxide_pwd) -- $argv)
-        and __zoxide_cd $result
+# Yazi function with cwd change
+if type -q yazi
+    function y
+        set tmp (mktemp -t "yazi-cwd.XXXXXX")
+        yazi $argv --cwd-file="$tmp"
+        if test -f "$tmp"
+            set cwd (command cat -- "$tmp")
+            if test -n "$cwd" -a "$cwd" != "$PWD"
+                builtin cd -- "$cwd"
+            end
+            rm -f -- "$tmp"
+        end
     end
 end
 
-# Completions.
-function __zoxide_z_complete
-    set -l tokens (builtin commandline --current-process --tokenize)
-    set -l curr_tokens (builtin commandline --cut-at-cursor --current-process --tokenize)
+# SSH agent setup - only in interactive sessions
+if status is-interactive
+    if not set -q SSH_AUTH_SOCK; or not test -S $SSH_AUTH_SOCK
+        if not pgrep -u (whoami) ssh-agent >/dev/null
+            eval (ssh-agent -c) >/dev/null
+        end
+    end
 
-    if test (builtin count $tokens) -le 2 -a (builtin count $curr_tokens) -eq 1
-        # If there are < 2 arguments, use `cd` completions.
-        complete --do-complete "'' "(builtin commandline --cut-at-cursor --current-token) | string match --regex -- '.*/$'
-    else if test (builtin count $tokens) -eq (builtin count $curr_tokens)
-        # If the last argument is empty, use interactive selection.
-        set -l query $tokens[2..-1]
-        set -l result (command zoxide query --exclude (__zoxide_pwd) --interactive -- $query)
-        and __zoxide_cd $result
-        and builtin commandline --function cancel-commandline repaint
+    # Add SSH key if not already added
+    if test -S $SSH_AUTH_SOCK; and test -f ~/.ssh/id_ed25519
+        ssh-add -l >/dev/null 2>&1; or ssh-add ~/.ssh/id_ed25519 2>/dev/null
     end
 end
-complete --command __zoxide_z --no-files --arguments '(__zoxide_z_complete)'
 
-# Jump to a directory using interactive search.
-function __zoxide_zi
-    set -l result (command zoxide query --interactive -- $argv)
-    and __zoxide_cd $result
+# Initialize jump if available
+if type -q jump
+    jump shell fish | source
+    alias j='jump'
 end
 
-# =============================================================================
-#
-# Commands for zoxide. Disable these using --no-cmd.
-#
+# Initialize zoxide if available - this handles all z/zi commands
+if type -q zoxide
+    zoxide init fish | source
+end
 
-abbr --erase z &>/dev/null
-alias z=__zoxide_z
-
-abbr --erase zi &>/dev/null
-alias zi=__zoxide_zi
-
-# =============================================================================
-#
-# To initialize zoxide, add this to your configuration (usually
-# ~/.config/fish/config.fish):
-#
-zoxide init fish | source
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fish_add_path --prepend "/home/nate/.asdf/shims"
-
-# bun
-set --export BUN_INSTALL "$HOME/.bun"
-set --export PATH $BUN_INSTALL/bin $PATH
+# Initialize Homebrew if available
+if test -x /home/linuxbrew/.linuxbrew/bin/brew
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+end
