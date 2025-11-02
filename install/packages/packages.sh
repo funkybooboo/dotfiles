@@ -119,6 +119,7 @@ PIP_PACKAGES=(
 
 NPM_PACKAGES=(
   @anthropic-ai/claude-code
+  @marp-team/marp-cli
 )
 
 GAH_PACKAGES=(

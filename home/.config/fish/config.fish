@@ -1,3 +1,6 @@
+set -e PYENV_ROOT
+set -gx PYENV_ROOT $HOME/.pyenv
+
 # Prevent multiple sourcing issues with a guard (optional but recommended)
 if set -q __config_fish_sourced
     return
@@ -112,4 +115,22 @@ end
 # Initialize Homebrew if available
 if test -x /home/linuxbrew/.linuxbrew/bin/brew
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+end
+
+# Ensure PYENV_ROOT is set
+if not set -q PYENV_ROOT
+    set -Ux PYENV_ROOT $HOME/.pyenv
+end
+
+# Ensure pyenv is in PATH only once
+if not contains $PYENV_ROOT/bin $fish_user_paths
+    set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+end
+
+# Initialize pyenv if available and not already initialized
+if type -q pyenv
+    if not set -q PYENV_LOADED
+        set -g PYENV_LOADED 1
+        pyenv init - fish | source
+    end
 end
