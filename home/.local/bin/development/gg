@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Show usage information
+show_usage() {
+  cat <<EOF
+Usage: gg [OPTIONS]
+
+Generate commit messages or branch names using AI based on git diff.
+
+OPTIONS:
+  -c, --commit    Generate a commit message (default)
+  -b, --branch    Generate a branch name
+  -h, --help      Show this help message
+
+EXAMPLES:
+  gg              # Generate commit message
+  gg -c           # Generate commit message
+  gg --commit     # Generate commit message
+  gg -b           # Generate branch name
+  gg --branch     # Generate branch name
+  git commit -m "\$(gg -c)"           # Use generated commit message
+  git checkout -b \$(gg -b)           # Create branch with generated name
+EOF
+}
+
+# Default mode is commit
+MODE="commit"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -c | --commit)
+    MODE="commit"
+    shift
+    ;;
+  -b | --branch)
+    MODE="branch"
+    shift
+    ;;
+  -h | --help)
+    show_usage
+    exit 0
+    ;;
+  *)
+    echo "Error: Unknown option: $1" >&2
+    echo "" >&2
+    show_usage
+    exit 1
+    ;;
+  esac
+done
+
+# Get git diff output - try multiple sources to always find changes
+# First try staged changes
+DIFF=$(git diff --cached)
+
+# If no staged changes, try unstaged changes
+if [ -z "$DIFF" ]; then
+  DIFF=$(git diff)
+fi
+
+# If still nothing, try all changes from HEAD
+if [ -z "$DIFF" ]; then
+  DIFF=$(git diff HEAD)
+fi
+
+# If still nothing, there are truly no changes
+if [ -z "$DIFF" ]; then
+  echo "Error: No changes detected (staged, unstaged, or from HEAD)" >&2
+  exit 1
+fi
+
+# Prepare the appropriate prompt based on mode
+if [ "$MODE" = "commit" ]; then
+  PROMPT="Analyze this git diff and generate a concise, clear commit message following conventional commit format.
+
+The commit message should:
+- Start with a type (feat/fix/docs/style/refactor/test/chore)
+- Be concise (50-72 characters for the subject line)
+- Focus on WHY the change was made, not just WHAT changed
+- Use imperative mood (\"add\" not \"added\" or \"adds\")
+
+Git diff:
+\`\`\`
+${DIFF}
+\`\`\`
+
+Respond with ONLY the commit message, nothing else."
+else
+  PROMPT="Analyze this git diff and generate a concise, clear branch name.
+
+The branch name should:
+- Be lowercase with words separated by hyphens
+- Start with a category prefix (feature/, fix/, docs/, refactor/, test/, chore/)
+- Be descriptive but concise (max 50 characters total)
+- Use kebab-case (e.g., feature/add-user-authentication)
+- Avoid special characters except hyphens and forward slashes
+- Focus on WHAT is being changed
+
+Git diff:
+\`\`\`
+${DIFF}
+\`\`\`
+
+Respond with ONLY the branch name, nothing else."
+fi
+
+# Use opencode CLI to generate output
+opencode run "$PROMPT"
