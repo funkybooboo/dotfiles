@@ -68,6 +68,7 @@ SNAP_PACKAGES=(
   zoom-client
   blanket
   procs
+  typst
 )
 
 SNAP_CLASSIC_PACKAGES=(
