@@ -13,6 +13,13 @@ function __add_to_path_if_exists
 end
 
 __add_to_path_if_exists $HOME/.local/bin
+# Add all subdirectories in ~/.local/bin to PATH
+if test -d $HOME/.local/bin
+    for dir in $HOME/.local/bin/*/
+        test -d $dir; and fish_add_path --path --move $dir
+    end
+end
+
 __add_to_path_if_exists $HOME/.cargo/bin
 __add_to_path_if_exists $HOME/go/bin
 __add_to_path_if_exists $HOME/.nix-profile/bin
