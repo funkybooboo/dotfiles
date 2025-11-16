@@ -111,6 +111,7 @@ HOMEBREW_PACKAGES=(
   lazydocker
   lazygit
   lazysql
+  act
 )
 
 PIP_PACKAGES=(
