@@ -53,17 +53,17 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Get git diff output - try multiple sources to always find changes
-# First try staged changes
-DIFF=$(git diff --cached)
+# First try staged changes (exclude binary files to avoid null bytes)
+DIFF=$(git diff --cached --no-color --text 2>/dev/null | tr -d '\000' || echo "")
 
 # If no staged changes, try unstaged changes
 if [ -z "$DIFF" ]; then
-  DIFF=$(git diff)
+  DIFF=$(git diff --no-color --text 2>/dev/null | tr -d '\000' || echo "")
 fi
 
 # If still nothing, try all changes from HEAD
 if [ -z "$DIFF" ]; then
-  DIFF=$(git diff HEAD)
+  DIFF=$(git diff HEAD --no-color --text 2>/dev/null | tr -d '\000' || echo "")
 fi
 
 # If still nothing, there are truly no changes
