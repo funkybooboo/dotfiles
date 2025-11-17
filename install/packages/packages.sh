@@ -96,6 +96,7 @@ NIX_PACKAGES=(
 
 CARGO_PACKAGES=(
   linutil_tui
+  cargo-cache
 )
 
 GO_PACKAGES=(
