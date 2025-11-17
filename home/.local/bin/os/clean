@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# system-cleanup — clean system depending on distro (Rhino Linux / NixOS)
+# system-cleanup — clean system on Ubuntu/Debian (supports Nix, Flatpak, Docker, Snap, Brew, pip, npm, pnpm, bun, Rust, Go)
 #
 set -euo pipefail
 
@@ -10,12 +10,10 @@ echo ""
 
 # --- Detect distro ---
 DISTRO=""
-if command -v nixos-version >/dev/null 2>&1; then
-    DISTRO="NixOS"
-elif [ -f /etc/os-release ]; then
+if [ -f /etc/os-release ]; then
     NAME=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
-    if [[ "$NAME" =~ [Rr]hino ]]; then
-        DISTRO="Rhino Linux"
+    if [[ "$NAME" =~ [Uu]buntu|[Dd]ebian ]]; then
+        DISTRO="Ubuntu/Debian"
     fi
 fi
 
@@ -29,86 +27,157 @@ echo ""
 
 # --- Common cleanup steps ---
 
-# 1) Nix garbage collection (for both NixOS and Rhino with Nix)
-if command -v nix-collect-garbage >/dev/null 2>&1; then
-    echo "[$(TS)] Step 1: Garbage-collect obsolete Nix generations..."
-    sudo nix-collect-garbage -d
-    echo "→ Nix store pruned of all but current generations."
-    echo ""
+# 1) Nix / nix-env cleanup
+if command -v nix-env >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning nix-env generations..."
+    nix-env --delete-generations old
+    echo "-> Old nix-env generations removed."
+    
+    if command -v nix-collect-garbage >/dev/null 2>&1; then
+        echo "[$(TS)] Running nix-collect-garbage..."
+        nix-collect-garbage -d
+        echo "-> Nix store pruned."
+    fi
 else
-    echo "[$(TS)] Nix is not installed. Skipping Nix garbage collection."
-    echo ""
+    echo "[$(TS)] Nix not installed. Skipping Nix cleanup."
 fi
+echo ""
 
 # 2) Unused Flatpak runtimes and apps
 if command -v flatpak >/dev/null 2>&1; then
-    echo "[$(TS)] Step 2: Removing unused Flatpak runtimes and apps..."
+    echo "[$(TS)] Removing unused Flatpak runtimes and apps..."
     sudo flatpak uninstall --unused -y
-    echo "→ Unused Flatpak content removed."
-    echo ""
-else
-    echo "[$(TS)] Flatpak is not installed. Skipping Flatpak cleanup."
-    echo ""
+    echo "-> Unused Flatpak content removed."
 fi
+echo ""
 
 # 3) Vacuum systemd journal logs older than 7 days
-echo "[$(TS)] Step 3: Vacuuming journal logs older than 7 days..."
-sudo journalctl --vacuum-time=7d || { echo "Failed to vacuum journal logs."; }
-echo "→ Old journal entries purged."
+echo "[$(TS)] Vacuuming journal logs older than 7 days..."
+sudo journalctl --vacuum-time=7d || echo "Failed to vacuum journal logs."
+echo "-> Old journal entries purged."
 echo ""
 
 # 4) Docker cleanup
 if command -v docker >/dev/null 2>&1; then
-    echo "[$(TS)] Step 4: Pruning unused Docker objects..."
+    echo "[$(TS)] Pruning unused Docker objects..."
     sudo docker system prune --all --volumes --force
     sudo docker builder prune --all --force
     sudo docker image prune --force --filter "until=24h"
-    echo "→ Docker cleanup finished."
-    echo ""
-else
-    echo "[$(TS)] Docker is not installed. Skipping Docker cleanup."
-    echo ""
+    echo "-> Docker cleanup finished."
 fi
+echo ""
 
-# 5) /tmp cleanup (but avoid deleting important files)
-echo "[$(TS)] Step 5: Deleting /tmp files older than 7 days..."
-# Skip files in use by checking if the file is older than 7 days and not open by any process
-sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -f {} \; || { echo "Failed to clean /tmp directory."; }
-echo "→ /tmp cleaned."
+# 5) /tmp cleanup
+echo "[$(TS)] Deleting /tmp files older than 7 days..."
+sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -rf {} \; || echo "Failed to clean /tmp directory."
+echo "-> /tmp cleaned."
 echo ""
 
 # 6) Multipass cleanup
 if command -v multipass >/dev/null 2>&1; then
-    echo "[$(TS)] Step 6: Cleaning up Multipass VMs and images..."
+    echo "[$(TS)] Cleaning up Multipass VMs and images..."
     multipass delete --all || true
     multipass purge || true
-    echo "→ Multipass cleanup finished."
-    echo ""
-else
-    echo "[$(TS)] Multipass is not installed. Skipping Multipass cleanup."
-    echo ""
+    echo "-> Multipass cleanup finished."
+fi
+echo ""
+
+# 7) Ubuntu/Debian package cleanup
+echo "[$(TS)] Cleaning Ubuntu/Debian package caches..."
+sudo apt update
+sudo apt autoremove -y
+sudo apt clean
+sudo apt autoclean
+echo "-> APT package cache and unused packages cleaned."
+
+# Snap old revisions cleanup
+if command -v snap >/dev/null 2>&1; then
+    echo "[$(TS)] Removing old Snap revisions..."
+    snap list --all | awk '/disabled/ {print $1, $2}' | while read -r NAME REV; do
+        # Strip quotes if any
+        REV_CLEAN=$(echo "$REV" | tr -d '"')
+        sudo snap remove "$NAME" --revision="$REV_CLEAN" || true
+    done
+    echo "-> Snap old revisions removed."
 fi
 
-# --- Distro-specific cleanup ---
+# 8) Other package manager / language cache cleanup
 
-if [ "$DISTRO" = "Rhino Linux" ]; then
-    echo "[$(TS)] Step 7: Cleaning Rhino Linux package caches..."
+# Homebrew
+if command -v brew >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning Homebrew..."
+    brew cleanup -s
+    echo "-> Homebrew cache cleaned."
+fi
 
-    # rpk/apt update + cleanup
-    if command -v rpk >/dev/null 2>&1; then
-        sudo rpk cleanup || { echo "Failed to clean rpk caches."; }
-        echo "→ rpk caches cleaned."
+# pip
+if command -v pyenv >/dev/null 2>&1; then
+    PYENV_PYTHON=$(pyenv prefix)/bin/python
+    
+    if [ -n "$PYENV_PYTHON" ]; then
+        echo "[$(TS)] Cleaning pip cache via pyenv..."
+        "$PYENV_PYTHON" -m pip cache purge || true
+        echo "-> pip cache cleaned."
     fi
-elif [ "$DISTRO" = "NixOS" ]; then
-    echo "[$(TS)] Step 7: NixOS-specific cleanup complete (already handled via nix-collect-garbage)."
+elif command -v pip >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning pip cache..."
+    pip cache purge || true
+    echo "-> pip cache cleaned."
+fi
+
+# poetry
+if command -v poetry >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning Poetry cache..."
+    poetry cache clear pypi --all
+    poetry cache clear virtualenvs --all
+    echo "-> Poetry caches cleared."
+fi
+
+# npm
+if command -v npm >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning npm cache..."
+    npm cache clean --force
+    echo "-> npm cache cleaned."
+fi
+
+# pnpm
+if command -v pnpm >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning pnpm store..."
+    pnpm store prune
+    echo "-> pnpm store cleaned."
+fi
+
+# bun
+if command -v bun >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning Bun cache..."
+    rm -rf ~/.bun/cache || true
+    echo "-> Bun cache cleaned."
+fi
+
+# Rust (cargo)
+if command -v cargo >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning Rust cargo cache..."
+    if command -v cargo-cache >/dev/null 2>&1; then
+        cargo-cache -a
+        echo "-> Rust cargo cache cleaned."
+    else
+        echo "-> cargo-cache not installed, skipping Rust cache cleanup."
+    fi
+fi
+
+# Go
+if command -v go >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning Go cache..."
+    go clean -cache -modcache -testcache
+    echo "-> Go cache cleaned."
 fi
 
 echo "[$(TS)] === System cleanup complete! ==="
 
-# Launch ncdu for disk usage analysis and handle any errors
+# Launch ncdu for disk usage analysis
 echo "[$(TS)] Launching ncdu for disk usage analysis..."
 if command -v ncdu >/dev/null 2>&1; then
-    sudo ncdu / || { echo "Failed to run ncdu."; }
+    sudo ncdu / || echo "Failed to run ncdu."
 else
     echo "ncdu is not installed. Please install it to analyze disk usage."
 fi
