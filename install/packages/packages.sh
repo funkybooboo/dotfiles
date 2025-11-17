@@ -69,6 +69,7 @@ SNAP_PACKAGES=(
   blanket
   procs
   typst
+  bruno
 )
 
 SNAP_CLASSIC_PACKAGES=(
