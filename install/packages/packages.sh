@@ -70,6 +70,7 @@ SNAP_PACKAGES=(
   procs
   typst
   bruno
+  keepassxc
 )
 
 SNAP_CLASSIC_PACKAGES=(
@@ -115,6 +116,7 @@ HOMEBREW_PACKAGES=(
   lazygit
   lazysql
   act
+  trivy
 )
 
 PIP_PACKAGES=(
