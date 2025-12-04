@@ -62,7 +62,6 @@ SNAP_PACKAGES=(
   mermaid-cli
   multipass
   rclone
-  tldr
   zotero-snap
   elisa
   zoom-client
@@ -98,6 +97,7 @@ NIX_PACKAGES=(
 CARGO_PACKAGES=(
   linutil_tui
   cargo-cache
+  tealdeer
 )
 
 GO_PACKAGES=(

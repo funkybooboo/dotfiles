@@ -141,3 +141,5 @@ if type -q pyenv
         pyenv init - fish | source
     end
 end
+
+set -x OLLAMA_HOST http://127.0.0.1:11500
