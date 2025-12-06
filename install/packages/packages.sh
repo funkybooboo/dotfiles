@@ -117,6 +117,7 @@ HOMEBREW_PACKAGES=(
   lazysql
   act
   trivy
+  localstack/tap/localstack-cli
 )
 
 PIP_PACKAGES=(
