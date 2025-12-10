@@ -54,6 +54,8 @@ APT_PACKAGES=(
   ripgrep
   gdebi
   python-is-python3
+  tor
+  torbrowser-launcher
 )
 
 SNAP_PACKAGES=(
