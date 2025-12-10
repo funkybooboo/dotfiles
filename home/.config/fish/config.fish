@@ -61,7 +61,7 @@ if status is-interactive
     # Server aliases
     alias raspberrypi_server='ssh nate@raspberrypi.local'
     alias dimension_server='ssh nate@192.168.0.134'
-    alias tnas_server='ssh -p 9222 funkybooboo@192.168.0.131'
+    alias tnas_server='ssh funkybooboo@192.168.8.238'
 end
 
 # Empty fish greeting
@@ -141,5 +141,3 @@ if type -q pyenv
         pyenv init - fish | source
     end
 end
-
-set -x OLLAMA_HOST http://127.0.0.1:11500
