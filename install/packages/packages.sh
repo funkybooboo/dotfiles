@@ -56,6 +56,8 @@ APT_PACKAGES=(
   python-is-python3
   tor
   torbrowser-launcher
+  clamav
+  clamav-daemon
 )
 
 SNAP_PACKAGES=(
