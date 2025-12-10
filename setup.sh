@@ -21,9 +21,12 @@ EOF
 # parse args
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -n|--dry-run) DRY_RUN=1; shift ;;
-    -h|--help)    usage ;;
-    *)            usage ;;
+  -n | --dry-run)
+    DRY_RUN=1
+    shift
+    ;;
+  -h | --help) usage ;;
+  *) usage ;;
   esac
 done
 
@@ -84,5 +87,17 @@ suffix=""
 if [[ $DRY_RUN -eq 1 ]]; then
   suffix=" (dry-run)"
 fi
+
+sudo systemctl stop clamav-freshclam
+sudo systemctl stop clamav-daemon
+sudo freshclam
+sudo systemctl start clamav-daemon
+sudo systemctl enable clamav-daemon
+sudo systemctl start clamav-freshclam
+sudo systemctl enable clamav-freshclam
+clamdscan --version
+echo "test" >/tmp/testfile
+clamdscan /tmp/testfile
+sudo setfacl -R -m u:clamav:rx /home/nate
 
 echo ">>> Done${suffix}."
