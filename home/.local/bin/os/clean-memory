@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+#
+# clean-memory — free up system memory by stopping containers, VMs, and clearing caches
+#
+set -euo pipefail
+
+TS() { date '+%F %T'; }
+echo "[$(TS)] === Starting memory cleanup ==="
+echo ""
+
+# --- Docker cleanup ---
+if command -v docker >/dev/null 2>&1; then
+  echo "[$(TS)] Stopping and removing Docker containers..."
+
+  # Stop all running containers
+  RUNNING_CONTAINERS=$(sudo docker ps -q)
+  if [ -n "$RUNNING_CONTAINERS" ]; then
+    echo "-> Stopping running containers..."
+    sudo docker stop $RUNNING_CONTAINERS || true
+    echo "-> Stopped $(echo $RUNNING_CONTAINERS | wc -w) containers."
+  else
+    echo "-> No running containers to stop."
+  fi
+
+  # Remove all stopped containers
+  STOPPED_CONTAINERS=$(sudo docker ps -aq)
+  if [ -n "$STOPPED_CONTAINERS" ]; then
+    echo "-> Removing stopped containers..."
+    sudo docker rm $STOPPED_CONTAINERS || true
+    echo "-> Removed stopped containers."
+  else
+    echo "-> No stopped containers to remove."
+  fi
+
+  # Prune networks and volumes
+  echo "-> Pruning unused networks and volumes..."
+  sudo docker network prune -f || true
+  sudo docker volume prune -f || true
+  echo "-> Docker memory cleanup finished."
+else
+  echo "[$(TS)] Docker not installed. Skipping Docker cleanup."
+fi
+echo ""
+
+# --- Multipass cleanup ---
+if command -v multipass >/dev/null 2>&1; then
+  echo "[$(TS)] Stopping Multipass VMs..."
+
+  # List running instances
+  RUNNING_VMS=$(multipass list --format csv 2>/dev/null | tail -n +2 | grep -i running | cut -d',' -f1 || true)
+
+  if [ -n "$RUNNING_VMS" ]; then
+    echo "-> Stopping running VMs: $RUNNING_VMS"
+    echo "$RUNNING_VMS" | while read -r vm; do
+      multipass stop "$vm" || true
+    done
+    echo "-> Multipass VMs stopped."
+  else
+    echo "-> No running Multipass VMs to stop."
+  fi
+else
+  echo "[$(TS)] Multipass not installed. Skipping Multipass cleanup."
+fi
+echo ""
+
+# --- VirtManager / libvirt cleanup ---
+if command -v virsh >/dev/null 2>&1; then
+  echo "[$(TS)] Stopping libvirt/VirtManager VMs..."
+
+  # List running VMs
+  RUNNING_LIBVIRT_VMS=$(sudo virsh list --name --state-running 2>/dev/null || true)
+
+  if [ -n "$RUNNING_LIBVIRT_VMS" ]; then
+    echo "-> Stopping running VMs..."
+    echo "$RUNNING_LIBVIRT_VMS" | while read -r vm; do
+      if [ -n "$vm" ]; then
+        echo "  - Shutting down: $vm"
+        sudo virsh shutdown "$vm" || true
+      fi
+    done
+    echo "-> libvirt VMs shutdown initiated."
+  else
+    echo "-> No running libvirt VMs to stop."
+  fi
+else
+  echo "[$(TS)] libvirt/virsh not installed. Skipping VirtManager cleanup."
+fi
+echo ""
+
+# --- Podman cleanup ---
+if command -v podman >/dev/null 2>&1; then
+  echo "[$(TS)] Stopping and removing Podman containers..."
+
+  # Stop all running containers
+  RUNNING_PODMAN=$(podman ps -q)
+  if [ -n "$RUNNING_PODMAN" ]; then
+    echo "-> Stopping running containers..."
+    podman stop $RUNNING_PODMAN || true
+    echo "-> Stopped Podman containers."
+  else
+    echo "-> No running Podman containers to stop."
+  fi
+
+  # Remove all stopped containers
+  STOPPED_PODMAN=$(podman ps -aq)
+  if [ -n "$STOPPED_PODMAN" ]; then
+    echo "-> Removing stopped containers..."
+    podman rm $STOPPED_PODMAN || true
+    echo "-> Removed stopped Podman containers."
+  fi
+
+  echo "-> Podman memory cleanup finished."
+else
+  echo "[$(TS)] Podman not installed. Skipping Podman cleanup."
+fi
+echo ""
+
+# --- LXD/LXC cleanup ---
+if command -v lxc >/dev/null 2>&1; then
+  echo "[$(TS)] Stopping LXD/LXC containers..."
+
+  RUNNING_LXC=$(lxc list --format csv --columns=n,s 2>/dev/null | grep RUNNING | cut -d',' -f1 || true)
+
+  if [ -n "$RUNNING_LXC" ]; then
+    echo "-> Stopping running containers..."
+    echo "$RUNNING_LXC" | while read -r container; do
+      if [ -n "$container" ]; then
+        echo "  - Stopping: $container"
+        lxc stop "$container" || true
+      fi
+    done
+    echo "-> LXD/LXC containers stopped."
+  else
+    echo "-> No running LXD/LXC containers to stop."
+  fi
+else
+  echo "[$(TS)] LXD/LXC not installed. Skipping LXC cleanup."
+fi
+echo ""
+
+# --- System memory caches ---
+echo "[$(TS)] Syncing filesystems and dropping caches..."
+sudo sync
+
+# Show memory before clearing caches
+echo "-> Memory before cache drop:"
+free -h | head -2
+
+# Drop page cache, dentries and inodes
+echo "-> Dropping caches (page cache, dentries, inodes)..."
+echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null
+echo "-> Caches dropped."
+
+# Show memory after clearing caches
+echo "-> Memory after cache drop:"
+free -h | head -2
+echo ""
+
+# --- Optional: Swap cleanup ---
+echo "[$(TS)] Checking swap usage..."
+SWAP_USED=$(free | grep Swap | awk '{print $3}')
+if [ "$SWAP_USED" -gt 0 ]; then
+  echo "-> Swap is being used ($SWAP_USED). Consider swapoff/swapon to clear it."
+  read -p "Do you want to clear swap? This may take a while and requires sufficient free RAM (y/N): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "-> Disabling swap..."
+    sudo swapoff -a
+    echo "-> Enabling swap..."
+    sudo swapon -a
+    echo "-> Swap cleared."
+  else
+    echo "-> Skipping swap cleanup."
+  fi
+else
+  echo "-> No swap currently in use."
+fi
+echo ""
+
+echo "[$(TS)] === Memory cleanup complete! ==="
+echo ""
+echo "Current memory status:"
+free -h
+echo ""
+echo "Top memory-consuming processes:"
+ps aux --sort=-%mem | head -11
