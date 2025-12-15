@@ -1,106 +1,181 @@
-# Install Software
+# Multi-Distro Dotfiles Installation System
 
-These scripts work on **Ubuntu Linux**
+This installation system supports **NixOS, Ubuntu, and Arch Linux** with a unified, modular package management approach.
 
----
+## Supported Distributions
 
-## Automated workflow
+- **NixOS** - Declarative configuration with bash installer guidance
+- **Ubuntu/Debian** - Full automated installation
+- **Arch Linux** - Full automated installation with AUR support
 
-1. Run **pre-reboot scripts**:
+## Quick Start
 
-```bash
-./pre-reboot.sh
-```
-
-2. Reboot your machine.
-
-3. Run **post-reboot scripts**:
+### Full Installation (All Packages)
 
 ```bash
-./post-reboot.sh
+cd /home/nate/projects/dotfiles/install
+./orchestration/install-all.sh
 ```
 
-4. Reboot again (optional, but recommended for some apps).
-   You should now have your machine fully set up.
+### Phased Installation (Recommended for fresh systems)
 
----
+#### Pre-Reboot Phase (System packages)
+```bash
+./orchestration/pre-reboot.sh
+# Reboot your system
+```
 
-### Pre-reboot scripts
+#### Post-Reboot Phase (User packages)
+```bash
+./orchestration/post-reboot.sh
+```
 
-These scripts install core system components, drivers, runtimes, and package managers:
-
-* `basic.sh`
-* `cuda.sh`
-* `container-runtime.sh`
-* `package-managers.sh`
-
----
-
-### Post-reboot scripts
-
-These scripts install user applications, tools, and configure Git/SSH/GPG:
-
-* `java.sh`
-* `jetbrains-toolbox.sh`
-* `ollama.sh`
-* `global-protect.sh`
-* `github-desktop.sh`
-* `ssh-key.sh`
-* `gpg-key.sh`
-* `git-repos.sh`
-* `signal-desktop.sh`
-* `zoom.sh`
-* `packages.sh`
-
----
-
-## Manual workflow
-
-You can run individual scripts if you only want specific components.
-For example:
+### Individual Package Installation
 
 ```bash
-./installers/java.sh
+# Install a specific package
+./packages/core/bat.sh
+./packages/dev/neovim.sh
+./packages/desktop/brave.sh
 ```
 
----
+## Directory Structure
 
-## Post workflow run
+```
+install/
+├── lib/                      # Core libraries
+│   ├── distro.sh             # Distribution detection
+│   ├── package-manager.sh    # Package manager abstraction
+│   └── log.sh                # Logging utilities
+├── packages/                 # One installer per package (116 total)
+│   ├── core/                 # Core utilities (60 packages)
+│   ├── dev/                  # Development tools (35 packages)
+│   ├── desktop/              # Desktop applications (18 packages)
+│   └── special/              # Complex installations (18 packages)
+├── orchestration/            # Installation orchestration
+│   ├── install-all.sh        # Master installer
+│   ├── pre-reboot.sh         # System-level phase
+│   └── post-reboot.sh        # User-level phase
+└── nix/                      # NixOS integration
+    └── generate-packages.sh  # Auto-generate NixOS config
+```
 
-* Check your shell configuration (`.bashrc` or `fish.config`) for any appended lines.
-* Clean things up if necessary (uncomment lines, remove duplicates, etc.).
+## Package Management Philosophy
 
----
+### Ubuntu
+- **Priority**: APT > Snap > Flatpak > Pacstall
+- **Language managers**: Only when package not in above repos
+- **Examples**: neovim (Pacstall), obsidian (Pacstall)
 
-## Notes
+### Arch Linux
+- **Priority**: pacman > AUR (yay) > language managers
+- **Philosophy**: Prefer native packages over npm/cargo/go/brew
+- **Examples**: lazygit (pacman), act (pacman), tealdeer (pacman)
 
-### Folder structure
+### NixOS
+- **Approach**: Declarative configuration recommended
+- **Guidance**: Bash installers print what to add to configuration.nix
+- **Generator**: Auto-generate package lists with `nix/generate-packages.sh`
 
-* **`installers/`** – Contains individual installation scripts for each tool or component.
+## NixOS Integration
 
-  * Pre-reboot scripts handle system-level setup (drivers, runtimes, package managers).
-  * Post-reboot scripts handle user-level applications and configurations (tools, Git/GPG, SSH).
+### Generate NixOS Configuration
 
-* **`packages/`** – Contains scripts for managing package lists and bulk installations:
+```bash
+./nix/generate-packages.sh
+```
 
-  * `packages.sh` – Defines packages to install via APT, Snap, Flatpak, etc.
-  * `manage-packages.sh` – Installs the packages defined in `packages.sh`.
+This creates `nix/generated-packages.nix` with all packages.
 
-* **`utils/`** – Contains helper scripts used by installers:
+### Use Generated Config
 
-  * `log.sh` – Consistent logging function.
-  * `copy-to-clip-board.sh` – Copies text to the system clipboard.
-  * `reboot.sh` – Safely reboots the system.
-  * `shell-configs.sh` – Updates shell configuration files.
+```bash
+# Copy to NixOS config directory
+sudo cp nix/generated-packages.nix /etc/nixos/
 
-### Workflow scripts
+# Import in configuration.nix
+# Add: imports = [ ./generated-packages.nix ];
 
-* `pre-reboot.sh` – Runs all pre-reboot installers. **Requires reboot** after running.
-* `post-reboot.sh` – Runs all post-reboot installers. **Should be run after reboot** from pre-reboot phase.
-* `README.md` – Documentation for the setup scripts.
+# Rebuild
+sudo nixos-rebuild switch
+```
 
-### General notes
+## Common Operations
 
-* All installers are modular and can be run individually if needed.
-* Pre-reboot scripts install system-level packages; post-reboot scripts install user-level applications and configurations.
-* The workflow ensures your system is fully set up while avoiding conflicts between system and user-level changes.
+### Test Single Package
+```bash
+./packages/core/bat.sh
+```
+
+### Install Development Tools Only
+```bash
+for pkg in ./packages/dev/*.sh; do bash "$pkg"; done
+```
+
+### Install Desktop Applications Only
+```bash
+for pkg in ./packages/desktop/*.sh; do bash "$pkg"; done
+```
+
+## Troubleshooting
+
+### Package Installation Fails
+
+1. Check distro detection:
+   ```bash
+   source lib/distro.sh && echo $DISTRO
+   ```
+
+2. Run package managers installer first:
+   ```bash
+   ./packages/special/package-managers.sh
+   ```
+
+3. Run installer with debug:
+   ```bash
+   bash -x ./packages/core/bat.sh
+   ```
+
+## Package Categories
+
+### Core (60 packages)
+Command-line utilities, system tools, security tools
+
+### Dev (35 packages)
+Programming languages, build tools, version control
+
+### Desktop (18 packages)
+GUI applications, browsers, office software
+
+### Special (18 packages)
+- `package-managers.sh` - Install all package managers (**RUN FIRST**)
+- `basic-system.sh` - Basic development libraries
+- `container-runtime.sh` - Docker or Podman
+- `cuda.sh` - NVIDIA CUDA toolkit
+- `jetbrains-toolbox.sh` - JetBrains IDE manager
+- And more...
+
+## Adding New Packages
+
+1. Create installer in appropriate category
+2. Follow existing templates
+3. Research package names for each distro
+4. Make executable
+
+See `/home/nate/projects/dotfiles/docs/ADDING-PACKAGES.md` for details.
+
+## Shell Configuration
+
+This system uses **bash** (not fish).
+
+## Migration Notes
+
+Old system (pre-2025) files removed:
+- `installers/` → `packages/`
+- `packages/packages.sh` → individual installers
+- `utils/` → `lib/`
+
+New system provides:
+- ✅ One file per package (116 installers)
+- ✅ Multi-distro support (NixOS, Ubuntu, Arch)
+- ✅ Unified package manager interface
