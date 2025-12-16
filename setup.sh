@@ -8,13 +8,15 @@ set -euo pipefail
 
 DRY_RUN=0
 FORCE=0
+BACKUP=0
 
 usage() {
   cat <<EOF
-Usage: $0 [--dry-run|-n] [--force|-f]
+Usage: $0 [--dry-run|-n] [--force|-f] [--backup|-b]
 
   --dry-run, -n   Print the commands that would be run, but do not execute them.
   --force, -f     Remove existing files/symlinks before creating new ones.
+  --backup, -b    Backup existing files/symlinks by renaming them with .bak suffix.
   --help, -h      Show this help message.
 EOF
   exit 1
@@ -31,6 +33,10 @@ while [[ $# -gt 0 ]]; do
     FORCE=1
     shift
     ;;
+  -b | --backup)
+    BACKUP=1
+    shift
+    ;;
   -h | --help) usage ;;
   *) usage ;;
   esac
@@ -45,15 +51,25 @@ run_cmd() {
   fi
 }
 
-# helper: ensure DEST does not exist (or remove it if --force)
+# helper: ensure DEST does not exist (or backup/remove it if --backup/--force)
 check_conflict() {
   local dest="$1"
   if [[ -e "$dest" ]] || [[ -L "$dest" ]]; then
-    if [[ $FORCE -eq 1 ]]; then
+    if [[ $BACKUP -eq 1 ]]; then
+      local backup_dest="${dest}.bak"
+      # If .bak already exists, add a number
+      local counter=1
+      while [[ -e "$backup_dest" ]]; do
+        backup_dest="${dest}.bak.${counter}"
+        ((counter++))
+      done
+      echo "Backing up existing: $dest → $backup_dest"
+      run_cmd mv "$dest" "$backup_dest"
+    elif [[ $FORCE -eq 1 ]]; then
       echo "Removing existing: $dest"
       run_cmd rm -rf "$dest"
     else
-      echo "conflict: '$dest' already exists. Use --force to overwrite or remove it manually."
+      echo "conflict: '$dest' already exists. Use --backup to backup or --force to overwrite."
       exit 1
     fi
   fi
@@ -99,24 +115,52 @@ if [[ $DRY_RUN -eq 1 ]]; then
   suffix=" (dry-run)"
 fi
 
-# Optional: Set up ClamAV if installed
-if command -v clamdscan &>/dev/null && command -v freshclam &>/dev/null; then
-  echo ">>> Setting up ClamAV"
-  run_cmd sudo systemctl stop clamav-freshclam || true
-  run_cmd sudo systemctl stop clamav-daemon || true
-  run_cmd sudo freshclam
-  run_cmd sudo systemctl start clamav-daemon
-  run_cmd sudo systemctl enable clamav-daemon
-  run_cmd sudo systemctl start clamav-freshclam
-  run_cmd sudo systemctl enable clamav-freshclam
-  run_cmd clamdscan --version
-  if [[ $DRY_RUN -eq 0 ]]; then
-    echo "test" >/tmp/testfile
-    run_cmd clamdscan /tmp/testfile
+# Set up NAS sync
+echo ">>> Setting up NAS sync"
+run_cmd mkdir -p "$HOME/.config/nas-sync"
+
+PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
+if [[ ! -f "$PASSWORD_FILE" ]] && [[ $DRY_RUN -eq 0 ]]; then
+  echo ""
+  echo "⚠️  NAS rsync password file not found."
+  echo "Please enter your NAS rsync password (or press Enter to skip):"
+  read -s -r nas_password
+  if [[ -n "$nas_password" ]]; then
+    echo "$nas_password" > "$PASSWORD_FILE"
+    chmod 600 "$PASSWORD_FILE"
+    echo "✓ Password file created at $PASSWORD_FILE"
+  else
+    echo "⚠️  Skipping password setup. Create it later with:"
+    echo "   echo 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
   fi
-  run_cmd sudo setfacl -R -m u:clamav:rx /home/nate
+elif [[ -f "$PASSWORD_FILE" ]]; then
+  echo "✓ Password file already exists"
+fi
+
+# Reload systemd and enable NAS sync timers
+if [[ $DRY_RUN -eq 0 ]]; then
+  echo ">>> Enabling NAS sync timers"
+  systemctl --user daemon-reload
+
+  for sync_type in documents music photos audiobooks; do
+    systemctl --user enable "nas-sync-${sync_type}.timer"
+    systemctl --user start "nas-sync-${sync_type}.timer"
+  done
+
+  echo "✓ NAS sync timers enabled and started"
+  echo ""
+  echo "Check timer status with: systemctl --user list-timers"
+  echo "View sync logs with: journalctl --user -u nas-sync-documents.service -f"
 else
-  echo ">>> Skipping ClamAV setup (not installed)"
+  echo "+ systemctl --user daemon-reload"
+  echo "+ systemctl --user enable nas-sync-documents.timer"
+  echo "+ systemctl --user start nas-sync-documents.timer"
+  echo "+ systemctl --user enable nas-sync-music.timer"
+  echo "+ systemctl --user start nas-sync-music.timer"
+  echo "+ systemctl --user enable nas-sync-photos.timer"
+  echo "+ systemctl --user start nas-sync-photos.timer"
+  echo "+ systemctl --user enable nas-sync-audiobooks.timer"
+  echo "+ systemctl --user start nas-sync-audiobooks.timer"
 fi
 
 echo ">>> Done${suffix}."

@@ -9,7 +9,21 @@
 ```bash
 git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-````
+```
+
+---
+
+### 2. Install packages (optional)
+
+Install ClamAV antivirus:
+```bash
+./install/packages/special/clamav.sh
+```
+
+Or run the full installation orchestration:
+```bash
+./install/orchestration/install-all.sh
+```
 
 ---
 
@@ -21,10 +35,17 @@ Preview what will be linked:
 ./setup.sh --dry-run
 ```
 
-Then apply for real:
+Then apply (choose one):
 
 ```bash
+# Safe mode: Abort if conflicts exist
 ./setup.sh
+
+# Backup mode: Backup existing files with .bak suffix (recommended)
+./setup.sh --backup
+
+# Force mode: Remove existing files/symlinks (destructive)
+./setup.sh --force
 ```
 
 What this does:
@@ -32,11 +53,47 @@ What this does:
 * Symlinks everything from `home/.local/bin/*` → `~/.local/bin/*`
 * Symlinks each folder under `home/.config/*` → `~/.config/*`
 * Symlinks all remaining dotfiles in `home/` → `$HOME`
-* Aborts if any destination already exists (safe, no overwrites)
+* Sets up NAS sync timers for Documents, Music, Photos, and Audiobooks
+* Prompts for NAS rsync password (stored securely in `~/.config/nas-sync/rsync-password`)
+
+**Flags:**
+- `--dry-run, -n`: Preview actions without executing
+- `--backup, -b`: Backup existing files with `.bak` suffix (safe, recommended)
+- `--force, -f`: Remove existing files (destructive)
+- `--help, -h`: Show help message
 
 ---
 
-### 4. System configuration (optional)
+### 4. Configure NAS sync
+
+The setup script will prompt for your NAS rsync password. You can also set it manually:
+
+```bash
+echo 'your_nas_password' > ~/.config/nas-sync/rsync-password
+chmod 600 ~/.config/nas-sync/rsync-password
+```
+
+NAS sync timers will run hourly and sync:
+- `~/Documents` ↔ NAS `documents` module
+- `~/Music` ↔ NAS `music` module
+- `~/Photos` ↔ NAS `photos` module
+- `~/Audiobooks` ↔ NAS `audiobooks` module
+
+Check sync status:
+```bash
+systemctl --user list-timers              # List all timers
+systemctl --user status nas-sync-documents.timer
+journalctl --user -u nas-sync-documents.service -f  # Watch logs
+```
+
+Manual sync:
+```bash
+systemctl --user start nas-sync-documents.service
+```
+
+---
+
+### 5. System configuration (optional)
 
 #### 🧊 NixOS
 
@@ -46,43 +103,86 @@ sudo cp root/etc/nixos/configuration.nix /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 ```
 
-#### 🐧 Ubuntu
+#### 🐧 Arch Linux
 
 ```bash
-update
-./install-software/pre-reboot.sh
+./install/orchestration/pre-reboot.sh
 # The scripts will prompt you to reboot
-./install-software/post-reboot.sh
-update
+./install/orchestration/post-reboot.sh
 ```
 
 ---
 
-### 5. Rclone & sync
+### 6. Proton Drive sync (optional)
+
+If you also want to sync with Proton Drive:
 
 ```bash
 rclone config
-sync-docs
-sync-music
-sync-audiobooks
+sync-docs        # ~/Documents ↔ Proton Drive
+sync-music       # ~/Music ↔ Proton Drive
+sync-audiobooks  # ~/Audiobooks ↔ Proton Drive
 ```
 
 ---
 
-### 6. When you add new files or scripts
+### 7. When you add new files or scripts
 
 After adding new configs or scripts under `home/`, re-run:
 
 ```bash
-./setup.sh
+./setup.sh --backup
 ```
 
 to link them into place.
 
 ---
 
-🧹 **Notes**
+## 📂 Repository Structure
 
-* Safe by default: the setup script aborts on conflicts (no accidental overwrites).
-* Use `--dry-run` to preview actions.
-* Designed to work seamlessly on both NixOS and Ubuntu.
+```
+dotfiles/
+├── home/                          # Dotfiles & user configs
+│   ├── .config/                   # XDG config directories (19 apps)
+│   │   ├── nvim/                  # Neovim (LazyVim)
+│   │   ├── hypr/                  # Hyprland WM
+│   │   ├── kitty/                 # Kitty terminal
+│   │   ├── systemd/user/          # User systemd services & timers
+│   │   └── ...
+│   ├── .local/bin/                # User scripts
+│   │   ├── nas/                   # NAS sync scripts (rsync)
+│   │   ├── proton/                # Proton Drive sync scripts (rclone)
+│   │   ├── os/                    # System utilities
+│   │   ├── vpn/                   # VPN scripts
+│   │   └── ...
+│   └── .{bashrc,gitconfig,...}    # Shell dotfiles
+├── install/                       # Installation scripts
+│   ├── packages/                  # Package installers by category
+│   │   ├── core/                  # Core system packages
+│   │   ├── desktop/               # Desktop environment
+│   │   ├── dev/                   # Development tools
+│   │   └── special/               # Special installs (ClamAV, etc)
+│   └── orchestration/             # Install orchestration scripts
+├── root/                          # System-level configs
+│   └── etc/nixos/                 # NixOS configuration
+├── setup.sh                       # Main dotfiles setup script
+└── README.md                      # This file
+```
+
+---
+
+## 🧹 Notes
+
+* **Safe by default**: The setup script aborts on conflicts (use `--backup` for safety)
+* **Use `--dry-run`** to preview actions before applying
+* **NAS sync**: Automatic hourly syncing when connected to home network/VPN
+* **Proton Drive sync**: Manual sync scripts in `.local/bin/proton/`
+* Designed to work on Arch Linux, NixOS, Ubuntu, and other Linux distros
+
+---
+
+## 🔐 Security
+
+- NAS rsync password stored in `~/.config/nas-sync/rsync-password` with 600 permissions
+- ClamAV configured to scan user directories with proper ACLs
+- GPG and SSH keys managed separately (see `install/packages/special/`)
