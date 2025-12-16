@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Create a btrfs snapshot of the home subvolume
+
+set -euo pipefail
+
+# Configuration
+SNAPSHOT_DIR="/.snapshots"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+SNAPSHOT_NAME="home_${TIMESTAMP}"
+DESCRIPTION="${1:-Manual snapshot}"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Check if running as root (needed for snapshots)
+if [ "$EUID" -ne 0 ]; then
+    echo -e "${YELLOW}This script requires root privileges to create snapshots.${NC}"
+    echo "Re-running with sudo..."
+    exec sudo "$0" "$@"
+fi
+
+echo -e "${GREEN}=== Creating btrfs snapshot ===${NC}"
+
+# Create snapshot directory if it doesn't exist
+if [ ! -d "$SNAPSHOT_DIR" ]; then
+    echo "Creating snapshot directory: $SNAPSHOT_DIR"
+    mkdir -p "$SNAPSHOT_DIR"
+fi
+
+# Get the device for home
+DEVICE=$(findmnt -n -o SOURCE /home | cut -d'[' -f1)
+echo "Device: $DEVICE"
+
+# Create read-only snapshot
+SNAPSHOT_PATH="$SNAPSHOT_DIR/$SNAPSHOT_NAME"
+echo "Creating snapshot: $SNAPSHOT_PATH"
+
+if btrfs subvolume snapshot -r /home "$SNAPSHOT_PATH"; then
+    echo -e "${GREEN}✓ Snapshot created successfully!${NC}"
+    echo ""
+    echo "Snapshot details:"
+    echo "  Path: $SNAPSHOT_PATH"
+    echo "  Description: $DESCRIPTION"
+    echo "  Timestamp: $TIMESTAMP"
+    echo ""
+
+    # Save metadata
+    cat > "$SNAPSHOT_PATH/.snapshot_info" <<EOF
+Created: $(date)
+Description: $DESCRIPTION
+Original subvolume: /home
+Snapshot type: read-only
+EOF
+
+    echo "To restore from this snapshot:"
+    echo "  1. Boot from live USB"
+    echo "  2. Mount the root btrfs filesystem"
+    echo "  3. Rename current /@home to /@home.old"
+    echo "  4. Create read-write snapshot: btrfs subvolume snapshot $SNAPSHOT_PATH /@home"
+    echo "  5. Reboot"
+    echo ""
+    echo "To delete this snapshot:"
+    echo "  sudo btrfs subvolume delete $SNAPSHOT_PATH"
+
+else
+    echo -e "${RED}✗ Failed to create snapshot${NC}"
+    exit 1
+fi
+
+# List recent snapshots
+echo ""
+echo "Recent snapshots:"
+ls -lt "$SNAPSHOT_DIR" | head -6
+
+# Show disk usage
+echo ""
+echo "Disk usage:"
+df -h /home | tail -1

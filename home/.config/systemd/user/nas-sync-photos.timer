@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly Photos sync with NAS
+Requires=nas-sync-photos.service
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=1h
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target

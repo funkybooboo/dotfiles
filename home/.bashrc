@@ -1,10 +1,15 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# If not running interactively, don't do anything
-case $- in
-*i*) ;;
-*) return ;;
-esac
+# If not running interactively, don't do anything (leave this at the top of this file)
+[[ $- != *i* ]] && return
+
+# ============================================================================
+# BLE.SH - Fish-like features (must load early!)
+# ============================================================================
+# Load ble.sh for Fish-like autosuggestions, syntax highlighting, and enhanced completion
+if [ -f ~/.local/share/blesh/ble.sh ]; then
+  source ~/.local/share/blesh/ble.sh --noattach
+fi
 
 # Prevent multiple sourcing
 if [ -n "$__bashrc_sourced" ]; then
@@ -12,7 +17,17 @@ if [ -n "$__bashrc_sourced" ]; then
 fi
 export __bashrc_sourced=1
 
-# ===== History Configuration =====
+# ============================================================================
+# OMARCHY DEFAULTS
+# ============================================================================
+# Load Omarchy default bash configuration (if available)
+if [ -f ~/.local/share/omarchy/default/bash/rc ]; then
+  source ~/.local/share/omarchy/default/bash/rc
+fi
+
+# ============================================================================
+# HISTORY CONFIGURATION
+# ============================================================================
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 HISTSIZE=10000
@@ -20,7 +35,9 @@ HISTFILESIZE=20000
 HISTTIMEFORMAT="%F %T "
 PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
 
-# ===== Shell Options =====
+# ============================================================================
+# SHELL OPTIONS
+# ============================================================================
 shopt -s checkwinsize  # Update LINES and COLUMNS after each command
 shopt -s globstar      # Enable ** recursive globbing
 shopt -s cdspell       # Correct minor directory spelling errors
@@ -28,50 +45,9 @@ shopt -s dirspell      # Correct directory spelling in completion
 shopt -s extglob       # Enable extended pattern matching
 shopt -s nocaseglob    # Case-insensitive globbing
 
-# ===== Less Configuration =====
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# ===== Prompt Configuration =====
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-case "$TERM" in
-xterm-color | *-256color) color_prompt=yes ;;
-esac
-
-if [ -n "$force_color_prompt" ]; then
-  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    color_prompt=yes
-  else
-    color_prompt=
-  fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-case "$TERM" in
-xterm* | rxvt*)
-  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-  ;;
-*) ;;
-esac
-
-# ===== Color Support =====
-if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-  alias ls='ls --color=auto'
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-fi
-
-# ===== Environment Variables =====
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
@@ -79,7 +55,9 @@ export LESS="-R"
 export PYENV_ROOT="$HOME/.pyenv"
 export BUN_INSTALL="$HOME/.bun"
 
-# ===== PATH Configuration =====
+# ============================================================================
+# PATH CONFIGURATION
+# ============================================================================
 # Helper function to add to PATH only if directory exists
 __add_to_path_if_exists() {
   if [ -d "$1" ]; then
@@ -108,7 +86,9 @@ __add_to_path_if_exists "$PYENV_ROOT/bin"
 __add_to_path_if_exists "$HOME/.asdf/shims"
 __add_to_path_if_exists "$BUN_INSTALL/bin"
 
-# ===== Conditional Aliases (only if command exists) =====
+# ============================================================================
+# MODERN TOOL ALIASES (conditional - only if installed)
+# ============================================================================
 command -v eza &> /dev/null && alias ls='eza --icons'
 command -v fd &> /dev/null && alias find='fd'
 command -v fdfind &> /dev/null && alias fd='fdfind'
@@ -118,39 +98,40 @@ command -v bat &> /dev/null && alias cat='bat'
 command -v batcat &> /dev/null && alias bat='batcat'
 command -v glances &> /dev/null && alias htop='glances'
 command -v duf &> /dev/null && alias df='duf'
-command -v multipass &> /dev/null && alias mp='multipass'
 
-# Traditional aliases (with fallbacks)
+# ============================================================================
+# CUSTOM ALIASES
+# ============================================================================
+# Editor aliases
+alias vim="nvim"
+alias vi="nvim"
+
+# System monitoring
+alias htop="btop"
+alias top="btop"
+
+# Listing
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# Utilities
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# ===== Server Aliases =====
+# Server aliases
 alias raspberrypi_server='ssh nate@raspberrypi.local'
 alias dimension_server='ssh nate@192.168.0.134'
 alias tnas_server='ssh funkybooboo@192.168.8.238'
 alias middlechild_server='ssh root@139.59.173.228'
 
-# ===== Bash Aliases =====
+# Source bash aliases if they exist
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi
 
-# ===== Programmable Completion =====
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
-if [ -f /usr/share/bash-completion/completions/git ]; then
-  source /usr/share/bash-completion/completions/git
-fi
-
-# ===== Functions =====
+# ============================================================================
+# FUNCTIONS
+# ============================================================================
 
 # Dotfiles git function
 dotfiles() {
@@ -212,15 +193,9 @@ histstat() {
   history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl | head -n20
 }
 
-# Git helpers
-gst() { git status "$@"; }
-gco() { git checkout "$@"; }
-gaa() { git add -A; }
-gcm() { git commit -m "$@"; }
-gp() { git push; }
-gl() { git pull; }
-
-# ===== Tool Initialization =====
+# ============================================================================
+# TOOL INITIALIZATION
+# ============================================================================
 
 # pyenv
 if command -v pyenv &> /dev/null; then
@@ -289,4 +264,25 @@ fi
 # direnv (auto-load environment variables)
 if command -v direnv &> /dev/null; then
   eval "$(direnv hook bash)"
+fi
+
+# Bash completion
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+if [ -f /usr/share/bash-completion/completions/git ]; then
+  source /usr/share/bash-completion/completions/git
+fi
+
+# ============================================================================
+# BLE.SH ATTACH (must be at the end!)
+# ============================================================================
+# Attach ble.sh after all other initialization
+if [[ ${BLE_VERSION-} ]]; then
+  ble-attach
 fi

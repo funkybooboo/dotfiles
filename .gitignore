@@ -3,8 +3,9 @@ nixos-switch.log
 stow-backups/
 
 # backups & editor temp
-*~ 
-*.bak 
+*~
+*.bak
+*.bak.*
 *.swp
 
 # nixos backup
@@ -13,5 +14,8 @@ etc/nixos/*.bak
 # fish state
 config/.config/fish/fish_plugins/
 config/.config/fish/fish_variables
+
+# NAS sync credentials (never commit passwords!)
+home/.config/nas-sync/rsync-password
 
 CLAUDE.md

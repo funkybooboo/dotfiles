@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Check if we can reach the NAS (either on home network or via VPN)
+
+NAS_IP="192.168.8.238"
+NAS_PORT="873"
+
+# Try to connect to NAS rsync port with a short timeout
+if timeout 2 bash -c "echo > /dev/tcp/$NAS_IP/$NAS_PORT" 2>/dev/null; then
+    exit 0  # Success - NAS is reachable
+else
+    exit 1  # Failed - NAS is not reachable
+fi

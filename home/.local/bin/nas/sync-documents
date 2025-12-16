@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Sync Documents with NAS
+exec "$HOME/.local/bin/nas/sync-to-nas" "$HOME/Documents" "documents" "nate"

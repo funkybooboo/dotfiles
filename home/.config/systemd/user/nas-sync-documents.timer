@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly Documents sync with NAS
+Requires=nas-sync-documents.service
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target
