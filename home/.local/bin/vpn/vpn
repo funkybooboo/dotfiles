@@ -1,0 +1,364 @@
+#!/usr/bin/env bash
+
+# vpn — unified VPN manager for debbie-local and Proton VPN
+
+set -euo pipefail
+
+# VPN definitions
+# Format: ["friendly-name"]="type:nm-connection-name" or "type"
+declare -A VPNS=(
+    ["home"]="nm:debbie-local"
+    ["proton"]="protonvpn"
+)
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+function error() {
+    echo -e "${RED}Error:${NC} $*" >&2
+    exit 1
+}
+
+function success() {
+    echo -e "${GREEN}✓${NC} $*"
+}
+
+function info() {
+    echo -e "${BLUE}ℹ${NC} $*"
+}
+
+function warn() {
+    echo -e "${YELLOW}⚠${NC} $*"
+}
+
+# Parse VPN type and connection name
+function parse_vpn() {
+    local vpn=$1
+    local config=${VPNS[$vpn]}
+
+    if [[ $config == *:* ]]; then
+        echo "${config%%:*}" "${config##*:}"
+    else
+        echo "$config" "$vpn"
+    fi
+}
+
+# Check if a VPN is active
+function is_active() {
+    local vpn=$1
+    local type conn_name
+    read -r type conn_name <<< "$(parse_vpn "$vpn")"
+
+    case $type in
+        nm)
+            nmcli connection show --active | grep -q "^$conn_name "
+            ;;
+        protonvpn)
+            # Check if ProtonVPN connection exists in NetworkManager
+            nmcli connection show --active | grep -q "^ProtonVPN " || \
+            ip link show proton0 &>/dev/null
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+# Get status of all VPNs
+function status() {
+    echo "=== VPN Status ==="
+    echo
+
+    local active_count=0
+
+    for vpn in "${!VPNS[@]}"; do
+        local type conn_name
+        read -r type conn_name <<< "$(parse_vpn "$vpn")"
+
+        # Display name with connection name if different
+        local display_name="$vpn"
+        if [ "$vpn" != "$conn_name" ]; then
+            display_name="$vpn ($conn_name)"
+        fi
+
+        if is_active "$vpn"; then
+            echo -e "${GREEN}● $display_name${NC} - ACTIVE"
+            active_count=$((active_count + 1))
+
+            case $type in
+                nm)
+                    ip addr show dev "$conn_name" 2>/dev/null | grep "inet " | awk '{print "  IP: " $2}'
+                    ;;
+                protonvpn)
+                    # Show Proton server info from active connection
+                    local server_info
+                    server_info=$(nmcli connection show --active | grep "^ProtonVPN " | awk '{print $1}' | sed 's/ProtonVPN //')
+                    if [ -n "$server_info" ]; then
+                        echo "  Server: $server_info"
+                    fi
+                    ip addr show dev proton0 2>/dev/null | grep "inet " | awk '{print "  IP: " $2}'
+                    ;;
+            esac
+        else
+            echo -e "${RED}○ $display_name${NC} - inactive"
+        fi
+    done
+
+    echo
+    if [ $active_count -eq 0 ]; then
+        warn "No VPN connections active"
+    elif [ $active_count -gt 1 ]; then
+        warn "Multiple VPNs active - this may cause routing conflicts!"
+    fi
+}
+
+# Connect to a VPN
+function up() {
+    local vpn=${1:-}
+
+    if [ -z "$vpn" ]; then
+        error "No VPN specified. Usage: vpn up {debbie-local|proton}"
+    fi
+
+    if [ -z "${VPNS[$vpn]:-}" ]; then
+        error "Unknown VPN '$vpn'. Available: ${!VPNS[*]}"
+    fi
+
+    # Check if already active
+    if is_active "$vpn"; then
+        info "$vpn is already connected"
+        return 0
+    fi
+
+    # Disconnect other VPNs first
+    for other_vpn in "${!VPNS[@]}"; do
+        if [ "$other_vpn" != "$vpn" ] && is_active "$other_vpn"; then
+            warn "Disconnecting $other_vpn first..."
+            down "$other_vpn" || warn "Failed to disconnect $other_vpn"
+        fi
+    done
+
+    # Connect
+    local type conn_name
+    read -r type conn_name <<< "$(parse_vpn "$vpn")"
+    info "Connecting to $vpn..."
+
+    case $type in
+        nm)
+            nmcli connection up "$conn_name" || error "Failed to connect to $vpn"
+            ;;
+        protonvpn)
+            protonvpn connect || error "Failed to connect to Proton VPN"
+            ;;
+    esac
+
+    success "$vpn connected"
+}
+
+# Disconnect from a VPN
+function down() {
+    local vpn=${1:-}
+
+    if [ -z "$vpn" ]; then
+        # Disconnect all if no VPN specified
+        info "Disconnecting all VPNs..."
+        for v in "${!VPNS[@]}"; do
+            if is_active "$v"; then
+                down "$v"
+            fi
+        done
+        return 0
+    fi
+
+    if [ -z "${VPNS[$vpn]:-}" ]; then
+        error "Unknown VPN '$vpn'. Available: ${!VPNS[*]}"
+    fi
+
+    if ! is_active "$vpn"; then
+        info "$vpn is already disconnected"
+        return 0
+    fi
+
+    local type conn_name
+    read -r type conn_name <<< "$(parse_vpn "$vpn")"
+    info "Disconnecting $vpn..."
+
+    case $type in
+        nm)
+            nmcli connection down "$conn_name" || error "Failed to disconnect $vpn"
+            ;;
+        protonvpn)
+            protonvpn disconnect || error "Failed to disconnect from Proton VPN"
+            ;;
+    esac
+
+    success "$vpn disconnected"
+}
+
+# Switch to a different VPN
+function switch() {
+    local vpn=${1:-}
+
+    if [ -z "$vpn" ]; then
+        error "No VPN specified. Usage: vpn switch {debbie-local|proton}"
+    fi
+
+    if [ -z "${VPNS[$vpn]:-}" ]; then
+        error "Unknown VPN '$vpn'. Available: ${!VPNS[*]}"
+    fi
+
+    down  # Disconnect all
+    sleep 1
+    up "$vpn"
+}
+
+# Toggle autoconnect for VPNs
+function autoconnect() {
+    local vpn=${1:-home}
+
+    if [ -z "${VPNS[$vpn]:-}" ]; then
+        error "Unknown VPN '$vpn'. Available: ${!VPNS[*]}"
+    fi
+
+    local type conn_name
+    read -r type conn_name <<< "$(parse_vpn "$vpn")"
+
+    case $type in
+        nm)
+            # NetworkManager autoconnect
+            local current
+            current=$(nmcli -g connection.autoconnect connection show "$conn_name")
+
+            if [ "$current" = "yes" ]; then
+                nmcli connection modify "$conn_name" connection.autoconnect no
+                success "Auto-connect disabled for $vpn"
+            else
+                nmcli connection modify "$conn_name" connection.autoconnect yes
+                success "Auto-connect enabled for $vpn"
+            fi
+            ;;
+        protonvpn)
+            # Systemd user service autoconnect
+            local service_dir="$HOME/.config/systemd/user"
+            local service_file="$service_dir/protonvpn-autoconnect.service"
+
+            if [ -f "$service_file" ]; then
+                # Disable autoconnect
+                systemctl --user disable protonvpn-autoconnect.service 2>/dev/null || true
+                systemctl --user stop protonvpn-autoconnect.service 2>/dev/null || true
+                rm -f "$service_file"
+                success "Auto-connect disabled for $vpn"
+            else
+                # Enable autoconnect
+                mkdir -p "$service_dir"
+                cat > "$service_file" << 'EOF'
+[Unit]
+Description=Proton VPN Auto-connect
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/protonvpn connect --fastest
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
+EOF
+                systemctl --user daemon-reload
+                systemctl --user enable protonvpn-autoconnect.service
+                success "Auto-connect enabled for $vpn (will connect on next login)"
+                info "To connect now: vpn up proton"
+            fi
+            ;;
+        *)
+            error "Autoconnect not supported for VPN type: $type"
+            ;;
+    esac
+}
+
+# List available VPNs
+function list() {
+    echo "Available VPNs:"
+    for vpn in "${!VPNS[@]}"; do
+        local type conn_name
+        read -r type conn_name <<< "$(parse_vpn "$vpn")"
+        local status_icon="○"
+        local status_text="inactive"
+        local autoconnect_status=""
+
+        # Display name with connection name if different
+        local display_name="$vpn"
+        if [ "$vpn" != "$conn_name" ]; then
+            display_name="$vpn ($conn_name)"
+        fi
+
+        if is_active "$vpn"; then
+            status_icon="●"
+            status_text="${GREEN}active${NC}"
+        else
+            status_text="${RED}inactive${NC}"
+        fi
+
+        # Check autoconnect status
+        case $type in
+            nm)
+                if [ "$(nmcli -g connection.autoconnect connection show "$conn_name" 2>/dev/null)" = "yes" ]; then
+                    autoconnect_status=" ${BLUE}[autoconnect]${NC}"
+                fi
+                ;;
+            protonvpn)
+                if [ -f "$HOME/.config/systemd/user/protonvpn-autoconnect.service" ]; then
+                    autoconnect_status=" ${BLUE}[autoconnect]${NC}"
+                fi
+                ;;
+        esac
+
+        echo -e "  $status_icon $display_name - $status_text$autoconnect_status"
+    done
+}
+
+function usage() {
+    cat << EOF
+Usage: vpn <command> [args]
+
+Commands:
+  status              Show status of all VPNs
+  list                List available VPNs with autoconnect status
+  up <name>           Connect to VPN (home|proton)
+  down [name]         Disconnect VPN (or all if no name given)
+  switch <name>       Switch to a different VPN
+  autoconnect [name]  Toggle autoconnect on login (default: home)
+
+Examples:
+  vpn status
+  vpn list
+  vpn up proton
+  vpn up home
+  vpn switch proton
+  vpn down
+  vpn autoconnect home
+  vpn autoconnect proton
+
+Autoconnect:
+  home   - Uses NetworkManager autoconnect (immediate)
+  proton - Uses systemd user service (connects on login)
+EOF
+    exit 1
+}
+
+# Main
+case "${1:-}" in
+    status|st) status ;;
+    list|ls) list ;;
+    up|connect) up "${2:-}" ;;
+    down|disconnect) down "${2:-}" ;;
+    switch|sw) switch "${2:-}" ;;
+    autoconnect|auto) autoconnect "${2:-}" ;;
+    -h|--help|help) usage ;;
+    *) usage ;;
+esac
