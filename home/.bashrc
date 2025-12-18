@@ -120,7 +120,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # Server aliases
 alias raspberrypi_server='ssh nate@raspberrypi.local'
-alias dimension_server='ssh nate@192.168.0.134'
+alias dimension_server='ssh nate@192.168.8.210'
 alias tnas_server='ssh funkybooboo@192.168.8.238'
 alias middlechild_server='ssh root@139.59.173.228'
 
