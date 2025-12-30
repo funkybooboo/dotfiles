@@ -1,0 +1,55 @@
+#!/bin/bash
+# Brightness control wrapper that keeps brightness in multiples of 5 (or 1% minimum)
+
+# Get the change value (e.g., +5, -5, +1, -1)
+change="$1"
+
+# Get current brightness info
+current=$(brightnessctl get)
+max=$(brightnessctl max)
+
+# Calculate current percentage
+current_percent=$((current * 100 / max))
+
+# Calculate 1% and 5% of max brightness
+min_brightness=$((max / 100))
+five_percent=$((max * 5 / 100))
+
+# Handle brightness changes
+if [[ "$change" =~ ^[+-] ]]; then
+    # Extract the numeric value
+    step="${change:1}"
+
+    if [[ "$change" == +* ]]; then
+        # Increasing brightness
+        if [ "$current_percent" -eq 1 ]; then
+            # Special case: from 1% go directly to 5%
+            new_value="$five_percent"
+        else
+            # Normal increment
+            new_value=$((current + (max * step / 100)))
+            # Cap at 100%
+            if [ "$new_value" -gt "$max" ]; then
+                new_value="$max"
+            fi
+        fi
+    else
+        # Decreasing brightness
+        new_value=$((current - (max * step / 100)))
+
+        # If we'd go below 5%, snap to 1% instead
+        if [ "$new_value" -lt "$five_percent" ]; then
+            new_value="$min_brightness"
+        fi
+    fi
+
+    # Set the new brightness
+    brightnessctl set "$new_value"
+
+    # Calculate percentage for OSD display
+    new_percent=$((new_value * 100 / max))
+    swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')" --brightness "$new_percent"
+else
+    # Direct value set - pass through to swayosd-client
+    swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')" --brightness "$change"
+fi
