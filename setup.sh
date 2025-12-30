@@ -110,6 +110,37 @@ done < <(
     ! -path "$PWD/home/.local/*"
 )
 
+# 5) link omarchy configuration files
+if [[ -d "$PWD/omarchy" ]]; then
+  echo ">>> Linking omarchy configuration files"
+
+  # Link all omarchy bin scripts
+  if [[ -d "$PWD/omarchy/bin" ]]; then
+    run_cmd mkdir -p "$HOME/.local/share/omarchy/bin"
+    for script in "$PWD/omarchy/bin"/*; do
+      if [[ -f "$script" ]]; then
+        dest="$HOME/.local/share/omarchy/bin/$(basename "$script")"
+        check_conflict "$dest"
+        run_cmd ln -s "$script" "$dest"
+      fi
+    done
+  fi
+
+  # Link all omarchy hypr configuration files
+  if [[ -d "$PWD/omarchy/hypr" ]]; then
+    run_cmd mkdir -p "$HOME/.local/share/omarchy/default/hypr"
+
+    # Link all files recursively while preserving directory structure
+    while IFS= read -r src; do
+      rel="${src#"$PWD/omarchy/hypr/"}"
+      dest="$HOME/.local/share/omarchy/default/hypr/$rel"
+      check_conflict "$dest"
+      run_cmd mkdir -p "$(dirname "$dest")"
+      run_cmd ln -s "$src" "$dest"
+    done < <(find "$PWD/omarchy/hypr" -type f)
+  fi
+fi
+
 suffix=""
 if [[ $DRY_RUN -eq 1 ]]; then
   suffix=" (dry-run)"
@@ -122,19 +153,19 @@ run_cmd mkdir -p "$HOME/.config/nas-sync"
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 if [[ ! -f "$PASSWORD_FILE" ]] && [[ $DRY_RUN -eq 0 ]]; then
   echo ""
-  echo "⚠️  NAS rsync password file not found."
+  echo "NAS rsync password file not found."
   echo "Please enter your NAS rsync password (or press Enter to skip):"
   read -s -r nas_password
   if [[ -n "$nas_password" ]]; then
     echo "$nas_password" > "$PASSWORD_FILE"
     chmod 600 "$PASSWORD_FILE"
-    echo "✓ Password file created at $PASSWORD_FILE"
+    echo "Password file created at $PASSWORD_FILE"
   else
-    echo "⚠️  Skipping password setup. Create it later with:"
+    echo "Skipping password setup. Create it later with:"
     echo "   echo 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
   fi
 elif [[ -f "$PASSWORD_FILE" ]]; then
-  echo "✓ Password file already exists"
+  echo "Password file already exists"
 fi
 
 # Reload systemd and enable NAS sync timers
@@ -147,7 +178,7 @@ if [[ $DRY_RUN -eq 0 ]]; then
     systemctl --user start "nas-sync-${sync_type}.timer"
   done
 
-  echo "✓ NAS sync timers enabled and started"
+  echo "NAS sync timers enabled and started"
   echo ""
   echo "Check timer status with: systemctl --user list-timers"
   echo "View sync logs with: journalctl --user -u nas-sync-documents.service -f"

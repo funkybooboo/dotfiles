@@ -1,0 +1,24 @@
+UNIT FILE                          STATE   PRESET
+avahi-daemon.service               enabled disabled
+bluetooth.service                  enabled disabled
+cups-browsed.service               enabled disabled
+cups.service                       enabled disabled
+docker.service                     enabled disabled
+getty@.service                     enabled enabled
+iwd.service                        enabled disabled
+limine-snapper-sync.service        enabled disabled
+NetworkManager-dispatcher.service  enabled disabled
+NetworkManager-wait-online.service enabled disabled
+NetworkManager.service             enabled disabled
+nvidia-hibernate.service           enabled disabled
+nvidia-resume.service              enabled disabled
+nvidia-suspend.service             enabled disabled
+proton.VPN.service                 enabled disabled
+sddm.service                       enabled disabled
+systemd-network-generator.service  enabled enabled
+systemd-networkd.service           enabled enabled
+systemd-resolved.service           enabled enabled
+systemd-timesyncd.service          enabled enabled
+ufw.service                        enabled disabled
+
+21 unit files listed.
