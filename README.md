@@ -50,10 +50,14 @@ Then apply (choose one):
 
 What this does:
 
-* Symlinks everything from `home/.local/bin/*` → `~/.local/bin/*`
+* Symlinks commands from `home/.local/bin/*` → `~/.local/bin/*`
+* Symlinks library scripts from `home/.local/lib/*` → `~/.local/lib/*`
+* Symlinks omarchy customizations from `home/.local/share/omarchy/*` → `~/.local/share/omarchy/*`
 * Symlinks each folder under `home/.config/*` → `~/.config/*`
 * Symlinks all remaining dotfiles in `home/` → `$HOME`
 * Sets up NAS sync timers for Documents, Music, Photos, and Audiobooks
+* Enables battery notification timer
+* Installs power profile auto-switching udev rule
 * Prompts for NAS rsync password (stored securely in `~/.config/nas-sync/rsync-password`)
 
 **Flags:**
@@ -142,32 +146,56 @@ to link them into place.
 
 ```
 dotfiles/
-├── home/                          # Dotfiles & user configs
-│   ├── .config/                   # XDG config directories (19 apps)
+├── home/                          # Dotfiles & user configs (maps to ~/)
+│   ├── .config/                   # XDG config directories (41 apps)
 │   │   ├── nvim/                  # Neovim (LazyVim)
-│   │   ├── hypr/                  # Hyprland WM
+│   │   ├── hypr/                  # Hyprland WM (11 configs)
+│   │   ├── waybar/                # Waybar status bar
 │   │   ├── kitty/                 # Kitty terminal
-│   │   ├── systemd/user/          # User systemd services & timers
-│   │   └── ...
-│   ├── .local/bin/                # User scripts
-│   │   ├── nas/                   # NAS sync scripts (rsync)
-│   │   ├── proton/                # Proton Drive sync scripts (rclone)
-│   │   ├── os/                    # System utilities
-│   │   ├── vpn/                   # VPN scripts
-│   │   └── ...
-│   └── .{bashrc,gitconfig,...}    # Shell dotfiles
+│   │   ├── systemd/user/          # User systemd services & timers (11 units)
+│   │   └── ...                    # 35+ more apps
+│   ├── .local/
+│   │   ├── bin/                   # User commands (24 scripts)
+│   │   │   ├── vpn                # VPN manager
+│   │   │   ├── update             # System updater
+│   │   │   ├── sync-*             # NAS sync commands
+│   │   │   ├── proton-sync*       # Proton Drive sync commands
+│   │   │   ├── waybar/            # Waybar status scripts (6 scripts)
+│   │   │   ├── hyprland/          # Hyprland helper (1 script)
+│   │   │   └── break-reminder/    # Break reminder (1 script + config)
+│   │   ├── lib/                   # Library scripts (10 scripts)
+│   │   │   ├── sync-to-nas        # NAS sync backend
+│   │   │   ├── good-time-to-run   # System readiness checker
+│   │   │   ├── battery-notify     # Battery notification daemon
+│   │   │   └── ...                # 7 more helpers
+│   │   └── share/
+│   │       └── omarchy/           # Omarchy customizations (169 files)
+│   │           ├── bin/           # 141 customized scripts
+│   │           ├── hypr/          # 27 customized Hyprland configs
+│   │           └── README.md      # Omarchy customization docs
+│   └── .{bashrc,gitconfig,...}    # Shell dotfiles (9 files)
 ├── install/                       # Installation scripts
-│   ├── packages/                  # Package installers by category
+│   ├── packages/                  # Package installers (210 scripts)
 │   │   ├── core/                  # Core system packages
 │   │   ├── desktop/               # Desktop environment
 │   │   ├── dev/                   # Development tools
-│   │   └── special/               # Special installs (ClamAV, etc)
+│   │   ├── fonts/                 # Font packages
+│   │   └── special/               # Special installs (libvirt, plymouth, etc)
 │   └── orchestration/             # Install orchestration scripts
-├── root/                          # System-level configs
-│   └── etc/nixos/                 # NixOS configuration
+├── root/                          # System-level configs (maps to /)
+│   └── etc/                       # System configuration files
+│       ├── dnsmasq.conf           # DNS configuration
+│       └── udev/                  # Power profile auto-switching
+├── docs/                          # Documentation
+│   ├── SOURCE_OF_TRUTH_COMPLETE.md    # Comprehensive documentation
+│   ├── IDEMPOTENCY_AUDIT.md           # Idempotency verification
+│   └── ...                            # Additional docs
+├── system-docs/                   # System-specific documentation
 ├── setup.sh                       # Main dotfiles setup script
 └── README.md                      # This file
 ```
+
+**Total:** 500+ tracked files
 
 ---
 

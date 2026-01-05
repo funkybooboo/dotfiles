@@ -934,7 +934,7 @@ in {
             #             "HOME=/home/nate"
             #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
             #         ];
-            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/auto-update";
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/update/auto-update";
             #         Restart = "on-failure";
             #         RestartSec = 300;
             #         StandardOutput = "journal";
@@ -953,7 +953,7 @@ in {
             #             "USER=nate"
             #             "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
             #         ];
-            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/backup-github";
+            #         ExecStart = "${pkgs.bash}/bin/bash /home/nate/.local/bin/repo/backup-github";
             #         Restart = "on-failure";
             #         RestartSec = 3600;
             #         StandardOutput = "journal";
@@ -1024,7 +1024,7 @@ in {
             #     Environment = [
             #       "PATH=/run/current-system/sw/bin:/home/nate/.local/bin"
             #     ];
-            #     ExecStart   = "/run/current-system/sw/bin/bash /home/nate/.local/bin/auto-update-firmware";
+            #     ExecStart   = "/run/current-system/sw/bin/bash /home/nate/.local/bin/update/auto-update-firmware";
             #     StandardOutput = "journal";
             #     StandardError  = "journal";
             #   };

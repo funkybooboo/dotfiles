@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# Sync Audiobooks with NAS
-exec "$HOME/.local/bin/nas/sync-to-nas" "$HOME/Audiobooks" "audiobooks" "nate"

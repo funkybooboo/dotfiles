@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=%h/.local/bin/nas/sync-audiobooks
+ExecStart=%h/.local/bin/sync-audiobooks
 StandardOutput=journal
 StandardError=journal
 

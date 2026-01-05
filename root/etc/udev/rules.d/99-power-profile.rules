@@ -1,0 +1,3 @@
+# Trigger power profile switch on AC adapter state changes
+SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/usr/bin/systemctl --user -M nate@ start power-profile-switch.service"
+SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/usr/bin/systemctl --user -M nate@ start power-profile-switch.service"

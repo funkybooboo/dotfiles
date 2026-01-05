@@ -1,0 +1,6 @@
+[Unit]
+Description=Battery notification service
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/lib/battery-notify
