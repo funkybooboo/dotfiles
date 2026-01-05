@@ -1,0 +1,23 @@
+#!/bin/bash
+# Automatically switch power profiles based on AC adapter state
+
+# Find AC adapter path
+AC_PATH=$(find /sys/class/power_supply -name 'AC*' -o -name 'ADP*' | head -1)
+
+if [ -z "$AC_PATH" ]; then
+    echo "Error: Could not find AC adapter path"
+    exit 1
+fi
+
+# Read AC adapter state (1 = plugged in, 0 = on battery)
+AC_STATE=$(cat "$AC_PATH/online")
+
+if [ "$AC_STATE" = "1" ]; then
+    # Plugged in - switch to performance
+    powerprofilesctl set performance
+    logger "Power profile: Switched to performance (AC plugged in)"
+else
+    # On battery - switch to power-saver
+    powerprofilesctl set power-saver
+    logger "Power profile: Switched to power-saver (on battery)"
+fi

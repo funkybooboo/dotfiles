@@ -19,3 +19,5 @@ config/.config/fish/fish_variables
 home/.config/nas-sync/rsync-password
 
 CLAUDE.md
+.claude.json
+.claude.json.backup

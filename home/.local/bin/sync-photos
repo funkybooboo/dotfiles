@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Sync Photos with NAS
+exec "$HOME/.local/lib/sync-to-nas" "$HOME/Photos" "photos" "nate"

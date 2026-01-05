@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Battery notification script
+# Notifies at 80%, 50%, 30%, 20%, 10%, 5%, and 1%
+
+STATE_FILE="$HOME/.cache/battery-notify-state"
+THRESHOLDS=(80 50 30 20 10 5 1)
+
+# Create cache directory if it doesn't exist
+mkdir -p "$(dirname "$STATE_FILE")"
+
+# Get current battery percentage
+BATTERY_PATH="/sys/class/power_supply/BAT0"
+if [ ! -d "$BATTERY_PATH" ]; then
+    BATTERY_PATH="/sys/class/power_supply/BAT1"
+fi
+
+if [ ! -d "$BATTERY_PATH" ]; then
+    echo "No battery found"
+    exit 1
+fi
+
+CAPACITY=$(cat "$BATTERY_PATH/capacity")
+STATUS=$(cat "$BATTERY_PATH/status")
+
+# Load previous state (last notified threshold)
+if [ -f "$STATE_FILE" ]; then
+    LAST_NOTIFIED=$(cat "$STATE_FILE")
+else
+    LAST_NOTIFIED=100
+fi
+
+# If charging, reset state to 100
+if [ "$STATUS" = "Charging" ] || [ "$STATUS" = "Full" ]; then
+    echo "100" > "$STATE_FILE"
+    exit 0
+fi
+
+# Check if we've crossed any threshold
+for THRESHOLD in "${THRESHOLDS[@]}"; do
+    if [ "$CAPACITY" -le "$THRESHOLD" ] && [ "$LAST_NOTIFIED" -gt "$THRESHOLD" ]; then
+        # Send notification
+        if [ "$THRESHOLD" -le 10 ]; then
+            URGENCY="critical"
+            ICON="battery-caution"
+        elif [ "$THRESHOLD" -le 30 ]; then
+            URGENCY="normal"
+            ICON="battery-low"
+        else
+            URGENCY="normal"
+            ICON="battery-good"
+        fi
+
+        notify-send -u "$URGENCY" -i "$ICON" "Battery Alert" "Battery at ${CAPACITY}%"
+
+        # Update state
+        echo "$THRESHOLD" > "$STATE_FILE"
+        break
+    fi
+done

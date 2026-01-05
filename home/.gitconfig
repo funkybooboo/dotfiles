@@ -2,7 +2,7 @@
 	name = Nate Stott
 	email = nate.stott@pm.me
 	github = funkybooboo
-	signingkey = 77D49F0D8CD7D1C3
+	signingkey = 8FB677945335F282
 
 [core]
 	editor = nvim
@@ -319,4 +319,3 @@
 [gpg]
 	program = gpg
 	format = openpgp
-	passphrase = nate1434

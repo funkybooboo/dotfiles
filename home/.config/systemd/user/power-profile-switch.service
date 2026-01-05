@@ -1,0 +1,6 @@
+[Unit]
+Description=Auto switch power profile based on AC state
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/lib/power-profile-switch

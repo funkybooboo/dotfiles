@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=%h/.local/bin/nas/sync-photos
+ExecStart=%h/.local/bin/sync-photos
 StandardOutput=journal
 StandardError=journal
 

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# Sync Music with NAS
-exec "$HOME/.local/bin/nas/sync-to-nas" "$HOME/Music" "music" "nate"

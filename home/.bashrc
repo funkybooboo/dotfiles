@@ -54,6 +54,7 @@ export PAGER="less"
 export LESS="-R"
 export PYENV_ROOT="$HOME/.pyenv"
 export BUN_INSTALL="$HOME/.bun"
+export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 # ============================================================================
 # PATH CONFIGURATION
@@ -77,6 +78,10 @@ if [ -d "$HOME/.local/bin" ]; then
     [ -d "$dir" ] && __add_to_path_if_exists "$dir"
   done
 fi
+
+# Flatpak exports
+__add_to_path_if_exists "/var/lib/flatpak/exports/share"
+__add_to_path_if_exists "$HOME/.local/share/flatpak/exports/share"
 
 __add_to_path_if_exists "$HOME/.cargo/bin"
 __add_to_path_if_exists "$HOME/go/bin"
@@ -115,14 +120,16 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+alias code='codium'
+
 # Utilities
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Server aliases
-alias raspberrypi_server='ssh nate@raspberrypi.local'
+alias raspberrypi_server='ssh nate@raspberrypi.lan'
 alias dimension_server='ssh nate@192.168.8.210'
-alias tnas_server='ssh funkybooboo@192.168.8.238'
-alias middlechild_server='ssh root@139.59.173.228'
+alias tnas_server='ssh funkybooboo@nas.lan'
+alias middlechild_server='ssh root@middlechild.cloud'
 
 # Source bash aliases if they exist
 if [ -f ~/.bash_aliases ]; then
@@ -210,16 +217,17 @@ if command -v fnm &> /dev/null; then
   eval "$(fnm env --use-on-cd)"
 fi
 
-# SSH agent setup
-if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
-  if ! pgrep -u "$(whoami)" ssh-agent >/dev/null; then
-    eval "$(ssh-agent -s)" >/dev/null
-  fi
+# -------------------------------
+# SSH agent setup and auto-load key
+# -------------------------------
+if [[ -z "$SSH_AUTH_SOCK" ]] || [[ ! -S "$SSH_AUTH_SOCK" ]]; then
+  # Start a new agent if none is running
+  eval "$(ssh-agent -s)" >/dev/null
 fi
 
-# Add SSH key if not already added
-if [ -S "$SSH_AUTH_SOCK" ] && [ -f ~/.ssh/id_ed25519 ]; then
-  ssh-add -l >/dev/null 2>&1 || ssh-add ~/.ssh/id_ed25519 2>/dev/null
+# Add ED25519 key if not already added
+if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
+  ssh-add -l >/dev/null 2>&1 || ssh-add "$HOME/.ssh/id_ed25519" >/dev/null 2>&1
 fi
 
 # Initialize jump if available
@@ -286,3 +294,6 @@ fi
 if [[ ${BLE_VERSION-} ]]; then
   ble-attach
 fi
+
+export GPG_TTY=$(tty)
+
