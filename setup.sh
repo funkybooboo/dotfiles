@@ -168,8 +168,9 @@ if [[ -d "home/.local/share" ]]; then
         for script in "$entry/bin"/*; do
           if [[ -f "$script" ]]; then
             script_dest="$HOME/.local/share/omarchy/bin/$(basename "$script")"
-            if check_should_create "$script_dest" "$script"; then
-              run_cmd ln -s "$script" "$script_dest"
+            script_src="$PWD/$script"
+            if check_should_create "$script_dest" "$script_src"; then
+              run_cmd ln -s "$script_src" "$script_dest"
             fi
           fi
         done
@@ -179,11 +180,12 @@ if [[ -d "home/.local/share" ]]; then
       if [[ -d "$entry/hypr" ]]; then
         run_cmd mkdir -p "$HOME/.local/share/omarchy/hypr"
         while IFS= read -r src_file; do
-          rel="${src_file#"$PWD/$entry/hypr/"}"
+          src_file_abs="$PWD/$src_file"
+          rel="${src_file#"$entry/hypr/"}"
           hypr_dest="$HOME/.local/share/omarchy/hypr/$rel"
-          if check_should_create "$hypr_dest" "$src_file"; then
+          if check_should_create "$hypr_dest" "$src_file_abs"; then
             run_cmd mkdir -p "$(dirname "$hypr_dest")"
-            run_cmd ln -s "$src_file" "$hypr_dest"
+            run_cmd ln -s "$src_file_abs" "$hypr_dest"
           fi
         done < <(find "$entry/hypr" -type f)
       fi
