@@ -148,6 +148,14 @@ done < <(
     ! -path "$PWD/home/.local/*"
 )
 
+# Ensure .ssh and .gnupg directories have correct permissions
+if [[ -d "$HOME/.ssh" ]]; then
+  run_cmd chmod 700 "$HOME/.ssh"
+fi
+if [[ -d "$HOME/.gnupg" ]]; then
+  run_cmd chmod 700 "$HOME/.gnupg"
+fi
+
 # 2c) link everything from home/.local/share/* → ~/.local/share/*
 if [[ -d "home/.local/share" ]]; then
   echo ">>> Linking shared files into ~/.local/share"
@@ -339,6 +347,99 @@ run_cmd sudo systemctl restart dnsmasq
 run_cmd sudo systemctl enable dnsmasq
 
 echo ">>> DNS configuration deployed."
+
+echo ">>> Deploying package management configuration..."
+
+if [[ -d "$DOTFILES_ROOT_ETC" ]]; then
+  PKG_MGMT_FILES=(
+    "pacman.conf"
+    "makepkg.conf"
+    "makepkg.conf.d/fortran.conf"
+    "makepkg.conf.d/rust.conf"
+  )
+
+  for f in "${PKG_MGMT_FILES[@]}"; do
+    src="$DOTFILES_ROOT_ETC/$f"
+    if [[ ! -f "$src" ]]; then continue; fi
+
+    dest="/etc/$f"
+    dest_dir=$(dirname "$dest")
+
+    if [[ ! -d "$dest_dir" ]]; then
+      run_cmd sudo mkdir -p "$dest_dir"
+    fi
+
+    if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+      continue
+    fi
+
+    if [[ -f "$dest" ]]; then
+      if [[ $BACKUP -eq 1 ]]; then
+        backup_dest="${dest}.bak.$(date +%s)"
+        echo "Backing up $dest → $backup_dest"
+        run_cmd sudo cp "$dest" "$backup_dest"
+      elif [[ $FORCE -eq 1 ]]; then
+        echo "Removing existing $dest"
+        run_cmd sudo rm -f "$dest"
+      else
+        echo "conflict: '$dest' already exists. Use --backup or --force."
+        exit 1
+      fi
+    fi
+
+    run_cmd sudo cp "$src" "$dest"
+    run_cmd sudo chown root:root "$dest"
+    run_cmd sudo chmod 644 "$dest"
+  done
+
+  echo ">>> Package management configuration deployed."
+fi
+
+echo ">>> Deploying locale and console configuration..."
+
+if [[ -d "$DOTFILES_ROOT_ETC" ]]; then
+  LOCALE_CONSOLE_FILES=(
+    "locale.conf"
+    "vconsole.conf"
+    "X11/xorg.conf.d/00-keyboard.conf"
+  )
+
+  for f in "${LOCALE_CONSOLE_FILES[@]}"; do
+    src="$DOTFILES_ROOT_ETC/$f"
+    if [[ ! -f "$src" ]]; then continue; fi
+
+    dest="/etc/$f"
+    dest_dir=$(dirname "$dest")
+
+    if [[ ! -d "$dest_dir" ]]; then
+      run_cmd sudo mkdir -p "$dest_dir"
+    fi
+
+    if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+      continue
+    fi
+
+    if [[ -f "$dest" ]]; then
+      if [[ $BACKUP -eq 1 ]]; then
+        backup_dest="${dest}.bak.$(date +%s)"
+        echo "Backing up $dest → $backup_dest"
+        run_cmd sudo cp "$dest" "$backup_dest"
+      elif [[ $FORCE -eq 1 ]]; then
+        echo "Removing existing $dest"
+        run_cmd sudo rm -f "$dest"
+      else
+        echo "conflict: '$dest' already exists. Use --backup or --force."
+        exit 1
+      fi
+    fi
+
+    run_cmd sudo cp "$src" "$dest"
+    run_cmd sudo chown root:root "$dest"
+    run_cmd sudo chmod 644 "$dest"
+  done
+
+  echo ">>> Locale and console configuration deployed."
+fi
 
 echo ">>> Done${suffix}."
 
