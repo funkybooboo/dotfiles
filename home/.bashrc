@@ -218,16 +218,21 @@ if command -v fnm &> /dev/null; then
 fi
 
 # -------------------------------
-# SSH agent setup and auto-load key
+# SSH agent setup with KWallet integration
 # -------------------------------
-if [[ -z "$SSH_AUTH_SOCK" ]] || [[ ! -S "$SSH_AUTH_SOCK" ]]; then
-  # Start a new agent if none is running
-  eval "$(ssh-agent -s)" >/dev/null
-fi
+# Use persistent ssh-agent from systemd service
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# Configure SSH to use ksshaskpass for passphrase prompts (integrates with KWallet)
+export SSH_ASKPASS="/usr/bin/ksshaskpass"
+export SSH_ASKPASS_REQUIRE=prefer
 
 # Add ED25519 key if not already added
 if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
-  ssh-add -l >/dev/null 2>&1 || ssh-add "$HOME/.ssh/id_ed25519" >/dev/null 2>&1
+  ssh-add -l >/dev/null 2>&1 || {
+    # Key not loaded, add it (will use ksshaskpass/KWallet for passphrase)
+    ssh-add "$HOME/.ssh/id_ed25519" </dev/null >/dev/null 2>&1
+  }
 fi
 
 # Initialize jump if available

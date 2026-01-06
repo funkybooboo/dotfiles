@@ -7,6 +7,41 @@ This guide documents how to switch NetworkManager's WiFi backend between iwd and
 - **Network Manager**: NetworkManager
 - **TUI**: nmtui (via Waybar icon)
 
+## Architecture Overview
+
+### WiFi Management Options on Linux
+
+There are three main approaches to managing WiFi on Intel chipsets:
+
+#### 1. iwd Standalone (Minimal)
+- Use `iwctl` for WiFi management
+- No NetworkManager needed
+- Lightweight and fast
+- Built-in DHCP client (optional, or use systemd-networkd/dhcpcd)
+- Good for minimal/server setups
+
+#### 2. NetworkManager Only (Default)
+- Uses wpa_supplicant as WiFi backend by default
+- One tool for all networking (WiFi, Ethernet, VPN)
+- GUI integration (nm-applet, GNOME/KDE)
+- Best for desktop environments
+
+#### 3. NetworkManager + iwd Backend (Hybrid)
+- NetworkManager provides GUI/desktop integration
+- iwd provides performance and simplicity as backend
+- Configure via `/etc/NetworkManager/conf.d/wifi-backend.conf`
+- Combines convenience with modern iwd features
+
+### Tool Compatibility
+
+**For Intel WiFi cards:**
+- ✅ **wpa_supplicant**: Standard authentication daemon, works with all Intel cards
+- ✅ **iwd**: Modern Intel-developed wireless daemon
+- ✅ **iw**: Modern configuration utility (replaces deprecated iwconfig)
+- ❌ **wlctl**: Broadcom-specific utility, does NOT work with Intel cards
+
+**Key point**: wpa_supplicant and iwd are authentication/connection daemons, while wlctl is a low-level Broadcom driver utility. They serve different purposes and wlctl only works with Broadcom hardware.
+
 ## Switch to wpa_supplicant (for eduroam compatibility)
 
 ### 1. Stop and disable iwd
@@ -103,17 +138,28 @@ This file tells NetworkManager which WiFi backend to use:
 
 - **nmtui** - Still works if NetworkManager is configured to use iwd backend
 
-### Why wlctl Doesn't Work
+### Why wlctl Doesn't Work with Intel Cards
 
-**wlctl** is advertised as a NetworkManager-compatible fork of impala, but it has limitations:
+**wlctl is Broadcom-specific** and fundamentally incompatible with Intel hardware:
 
-- **Hardware compatibility**: wlctl appears to only work with Broadcom WiFi chipsets
-- **Intel WiFi cards** (like the one in this system) are not supported
-- This makes wlctl unsuitable as a general replacement for impala
+- **wlctl**: Broadcom wireless driver utility for low-level driver control
+  - Only works with Broadcom chipsets (bcm43xx, brcmfmac, etc.)
+  - Configures proprietary Broadcom driver features
+  - Not a replacement for wpa_supplicant or iwd
 
-**Conclusion**: For Intel WiFi cards, use:
-- **impala** when using iwd backend
-- **nmtui** when using wpa_supplicant backend
+- **Intel WiFi cards** use the `iwlwifi` driver, which is completely different from Broadcom drivers
+  - Standard Linux wireless stack tools work with Intel: `iw`, `wpa_supplicant`, `iwd`
+  - wlctl cannot communicate with iwlwifi driver
+
+**Tool Categories:**
+- **Low-level driver tools**: wlctl (Broadcom only), iw (universal)
+- **Authentication daemons**: wpa_supplicant (universal), iwd (modern alternative)
+- **TUI tools**: impala/iwctl (iwd), nmtui (NetworkManager)
+
+**Conclusion for Intel WiFi cards:**
+- ✅ Use **impala** or **iwctl** when using iwd (standalone or as NetworkManager backend)
+- ✅ Use **nmtui** when using NetworkManager with wpa_supplicant backend
+- ❌ Never use **wlctl** - it's for Broadcom hardware only
 
 ## Waybar/Omarchy Integration
 
