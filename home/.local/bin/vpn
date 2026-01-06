@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# vpn — unified VPN manager for debbie-local and Proton VPN
+# vpn — unified VPN manager for debbie-local, Proton VPN, and GlobalProtect
 
 set -euo pipefail
 
@@ -9,6 +9,7 @@ set -euo pipefail
 declare -A VPNS=(
     ["home"]="nm:debbie-local"
     ["proton"]="protonvpn"
+    ["usu"]="globalprotect:gp.usu.edu"
 )
 
 # Colors
@@ -62,6 +63,10 @@ function is_active() {
             nmcli connection show --active | grep -q "^ProtonVPN " || \
             ip link show proton0 &>/dev/null
             ;;
+        globalprotect)
+            # Check if GlobalProtect is connected via tun interface or process
+            pgrep -x openconnect &>/dev/null || ip link show | grep -q "^[0-9]*: tun"
+            ;;
         *)
             return 1
             ;;
@@ -101,6 +106,11 @@ function status() {
                         echo "  Server: $server_info"
                     fi
                     ip addr show dev proton0 2>/dev/null | grep "inet " | awk '{print "  IP: " $2}'
+                    ;;
+                globalprotect)
+                    echo "  Gateway: $conn_name"
+                    # Show IP of tun interface
+                    ip addr show | grep -A2 "^[0-9]*: tun" | grep "inet " | head -1 | awk '{print "  IP: " $2}'
                     ;;
             esac
         else
@@ -154,6 +164,18 @@ function up() {
         protonvpn)
             protonvpn connect || error "Failed to connect to Proton VPN"
             ;;
+        globalprotect)
+            # Authenticate first (blocks until browser auth completes)
+            info "Authenticating with browser..."
+            local cookie
+            cookie=$(gpauth --fix-openssl "$conn_name" --browser chromium 2>/dev/null) || error "Failed to authenticate"
+            # Write cookie to temp file with sudo permissions
+            echo "$cookie" | sudo tee /tmp/gpclient-cookie.tmp > /dev/null
+            # Connect in background using sudo -b flag, delete temp file after reading
+            info "Establishing connection in background..."
+            sudo -b sh -c 'gpclient --fix-openssl connect '"$conn_name"' --cookie-on-stdin < /tmp/gpclient-cookie.tmp > /var/log/gpclient-connect.log 2>&1; rm -f /tmp/gpclient-cookie.tmp'
+            sleep 2
+            ;;
     esac
 
     success "$vpn connected"
@@ -193,6 +215,17 @@ function down() {
             ;;
         protonvpn)
             protonvpn disconnect || error "Failed to disconnect from Proton VPN"
+            ;;
+        globalprotect)
+            sudo gpclient disconnect || error "Failed to disconnect from $vpn"
+            # Ensure background process is killed
+            if [ -f /var/run/gpclient.lock ]; then
+                local pid
+                pid=$(cat /var/run/gpclient.lock 2>/dev/null)
+                if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+                    sudo kill "$pid" 2>/dev/null || true
+                fi
+            fi
             ;;
     esac
 
@@ -329,7 +362,7 @@ Usage: vpn <command> [args]
 Commands:
   status              Show status of all VPNs
   list                List available VPNs with autoconnect status
-  up <name>           Connect to VPN (home|proton)
+  up <name>           Connect to VPN (home|proton|usu)
   down [name]         Disconnect VPN (or all if no name given)
   switch <name>       Switch to a different VPN
   autoconnect [name]  Toggle autoconnect on login (default: home)
@@ -339,6 +372,7 @@ Examples:
   vpn list
   vpn up proton
   vpn up home
+  vpn up usu
   vpn switch proton
   vpn down
   vpn autoconnect home
