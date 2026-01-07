@@ -29,6 +29,7 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `vscodium-bin` - VS Code without Microsoft telemetry
 - [ ] `typora` - Markdown editor with live preview
 - [ ] `pinta` - Simple image editor (Paint.NET alternative)
+- [ ] `lazyssh` - tui for ssh
 
 ## Medium Priority Packages (25)
 
