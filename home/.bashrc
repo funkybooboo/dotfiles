@@ -126,10 +126,11 @@ alias code='codium'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Server aliases
-alias raspberrypi_server='ssh nate@raspberrypi.lan'
-alias dimension_server='ssh nate@192.168.8.210'
-alias tnas_server='ssh funkybooboo@nas.lan'
-alias middlechild_server='ssh root@middlechild.cloud'
+alias raspberrypi_server='ssh nate@raspberrypi.lan' # raspberry pi 4
+alias dimension_server='ssh nate@192.168.8.210' # old desktop from di
+alias tnas_server='ssh funkybooboo@nas.lan' # my nas
+alias middlechild_server='ssh root@middlechild.cloud' # digital ocean vm
+alias cs6715_server='ssh -p 2222 root@localhost' # on a local vm
 
 # Source bash aliases if they exist
 if [ -f ~/.bash_aliases ]; then
