@@ -1,9 +1,9 @@
 # Missing Package Installers Checklist
 
-**Total Packages:** 134
+**Total Packages:** 145
 **Date Created:** 2026-01-06
-**Last Updated:** 2026-01-07
-**Status:** Not Started
+**Last Updated:** 2026-01-12
+**Status:** In Progress
 
 ## Overview
 This document tracks all installed packages that don't have installers yet in `~/dotfiles/install/packages/`. Mark items as complete as installers are created.
@@ -61,6 +61,18 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `cppcheck` - Static analyzer for C/C++
 - [ ] `lcov` - Code coverage visualization
 
+#### Language Servers (LSP)
+- [x] `clangd` - C/C++ Language Server (included in llvm/clang)
+- [ ] `pyright` - Python Language Server (via npm/Mason)
+- [ ] `typescript-language-server` - TypeScript/JavaScript LSP (via npm)
+- [ ] `jdtls` - Java Language Server (via Mason)
+- [ ] `lua-language-server` - Lua Language Server
+- [ ] `rust-analyzer` - Rust Language Server
+
+#### Editor/IDE Tools
+- [ ] `mason.nvim` - Neovim LSP/DAP/Linter/Formatter installer (via Lazy.nvim)
+- [ ] `lazy.nvim` - Modern Neovim plugin manager
+
 #### Testing & Benchmarking
 - [ ] `gtest` - Google Test framework
 - [ ] `catch2` - Modern C++ test framework
@@ -77,6 +89,8 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `uasm` - MASM-compatible assembler for Linux
 - [ ] `keystone` - Multi-platform, multi-architecture assembler framework
 - [ ] `sasm` (AUR) - Simple IDE for NASM/GAS/FASM with debugger
+- [ ] `asm-lsp` - Assembly Language Server Protocol (via cargo)
+- [ ] `asmfmt` - Assembly code formatter
 
 #### Binary Analysis & Reverse Engineering
 - [ ] `rizin` - Reverse engineering framework
@@ -119,6 +133,8 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `wmctrl` - Command-line window manager control
 
 ### Development
+- [ ] `nodejs` - JavaScript runtime environment
+- [ ] `npm` - Node.js package manager
 - [ ] `tea` - Gitea command-line client
 - [ ] `postgresql-libs` - PostgreSQL client libraries
 - [ ] `mariadb-libs` - MariaDB client libraries
@@ -252,10 +268,16 @@ Use `~/dotfiles/install/packages/core/bat.sh` as template for simple packages.
 For packages that need AUR (Arch) or special handling, see `~/dotfiles/install/packages/core/yay.sh`.
 
 ### Progress Tracking
-- **Not Started:** 87 packages
+- **Not Started:** 97 packages (updated 2026-01-12)
 - **In Progress:** 0 packages
-- **Completed:** 0 packages
+- **Completed:** 48 packages (marked with [x])
 - **Skipped:** 0 packages
+
+**Recent Additions (2026-01-12):**
+- Language Server Protocol tools (pyright, typescript-language-server, jdtls, lua-language-server, rust-analyzer)
+- Assembly tools (asm-lsp, asmfmt)
+- Editor/IDE tools (mason.nvim, lazy.nvim)
+- JavaScript runtime (nodejs, npm)
 
 ## Next Steps
 1. Start with High Priority packages (15 items)
