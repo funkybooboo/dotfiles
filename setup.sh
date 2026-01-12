@@ -250,6 +250,44 @@ if [[ $WITH_NAS_SYNC -eq 1 ]]; then
     echo "Password file already exists"
   fi
 
+  # Initial clone from NAS before enabling bidirectional sync
+  if [[ $DRY_RUN -eq 0 ]]; then
+    echo ">>> Performing initial clone from NAS"
+
+    # Check if NAS is reachable
+    if "$HOME/.local/lib/check-nas-connection"; then
+      echo "NAS is reachable, cloning data..."
+
+      # Create local directories
+      mkdir -p "$HOME/Documents" "$HOME/Music" "$HOME/Photos" "$HOME/Audiobooks"
+
+      # Clone each module from NAS (download only, no upload)
+      for sync_info in "documents:Documents" "music:Music" "photos:Photos" "audiobooks:Audiobooks"; do
+        module="${sync_info%%:*}"
+        local_dir="${sync_info##*:}"
+
+        echo "Cloning $module from NAS to ~/$local_dir..."
+        rsync -avz --progress --password-file="$PASSWORD_FILE" \
+          "rsync://nate@nas.lan:873/$module/" "$HOME/$local_dir/" || {
+          echo "Warning: Failed to clone $module. Continuing with other modules..."
+        }
+      done
+
+      echo "Initial clone complete"
+    else
+      echo "Warning: NAS not reachable. Skipping initial clone."
+      echo "You can manually clone later with:"
+      echo "  rsync -avz --password-file=~/.config/nas-sync/rsync-password rsync://nate@nas.lan:873/documents/ ~/Documents/"
+    fi
+  else
+    echo "+ check-nas-connection"
+    echo "+ mkdir -p ~/Documents ~/Music ~/Photos ~/Audiobooks"
+    echo "+ rsync -avz --password-file=~/.config/nas-sync/rsync-password rsync://nate@nas.lan:873/documents/ ~/Documents/"
+    echo "+ rsync -avz --password-file=~/.config/nas-sync/rsync-password rsync://nate@nas.lan:873/music/ ~/Music/"
+    echo "+ rsync -avz --password-file=~/.config/nas-sync/rsync-password rsync://nate@nas.lan:873/photos/ ~/Photos/"
+    echo "+ rsync -avz --password-file=~/.config/nas-sync/rsync-password rsync://nate@nas.lan:873/audiobooks/ ~/Audiobooks/"
+  fi
+
   # Reload systemd and enable NAS sync timers
   if [[ $DRY_RUN -eq 0 ]]; then
     echo ">>> Enabling NAS sync timers"

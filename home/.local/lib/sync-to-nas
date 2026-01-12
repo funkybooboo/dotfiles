@@ -13,7 +13,7 @@ fi
 LOCAL_DIR="$1"
 RSYNC_MODULE="$2"
 USERNAME="$3"
-NAS_IP="192.168.8.238"
+NAS_IP="nas.lan"
 NAS_PORT="873"
 
 # Password file location (will be created separately)

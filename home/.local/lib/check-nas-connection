@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Check if we can reach the NAS (either on home network or via VPN)
 
-NAS_IP="192.168.8.238"
+NAS_IP="nas.lan"
 NAS_PORT="873"
 
 # Try to connect to NAS rsync port with a short timeout

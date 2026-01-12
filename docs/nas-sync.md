@@ -6,7 +6,7 @@ Automated bidirectional synchronization between local directories and NAS using 
 
 ## NAS Configuration
 
-- **NAS IP:** 192.168.8.238
+- **NAS IP:** nas.lan
 - **Port:** 873 (rsync)
 - **Protocol:** rsync over TCP
 
@@ -272,7 +272,7 @@ Test NAS connectivity:
 
 Ping the NAS:
 ```bash
-ping 192.168.8.238
+ping nas.lan
 ```
 
 ### Permission Denied
@@ -294,7 +294,7 @@ journalctl --user -u nas-sync-documents.service -n 50
 Manually test the rsync command:
 ```bash
 rsync -avzu --password-file=~/.config/nas-sync/rsync-password \
-  ~/Documents/ rsync://nate@192.168.8.238:873/documents/
+  ~/Documents/ rsync://nate@nas.lan:873/documents/
 ```
 
 ## Files
