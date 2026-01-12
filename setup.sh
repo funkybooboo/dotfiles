@@ -9,15 +9,17 @@ set -euo pipefail
 DRY_RUN=0
 FORCE=0
 BACKUP=0
+WITH_NAS_SYNC=0
 
 usage() {
   cat <<EOF
-Usage: $0 [--dry-run|-n] [--force|-f] [--backup|-b]
+Usage: $0 [--dry-run|-n] [--force|-f] [--backup|-b] [--with-nas-sync]
 
-  --dry-run, -n   Print the commands that would be run, but do not execute them.
-  --force, -f     Remove existing files/symlinks before creating new ones.
-  --backup, -b    Backup existing files/symlinks by renaming them with .bak suffix.
-  --help, -h      Show this help message.
+  --dry-run, -n       Print the commands that would be run, but do not execute them.
+  --force, -f         Remove existing files/symlinks before creating new ones.
+  --backup, -b        Backup existing files/symlinks by renaming them with .bak suffix.
+  --with-nas-sync     Enable NAS sync timers setup (optional).
+  --help, -h          Show this help message.
 EOF
   exit 1
 }
@@ -35,6 +37,10 @@ while [[ $# -gt 0 ]]; do
     ;;
   -b | --backup)
     BACKUP=1
+    shift
+    ;;
+  --with-nas-sync)
+    WITH_NAS_SYNC=1
     shift
     ;;
   -h | --help) usage ;;
@@ -221,52 +227,56 @@ if [[ $DRY_RUN -eq 1 ]]; then
   suffix=" (dry-run)"
 fi
 
-# Set up NAS sync
-echo ">>> Setting up NAS sync"
-run_cmd mkdir -p "$HOME/.config/nas-sync"
+# Set up NAS sync (optional)
+if [[ $WITH_NAS_SYNC -eq 1 ]]; then
+  echo ">>> Setting up NAS sync"
+  run_cmd mkdir -p "$HOME/.config/nas-sync"
 
-PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
-if [[ ! -f "$PASSWORD_FILE" ]] && [[ $DRY_RUN -eq 0 ]]; then
-  echo ""
-  echo "NAS rsync password file not found."
-  echo "Please enter your NAS rsync password (or press Enter to skip):"
-  read -s -r nas_password
-  if [[ -n "$nas_password" ]]; then
-    echo "$nas_password" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-    echo "Password file created at $PASSWORD_FILE"
-  else
-    echo "Skipping password setup. Create it later with:"
-    echo "   echo 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
+  PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
+  if [[ ! -f "$PASSWORD_FILE" ]] && [[ $DRY_RUN -eq 0 ]]; then
+    echo ""
+    echo "NAS rsync password file not found."
+    echo "Please enter your NAS rsync password (or press Enter to skip):"
+    read -s -r nas_password
+    if [[ -n "$nas_password" ]]; then
+      echo "$nas_password" > "$PASSWORD_FILE"
+      chmod 600 "$PASSWORD_FILE"
+      echo "Password file created at $PASSWORD_FILE"
+    else
+      echo "Skipping password setup. Create it later with:"
+      echo "   echo 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
+    fi
+  elif [[ -f "$PASSWORD_FILE" ]]; then
+    echo "Password file already exists"
   fi
-elif [[ -f "$PASSWORD_FILE" ]]; then
-  echo "Password file already exists"
-fi
 
-# Reload systemd and enable NAS sync timers
-if [[ $DRY_RUN -eq 0 ]]; then
-  echo ">>> Enabling NAS sync timers"
-  systemctl --user daemon-reload
+  # Reload systemd and enable NAS sync timers
+  if [[ $DRY_RUN -eq 0 ]]; then
+    echo ">>> Enabling NAS sync timers"
+    systemctl --user daemon-reload
 
-  for sync_type in documents music photos audiobooks; do
-    systemctl --user enable "nas-sync-${sync_type}.timer"
-    systemctl --user start "nas-sync-${sync_type}.timer"
-  done
+    for sync_type in documents music photos audiobooks; do
+      systemctl --user enable "nas-sync-${sync_type}.timer"
+      systemctl --user start "nas-sync-${sync_type}.timer"
+    done
 
-  echo "NAS sync timers enabled and started"
-  echo ""
-  echo "Check timer status with: systemctl --user list-timers"
-  echo "View sync logs with: journalctl --user -u nas-sync-documents.service -f"
+    echo "NAS sync timers enabled and started"
+    echo ""
+    echo "Check timer status with: systemctl --user list-timers"
+    echo "View sync logs with: journalctl --user -u nas-sync-documents.service -f"
+  else
+    echo "+ systemctl --user daemon-reload"
+    echo "+ systemctl --user enable nas-sync-documents.timer"
+    echo "+ systemctl --user start nas-sync-documents.timer"
+    echo "+ systemctl --user enable nas-sync-music.timer"
+    echo "+ systemctl --user start nas-sync-music.timer"
+    echo "+ systemctl --user enable nas-sync-photos.timer"
+    echo "+ systemctl --user start nas-sync-photos.timer"
+    echo "+ systemctl --user enable nas-sync-audiobooks.timer"
+    echo "+ systemctl --user start nas-sync-audiobooks.timer"
+  fi
 else
-  echo "+ systemctl --user daemon-reload"
-  echo "+ systemctl --user enable nas-sync-documents.timer"
-  echo "+ systemctl --user start nas-sync-documents.timer"
-  echo "+ systemctl --user enable nas-sync-music.timer"
-  echo "+ systemctl --user start nas-sync-music.timer"
-  echo "+ systemctl --user enable nas-sync-photos.timer"
-  echo "+ systemctl --user start nas-sync-photos.timer"
-  echo "+ systemctl --user enable nas-sync-audiobooks.timer"
-  echo "+ systemctl --user start nas-sync-audiobooks.timer"
+  echo ">>> Skipping NAS sync setup (use --with-nas-sync to enable)"
 fi
 
 # Enable battery notification timer

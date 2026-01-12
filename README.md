@@ -1,8 +1,33 @@
-# 🗂️ Dotfiles
+# Dotfiles
+
+A comprehensive Linux dotfiles and system configuration management solution with multi-distribution support, extensive automation, and 500+ tracked configuration files.
+
+## Overview
+
+This repository provides a complete, reproducible system setup for Linux environments, combining:
+
+- **Configuration management** - Symlink-based deployment of all personal dotfiles
+- **Package management** - Unified installer system with 219 packages across Arch, Ubuntu, and NixOS
+- **Automation** - Systemd timers for battery notifications, power profile switching, and optional NAS sync
+- **Deep customization** - Full Hyprland/Omarchy integration with 169 customized files
+- **Developer tools** - 24 custom commands and 10 library scripts for system management
+
+### Key Features
+
+- **Multi-distribution support** - Works on Arch Linux, Ubuntu/Debian, and NixOS
+- **Idempotent setup** - Safe to run multiple times without breaking existing configs
+- **Optional NAS sync** - Automatic hourly rsync backups to NAS (opt-in with `--with-nas-sync`)
+- **Smart power management** - Automatic profile switching on AC/battery
+- **VPN integration** - Unified VPN manager supporting multiple providers
+- **Custom commands** - System updater, disk cleanup, 2FA manager, GitHub backups
+- **Cloud sync** - Proton Drive integration for documents and media
+- **Security focused** - ClamAV scanning, secure credential storage, proper permissions
+
+See [docs/](docs/) for detailed feature documentation.
 
 ---
 
-## 🚀 Quick Start (Fresh System)
+## Quick Start (Fresh System)
 
 ### 1. Clone your dotfiles
 
@@ -15,15 +40,31 @@ cd ~/dotfiles
 
 ### 2. Install packages (optional)
 
-Install ClamAV antivirus:
-```bash
-./install/packages/special/clamav.sh
-```
-
-Or run the full installation orchestration:
+Install all 219 packages:
 ```bash
 ./install/orchestration/install-all.sh
 ```
+
+Or use phased installation (recommended for fresh systems):
+```bash
+./install/orchestration/pre-reboot.sh    # System packages
+# Reboot here
+./install/orchestration/post-reboot.sh   # User packages
+```
+
+Individual package installation:
+```bash
+./install/packages/core/neovim.sh        # Install Neovim
+./install/packages/special/clamav.sh     # Install ClamAV antivirus
+./install/packages/desktop/brave.sh      # Install Brave browser
+```
+
+**Package categories:**
+- **core/** (60 packages) - Essential utilities: git, neovim, bat, fd, ripgrep, fzf, jq, eza, etc.
+- **dev/** (35 packages) - Development tools: languages, build tools, version managers
+- **desktop/** (18 packages) - GUI applications: Brave, Discord, Obsidian, VLC, OBS
+- **special/** (18 packages) - Complex installs: Docker, CUDA, libvirt, JetBrains Toolbox
+- **fonts/** - Font packages for desktop use
 
 ---
 
@@ -55,20 +96,25 @@ What this does:
 * Symlinks omarchy customizations from `home/.local/share/omarchy/*` → `~/.local/share/omarchy/*`
 * Symlinks each folder under `home/.config/*` → `~/.config/*`
 * Symlinks all remaining dotfiles in `home/` → `$HOME`
-* Sets up NAS sync timers for Documents, Music, Photos, and Audiobooks
 * Enables battery notification timer
 * Installs power profile auto-switching udev rule
-* Prompts for NAS rsync password (stored securely in `~/.config/nas-sync/rsync-password`)
 
 **Flags:**
 - `--dry-run, -n`: Preview actions without executing
 - `--backup, -b`: Backup existing files with `.bak` suffix (safe, recommended)
 - `--force, -f`: Remove existing files (destructive)
+- `--with-nas-sync`: Enable NAS sync timers setup (optional)
 - `--help, -h`: Show help message
 
 ---
 
-### 4. Configure NAS sync
+### 4. Configure NAS sync (optional)
+
+If you want to enable automatic NAS synchronization, run setup with the `--with-nas-sync` flag:
+
+```bash
+./setup.sh --backup --with-nas-sync
+```
 
 The setup script will prompt for your NAS rsync password. You can also set it manually:
 
@@ -99,7 +145,7 @@ systemctl --user start nas-sync-documents.service
 
 ### 5. System configuration (optional)
 
-#### 🧊 NixOS
+#### NixOS
 
 ```bash
 sudo mkdir -p /etc/nixos
@@ -107,7 +153,7 @@ sudo cp root/etc/nixos/configuration.nix /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 ```
 
-#### 🐧 Arch Linux
+#### Arch Linux
 
 ```bash
 ./install/orchestration/pre-reboot.sh
@@ -117,7 +163,37 @@ sudo nixos-rebuild switch
 
 ---
 
-### 6. Proton Drive sync (optional)
+### 6. Custom commands
+
+After setup, you'll have access to 24 custom commands in `~/.local/bin/`:
+
+**System Management:**
+- `update` - Multi-distro system updater (NixOS/Ubuntu aware)
+- `update-firmware` - Firmware update management
+- `auto-update` - Scheduled system updates
+- `rebuild` - System rebuild/reconfiguration
+- `clean-disk` - Disk space cleanup utility
+- `clean-memory` - Memory optimization
+
+**VPN & Networking:**
+- `vpn` - Unified VPN manager (home/debbie-local, Proton VPN, GlobalProtect)
+- `sync-documents`, `sync-music`, `sync-photos`, `sync-audiobooks` - Manual NAS sync
+
+**Cloud Sync:**
+- `proton-sync` - Proton Drive synchronization
+- `proton-sync-docs`, `proton-sync-music`, `proton-sync-audiobooks` - Specific syncs
+- `update-rclone-2fa` - 2FA token management for Proton
+
+**Development & Utilities:**
+- `gg` - Git shortcut tool
+- `audit` - System security audit
+- `backup-github` - GitHub repository backup
+- `2fa` - Two-factor authentication manager
+- `btrfs-snapshot` - Btrfs snapshot management
+
+---
+
+### 7. Proton Drive sync (optional)
 
 If you also want to sync with Proton Drive:
 
@@ -130,7 +206,7 @@ sync-audiobooks  # ~/Audiobooks ↔ Proton Drive
 
 ---
 
-### 7. When you add new files or scripts
+### 8. When you add new files or scripts
 
 After adding new configs or scripts under `home/`, re-run:
 
@@ -142,7 +218,7 @@ to link them into place.
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 dotfiles/
@@ -175,12 +251,12 @@ dotfiles/
 │   │           └── README.md      # Omarchy customization docs
 │   └── .{bashrc,gitconfig,...}    # Shell dotfiles (9 files)
 ├── install/                       # Installation scripts
-│   ├── packages/                  # Package installers (210 scripts)
-│   │   ├── core/                  # Core system packages
-│   │   ├── desktop/               # Desktop environment
-│   │   ├── dev/                   # Development tools
+│   ├── packages/                  # Package installers (219 scripts)
+│   │   ├── core/                  # Core system packages (60)
+│   │   ├── desktop/               # Desktop environment (18)
+│   │   ├── dev/                   # Development tools (35)
 │   │   ├── fonts/                 # Font packages
-│   │   └── special/               # Special installs (libvirt, plymouth, etc)
+│   │   └── special/               # Special installs (18) - libvirt, plymouth, etc
 │   └── orchestration/             # Install orchestration scripts
 ├── root/                          # System-level configs (maps to /)
 │   └── etc/                       # System configuration files
@@ -199,17 +275,17 @@ dotfiles/
 
 ---
 
-## 🧹 Notes
+## Notes
 
 * **Safe by default**: The setup script aborts on conflicts (use `--backup` for safety)
 * **Use `--dry-run`** to preview actions before applying
-* **NAS sync**: Automatic hourly syncing when connected to home network/VPN
-* **Proton Drive sync**: Manual sync scripts in `.local/bin/proton/`
+* **NAS sync**: Optional - use `--with-nas-sync` flag to enable automatic hourly syncing
+* **Proton Drive sync**: Manual sync scripts available in `~/.local/bin/`
 * Designed to work on Arch Linux, NixOS, Ubuntu, and other Linux distros
 
 ---
 
-## 🔐 Security
+## Security
 
 - NAS rsync password stored in `~/.config/nas-sync/rsync-password` with 600 permissions
 - ClamAV configured to scan user directories with proper ACLs

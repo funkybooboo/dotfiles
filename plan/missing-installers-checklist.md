@@ -1,7 +1,8 @@
 # Missing Package Installers Checklist
 
-**Total Packages:** 87
+**Total Packages:** 134
 **Date Created:** 2026-01-06
+**Last Updated:** 2026-01-07
 **Status:** Not Started
 
 ## Overview
@@ -23,6 +24,83 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `valgrind` - Memory debugging and profiling tool
 - [ ] `sysbench` - Scriptable database and system performance benchmark
 - [ ] `gemini-cli` - Google Gemini AI CLI client
+
+### C/C++ Development Tools
+#### Core Toolchain (Already Installed)
+- [x] `llvm` - LLVM compiler infrastructure
+- [x] `clang` - C/C++ compiler front-end
+- [x] `gcc` - GNU Compiler Collection (g++)
+- [x] `cmake` - Cross-platform build system
+- [x] `make` - GNU Make build tool
+- [x] `binutils` - objdump, hexdump, readelf, nm, strings, addr2line, objcopy, ldd
+
+#### Debuggers & Profiling
+- [ ] `gdb` - GNU Debugger
+- [ ] `lldb` - LLVM debugger
+- [ ] `python-gdbgui` (AUR) - Browser-based GDB frontend
+- [ ] `strace` - System call tracer
+- [ ] `ltrace` - Library call tracer
+- [ ] `perf` - Linux performance profiling tool
+- [ ] `heaptrack` - Heap memory profiler
+- [ ] `kcachegrind` - Callgrind/cachegrind visualizer
+- [ ] `massif-visualizer` - Valgrind massif heap profiler GUI
+
+#### Build Systems & Tools
+- [ ] `ninja` - Fast build system
+- [ ] `meson` - Modern build system
+- [ ] `ccache` - Compiler cache for faster rebuilds
+- [ ] `sccache` - Shared compilation cache
+- [ ] `bear` - Compilation database generator
+- [ ] `autoconf` - GNU Autotools configuration
+- [ ] `automake` - GNU Autotools makefile generator
+- [ ] `libtool` - Generic library support script
+
+#### Code Quality & Analysis
+- [x] `clang-format` - Code formatter
+- [x] `clang-tidy` - C++ linter
+- [ ] `cppcheck` - Static analyzer for C/C++
+- [ ] `lcov` - Code coverage visualization
+
+#### Testing & Benchmarking
+- [ ] `gtest` - Google Test framework
+- [ ] `catch2` - Modern C++ test framework
+- [ ] `boost` - C++ libraries (includes test framework)
+- [ ] `benchmark` - Google's microbenchmarking library
+- [ ] `hyperfine` - Command-line benchmarking tool
+
+#### Assembly & Low-Level
+- [x] `binutils` - Includes GAS (GNU Assembler, AT&T syntax)
+- [x] `nasm` - Netwide Assembler (Intel syntax, most popular)
+- [x] `yasm` - YASM assembler (NASM rewrite, Intel syntax)
+- [x] `llvm` - Includes LLVM integrated assembler
+- [ ] `fasm` - Flat Assembler (own syntax, very fast)
+- [ ] `uasm` - MASM-compatible assembler for Linux
+- [ ] `keystone` - Multi-platform, multi-architecture assembler framework
+- [ ] `sasm` (AUR) - Simple IDE for NASM/GAS/FASM with debugger
+
+#### Binary Analysis & Reverse Engineering
+- [ ] `rizin` - Reverse engineering framework
+- [ ] `cutter` - GUI for rizin
+- [ ] `radare2` - Alternative reverse engineering framework
+
+#### Hex Editors
+- [ ] `hexedit` - Terminal hex editor
+- [ ] `imhex-bin` (AUR) - Modern GUI hex editor
+
+#### Documentation & Utilities
+- [ ] `doxygen` - Documentation generator
+- [ ] `graphviz` - Graph visualization (for doxygen)
+- [x] `pkg-config` - Library management utility
+- [ ] `ctags` - Code indexing for editors
+- [ ] `qt6-base` - Qt6 base (needed for cmake-gui)
+
+#### Advanced Tools
+- [ ] `cling` (AUR) - Interactive C++ interpreter (REPL)
+- [ ] `distcc` - Distributed C/C++ compilation
+- [ ] `compiler-rt` - Sanitizer runtime libraries
+- [ ] `git-delta` - Syntax-highlighting git diff
+- [ ] `meld` - Visual diff/merge tool
+- [ ] `nemiver` - GTK-based debugger frontend
 
 ### Desktop Applications
 - [ ] `localsend` - Cross-platform local file sharing (AirDrop alternative)
@@ -133,6 +211,8 @@ This document tracks all installed packages that don't have installers yet in `~
 - [ ] `texlive-latexextra` - TeX Live LaTeX extra packages
 
 ### Virtualization
+- [ ] `virtualbox` - Oracle VM VirtualBox
+- [ ] `virtualbox-host-modules-arch` - VirtualBox kernel modules
 - [ ] `virt-viewer` - Virtual machine viewer
 
 ### Experimental/Testing
