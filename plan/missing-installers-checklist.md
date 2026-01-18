@@ -1,12 +1,100 @@
 # Missing Package Installers Checklist
 
-**Total Packages:** 145
+**Total Packages:** 158
 **Date Created:** 2026-01-06
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-01-17
 **Status:** In Progress
 
 ## Overview
 This document tracks all installed packages that don't have installers yet in `~/dotfiles/install/packages/`. Mark items as complete as installers are created.
+
+---
+
+## Nice-to-Have Modern CLI Tools (13)
+
+These are quality-of-life improvements recommended for your workflow. All are Rust-based, fast, and modern replacements for traditional tools.
+
+### System Monitoring & Disk Usage
+- [ ] `duf` - Prettier disk usage (better `df`) - mentioned in bash-configuration.md
+  ```bash
+  sudo pacman -S duf
+  ```
+- [ ] `bottom` or `btm` - Alternative to btop with different UI
+  ```bash
+  sudo pacman -S bottom
+  ```
+- [ ] `ncdu` - Interactive disk usage analyzer
+  ```bash
+  sudo pacman -S ncdu
+  ```
+- [ ] `dua-cli` - Disk usage analyzer (Rust-based, faster than ncdu)
+  ```bash
+  sudo pacman -S dua-cli
+  ```
+- [ ] `bandwhich` - Network bandwidth monitor
+  ```bash
+  sudo pacman -S bandwhich
+  ```
+
+### Navigation & File Management
+- [ ] `broot` - Better tree with fuzzy search and navigation
+  ```bash
+  sudo pacman -S broot
+  ```
+
+### Text Processing & Search
+- [ ] `sd` - Modern sed replacement (simpler syntax)
+  ```bash
+  sudo pacman -S sd
+  ```
+- [ ] `grex` - Generate regex from examples
+  ```bash
+  sudo pacman -S grex
+  ```
+
+### Development Tools
+- [ ] `tokei` - Fast code statistics (lines of code, language breakdown)
+  ```bash
+  sudo pacman -S tokei
+  ```
+
+### Network Tools
+- [ ] `dog` - Modern DNS client (dig replacement, colorized output)
+  ```bash
+  sudo pacman -S dog
+  ```
+- [ ] `xh` - Modern HTTP client (httpie/curl alternative, simpler syntax)
+  ```bash
+  sudo pacman -S xh
+  ```
+
+### Documentation & Help
+- [ ] `cheat` - Community-driven cheatsheets (alternative to tldr)
+  ```bash
+  sudo pacman -S cheat
+  ```
+
+### Shell Enhancement
+- [ ] `ble.sh` - Fish-like syntax highlighting and autosuggestions for bash - mentioned in bash-configuration.md
+  ```bash
+  git clone --recursive --depth 1 --shallow-submodules \
+    https://github.com/akinomyoga/ble.sh.git ~/.local/share/blesh
+  make -C ~/.local/share/blesh install PREFIX=~/.local
+  ```
+
+### Already Installed ✓
+These modern tools are already on your system:
+- [x] `hyperfine` - Command-line benchmarking
+- [x] `lazygit` - Git TUI
+- [x] `delta` - Better git diff with syntax highlighting
+- [x] `tldr` - Simplified man pages with examples
+- [x] `gdb` - GNU Debugger
+- [x] `valgrind` - Memory debugging
+- [x] `strace` - System call tracer
+- [x] `ltrace` - Library call tracer
+- [x] `perf` - Performance profiling
+
+---
 
 ## High Priority Packages (15)
 
@@ -35,12 +123,12 @@ This document tracks all installed packages that don't have installers yet in `~
 - [x] `binutils` - objdump, hexdump, readelf, nm, strings, addr2line, objcopy, ldd
 
 #### Debuggers & Profiling
-- [ ] `gdb` - GNU Debugger
+- [x] `gdb` - GNU Debugger (INSTALLED)
 - [ ] `lldb` - LLVM debugger
 - [ ] `python-gdbgui` (AUR) - Browser-based GDB frontend
-- [ ] `strace` - System call tracer
-- [ ] `ltrace` - Library call tracer
-- [ ] `perf` - Linux performance profiling tool
+- [x] `strace` - System call tracer (INSTALLED)
+- [x] `ltrace` - Library call tracer (INSTALLED)
+- [x] `perf` - Linux performance profiling tool (INSTALLED)
 - [ ] `heaptrack` - Heap memory profiler
 - [ ] `kcachegrind` - Callgrind/cachegrind visualizer
 - [ ] `massif-visualizer` - Valgrind massif heap profiler GUI

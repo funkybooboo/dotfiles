@@ -1,4 +1,26 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
+#
+# MINIMAL YET POWERFUL BASH CONFIGURATION
+# ========================================
+# Philosophy: Use tools as developers intended
+#
+# Features:
+# ✓ Starship prompt (beautiful, git-aware)
+# ✓ Zoxide (smart directory jumping: z, zi)
+# ✓ Enhanced history (50k entries, smart search)
+# ✓ Fuzzy finder (fzf: Ctrl+T, Ctrl+R, Alt+C)
+# ✓ Auto-cd (type directory name to cd)
+# ✓ Command timing (shows time for slow commands)
+#
+# Minimal aliases:
+# • ls → eza (tasteful, simple)
+# • code → codium (only if code doesn't exist)
+# • .., ..., .... (parent directory shortcuts)
+# • - (previous directory)
+# • zi (zoxide interactive picker)
+#
+# Everything else: use real command names
+# ========================================
 
 # If not running interactively, don't do anything (leave this at the top of this file)
 [[ $- != *i* ]] && return
@@ -26,17 +48,34 @@ if [ -f ~/.local/share/omarchy/default/bash/rc ]; then
 fi
 
 # ============================================================================
-# HISTORY CONFIGURATION
+# HISTORY CONFIGURATION (Fish-like infinite history)
 # ============================================================================
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=50000              # Increased for fish-like experience
+HISTFILESIZE=100000         # Increased for fish-like experience
 HISTTIMEFORMAT="%F %T "
-PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
+
+# Fish-like command timing (show execution time for commands > 1s)
+__command_timer_start() {
+  __command_start_time=${__command_start_time:-$SECONDS}
+}
+
+__command_timer_stop() {
+  if [ -n "$__command_start_time" ]; then
+    local elapsed=$((SECONDS - __command_start_time))
+    if [ $elapsed -gt 1 ]; then
+      echo -e "\033[2m⏱  ${elapsed}s\033[0m"
+    fi
+  fi
+  unset __command_start_time
+}
+
+trap '__command_timer_start' DEBUG
+PROMPT_COMMAND="__command_timer_stop; history -a; history -n; ${PROMPT_COMMAND}"
 
 # ============================================================================
-# SHELL OPTIONS
+# SHELL OPTIONS (Fish-like features)
 # ============================================================================
 shopt -s checkwinsize  # Update LINES and COLUMNS after each command
 shopt -s globstar      # Enable ** recursive globbing
@@ -44,6 +83,10 @@ shopt -s cdspell       # Correct minor directory spelling errors
 shopt -s dirspell      # Correct directory spelling in completion
 shopt -s extglob       # Enable extended pattern matching
 shopt -s nocaseglob    # Case-insensitive globbing
+shopt -s autocd        # Fish-like auto-cd: type directory name to cd into it
+shopt -s cdable_vars   # If cd arg isn't a dir, try it as a variable
+shopt -s direxpand     # Expand directory names on tab completion
+shopt -s dotglob       # Include dotfiles in pathname expansion
 
 # ============================================================================
 # ENVIRONMENT VARIABLES
@@ -91,39 +134,47 @@ __add_to_path_if_exists "$PYENV_ROOT/bin"
 __add_to_path_if_exists "$HOME/.asdf/shims"
 __add_to_path_if_exists "$BUN_INSTALL/bin"
 
-# ============================================================================
-# MODERN TOOL ALIASES (conditional - only if installed)
-# ============================================================================
-command -v eza &> /dev/null && alias ls='eza --icons'
-command -v fd &> /dev/null && alias find='fd'
-command -v fdfind &> /dev/null && alias fd='fdfind'
-command -v mtr &> /dev/null && alias ping='mtr --report --report-cycles 1'
-command -v procs &> /dev/null && alias ps='procs'
-command -v bat &> /dev/null && alias cat='bat'
-command -v batcat &> /dev/null && alias bat='batcat'
-command -v glances &> /dev/null && alias htop='glances'
-command -v duf &> /dev/null && alias df='duf'
+# Ruby and Bundler
+__add_to_path_if_exists "$HOME/.rbenv/bin"
+__add_to_path_if_exists "$HOME/.rbenv/shims"
+
+# RubyGems user install (version-agnostic)
+if [ -d "$HOME/.local/share/gem/ruby" ]; then
+  for ruby_dir in "$HOME/.local/share/gem/ruby"/*/bin; do
+    [ -d "$ruby_dir" ] && __add_to_path_if_exists "$ruby_dir"
+  done
+fi
+
+# Additional language package managers
+__add_to_path_if_exists "$HOME/.deno/bin"
+__add_to_path_if_exists "$HOME/.local/share/pnpm"
+__add_to_path_if_exists "$HOME/.config/composer/vendor/bin"
 
 # ============================================================================
-# CUSTOM ALIASES
+# ALIASES (minimal - tools as developers intended)
 # ============================================================================
-# Editor aliases
-alias vim="nvim"
-alias vi="nvim"
+# Modern tool alternatives (use by their real names):
+#   bat      - cat with syntax highlighting
+#   fd       - faster find
+#   btop     - better top/htop
+#   procs    - better ps
+#   dust     - better du (disk usage)
+#   ripgrep  - faster grep (use: rg)
+#   nvim     - modern vim
+#   git      - use full commands (git status, git add, etc.)
 
-# System monitoring
-alias htop="btop"
-alias top="btop"
+# eza - tasteful ls replacement (keep it simple)
+if command -v eza &> /dev/null; then
+  alias ls='eza'                    # Simple list
+  alias la='eza -a'                 # Simple list with hidden files
+  alias ll='eza -l'                 # Long format (permissions, size, date, etc.)
+  alias lla='eza -la'               # Long format with hidden files
+fi
 
-# Listing
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-alias code='codium'
-
-# Utilities
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+# VSCodium - only if code doesn't exist
+if command -v codium &> /dev/null; then
+  command -v code &> /dev/null || alias code='codium'
+fi
 
 # Server aliases
 alias raspberrypi_server='ssh nate@raspberrypi.lan' # raspberry pi 4
@@ -138,8 +189,13 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 # ============================================================================
-# FUNCTIONS
+# FUNCTIONS (Fish-like utilities)
 # ============================================================================
+# This section includes fish-like functions for better command-line experience:
+# - Directory navigation helpers (up, .., ..., etc.)
+# - Smart command suggestions (command_not_found_handle)
+# - Git shortcuts and utilities
+# - File management helpers
 
 # Dotfiles git function
 dotfiles() {
@@ -202,6 +258,18 @@ histstat() {
 }
 
 # ============================================================================
+# DIRECTORY NAVIGATION
+# ============================================================================
+# Use: z <partial>  - smart jump to directory (zoxide)
+#      zi           - interactive directory picker (defined below)
+#      cd           - standard change directory
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias -- -='cd -'
+
+# ============================================================================
 # TOOL INITIALIZATION
 # ============================================================================
 
@@ -210,6 +278,14 @@ if command -v pyenv &> /dev/null; then
   if [ -z "$PYENV_LOADED" ]; then
     export PYENV_LOADED=1
     eval "$(pyenv init -)"
+  fi
+fi
+
+# rbenv
+if command -v rbenv &> /dev/null; then
+  if [ -z "$RBENV_LOADED" ]; then
+    export RBENV_LOADED=1
+    eval "$(rbenv init - bash)"
   fi
 fi
 
@@ -242,10 +318,17 @@ if command -v jump &> /dev/null; then
   alias j='jump'
 fi
 
-# Initialize zoxide if available
+# ============================================================================
+# ZOXIDE INTERACTIVE PICKER
+# ============================================================================
+# Note: zoxide init is handled by omarchy (see ~/.local/share/omarchy/default/bash/init)
+# This just adds the interactive picker function
+
 if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init bash)"
-  alias cd='z'
+  zi() {
+    local dir=$(zoxide query -i "$@")
+    [ -n "$dir" ] && cd "$dir"
+  }
 fi
 
 # Homebrew
@@ -264,14 +347,44 @@ if [ -f "$HOME/.asdf/asdf.sh" ]; then
   [ -f "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
 fi
 
-# fzf (fuzzy finder)
+# fzf (fuzzy finder) - Fish-like configuration
 if command -v fzf &> /dev/null; then
   eval "$(fzf --bash)" 2>/dev/null || true
-  export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 
+  # Fish-like fzf theme with better colors
+  export FZF_DEFAULT_OPTS="
+    --height 40%
+    --layout=reverse
+    --border
+    --info=inline
+    --prompt='❯ '
+    --pointer='▶'
+    --marker='✓'
+    --color=fg:#c0caf5,bg:#1a1b26,hl:#7aa2f7
+    --color=fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff
+    --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff
+    --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
+  "
+
+  # Use fd for faster file searching
   if command -v fd &> /dev/null; then
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  fi
+
+  # Fish-like Ctrl+R for history search with preview
+  if [[ ! -o vi ]]; then
+    bind '"\C-r": "\C-x1\e^\C-x2\e[0n"'
+    bind -x '"\C-x1": __fzf_history';
+    bind '"\C-x2": redraw-current-line';
+
+    __fzf_history() {
+      local selected
+      selected=$(fc -rl 1 | awk '{$1="";print substr($0,2)}' | fzf --tac --no-sort --exact --query="$READLINE_LINE")
+      READLINE_LINE="$selected"
+      READLINE_POINT=${#READLINE_LINE}
+    }
   fi
 fi
 
@@ -303,3 +416,6 @@ fi
 
 export GPG_TTY=$(tty)
 
+
+# opencode
+export PATH=/home/nate/.opencode/bin:$PATH
