@@ -245,9 +245,9 @@ dotfiles/
 │   │   │   ├── battery-notify     # Battery notification daemon
 │   │   │   └── ...                # 7 more helpers
 │   │   └── share/
-│   │       └── omarchy/           # Omarchy customizations (169 files)
-│   │           ├── bin/           # 141 customized scripts
-│   │           ├── hypr/          # 27 customized Hyprland configs
+│   │       └── omarchy/           # Omarchy customizations (2 custom files)
+│   │           ├── bin/           # omarchy-cmd-brightness (custom)
+│   │           ├── hypr/bindings/ # media.conf (custom)
 │   │           └── README.md      # Omarchy customization docs
 │   └── .{bashrc,gitconfig,...}    # Shell dotfiles (9 files)
 ├── install/                       # Installation scripts

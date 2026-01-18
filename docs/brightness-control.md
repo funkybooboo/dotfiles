@@ -6,8 +6,8 @@ Custom brightness control system with intelligent step sizing and minimum bright
 ## Configuration
 - **Control Tool:** Brightnessctl 0.5.1-3
 - **OSD Display:** SwayOSD 0.2.1-2
-- **Wrapper Script:** `~/.local/share/omarchy/bin/omarchy-cmd-brightness`
-- **Key Bindings:** `~/.local/share/omarchy/default/hypr/bindings/media.conf`
+- **Wrapper Script:** `~/.local/bin/omarchy-cmd-brightness`
+- **Key Bindings:** `~/.config/hypr/bindings.conf`
 
 ## Behavior
 - **Step Size:** 5% (jumps in increments of 5)
@@ -44,12 +44,12 @@ Custom brightness control system with intelligent step sizing and minimum bright
 - Displays OSD feedback via SwayOSD
 
 **Files:**
-- Script: `~/.local/share/omarchy/bin/omarchy-cmd-brightness`
-- Bindings: `~/.local/share/omarchy/default/hypr/bindings/media.conf:9-10,15-16`
-- Dotfiles Source: `~/dotfiles/omarchy/bin/omarchy-cmd-brightness`
-- Dotfiles Bindings: `~/dotfiles/omarchy/hypr/bindings/media.conf`
+- Script: `~/.local/bin/omarchy-cmd-brightness`
+- Bindings: `~/.config/hypr/bindings.conf`
+- Dotfiles Source (script): `~/dotfiles/home/.local/bin/omarchy-cmd-brightness`
+- Dotfiles Source (bindings): `~/dotfiles/home/.config/hypr/bindings.conf`
 
-**Note:** These files are managed through dotfiles and automatically symlinked via `~/dotfiles/setup.sh`
+**Note:** These files are update-proof and won't be affected by omarchy updates. The script is in PATH and takes precedence over omarchy's default, and the bindings are in user config which overrides omarchy defaults.
 
 ## Manual Control
 
@@ -76,7 +76,8 @@ brightnessctl get         # Get current value
 **If brightness keys don't work:**
 1. Check if brightnessctl works: `brightnessctl info`
 2. Reload Hyprland config: `hyprctl reload`
-3. Check wrapper script permissions: `ls -l ~/.local/share/omarchy/bin/omarchy-cmd-brightness`
+3. Check wrapper script permissions: `ls -l ~/.local/bin/omarchy-cmd-brightness`
+4. Verify script is in PATH: `which omarchy-cmd-brightness`
 
 **If OSD doesn't appear:**
 1. Check if SwayOSD is running: `pgrep swayosd`

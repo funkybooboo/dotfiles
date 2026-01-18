@@ -167,57 +167,12 @@ if [[ -d "home/.local/share" ]]; then
   echo ">>> Linking shared files into ~/.local/share"
   run_cmd mkdir -p "$HOME/.local/share"
 
-  # Link omarchy and other share items
+  # Link all items from .local/share
   for entry in home/.local/share/*; do
     dest="$HOME/.local/share/$(basename "$entry")"
     src="$PWD/$entry"
-
-    # If it's the omarchy directory, handle it specially
-    if [[ "$(basename "$entry")" == "omarchy" && -d "$entry" ]]; then
-      run_cmd mkdir -p "$HOME/.local/share/omarchy"
-
-      # Link omarchy bin scripts
-      if [[ -d "$entry/bin" ]]; then
-        run_cmd mkdir -p "$HOME/.local/share/omarchy/bin"
-        for script in "$entry/bin"/*; do
-          if [[ -f "$script" ]]; then
-            script_dest="$HOME/.local/share/omarchy/bin/$(basename "$script")"
-            script_src="$PWD/$script"
-            if check_should_create "$script_dest" "$script_src"; then
-              run_cmd ln -s "$script_src" "$script_dest"
-            fi
-          fi
-        done
-      fi
-
-      # Link omarchy hypr configs
-      if [[ -d "$entry/hypr" ]]; then
-        run_cmd mkdir -p "$HOME/.local/share/omarchy/hypr"
-        while IFS= read -r src_file; do
-          src_file_abs="$PWD/$src_file"
-          rel="${src_file#"$entry/hypr/"}"
-          hypr_dest="$HOME/.local/share/omarchy/hypr/$rel"
-          if check_should_create "$hypr_dest" "$src_file_abs"; then
-            run_cmd mkdir -p "$(dirname "$hypr_dest")"
-            run_cmd ln -s "$src_file_abs" "$hypr_dest"
-          fi
-        done < <(find "$entry/hypr" -type f)
-      fi
-
-      # Link omarchy README
-      if [[ -f "$entry/README.md" ]]; then
-        run_cmd mkdir -p "$HOME/.local/share/omarchy/home"
-        readme_dest="$HOME/.local/share/omarchy/home/README.md"
-        readme_src="$PWD/$entry/README.md"
-        if check_should_create "$readme_dest" "$readme_src"; then
-          run_cmd ln -s "$readme_src" "$readme_dest"
-        fi
-      fi
-    else
-      # For non-omarchy items, just symlink directly
-      if check_should_create "$dest" "$src"; then
-        run_cmd ln -s "$src" "$dest"
-      fi
+    if check_should_create "$dest" "$src"; then
+      run_cmd ln -s "$src" "$dest"
     fi
   done
 fi
