@@ -1,4 +1,3 @@
-
 " An example for a vimrc file.
 "
 " Maintainer:	The Vim Project <https://github.com/vim/vim>
@@ -57,4 +56,4 @@ set expandtab      " Use spaces instead of tabs
 set shiftwidth=4   " Set the number of spaces for indentation
 set softtabstop=4  " Set the number of spaces to insert when pressing Tab
 set tabstop=4      " Set the width of a tab character (for display purposes)
-
+set relativenumber " Use relative line numbers
