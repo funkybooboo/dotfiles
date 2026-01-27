@@ -56,23 +56,8 @@ HISTSIZE=50000              # Increased for fish-like experience
 HISTFILESIZE=100000         # Increased for fish-like experience
 HISTTIMEFORMAT="%F %T "
 
-# Fish-like command timing (show execution time for commands > 1s)
-__command_timer_start() {
-  __command_start_time=${__command_start_time:-$SECONDS}
-}
-
-__command_timer_stop() {
-  if [ -n "$__command_start_time" ]; then
-    local elapsed=$((SECONDS - __command_start_time))
-    if [ $elapsed -gt 1 ]; then
-      echo -e "\033[2m⏱  ${elapsed}s\033[0m"
-    fi
-  fi
-  unset __command_start_time
-}
-
-trap '__command_timer_start' DEBUG
-PROMPT_COMMAND="__command_timer_stop; history -a; history -n; ${PROMPT_COMMAND}"
+# Fish-like history syncing across sessions
+PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
 
 # ============================================================================
 # SHELL OPTIONS (Fish-like features)
@@ -149,6 +134,9 @@ fi
 __add_to_path_if_exists "$HOME/.deno/bin"
 __add_to_path_if_exists "$HOME/.local/share/pnpm"
 __add_to_path_if_exists "$HOME/.config/composer/vendor/bin"
+__add_to_path_if_exists "/var/lib/snapd/snap/bin"
+
+__add_to_path_if_exists "$HOME/.opencode/bin"
 
 # ============================================================================
 # ALIASES (minimal - tools as developers intended)
@@ -174,6 +162,10 @@ fi
 # VSCodium - only if code doesn't exist
 if command -v codium &> /dev/null; then
   command -v code &> /dev/null || alias code='codium'
+fi
+
+if command -v go-task &> /dev/null; then
+  command -v task &> /dev/null || alias task='go-task'
 fi
 
 # Server aliases
@@ -257,6 +249,56 @@ histstat() {
   history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl | head -n20
 }
 
+# Search command history with fzf
+h() {
+  local cmd
+  cmd=$(history | awk '{$1=""; print substr($0,2)}' | fzf --tac --no-sort --exact --query="$*")
+  if [ -n "$cmd" ]; then
+    echo "$cmd"
+    eval "$cmd"
+  fi
+}
+
+# View CSV files interactively with visidata
+csv() {
+  if [ -f "$1" ]; then
+    visidata "$1"
+  else
+    echo "File not found: $1"
+    return 1
+  fi
+}
+
+# View images in terminal with chafa
+img() {
+  if [ -f "$1" ]; then
+    chafa "$1"
+  else
+    echo "File not found: $1"
+    return 1
+  fi
+}
+
+# View images with timg (supports animations)
+imga() {
+  if [ -f "$1" ]; then
+    timg "$@"
+  else
+    echo "File not found: $1"
+    return 1
+  fi
+}
+
+# View PDFs in terminal (convert to images with timg)
+pdf() {
+  if [ -f "$1" ]; then
+    timg "$1"
+  else
+    echo "File not found: $1"
+    return 1
+  fi
+}
+
 # ============================================================================
 # DIRECTORY NAVIGATION
 # ============================================================================
@@ -273,23 +315,32 @@ alias -- -='cd -'
 # TOOL INITIALIZATION
 # ============================================================================
 
-# pyenv
+# Lazy load pyenv - only initialize when actually used
 if command -v pyenv &> /dev/null; then
-  if [ -z "$PYENV_LOADED" ]; then
-    export PYENV_LOADED=1
-    eval "$(pyenv init -)"
-  fi
+  export PYENV_ROOT="$HOME/.pyenv"
+  __add_to_path_if_exists "$PYENV_ROOT/bin"
+
+  pyenv() {
+    if [ -z "$PYENV_LOADED" ]; then
+      export PYENV_LOADED=1
+      eval "$(command pyenv init -)"
+    fi
+    command pyenv "$@"
+  }
 fi
 
-# rbenv
+# Lazy load rbenv - only initialize when actually used
 if command -v rbenv &> /dev/null; then
-  if [ -z "$RBENV_LOADED" ]; then
-    export RBENV_LOADED=1
-    eval "$(rbenv init - bash)"
-  fi
+  rbenv() {
+    if [ -z "$RBENV_LOADED" ]; then
+      export RBENV_LOADED=1
+      eval "$(command rbenv init - bash)"
+    fi
+    command rbenv "$@"
+  }
 fi
 
-# fnm (Fast Node Manager)
+# fnm (Fast Node Manager) - keep auto-loading for --use-on-cd feature
 if command -v fnm &> /dev/null; then
   eval "$(fnm env --use-on-cd)"
 fi
@@ -341,10 +392,16 @@ if [ -f "$HOME/.cargo/env" ]; then
   source "$HOME/.cargo/env"
 fi
 
-# asdf version manager
+# Lazy load asdf - only when actually used
 if [ -f "$HOME/.asdf/asdf.sh" ]; then
-  source "$HOME/.asdf/asdf.sh"
-  [ -f "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
+  asdf() {
+    if [ -z "$ASDF_LOADED" ]; then
+      export ASDF_LOADED=1
+      source "$HOME/.asdf/asdf.sh"
+      [ -f "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
+    fi
+    command asdf "$@"
+  }
 fi
 
 # fzf (fuzzy finder) - Fish-like configuration
@@ -415,7 +472,3 @@ if [[ ${BLE_VERSION-} ]]; then
 fi
 
 export GPG_TTY=$(tty)
-
-
-# opencode
-export PATH=/home/nate/.opencode/bin:$PATH

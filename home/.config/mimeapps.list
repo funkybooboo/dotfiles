@@ -46,3 +46,4 @@ video/x-theora+ogg=mpv.desktop
 application/ogg=mpv.desktop
 x-scheme-handler/mailto=HEY.desktop
 x-scheme-handler/jetbrains=jetbrains-toolbox.desktop
+x-scheme-handler/bruno=bruno.desktop

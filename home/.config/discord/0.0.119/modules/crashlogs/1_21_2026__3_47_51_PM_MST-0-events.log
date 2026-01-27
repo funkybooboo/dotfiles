@@ -1,0 +1,26 @@
+1/21/2026, 3:47:51 PM MST 0: 
+
+----------------------------------------------
+1/21/2026, 3:47:51 PM MST 1: Discord starting: {"releaseChannel":"stable","version":"0.0.119"}, modulepath: /home/nate/.config/discord/0.0.119/modules
+1/21/2026, 3:47:51 PM MST 2: ✅ webContents.created web1 ""
+1/21/2026, 3:47:51 PM MST 3: ✅ window.created win1 "discord"
+1/21/2026, 3:47:51 PM MST 4: ✅ webContents.did-finish-load web1
+1/21/2026, 3:48:20 PM MST 5: before-quit
+1/21/2026, 3:48:20 PM MST 6: window.close win1
+1/21/2026, 3:48:41 PM MST 0: 
+
+----------------------------------------------
+1/21/2026, 3:48:41 PM MST 1: Discord starting: {"releaseChannel":"stable","version":"0.0.119"}, modulepath: /home/nate/.config/discord/0.0.119/modules
+1/21/2026, 3:48:41 PM MST 2: ✅ webContents.created web1 ""
+1/21/2026, 3:48:41 PM MST 3: ✅ window.created win1 "discord"
+1/21/2026, 3:48:41 PM MST 4: ✅ webContents.did-finish-load web1
+1/21/2026, 3:48:45 PM MST 5: before-quit
+1/21/2026, 3:48:46 PM MST 6: window.close win1
+1/21/2026, 3:49:55 PM MST 0: 
+
+----------------------------------------------
+1/21/2026, 3:49:55 PM MST 1: Discord starting: {"releaseChannel":"stable","version":"0.0.119"}, modulepath: /home/nate/.config/discord/0.0.119/modules
+1/21/2026, 3:49:55 PM MST 2: ✅ webContents.created web1 ""
+1/21/2026, 3:49:55 PM MST 3: ✅ window.created win1 "discord"
+1/21/2026, 3:49:55 PM MST 4: ✅ webContents.did-finish-load web1
+1/21/2026, 3:50:02 PM MST 5: before-quit
