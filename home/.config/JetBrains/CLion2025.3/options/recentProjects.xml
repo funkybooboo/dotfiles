@@ -1,0 +1,41 @@
+<application>
+  <component name="RecentProjectsManager">
+    <option name="additionalInfo">
+      <map>
+        <entry key="$USER_HOME$/projects/nsegcm">
+          <value>
+            <RecentProjectMetaInfo frameTitle="nsegcm – analysis.cpp" projectWorkspaceId="38pBLBor5DUEFrOeWn90JKWJKs0">
+              <option name="activationTimestamp" value="1769528350114" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="build" value="CL-253.29346.141" />
+              <option name="buildTimestamp" value="1766037780000" />
+              <option name="colorInfo">
+                <RecentProjectColorInfo associatedIndex="3" />
+              </option>
+              <frame x="4178" y="28" width="1916" height="1050" />
+              <option name="productionCode" value="CL" />
+              <option name="projectOpenTimestamp" value="1769486574869" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/projects/university/cs6030_high_performance_computing/hw2">
+          <value>
+            <RecentProjectMetaInfo frameTitle="hw2" opened="true" projectWorkspaceId="38qY1IV2YPEBHMDgKBQ3FENmFSY">
+              <option name="activationTimestamp" value="1769551632196" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="build" value="CL-253.29346.141" />
+              <option name="buildTimestamp" value="1766037780000" />
+              <option name="colorInfo">
+                <RecentProjectColorInfo associatedIndex="4" />
+              </option>
+              <frame x="4178" y="28" width="1916" height="1050" />
+              <option name="productionCode" value="CL" />
+              <option name="projectOpenTimestamp" value="1769528352063" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="lastOpenedProject" value="$USER_HOME$/projects/university/cs6030_high_performance_computing/hw2" />
+  </component>
+</application>

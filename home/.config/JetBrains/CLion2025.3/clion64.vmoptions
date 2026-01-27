@@ -2,3 +2,4 @@
 -Dide.managed.by.toolbox=/opt/jetbrains-toolbox/jetbrains-toolbox
 -Dtoolbox.notification.token=4bdfbf22-3cee-4e4c-adc6-5ccd86b19515
 -Dtoolbox.notification.portFile=/home/nate/.cache/JetBrains/Toolbox/ports/ed50a95d-5b84-401b-869f-d3b7b5e3b8bb.port
+-Didea.suppressed.plugins.set.selector=radler

@@ -1,0 +1,713 @@
+<project version="4">
+  <component name="BookmarksManager">
+    <option name="groups">
+      <GroupState>
+        <option name="name" value="hw2" />
+      </GroupState>
+    </option>
+  </component>
+  <component name="FileEditorManager">
+    <leaf ideFingerprint="25xigafwkol7t" />
+  </component>
+  <component name="FileTypeUsageLocalSummary"><![CDATA[{
+  "data": {
+    "C/C++ Header": {
+      "usageCount": 15,
+      "lastUsed": 1769546214401
+    },
+    "C/C++": {
+      "usageCount": 44,
+      "lastUsed": 1769550378879
+    },
+    "GitIgnore file": {
+      "usageCount": 3,
+      "lastUsed": 1769531352304
+    },
+    "EditorConfig": {
+      "usageCount": 1,
+      "lastUsed": 1769533277958
+    },
+    "textmate": {
+      "usageCount": 1,
+      "lastUsed": 1769531368431
+    },
+    "JSON": {
+      "usageCount": 1,
+      "lastUsed": 1769529360755
+    },
+    "Markdown": {
+      "usageCount": 14,
+      "lastUsed": 1769548471409
+    },
+    "YAML": {
+      "usageCount": 2,
+      "lastUsed": 1769534285913
+    }
+  }
+}]]></component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>time_histogram</find>
+      <find />
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="IdeDocumentHistory"><![CDATA[{
+  "changedPaths": [
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/src/main.cpp",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/docs/instructions.md",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/docs/q&a.md",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/docs/todo.md",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/.gitignore",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/src/histogram_core.cpp",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/src/benchmark.cpp",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/README.md",
+    "/home/nate/projects/university/cs6030_high_performance_computing/hw2/docs/discussion.md"
+  ]
+}]]></component>
+  <component name="LanguageUsageStatistics">
+    <language id="C++">
+      <summary usageCount="59" lastUsage="1769550378879" />
+    </language>
+    <language id="EditorConfig">
+      <summary usageCount="1" lastUsage="1769533277958" />
+    </language>
+    <language id="GitIgnore">
+      <summary usageCount="3" lastUsage="1769531352304" />
+    </language>
+    <language id="JSON">
+      <summary usageCount="1" lastUsage="1769529360755" />
+    </language>
+    <language id="Markdown">
+      <summary usageCount="14" lastUsage="1769548471409" />
+    </language>
+    <language id="textmate">
+      <summary usageCount="1" lastUsage="1769531368431" />
+    </language>
+    <language id="yaml">
+      <summary usageCount="2" lastUsage="1769534285913" />
+    </language>
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/docs}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/include}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/plans}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/src}" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+          <presentation>
+            <attributes />
+            <data iconPath="expui/toolwindows/project.svg" iconPlugin="com.intellij" isLeaf="false" text="Histogram" />
+            <item name="Histogram" type="b2602c69:ProjectViewProjectNode" />
+            <presentation>
+              <attributes>
+                <map>
+                  <entry key="filePath" value="$PROJECT_DIR$" />
+                </map>
+              </attributes>
+              <data iconPath="expui/nodes/module.svg" iconPlugin="com.intellij" isLeaf="false" text="hw2" />
+              <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2}" type="462c0819:PsiDirectoryNode" />
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.cache" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text=".cache" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/.cache}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.claude" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text=".claude" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/.claude}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/build" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="build" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/build}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/build_sanitize" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="build_sanitize" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/build_sanitize}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/cmake-build-debug" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="cmake-build-debug" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/cmake-build-debug}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/docs" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="docs" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/docs}" type="462c0819:PsiDirectoryNode" />
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/docs/4-ParallelSoftware.pdf" />
+                    </map>
+                  </attributes>
+                  <data iconPath="expui/fileTypes/unknown.svg" iconPlugin="com.intellij" isLeaf="true" text="4-ParallelSoftware.pdf" />
+                  <item name="4-ParallelSoftware.pdf" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/docs/discussion.md" />
+                    </map>
+                  </attributes>
+                  <data iconPath="icons/expui/markdown.svg" iconPlugin="org.intellij.plugins.markdown" isLeaf="true" text="discussion.md" />
+                  <item name="discussion.md" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/docs/instructions.md" />
+                    </map>
+                  </attributes>
+                  <data iconPath="icons/expui/markdown.svg" iconPlugin="org.intellij.plugins.markdown" isLeaf="true" text="instructions.md" />
+                  <item name="instructions.md" type="ab9368bb:PsiFileNode" />
+                </presentation>
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/include" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="include" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/include}" type="462c0819:PsiDirectoryNode" />
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/include/benchmark.hpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/h.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="benchmark.hpp" />
+                  <item name="benchmark.hpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/include/histogram_core.hpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/h.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="histogram_core.hpp" />
+                  <item name="histogram_core.hpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/include/histogram_io.hpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/h.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="histogram_io.hpp" />
+                  <item name="histogram_io.hpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/plans" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="plans" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/plans}" type="462c0819:PsiDirectoryNode" />
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/plans/todo.md" />
+                    </map>
+                  </attributes>
+                  <data iconPath="icons/expui/markdown.svg" iconPlugin="org.intellij.plugins.markdown" isLeaf="true" text="todo.md" />
+                  <item name="todo.md" type="ab9368bb:PsiFileNode" />
+                </presentation>
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/src" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="src" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/src}" type="462c0819:PsiDirectoryNode" />
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/src/benchmark.cpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/cpp.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="benchmark.cpp" />
+                  <item name="benchmark.cpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/src/histogram_core.cpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/cpp.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="histogram_core.cpp" />
+                  <item name="histogram_core.cpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/src/histogram_io.cpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/cpp.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="histogram_io.cpp" />
+                  <item name="histogram_io.cpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+                <presentation>
+                  <attributes>
+                    <map>
+                      <entry key="filePath" value="$PROJECT_DIR$/src/main.cpp" />
+                    </map>
+                  </attributes>
+                  <data iconModule="intellij.cidr.lang.base" iconPath="icons/expui/fileTypes/cpp.svg" iconPlugin="com.intellij.clion" isLeaf="true" text="main.cpp" />
+                  <item name="main.cpp" type="ab9368bb:PsiFileNode" />
+                </presentation>
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/tests" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="tests" />
+                <item name="dir{file:///home/nate/projects/university/cs6030_high_performance_computing/hw2/tests}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.clang-format" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/fileTypes/yaml.svg" iconPlugin="com.intellij" isLeaf="true" text=".clang-format" />
+                <item name=".clang-format" type="ab9368bb:PsiFileNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.editorconfig" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/fileTypes/editorConfig.svg" iconPlugin="com.intellij" isLeaf="true" text=".editorconfig" />
+                <item name=".editorconfig" type="ab9368bb:PsiFileNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.gitignore" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/fileTypes/ignored.svg" iconPlugin="com.intellij" isLeaf="true" text=".gitignore" />
+                <item name=".gitignore" type="ab9368bb:PsiFileNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/CMakeLists.txt" />
+                  </map>
+                </attributes>
+                <data iconPath="icons/expui/CMake.svg" iconPlugin="com.intellij.cmake" isLeaf="true" text="CMakeLists.txt" />
+                <item name="CMakeLists.txt" type="ab9368bb:PsiFileNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/README.md" />
+                  </map>
+                </attributes>
+                <data iconPath="icons/expui/markdown.svg" iconPlugin="org.intellij.plugins.markdown" isLeaf="true" text="README.md" />
+                <item name="README.md" type="ab9368bb:PsiFileNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/Taskfile.yml" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/fileTypes/yaml.svg" iconPlugin="com.intellij" isLeaf="true" text="Taskfile.yml" />
+                <item name="Taskfile.yml" type="ab9368bb:PsiFileNode" />
+              </presentation>
+            </presentation>
+            <presentation>
+              <attributes />
+              <data iconPath="expui/nodes/library.svg" iconPlugin="com.intellij" isLeaf="false" text="External Libraries" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </presentation>
+            <presentation>
+              <attributes />
+              <data iconPath="expui/fileTypes/scratches.svg" iconPlugin="com.intellij" isLeaf="true" text="Scratches and Consoles" />
+              <item name="Scratches and Consoles" type="b85a3e1f:ScratchTreeStructureProvider$MyProjectNode" />
+            </presentation>
+          </presentation>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="RunConfigurationStartHistory">
+    <option name="allConfigurationsExpanded" value="true" />
+    <history>
+      <element setting="CMake Application.histogram" />
+      <element setting="CMake Application.gtest_main" />
+      <element setting="Google Test.test_threading" />
+      <element setting="Google Test.test_helpers" />
+      <element setting="Google Test.test_correctness" />
+      <element setting="CMake Application.gtest" />
+    </history>
+  </component>
+  <component name="TerminalTabsStorage">
+    <option name="tabs">
+      <TerminalSessionPersistedTab name="Local" workingDirectory="$PROJECT_DIR$">
+        <option name="shellCommand">
+          <option value="/usr/bin/bash" />
+          <option value="-i" />
+        </option>
+      </TerminalSessionPersistedTab>
+    </option>
+  </component>
+  <component name="TestHistory">
+    <history-entry file="test_correctness - 2026.01.27 at 08h 41m 39s.xml">
+      <configuration name="test_correctness" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="test_helpers - 2026.01.27 at 08h 41m 44s.xml">
+      <configuration name="test_helpers" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="test_threading - 2026.01.27 at 08h 41m 49s.xml">
+      <configuration name="test_threading" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="17051000" />
+  </component>
+  <component name="ToolWindowManager">
+    <layoutV2>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24765135" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" weight="0.20904762" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32999998" />
+      <window_info anchor="bottom" id="Services" order="4" />
+      <window_info anchor="bottom" id="CMake" order="5" weight="0.32999998" />
+      <window_info anchor="bottom" id="Run" order="6" show_stripe_button="false" weight="0.32999998" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32999998" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+      <window_info anchor="right" id="Meson" order="5" />
+      <unified_weights bottom="0.20904762" left="0.24765135" />
+    </layoutV2>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33011484" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" />
+      <window_info anchor="bottom" id="Terminal" order="3" />
+      <window_info anchor="bottom" id="Services" order="4" />
+      <window_info anchor="bottom" id="CMake" order="5" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.32999998" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32999998" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+      <window_info anchor="right" id="Meson" order="5" />
+      <unified_weights bottom="0.32999998" left="0.33011484" />
+    </layout-to-restore>
+    <recentWindows>
+      <value>Project</value>
+      <value>Problems View</value>
+      <value>CMake</value>
+      <value>Terminal</value>
+      <value>Run</value>
+      <value>Messages</value>
+    </recentWindows>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1812" height="287" key="GridCell.Tab.0.bottom.ideScale=125" timestamp="1769551632193">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1812" height="287" key="GridCell.Tab.0.bottom.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080@4176.0.1920.1080" timestamp="1769551632193" />
+    <state width="1812" height="287" key="GridCell.Tab.0.center.ideScale=125" timestamp="1769551632193">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1812" height="287" key="GridCell.Tab.0.center.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080@4176.0.1920.1080" timestamp="1769551632193" />
+    <state width="1812" height="287" key="GridCell.Tab.0.left.ideScale=125" timestamp="1769551632193">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1812" height="287" key="GridCell.Tab.0.left.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080@4176.0.1920.1080" timestamp="1769551632193" />
+    <state width="1812" height="287" key="GridCell.Tab.0.right.ideScale=125" timestamp="1769551632193">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1812" height="287" key="GridCell.Tab.0.right.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080@4176.0.1920.1080" timestamp="1769551632193" />
+    <state x="4736" y="253" key="conflicts.dialog.ideScale=125" timestamp="1769532994534">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state x="4736" y="253" key="conflicts.dialog.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080@4176.0.1920.1080" timestamp="1769532994534" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/compile_commands.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2543" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/instructions.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SHOW_EDITOR" is_vertical_split="false">
+          <first_editor relative-caret-position="567">
+            <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/benchmark.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/todo.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SHOW_EDITOR" is_vertical_split="false">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="742">
+          <caret line="114" selection-start-line="114" selection-end-line="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_edge_cases_extended.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="715">
+          <caret line="385" selection-start-line="385" selection-end-line="385" />
+          <folding>
+            <marker date="1769532439912" expanded="true" signature="237:318" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_threading.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="715">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_assignment_compliance.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="715">
+          <caret line="194" selection-start-line="194" selection-end-line="194" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_utils.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <marker date="1769461588254" expanded="true" signature="127:236" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_correctness.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <marker date="1769463414886" expanded="true" signature="93:157" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_comprehensive_coverage.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <marker date="1769533127462" expanded="true" signature="493:614" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.editorconfig">
+      <provider editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="org.editorconfig.configmanagement.editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/histogram_core.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="81" column="17" selection-start-line="81" selection-start-column="17" selection-end-line="81" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_correctness_advanced.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="688">
+          <caret line="372" selection-start-line="372" selection-end-line="372" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_error_handling.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Taskfile.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-81" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_performance_scaling.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+          <folding>
+            <marker date="1769534280935" expanded="true" signature="375:418" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_helpers.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/histogram_io.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-149" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/histogram_io.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="837">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+          <folding>
+            <marker date="1769529928477" expanded="true" signature="83:149" ph="##include ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plans/todo.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SHOW_EDITOR" is_vertical_split="false">
+          <first_editor relative-caret-position="-7088">
+            <caret line="75" column="18" lean-forward="true" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
+            <folding>
+              <marker date="1769532723035" expanded="true" signature="2801:2889" ph="Should be identical..." />
+            </folding>
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/benchmark.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/histogram_core.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="205" lean-forward="true" selection-start-line="205" selection-end-line="205" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/discussion.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SHOW_EDITOR" is_vertical_split="false">
+          <first_editor relative-caret-position="724">
+            <caret line="260" lean-forward="true" selection-start-line="260" selection-end-line="260" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SHOW_EDITOR" is_vertical_split="false">
+          <first_editor relative-caret-position="-518">
+            <caret line="20" selection-start-line="20" selection-end-line="20" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

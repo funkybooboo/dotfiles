@@ -12,8 +12,8 @@
   <component name="FileTypeUsageLocalSummary"><![CDATA[{
   "data": {
     "TypeScript": {
-      "usageCount": 4,
-      "lastUsed": 1768856153392
+      "usageCount": 15,
+      "lastUsed": 1769026174148
     },
     "Markdown": {
       "usageCount": 1,
@@ -32,6 +32,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find />
+      <find>console</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -56,7 +57,7 @@
       <summary usageCount="1" lastUsage="1768841021184" />
     </language>
     <language id="TypeScript">
-      <summary usageCount="4" lastUsage="1768856153392" />
+      <summary usageCount="15" lastUsage="1769026174148" />
     </language>
   </component>
   <component name="ProjectRoots">
@@ -87,6 +88,30 @@
               <item name="alle" type="b2602c69:ProjectViewProjectNode" />
               <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
               <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters/data}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
               <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -95,6 +120,50 @@
               <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
               <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
               <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/config}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/data}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/http}" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="alle" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dir{file:///home/nate/projects/alle}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+              <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/logging}" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -113,11 +182,29 @@
               <presentation>
                 <attributes>
                   <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/.claude" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text=".claude" />
+                <item name="dir{file:///home/nate/projects/alle/.claude}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
                     <entry key="filePath" value="$PROJECT_DIR$/.idea" />
                   </map>
                 </attributes>
                 <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text=".idea" />
                 <item name="dir{file:///home/nate/projects/alle/.idea}" type="462c0819:PsiDirectoryNode" />
+              </presentation>
+              <presentation>
+                <attributes>
+                  <map>
+                    <entry key="filePath" value="$PROJECT_DIR$/bruno" />
+                  </map>
+                </attributes>
+                <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="bruno" />
+                <item name="dir{file:///home/nate/projects/alle/bruno}" type="462c0819:PsiDirectoryNode" />
               </presentation>
               <presentation>
                 <attributes>
@@ -179,6 +266,96 @@
                     </attributes>
                     <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="src" />
                     <item name="dir{file:///home/nate/projects/alle/packages/server/src}" type="462c0819:PsiDirectoryNode" />
+                    <presentation>
+                      <attributes>
+                        <map>
+                          <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters" />
+                        </map>
+                      </attributes>
+                      <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="adapters" />
+                      <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters}" type="462c0819:PsiDirectoryNode" />
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/config" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="config" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters/config}" type="462c0819:PsiDirectoryNode" />
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/data" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="data" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters/data}" type="462c0819:PsiDirectoryNode" />
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/data/InMemoryTodoRepository.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="InMemoryTodoRepository.ts" />
+                          <item name="InMemoryTodoRepository.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/http" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="http" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters/http}" type="462c0819:PsiDirectoryNode" />
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/logging" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="logging" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/server/src/adapters/logging}" type="462c0819:PsiDirectoryNode" />
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/adapters/README.md" />
+                          </map>
+                        </attributes>
+                        <data iconPath="icons/expui/markdown.svg" iconPlugin="org.intellij.plugins.markdown" isLeaf="true" text="README.md" />
+                        <item name="README.md" type="ab9368bb:PsiFileNode" />
+                      </presentation>
+                    </presentation>
+                    <presentation>
+                      <attributes>
+                        <map>
+                          <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/utils" />
+                        </map>
+                      </attributes>
+                      <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="utils" />
+                      <item name="dir{file:///home/nate/projects/alle/packages/server/src/utils}" type="462c0819:PsiDirectoryNode" />
+                    </presentation>
+                    <presentation>
+                      <attributes>
+                        <map>
+                          <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/container.ts" />
+                        </map>
+                      </attributes>
+                      <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="container.ts" />
+                      <item name="container.ts" type="ab9368bb:PsiFileNode" />
+                    </presentation>
+                    <presentation>
+                      <attributes>
+                        <map>
+                          <entry key="filePath" value="$PROJECT_DIR$/packages/server/src/index.ts" />
+                        </map>
+                      </attributes>
+                      <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="index.ts" />
+                      <item name="index.ts" type="ab9368bb:PsiFileNode" />
+                    </presentation>
                   </presentation>
                   <presentation>
                     <attributes>
@@ -206,6 +383,15 @@
                     </attributes>
                     <data iconPath="expui/fileTypes/json.svg" iconPlugin="com.intellij" isLeaf="true" text="package.json" />
                     <item name="package.json" type="ab9368bb:PsiFileNode" />
+                  </presentation>
+                  <presentation>
+                    <attributes>
+                      <map>
+                        <entry key="filePath" value="$PROJECT_DIR$/packages/server/tsconfig.json" />
+                      </map>
+                    </attributes>
+                    <data iconPath="expui/fileTypes/json.svg" iconPlugin="com.intellij" isLeaf="true" text="tsconfig.json" />
+                    <item name="tsconfig.json" type="ab9368bb:PsiFileNode" />
                   </presentation>
                 </presentation>
                 <presentation>
@@ -241,6 +427,105 @@
                       </attributes>
                       <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="adapters" />
                       <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters}" type="462c0819:PsiDirectoryNode" />
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/config" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="config" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/config}" type="462c0819:PsiDirectoryNode" />
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/config/ConfigProvider.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="ConfigProvider.ts" />
+                          <item name="ConfigProvider.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/data" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="data" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/data}" type="462c0819:PsiDirectoryNode" />
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/data/TodoRepository.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="TodoRepository.ts" />
+                          <item name="TodoRepository.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/http" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="http" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/http}" type="462c0819:PsiDirectoryNode" />
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/http/FetchHttpClient.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="FetchHttpClient.ts" />
+                          <item name="FetchHttpClient.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/http/HttpClient.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="HttpClient.ts" />
+                          <item name="HttpClient.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                      </presentation>
+                      <presentation>
+                        <attributes>
+                          <map>
+                            <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/logging" />
+                          </map>
+                        </attributes>
+                        <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="logging" />
+                        <item name="dir{file:///home/nate/projects/alle/packages/shared/src/adapters/logging}" type="462c0819:PsiDirectoryNode" />
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/logging/ConsoleLoggerBase.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="ConsoleLoggerBase.ts" />
+                          <item name="ConsoleLoggerBase.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                        <presentation>
+                          <attributes>
+                            <map>
+                              <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/adapters/logging/Logger.ts" />
+                            </map>
+                          </attributes>
+                          <data iconPath="icons/expui/fileTypes/typeScript.svg" iconPlugin="JavaScript" isLeaf="true" text="Logger.ts" />
+                          <item name="Logger.ts" type="ab9368bb:PsiFileNode" />
+                        </presentation>
+                      </presentation>
+                    </presentation>
+                    <presentation>
+                      <attributes>
+                        <map>
+                          <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/errors" />
+                        </map>
+                      </attributes>
+                      <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="errors" />
+                      <item name="dir{file:///home/nate/projects/alle/packages/shared/src/errors}" type="462c0819:PsiDirectoryNode" />
                     </presentation>
                     <presentation>
                       <attributes>
@@ -257,7 +542,7 @@
                           <entry key="filePath" value="$PROJECT_DIR$/packages/shared/src/utils" />
                         </map>
                       </attributes>
-                      <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="true" text="utils" />
+                      <data iconPath="expui/nodes/folder.svg" iconPlugin="com.intellij" isLeaf="false" text="utils" />
                       <item name="dir{file:///home/nate/projects/alle/packages/shared/src/utils}" type="462c0819:PsiDirectoryNode" />
                     </presentation>
                     <presentation>
@@ -371,11 +656,11 @@
     </panes>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3054000" />
+    <option name="totallyTimeSpent" value="11684000" />
   </component>
   <component name="ToolWindowManager">
     <layoutV2>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23256332" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2276766" />
       <window_info id="Commit" order="1" weight="0.25" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" order="0" />
@@ -388,7 +673,7 @@
       <window_info anchor="right" id="Database" order="2" weight="0.25" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
       <window_info anchor="right" id="Maven" order="4" weight="0.25" />
-      <unified_weights left="0.23256332" />
+      <unified_weights left="0.2276766" />
     </layoutV2>
     <recentWindows>
       <value>Project</value>
@@ -408,6 +693,21 @@
     <entry file="file://$PROJECT_DIR$/packages/shared/package.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/packages/client/src/adapters/http/HttpClient.ts" />
+    <entry file="file://$PROJECT_DIR$/packages/client/src/adapters/config/ViteConfigProvider.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="11" column="3" lean-forward="true" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/server/src/adapters/http/types.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="526">
+          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/packages/shared/src/constants.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -415,12 +715,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/packages/shared/src/utils/date.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2633" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/server/src/container.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#446#517#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/server/src/adapters/data/InMemoryTodoRepository.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages/shared/src/adapters/data/TodoRepository.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/packages/server/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        <state relative-caret-position="137">
+          <caret line="128" column="32" lean-forward="true" selection-start-line="128" selection-start-column="32" selection-end-line="128" selection-end-column="32" />
           <folding>
-            <element signature="e#133#192#0" expanded="true" />
+            <element signature="e#282#499#0" expanded="true" />
           </folding>
         </state>
       </provider>

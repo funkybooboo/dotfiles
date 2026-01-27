@@ -1,0 +1,21 @@
+<application>
+  <component name="DimensionService">
+    <size key="GridCell.Tab.0.left.4176.0.1920.1080@120dpi" width="1812" height="287" />
+    <size key="GridCell.Tab.0.center.4176.0.1920.1080@120dpi" width="1812" height="287" />
+    <size key="GridCell.Tab.0.right.4176.0.1920.1080@120dpi" width="1812" height="287" />
+    <size key="GridCell.Tab.0.bottom.4176.0.1920.1080@120dpi" width="1812" height="287" />
+  </component>
+  <component name="WindowManager">
+    <frame x="4178" y="28" width="1916" height="1050" />
+  </component>
+  <component name="WindowStateApplicationService">
+    <state x="4871" y="266" key="FileChooserDialogImpl.ideScale=125" timestamp="1769486572547">
+      <screen x="4176" y="0" width="1920" height="1080" />
+    </state>
+    <state x="4871" y="266" key="FileChooserDialogImpl.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080" timestamp="1769486572547" />
+    <state width="774" height="353" key="ShowUsagesActions.dimensionServiceKey.ideScale=125" timestamp="1769536843772">
+      <screen x="0" y="0" width="2256" height="1504" />
+    </state>
+    <state width="774" height="353" key="ShowUsagesActions.dimensionServiceKey.ideScale=125/0.0.2256.1504/2256.0.1920.1080/4176.0.1920.1080/6096.0.1920.1080" timestamp="1769536843772" />
+  </component>
+</application>
