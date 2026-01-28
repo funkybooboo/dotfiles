@@ -71,31 +71,24 @@
 	browser = firefox
 
 [delta]
-	features                    = decorations side-by-side
-	side-by-side                = true
-	keep-plus-minus-markers     = true
-	line-numbers                = true
-	collapse                    = false
-	navigate                    = true
-	width                       = 80
-	syntax-theme                = "Monokai Extended"
-	max-line-length             = 120
-	commit-decoration-style     = "bold #0969da"
-	whitespace-error-style      = "22 reverse"
-	line-numbers-left-format    = "{nm:4} │ "
-	line-numbers-right-format   = "{np:^4}│ "
-
-[delta "decorations"]
-	minus-style                      = "syntax #d73a49"
-	minus-emph-style                 = "white bold #d73a49"
-	plus-style                       = "syntax #22863a"
-	plus-emph-style                  = "white bold #22863a"
-	file-style                       = "syntax #0969da"
-	file-decoration-style            = "none"
-	hunk-header-style                = "syntax #6a737d"
-	hunk-header-decoration-style     = "none"
-	minus-empty-line-marker-style    = "red reverse"
-	plus-empty-line-marker-style     = "green reverse"
+    features = line-numbers decorations
+    syntax-theme = "Dracula"
+    dark = true
+    navigate = true
+    line-numbers = true
+    side-by-side = false
+    hunk-header-style = "#6272a4"
+    minus-style = "syntax #442222"
+    plus-style = "syntax #224422"
+    minus-emph-style = "bold #ff5555"
+    plus-emph-style = "bold #50fa7b"
+    whitespace-error-style = "red reverse"
+    commit-decoration-style = "bold #bd93f9 box ul"
+    file-style = "bold #f1fa8c ul"
+    file-decoration-style = "none"
+    hyperlinks = true
+    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+    max-line-length = 0
 
 [trim]
 	bases     = master,main
@@ -319,3 +312,5 @@
 [gpg]
 	program = gpg
 	format = openpgp
+[interactive]
+	diffFilter = delta --color-only
