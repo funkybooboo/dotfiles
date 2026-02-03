@@ -73,6 +73,9 @@ shopt -s cdable_vars   # If cd arg isn't a dir, try it as a variable
 shopt -s direxpand     # Expand directory names on tab completion
 shopt -s dotglob       # Include dotfiles in pathname expansion
 
+# Enable vi mode for command line editing
+set -o vi
+
 # ============================================================================
 # ENVIRONMENT VARIABLES
 # ============================================================================
@@ -155,8 +158,7 @@ __add_to_path_if_exists "$HOME/.opencode/bin"
 if command -v eza &> /dev/null; then
   alias ls='eza'                    # Simple list
   alias la='eza -a'                 # Simple list with hidden files
-  alias ll='eza -l'                 # Long format (permissions, size, date, etc.)
-  alias lla='eza -la'               # Long format with hidden files
+  alias ll='eza -la'                 # Long format (permissions, size, date, etc.)
 fi
 
 # VSCodium - only if code doesn't exist
@@ -174,6 +176,7 @@ alias dimension_server='ssh nate@192.168.8.210' # old desktop from di
 alias tnas_server='ssh funkybooboo@nas.lan' # my nas
 alias middlechild_server='ssh root@middlechild.cloud' # digital ocean vm
 alias cs6715_server='ssh cs6715@192.168.8.208' # on a local vm
+alias kenny_server='ssh nate@192.168.8.182' # on kels computer
 
 # Source bash aliases if they exist
 if [ -f ~/.bash_aliases ]; then
