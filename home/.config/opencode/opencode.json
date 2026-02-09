@@ -1,0 +1,49 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["opencode-gemini-auth@latest"],
+  "theme": "system",
+  "provider": {
+    "ollama_local": {
+      "name": "Ollama (local)",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "deepseek-coder:6.7b": {
+          "_launch": true,
+          "name": "deepseek-coder:6.7b"
+        },
+        "qwen2.5-coder:1.5b": {
+          "_launch": true,
+          "name": "qwen2.5-coder:1.5b"
+        },
+        "qwen2.5-coder:7b": {
+          "_launch": true,
+          "name": "qwen2.5-coder:7b"
+        },
+        "qwen3-coder:30b": {
+          "_launch": true,
+          "name": "qwen3-coder:30b"
+        }
+      }
+    },
+    "ollama_remote": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (Remote Kenny)",
+      "options": {
+        "baseURL": "http://192.168.8.182:11434/v1"
+      },
+      "models": {
+        "qwen3-coder:30b": {
+          "_launch": true,
+          "name": "qwen3-coder:30b"
+        },
+        "qwen3-coder:480b": {
+          "_launch": true,
+          "name": "qwen3-coder:480b"
+        }
+      }
+    }
+  }
+}
