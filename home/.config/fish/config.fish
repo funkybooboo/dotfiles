@@ -25,7 +25,7 @@
 
 # Only run in interactive mode
 if not status is-interactive
-    exit
+    return
 end
 
 # ============================================================================
@@ -160,20 +160,7 @@ function dotfiles
     end
 end
 
-# Yazi function with cwd change
-if command -v yazi &>/dev/null
-    function y
-        set tmp (mktemp -t "yazi-cwd.XXXXXX")
-        yazi $argv --cwd-file=$tmp
-        if test -f $tmp
-            set cwd (cat -- $tmp)
-            if test -n "$cwd" -a "$cwd" != "$PWD"
-                builtin cd -- $cwd
-            end
-            rm -f -- $tmp
-        end
-    end
-end
+# Yazi function not needed - removed (omarchy handles terminal file manager)
 
 # Quick directory navigation
 function mkcd
@@ -314,12 +301,6 @@ set -gx SSH_ASKPASS_REQUIRE prefer
 if test -f $HOME/.ssh/id_ed25519
     ssh-add -l >/dev/null 2>&1
     or ssh-add $HOME/.ssh/id_ed25519 </dev/null >/dev/null 2>&1
-end
-
-# Initialize jump if available
-if command -v jump &>/dev/null
-    jump shell fish | source
-    alias j 'jump'
 end
 
 # ============================================================================

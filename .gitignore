@@ -1,23 +1,58 @@
-nix-switch.log
-nixos-switch.log
-stow-backups/
-
-# backups & editor temp
+# Backups & editor temp
 *~
 *.bak
 *.bak.*
 *.swp
 
-# nixos backup
+# Machine-specific state
+home/.config/fish/fish_plugins/
+home/.config/fish/fish_variables
+home/.config/hypr/monitors.conf
+
+# Omarchy-managed files (never commit - managed by omarchy)
+home/.config/btop/
+home/.config/mako/
+home/.config/hypridle.conf
+home/.config/alacritty/
+home/.config/walker/
+home/.config/waybar/style.css
+
+# Application cache & state
+home/.config/discord/
+home/.config/JetBrains/
+home/.config/Code/Backups/
+home/.config/Code/Cache/
+home/.config/Code/CachedData/
+home/.config/Code/CachedExtension*/
+home/.config/Code/logs/
+home/.config/Code/User/workspaceStorage/
+home/.config/Code/User/History/
+home/.config/zoom.conf
+home/.config/go/telemetry/
+home/.config/fcitx/dbus/
+home/.config/tea/config.yml
+
+# Auto-generated documentation (AI working notes)
+docs/
+plan/
+START_HERE.md
+
+# Binary assets (use git-lfs or external storage)
+home/.config/wallpapers/
+
+# NixOS (system now runs Arch)
+home/.config/nixos/
+nix-switch.log
+nixos-switch.log
 etc/nixos/*.bak
 
-# fish state
-config/.config/fish/fish_plugins/
-config/.config/fish/fish_variables
+# Stow backups
+stow-backups/
 
 # NAS sync credentials (never commit passwords!)
 home/.config/nas-sync/rsync-password
 
+# Claude AI temp files
 CLAUDE.md
 .claude.json
 .claude.json.backup
