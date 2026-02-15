@@ -203,22 +203,7 @@ dotfiles() {
   fi
 }
 
-# Yazi function with cwd change
-if command -v yazi &> /dev/null; then
-  y() {
-    local tmp
-    tmp=$(mktemp -t "yazi-cwd.XXXXXX")
-    yazi "$@" --cwd-file="$tmp"
-    if [ -f "$tmp" ]; then
-      local cwd
-      cwd=$(cat -- "$tmp")
-      if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd" || return
-      fi
-      rm -f -- "$tmp"
-    fi
-  }
-fi
+# Yazi function not needed - removed (omarchy handles terminal file manager)
 
 # Quick directory navigation
 mkcd() {
@@ -320,7 +305,6 @@ alias -- -='cd -'
 
 # Lazy load pyenv - only initialize when actually used
 if command -v pyenv &> /dev/null; then
-  export PYENV_ROOT="$HOME/.pyenv"
   __add_to_path_if_exists "$PYENV_ROOT/bin"
 
   pyenv() {
@@ -364,12 +348,6 @@ if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
     # Key not loaded, add it (will use ksshaskpass/KWallet for passphrase)
     ssh-add "$HOME/.ssh/id_ed25519" </dev/null >/dev/null 2>&1
   }
-fi
-
-# Initialize jump if available
-if command -v jump &> /dev/null; then
-  eval "$(jump shell bash)"
-  alias j='jump'
 fi
 
 # ============================================================================
@@ -434,18 +412,16 @@ if command -v fzf &> /dev/null; then
   fi
 
   # Fish-like Ctrl+R for history search with preview
-  if [[ ! -o vi ]]; then
-    bind '"\C-r": "\C-x1\e^\C-x2\e[0n"'
-    bind -x '"\C-x1": __fzf_history';
-    bind '"\C-x2": redraw-current-line';
+  bind '"\C-r": "\C-x1\e^\C-x2\e[0n"'
+  bind -x '"\C-x1": __fzf_history';
+  bind '"\C-x2": redraw-current-line';
 
-    __fzf_history() {
-      local selected
-      selected=$(fc -rl 1 | awk '{$1="";print substr($0,2)}' | fzf --tac --no-sort --exact --query="$READLINE_LINE")
-      READLINE_LINE="$selected"
-      READLINE_POINT=${#READLINE_LINE}
-    }
-  fi
+  __fzf_history() {
+    local selected
+    selected=$(fc -rl 1 | awk '{$1="";print substr($0,2)}' | fzf --tac --no-sort --exact --query="$READLINE_LINE")
+    READLINE_LINE="$selected"
+    READLINE_POINT=${#READLINE_LINE}
+  }
 fi
 
 # direnv (auto-load environment variables)

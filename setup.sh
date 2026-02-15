@@ -309,47 +309,41 @@ else
   echo "Warning: Power profile udev rule not found at $UDEV_RULE_SRC"
 fi
 
-echo ">>> Deploying DNS configuration..."
+echo ">>> Deploying /etc/hosts..."
 
-DOTFILES_ROOT_ETC="$HOME/dotfiles/root/etc"
-DNS_FILES=(dnsmasq.conf dnsmasq.hosts resolv.conf "NetworkManager/NetworkManager.conf")
+HOSTS_SRC="$HOME/dotfiles/root/etc/hosts"
+HOSTS_DEST="/etc/hosts"
 
-for f in "${DNS_FILES[@]}"; do
-    src="$DOTFILES_ROOT_ETC/$f"
-    dest="/etc/$f"
-
+if [[ -f "$HOSTS_SRC" ]]; then
     # Check if file is already identical (idempotent)
-    if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
-        # Files are identical, skip
-        continue
-    fi
-
-    # File exists but is different
-    if [[ -f "$dest" ]]; then
-        if [[ $BACKUP -eq 1 ]]; then
-            backup_dest="${dest}.bak.$(date +%s)"
-            echo "Backing up $dest → $backup_dest"
-            run_cmd sudo cp "$dest" "$backup_dest"
-        elif [[ $FORCE -eq 1 ]]; then
-            echo "Removing existing $dest"
-            run_cmd sudo rm -f "$dest"
-        else
-            echo "conflict: '$dest' already exists. Use --backup or --force."
-            exit 1
+    if [[ -f "$HOSTS_DEST" ]] && cmp -s "$HOSTS_SRC" "$HOSTS_DEST"; then
+        echo "/etc/hosts is already up to date"
+    else
+        # File exists but is different
+        if [[ -f "$HOSTS_DEST" ]]; then
+            if [[ $BACKUP -eq 1 ]]; then
+                backup_dest="${HOSTS_DEST}.bak.$(date +%s)"
+                echo "Backing up $HOSTS_DEST → $backup_dest"
+                run_cmd sudo cp "$HOSTS_DEST" "$backup_dest"
+            elif [[ $FORCE -eq 1 ]]; then
+                echo "Removing existing $HOSTS_DEST"
+                run_cmd sudo rm -f "$HOSTS_DEST"
+            else
+                echo "conflict: '$HOSTS_DEST' already exists. Use --backup or --force."
+                exit 1
+            fi
         fi
+
+        # Copy file
+        run_cmd sudo cp "$HOSTS_SRC" "$HOSTS_DEST"
+        run_cmd sudo chown root:root "$HOSTS_DEST"
+        run_cmd sudo chmod 644 "$HOSTS_DEST"
+        echo "/etc/hosts deployed successfully"
     fi
+else
+    echo "Warning: /etc/hosts source file not found at $HOSTS_SRC"
+fi
 
-    # Copy file
-    run_cmd sudo cp "$src" "$dest"
-    run_cmd sudo chown root:root "$dest"
-    run_cmd sudo chmod 644 "$dest"
-done
-
-# Restart and enable dnsmasq
-run_cmd sudo systemctl restart dnsmasq
-run_cmd sudo systemctl enable dnsmasq
-
-echo ">>> DNS configuration deployed."
 
 echo ">>> Deploying package management configuration..."
 

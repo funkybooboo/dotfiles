@@ -1,157 +1,69 @@
 #!/usr/bin/env bash
+# System update script for Arch Linux with Omarchy
 
 set -euo pipefail
 
-echo "=== Starting Update Process ==="
+echo "=== System Update (Arch Linux) ==="
 echo ""
 
-# Detect distro
-if command -v nixos-version >/dev/null 2>&1; then
-    DISTRO="NixOS"
-elif command -v apt >/dev/null 2>&1; then
-    DISTRO="Ubuntu"
+# Step 1: Update Arch packages with yay (AUR helper)
+if command -v yay >/dev/null 2>&1; then
+    echo "→ Updating Arch/AUR packages (yay)..."
+    yay -Syu --noconfirm
+    echo ""
 else
-    DISTRO=""
-fi
-
-if [ -z "$DISTRO" ]; then
-    echo "Unsupported distribution."
-    exit 1
-fi
-
-echo "Detected: $DISTRO"
-echo ""
-
-if [ "$DISTRO" = "NixOS" ]; then
-    # Step 1: Update Flatpak applications and runtimes
-    echo "Step 1: Updating Flatpak applications and runtimes..."
-    sudo flatpak update -y
-    echo "Flatpak applications and runtimes updated."
-    echo ""
-
-    # Step 2: Update Nix channels
-    echo "Step 2: Updating Nix channels..."
-    sudo nix-channel --update
-    echo "Done updating Nix channels."
-    echo ""
-
-    # Step 3: Rebuild NixOS with upgrade
-    echo "Step 3: Rebuilding NixOS with upgrade..."
-    sudo nixos-rebuild switch --upgrade
-    echo "Done rebuilding NixOS."
-    echo ""
-
-    # Step 4: Update Rust packages
-    if command -v cargo >/dev/null 2>&1; then
-        echo "Step 4: Updating Rust (cargo) packages..."
-        cargo install-update -a || echo "→ cargo install-update not installed; skipping"
-        echo "Rust packages updated."
-        echo ""
-    fi
-
-    # Step 5: Update Go packages
-    if command -v go >/dev/null 2>&1; then
-        echo "Step 5: Updating Go packages..."
-        for bin in $(ls "$HOME/go/bin" 2>/dev/null || true); do
-            pkg_name=$(go list -m -f '{{.Path}}' "all/$bin" 2>/dev/null || echo "")
-            if [ -n "$pkg_name" ]; then
-                echo "→ Updating $pkg_name..."
-                go install "$pkg_name@latest"
-            fi
-        done
-        echo "Go packages updated."
-        echo ""
-    fi
-
-    # Step 6: Show current NixOS version
-    echo "Step 6: Current NixOS version:"
-    nixos-version
-    echo ""
-
-elif [ "$DISTRO" = "Ubuntu" ]; then
-    
-    if command -v rpk >/dev/null 2>&1; then
-        echo "Updating RPK packages..."
-        sudo rpk sync
-        sudo rpk update
-        echo "RPK packages updated."
-        echo ""
-    else
-        if command -v apt >/dev/null 2>&1; then
-            echo "Updating APT packages..."
-            sudo apt update && sudo apt upgrade -y
-            echo "APT packages updated."
-            echo ""
-        fi
-
-        if command -v flatpak >/dev/null 2>&1; then
-            echo "Updating Flatpak applications and runtimes..."
-            sudo flatpak update -y
-            echo "Flatpak packages updated."
-            echo ""
-        fi
-
-        if command -v snap >/dev/null 2>&1; then
-            echo "Updating Snap packages..."
-            sudo snap refresh
-            echo "Snap packages updated."
-            echo ""
-        fi
-
-        if command -v pacstall >/dev/null 2>&1; then
-            echo "Updating Pacstall packages..."
-            sudo pacstall -Up
-            echo "Pacstall packages updated."
-            echo ""
-        fi
-    fi
-
-    if command -v nix-env >/dev/null 2>&1; then
-        echo "Step 2: Updating nix-env packages..."
-        nix-channel --update
-        nix-env -u '*'
-        echo ""
-    fi
-
-    if command -v cargo >/dev/null 2>&1; then
-        echo "Updating Rust (cargo) packages..."
-        installed_bins=$(cargo install --list | awk '{print $1}' | tr -d ':' | sort | uniq | grep -v '^linutil_tui$' || true)
-        for bin in $installed_bins; do
-            echo "→ Updating $bin..."
-            cargo install "$bin" --force
-        done
-        echo "Rust packages updated."
-        echo ""
-    fi
-
-    if command -v go >/dev/null 2>&1; then
-        echo "Updating Go packages..."
-        for bin in "$HOME/go/bin/"*; do
-            pkg_name=$(basename "$bin")
-            echo "→ Reinstalling $pkg_name..."
-            go install "$pkg_name@latest" 2>/dev/null || true
-        done
-        echo "Go packages updated."
-        echo ""
-    fi
-
-    if command -v brew >/dev/null 2>&1; then
-        echo "Updating Brew packages..."
-        brew update
-    fi
-
-    if command -v gah >/dev/null 2>&1; then
-        echo "Updating Gah packages..."
-        gah update
-    fi
-
-    echo "Current Rhino Linux version:"
-    if [ -f /etc/rhino-release ]; then
-        cat /etc/rhino-release
-    else
-        grep '^PRETTY_NAME=' /etc/os-release | cut -d= -f2 | tr -d '"'
-    fi
+    echo "→ yay not found, using pacman..."
+    sudo pacman -Syu --noconfirm
     echo ""
 fi
 
-echo "=== Update Process Complete ==="
+# Step 2: Update Flatpak applications
+if command -v flatpak >/dev/null 2>&1; then
+    echo "→ Updating Flatpak applications..."
+    flatpak update -y
+    echo ""
+fi
+
+# Step 3: Update Omarchy
+if command -v omarchy-update >/dev/null 2>&1; then
+    echo "→ Updating Omarchy..."
+    omarchy-update
+    echo ""
+fi
+
+# Step 4: Update firmware
+if command -v fwupdmgr >/dev/null 2>&1; then
+    echo "→ Checking for firmware updates..."
+    fwupdmgr refresh || true
+    fwupdmgr update || echo "No firmware updates available"
+    echo ""
+fi
+
+# Step 5: Update Rust packages
+if command -v cargo >/dev/null 2>&1; then
+    echo "→ Updating Rust packages..."
+    cargo install cargo-update 2>/dev/null || true
+    cargo install-update -a || echo "cargo-update not installed"
+    echo ""
+fi
+
+# Step 6: Update Go packages
+if command -v go >/dev/null 2>&1 && [ -d "$HOME/go/bin" ]; then
+    echo "→ Updating Go packages..."
+    for bin in "$HOME/go/bin/"*; do
+        [ -f "$bin" ] || continue
+        pkg_name=$(basename "$bin")
+        echo "  → Reinstalling $pkg_name..."
+        go install "$pkg_name@latest" 2>/dev/null || true
+    done
+    echo ""
+fi
+
+# Step 7: Clean package cache
+if command -v yay >/dev/null 2>&1; then
+    echo "→ Cleaning package cache..."
+    yay -Sc --noconfirm
+    echo ""
+fi
+
+echo "=== Update Complete ==="
