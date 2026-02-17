@@ -3,6 +3,6 @@
 127.0.1.1 debbie.localdomain debbie
 
 # Local network devices
-192.168.8.100 nas.lan
+192.168.8.239 nas.lan
 192.168.8.254 raspberrypi.lan
 148.135.111.183 middlechild.cloud

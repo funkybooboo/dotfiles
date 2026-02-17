@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# system-cleanup — clean system on Ubuntu/Debian (supports Nix, Flatpak, Docker, Snap, Brew, pip, npm, pnpm, bun, Rust, Go)
+# clean-disk — clean system on Arch Linux (supports Flatpak, Docker, Brew, pip, npm, pnpm, bun, Rust, Go)
 #
 set -euo pipefail
 
@@ -11,14 +11,16 @@ echo ""
 # --- Detect distro ---
 DISTRO=""
 if [ -f /etc/os-release ]; then
-    NAME=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
-    if [[ "$NAME" =~ [Uu]buntu|[Dd]ebian ]]; then
-        DISTRO="Ubuntu/Debian"
-    fi
+    . /etc/os-release
+    case "$ID" in
+        arch|manjaro|endeavouros)
+            DISTRO="Arch Linux"
+            ;;
+    esac
 fi
 
 if [ -z "$DISTRO" ]; then
-    echo "[$(TS)] Unsupported distribution. Exiting."
+    echo "[$(TS)] ERROR: Unsupported distribution. This script only supports Arch Linux."
     exit 1
 fi
 
@@ -27,23 +29,7 @@ echo ""
 
 # --- Common cleanup steps ---
 
-# 1) Nix / nix-env cleanup
-if command -v nix-env >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning nix-env generations..."
-    nix-env --delete-generations old
-    echo "-> Old nix-env generations removed."
-    
-    if command -v nix-collect-garbage >/dev/null 2>&1; then
-        echo "[$(TS)] Running nix-collect-garbage..."
-        nix-collect-garbage -d
-        echo "-> Nix store pruned."
-    fi
-else
-    echo "[$(TS)] Nix not installed. Skipping Nix cleanup."
-fi
-echo ""
-
-# 2) Unused Flatpak runtimes and apps
+# 1) Flatpak cleanup
 if command -v flatpak >/dev/null 2>&1; then
     echo "[$(TS)] Removing unused Flatpak runtimes and apps..."
     sudo flatpak uninstall --unused -y
@@ -51,13 +37,13 @@ if command -v flatpak >/dev/null 2>&1; then
 fi
 echo ""
 
-# 3) Vacuum systemd journal logs older than 7 days
+# 2) Vacuum systemd journal logs older than 7 days
 echo "[$(TS)] Vacuuming journal logs older than 7 days..."
 sudo journalctl --vacuum-time=7d || echo "Failed to vacuum journal logs."
 echo "-> Old journal entries purged."
 echo ""
 
-# 4) Docker cleanup
+# 3) Docker cleanup
 if command -v docker >/dev/null 2>&1; then
     echo "[$(TS)] Pruning unused Docker objects..."
     sudo docker system prune --all --volumes --force
@@ -67,13 +53,13 @@ if command -v docker >/dev/null 2>&1; then
 fi
 echo ""
 
-# 5) /tmp cleanup
+# 4) /tmp cleanup
 echo "[$(TS)] Deleting /tmp files older than 7 days..."
 sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -rf {} \; || echo "Failed to clean /tmp directory."
 echo "-> /tmp cleaned."
 echo ""
 
-# 6) Multipass cleanup
+# 5) Multipass cleanup
 if command -v multipass >/dev/null 2>&1; then
     echo "[$(TS)] Cleaning up Multipass VMs and images..."
     multipass delete --all || true
@@ -82,26 +68,15 @@ if command -v multipass >/dev/null 2>&1; then
 fi
 echo ""
 
-# 7) Ubuntu/Debian package cleanup
-echo "[$(TS)] Cleaning Ubuntu/Debian package caches..."
-sudo apt update
-sudo apt autoremove -y
-sudo apt clean
-sudo apt autoclean
-echo "-> APT package cache and unused packages cleaned."
-
-# Snap old revisions cleanup
-if command -v snap >/dev/null 2>&1; then
-    echo "[$(TS)] Removing old Snap revisions..."
-    snap list --all | awk '/disabled/ {print $1, $2}' | while read -r NAME REV; do
-        # Strip quotes if any
-        REV_CLEAN=$(echo "$REV" | tr -d '"')
-        sudo snap remove "$NAME" --revision="$REV_CLEAN" || true
-    done
-    echo "-> Snap old revisions removed."
+# 6) Arch package cleanup
+echo "[$(TS)] Cleaning Arch package caches..."
+if command -v yay >/dev/null 2>&1; then
+    yay -Sc --noconfirm
+else
+    sudo pacman -Sc --noconfirm
 fi
-
-# 8) Other package manager / language cache cleanup
+echo "-> Package cache cleaned."
+echo ""
 
 # Homebrew
 if command -v brew >/dev/null 2>&1; then
