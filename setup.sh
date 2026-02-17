@@ -10,15 +10,17 @@ DRY_RUN=0
 FORCE=0
 BACKUP=0
 WITH_NAS_SYNC=0
+INSTALL=0
 
 usage() {
   cat <<EOF
-Usage: $0 [--dry-run|-n] [--force|-f] [--backup|-b] [--with-nas-sync]
+Usage: $0 [--dry-run|-n] [--force|-f] [--backup|-b] [--with-nas-sync] [--install|-i]
 
   --dry-run, -n       Print the commands that would be run, but do not execute them.
   --force, -f         Remove existing files/symlinks before creating new ones.
   --backup, -b        Backup existing files/symlinks by renaming them with .bak suffix.
   --with-nas-sync     Enable NAS sync timers setup (optional).
+  --install, -i       Run package installation after setup (optional).
   --help, -h          Show this help message.
 EOF
   exit 1
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
     ;;
   --with-nas-sync)
     WITH_NAS_SYNC=1
+    shift
+    ;;
+  -i | --install)
+    INSTALL=1
     shift
     ;;
   -h | --help) usage ;;
@@ -104,10 +110,15 @@ check_should_create() {
 # 1) cd into repo root
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# 2) link everything from home/.local/bin/* → ~/.local/bin/*
+# Define directory paths
+DOTFILES_ROOT="$PWD/root"
+DOTFILES_ROOT_ETC="$DOTFILES_ROOT/etc"
+DOTFILES_HOME="$DOTFILES_ROOT/home"
+
+# 2) link everything from root/home/.local/bin/* → ~/.local/bin/*
 echo ">>> Linking executables into ~/.local/bin"
 run_cmd mkdir -p "$HOME/.local/bin"
-for entry in home/.local/bin/*; do
+for entry in "$DOTFILES_HOME/.local/bin"/*; do
   dest="$HOME/.local/bin/$(basename "$entry")"
   src="$PWD/$entry"
   if check_should_create "$dest" "$src"; then
@@ -115,11 +126,11 @@ for entry in home/.local/bin/*; do
   fi
 done
 
-# 2b) link everything from home/.local/lib/* → ~/.local/lib/*
-if [[ -d "home/.local/lib" ]]; then
+# 2b) link everything from root/home/.local/lib/* → ~/.local/lib/*
+if [[ -d "$DOTFILES_HOME/.local/lib" ]]; then
   echo ">>> Linking library scripts into ~/.local/lib"
   run_cmd mkdir -p "$HOME/.local/lib"
-  for entry in home/.local/lib/*; do
+  for entry in "$DOTFILES_HOME/.local/lib"/*; do
     dest="$HOME/.local/lib/$(basename "$entry")"
     src="$PWD/$entry"
     if check_should_create "$dest" "$src"; then
@@ -128,10 +139,10 @@ if [[ -d "home/.local/lib" ]]; then
   done
 fi
 
-# 3) link each folder and file under home/.config → ~/.config/*
+# 3) link each folder and file under root/home/.config → ~/.config/*
 echo ">>> Linking config folders and files into ~/.config"
 run_cmd mkdir -p "$HOME/.config"
-for entry in home/.config/*; do
+for entry in "$DOTFILES_HOME/.config"/*; do
   dest="$HOME/.config/$(basename "$entry")"
   src="$PWD/$entry"
   if check_should_create "$dest" "$src"; then
@@ -139,19 +150,19 @@ for entry in home/.config/*; do
   fi
 done
 
-# 4) link per-file dotfiles from home/* → $HOME (excluding .config and .local)
+# 4) link per-file dotfiles from root/home/* → $HOME (excluding .config and .local)
 echo ">>> Linking dotfiles into \$HOME"
 while IFS= read -r src; do
-  rel="${src#"$PWD/home/"}"
+  rel="${src#"$DOTFILES_HOME/"}"
   dest="$HOME/$rel"
   if check_should_create "$dest" "$src"; then
     run_cmd mkdir -p "$(dirname "$dest")"
     run_cmd ln -s "$src" "$dest"
   fi
 done < <(
-  find "$PWD/home" -type f \
-    ! -path "$PWD/home/.config/*" \
-    ! -path "$PWD/home/.local/*"
+  find "$DOTFILES_HOME" -type f \
+    ! -path "$DOTFILES_HOME/.config/*" \
+    ! -path "$DOTFILES_HOME/.local/*"
 )
 
 # Ensure .ssh and .gnupg directories have correct permissions
@@ -162,13 +173,13 @@ if [[ -d "$HOME/.gnupg" ]]; then
   run_cmd chmod 700 "$HOME/.gnupg"
 fi
 
-# 2c) link everything from home/.local/share/* → ~/.local/share/*
-if [[ -d "home/.local/share" ]]; then
+# 2c) link everything from root/home/.local/share/* → ~/.local/share/*
+if [[ -d "$DOTFILES_HOME/.local/share" ]]; then
   echo ">>> Linking shared files into ~/.local/share"
   run_cmd mkdir -p "$HOME/.local/share"
 
   # Link all items from .local/share
-  for entry in home/.local/share/*; do
+  for entry in "$DOTFILES_HOME/.local/share"/*; do
     dest="$HOME/.local/share/$(basename "$entry")"
     src="$PWD/$entry"
     if check_should_create "$dest" "$src"; then
@@ -311,7 +322,7 @@ fi
 
 echo ">>> Deploying /etc/hosts..."
 
-HOSTS_SRC="$HOME/dotfiles/root/etc/hosts"
+HOSTS_SRC="$DOTFILES_ROOT_ETC/hosts"
 HOSTS_DEST="/etc/hosts"
 
 if [[ -f "$HOSTS_SRC" ]]; then
@@ -349,8 +360,6 @@ echo ">>> Deploying package management configuration..."
 
 if [[ -d "$DOTFILES_ROOT_ETC" ]]; then
   PKG_MGMT_FILES=(
-    "pacman.conf"
-    "makepkg.conf"
     "makepkg.conf.d/fortran.conf"
     "makepkg.conf.d/rust.conf"
   )
@@ -436,6 +445,25 @@ if [[ -d "$DOTFILES_ROOT_ETC" ]]; then
   done
 
   echo ">>> Locale and console configuration deployed."
+fi
+
+# Run package installation if requested
+if [[ $INSTALL -eq 1 ]]; then
+  echo ""
+  echo ">>> Running package installation..."
+  if [[ -f "$PWD/install/orchestration/install-all.sh" ]]; then
+    if [[ $DRY_RUN -eq 0 ]]; then
+      bash "$PWD/install/orchestration/install-all.sh"
+    else
+      echo "+ bash $PWD/install/orchestration/install-all.sh"
+    fi
+  else
+    echo "Error: install-all.sh not found at $PWD/install/orchestration/install-all.sh"
+    exit 1
+  fi
+else
+  echo ""
+  echo ">>> Skipping package installation (use --install to enable)"
 fi
 
 echo ">>> Done${suffix}."
