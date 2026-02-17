@@ -7,7 +7,7 @@ A comprehensive Linux dotfiles and system configuration management solution with
 This repository provides a complete, reproducible system setup for Linux environments, combining:
 
 - **Configuration management** - Symlink-based deployment of all personal dotfiles
-- **Package management** - Unified installer system with 219 packages across Arch, Ubuntu, and NixOS
+- **Package management** - Unified installer system with 164 packages across Arch, Ubuntu, and NixOS
 - **Automation** - Systemd timers for battery notifications, power profile switching, and optional NAS sync
 - **Deep customization** - Full Hyprland/Omarchy integration with 169 customized files
 - **Developer tools** - 24 custom commands and 10 library scripts for system management
@@ -40,7 +40,7 @@ cd ~/dotfiles
 
 ### 2. Install packages (optional)
 
-Install all 219 packages:
+Install all 164 packages:
 ```bash
 ./install/orchestration/install-all.sh
 ```
@@ -60,10 +60,10 @@ Individual package installation:
 ```
 
 **Package categories:**
-- **core/** (60 packages) - Essential utilities: git, neovim, bat, fd, ripgrep, fzf, jq, eza, etc.
-- **dev/** (35 packages) - Development tools: languages, build tools, version managers
-- **desktop/** (18 packages) - GUI applications: Brave, Discord, Obsidian, VLC, OBS
-- **special/** (18 packages) - Complex installs: Docker, CUDA, libvirt, JetBrains Toolbox
+- **core/** - Essential utilities: git, neovim, bat, fd, ripgrep, fzf, jq, eza, etc.
+- **dev/** - Development tools: languages, build tools, version managers
+- **desktop/** - GUI applications: Brave, Obsidian, OBS, browsers
+- **special/** - Complex installs: Docker, libvirt, JetBrains Toolbox
 - **fonts/** - Font packages for desktop use
 
 ---
@@ -251,12 +251,12 @@ dotfiles/
 │   │           └── README.md      # Omarchy customization docs
 │   └── .{bashrc,gitconfig,...}    # Shell dotfiles (9 files)
 ├── install/                       # Installation scripts
-│   ├── packages/                  # Package installers (219 scripts)
-│   │   ├── core/                  # Core system packages (60)
-│   │   ├── desktop/               # Desktop environment (18)
-│   │   ├── dev/                   # Development tools (35)
+│   ├── packages/                  # Package installers (164 scripts)
+│   │   ├── core/                  # Core system packages
+│   │   ├── desktop/               # Desktop environment
+│   │   ├── dev/                   # Development tools
 │   │   ├── fonts/                 # Font packages
-│   │   └── special/               # Special installs (18) - libvirt, plymouth, etc
+│   │   └── special/               # Special installs - libvirt, plymouth, etc
 │   └── orchestration/             # Install orchestration scripts
 ├── root/                          # System-level configs (maps to /)
 │   └── etc/                       # System configuration files
