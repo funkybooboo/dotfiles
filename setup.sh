@@ -120,7 +120,7 @@ echo ">>> Linking executables into ~/.local/bin"
 run_cmd mkdir -p "$HOME/.local/bin"
 for entry in "$DOTFILES_HOME/.local/bin"/*; do
   dest="$HOME/.local/bin/$(basename "$entry")"
-  src="$PWD/$entry"
+  src="$entry"
   if check_should_create "$dest" "$src"; then
     run_cmd ln -s "$src" "$dest"
   fi
@@ -132,7 +132,7 @@ if [[ -d "$DOTFILES_HOME/.local/lib" ]]; then
   run_cmd mkdir -p "$HOME/.local/lib"
   for entry in "$DOTFILES_HOME/.local/lib"/*; do
     dest="$HOME/.local/lib/$(basename "$entry")"
-    src="$PWD/$entry"
+    src="$entry"
     if check_should_create "$dest" "$src"; then
       run_cmd ln -s "$src" "$dest"
     fi
@@ -144,7 +144,7 @@ echo ">>> Linking config folders and files into ~/.config"
 run_cmd mkdir -p "$HOME/.config"
 for entry in "$DOTFILES_HOME/.config"/*; do
   dest="$HOME/.config/$(basename "$entry")"
-  src="$PWD/$entry"
+  src="$entry"
   if check_should_create "$dest" "$src"; then
     run_cmd ln -s "$src" "$dest"
   fi
@@ -181,7 +181,7 @@ if [[ -d "$DOTFILES_HOME/.local/share" ]]; then
   # Link all items from .local/share
   for entry in "$DOTFILES_HOME/.local/share"/*; do
     dest="$HOME/.local/share/$(basename "$entry")"
-    src="$PWD/$entry"
+    src="$entry"
     if check_should_create "$dest" "$src"; then
       run_cmd ln -s "$src" "$dest"
     fi
