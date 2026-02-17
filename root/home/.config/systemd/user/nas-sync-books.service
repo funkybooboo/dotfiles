@@ -1,0 +1,13 @@
+[Unit]
+Description=Sync Books with NAS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/sync-books
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

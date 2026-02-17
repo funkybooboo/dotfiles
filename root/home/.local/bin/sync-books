@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Sync Books with NAS
+exec "$HOME/.local/lib/sync-to-nas" "$HOME/Books" "books" "nate"

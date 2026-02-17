@@ -1,3 +1,0 @@
-display_mode = "DEFAULT"
-engine_path = "/run/current-system/sw/bin/stockfish"
-log_level = "OFF"

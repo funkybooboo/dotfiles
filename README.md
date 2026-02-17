@@ -1,33 +1,29 @@
 # Dotfiles
 
-A comprehensive Linux dotfiles and system configuration management solution with multi-distribution support, extensive automation, and 500+ tracked configuration files.
+Minimalist Arch Linux dotfiles focused on Hyprland/Omarchy desktop with essential tools only.
 
 ## Overview
 
-This repository provides a complete, reproducible system setup for Linux environments, combining:
+This repository provides a clean, reproducible Arch Linux setup with:
 
-- **Configuration management** - Symlink-based deployment of all personal dotfiles
-- **Package management** - Unified installer system with 164 packages across Arch, Ubuntu, and NixOS
-- **Automation** - Systemd timers for battery notifications, power profile switching, and optional NAS sync
-- **Deep customization** - Full Hyprland/Omarchy integration with 169 customized files
-- **Developer tools** - 24 custom commands and 10 library scripts for system management
+- **Configuration management** - Just 16 essential configs, nothing more
+- **Package management** - 48 curated installers for core tools only
+- **Hyprland/Omarchy** - Wayland compositor with custom configurations
+- **Developer tools** - Neovim, Git, Docker, and essential CLI utilities
+- **Minimalist philosophy** - No bloat, only what you actually use
 
 ### Key Features
 
-- **Multi-distribution support** - Works on Arch Linux, Ubuntu/Debian, and NixOS
+- **Arch Linux only** - Simplified, focused on one distro
 - **Idempotent setup** - Safe to run multiple times without breaking existing configs
 - **Optional NAS sync** - Automatic hourly rsync backups to NAS (opt-in with `--with-nas-sync`)
 - **Smart power management** - Automatic profile switching on AC/battery
-- **VPN integration** - Unified VPN manager supporting multiple providers
-- **Custom commands** - System updater, disk cleanup, 2FA manager, GitHub backups
-- **Cloud sync** - Proton Drive integration for documents and media
-- **Security focused** - ClamAV scanning, secure credential storage, proper permissions
-
-See [docs/](docs/) for detailed feature documentation.
+- **Ghostty terminal** - Modern GPU-accelerated terminal emulator
+- **LibreWolf browser** - Privacy-focused Firefox fork
 
 ---
 
-## Quick Start (Fresh System)
+## Quick Start (Fresh Arch System)
 
 ### 1. Clone your dotfiles
 
@@ -40,31 +36,22 @@ cd ~/dotfiles
 
 ### 2. Install packages (optional)
 
-Install all 164 packages:
+Install all packages:
 ```bash
-./install/orchestration/install-all.sh
+./install.sh
 ```
 
-Or use phased installation (recommended for fresh systems):
+Or combine with setup:
 ```bash
-./install/orchestration/pre-reboot.sh    # System packages
-# Reboot here
-./install/orchestration/post-reboot.sh   # User packages
+./setup.sh --install --backup
 ```
 
-Individual package installation:
-```bash
-./install/packages/core/neovim.sh        # Install Neovim
-./install/packages/special/clamav.sh     # Install ClamAV antivirus
-./install/packages/desktop/brave.sh      # Install Brave browser
-```
-
-**Package categories:**
-- **core/** - Essential utilities: git, neovim, bat, fd, ripgrep, fzf, jq, eza, etc.
-- **dev/** - Development tools: languages, build tools, version managers
-- **desktop/** - GUI applications: Brave, Obsidian, OBS, browsers
-- **special/** - Complex installs: Docker, libvirt, JetBrains Toolbox
-- **fonts/** - Font packages for desktop use
+**What gets installed:**
+- **Core:** git, curl, wget, base-devel, linux-headers
+- **Shell:** fish, starship, zoxide, fzf, ripgrep, fd, bat, eza, dust, btop, fastfetch, jq, wl-clipboard
+- **Dev:** neovim, docker, rust, go, python, lazygit, lazydocker, act, github-cli
+- **Desktop:** librewolf-bin (via AUR)
+- **System:** flatpak, power-profiles-daemon, fwupd
 
 ---
 
@@ -143,78 +130,13 @@ systemctl --user start nas-sync-documents.service
 
 ---
 
-### 5. System configuration (optional)
-
-#### NixOS
-
-```bash
-sudo mkdir -p /etc/nixos
-sudo cp root/etc/nixos/configuration.nix /etc/nixos/configuration.nix
-sudo nixos-rebuild switch
-```
-
-#### Arch Linux
-
-```bash
-./install/orchestration/pre-reboot.sh
-# The scripts will prompt you to reboot
-./install/orchestration/post-reboot.sh
-```
-
----
-
-### 6. Custom commands
-
-After setup, you'll have access to 24 custom commands in `~/.local/bin/`:
-
-**System Management:**
-- `update` - Multi-distro system updater (NixOS/Ubuntu aware)
-- `update-firmware` - Firmware update management
-- `auto-update` - Scheduled system updates
-- `rebuild` - System rebuild/reconfiguration
-- `clean-disk` - Disk space cleanup utility
-- `clean-memory` - Memory optimization
-
-**VPN & Networking:**
-- `vpn` - Unified VPN manager (home/debbie-local, Proton VPN, GlobalProtect)
-- `sync-documents`, `sync-music`, `sync-photos`, `sync-audiobooks` - Manual NAS sync
-
-**Cloud Sync:**
-- `proton-sync` - Proton Drive synchronization
-- `proton-sync-docs`, `proton-sync-music`, `proton-sync-audiobooks` - Specific syncs
-- `update-rclone-2fa` - 2FA token management for Proton
-
-**Development & Utilities:**
-- `gg` - Git shortcut tool
-- `audit` - System security audit
-- `backup-github` - GitHub repository backup
-- `2fa` - Two-factor authentication manager
-- `btrfs-snapshot` - Btrfs snapshot management
-
----
-
-### 7. Proton Drive sync (optional)
-
-If you also want to sync with Proton Drive:
-
-```bash
-rclone config
-sync-docs        # ~/Documents ↔ Proton Drive
-sync-music       # ~/Music ↔ Proton Drive
-sync-audiobooks  # ~/Audiobooks ↔ Proton Drive
-```
-
----
-
-### 8. When you add new files or scripts
+### 5. When you add new files or scripts
 
 After adding new configs or scripts under `home/`, re-run:
 
 ```bash
-./setup.sh --backup
+./setup.sh --backup  # Re-symlink new files
 ```
-
-to link them into place.
 
 ---
 
@@ -222,71 +144,115 @@ to link them into place.
 
 ```
 dotfiles/
-├── home/                          # Dotfiles & user configs (maps to ~/)
-│   ├── .config/                   # XDG config directories (41 apps)
-│   │   ├── nvim/                  # Neovim (LazyVim)
-│   │   ├── hypr/                  # Hyprland WM (11 configs)
-│   │   ├── waybar/                # Waybar status bar
-│   │   ├── kitty/                 # Kitty terminal
-│   │   ├── systemd/user/          # User systemd services & timers (11 units)
-│   │   └── ...                    # 35+ more apps
-│   ├── .local/
-│   │   ├── bin/                   # User commands (24 scripts)
-│   │   │   ├── vpn                # VPN manager
-│   │   │   ├── update             # System updater
-│   │   │   ├── sync-*             # NAS sync commands
-│   │   │   ├── proton-sync*       # Proton Drive sync commands
-│   │   │   ├── waybar/            # Waybar status scripts (6 scripts)
-│   │   │   ├── hyprland/          # Hyprland helper (1 script)
-│   │   │   └── break-reminder/    # Break reminder (1 script + config)
-│   │   ├── lib/                   # Library scripts (10 scripts)
-│   │   │   ├── sync-to-nas        # NAS sync backend
-│   │   │   ├── good-time-to-run   # System readiness checker
-│   │   │   ├── battery-notify     # Battery notification daemon
-│   │   │   └── ...                # 7 more helpers
-│   │   └── share/
-│   │       └── omarchy/           # Omarchy customizations (2 custom files)
-│   │           ├── bin/           # omarchy-cmd-brightness (custom)
-│   │           ├── hypr/bindings/ # media.conf (custom)
-│   │           └── README.md      # Omarchy customization docs
-│   └── .{bashrc,gitconfig,...}    # Shell dotfiles (9 files)
-├── install/                       # Installation scripts
-│   ├── packages/                  # Package installers (164 scripts)
-│   │   ├── core/                  # Core system packages
-│   │   ├── desktop/               # Desktop environment
-│   │   ├── dev/                   # Development tools
-│   │   ├── fonts/                 # Font packages
-│   │   └── special/               # Special installs - libvirt, plymouth, etc
-│   └── orchestration/             # Install orchestration scripts
-├── root/                          # System-level configs (maps to /)
-│   └── etc/                       # System configuration files
-│       ├── dnsmasq.conf           # DNS configuration
-│       └── udev/                  # Power profile auto-switching
-├── docs/                          # Documentation
-│   ├── SOURCE_OF_TRUTH_COMPLETE.md    # Comprehensive documentation
-│   ├── IDEMPOTENCY_AUDIT.md           # Idempotency verification
-│   └── ...                            # Additional docs
-├── system-docs/                   # System-specific documentation
-├── setup.sh                       # Main dotfiles setup script
-└── README.md                      # This file
+├── root/                       # Files to be symlinked
+│   ├── home/                   # User home directory files
+│   │   ├── .config/           # Configuration files
+│   │   │   ├── fish/          # Fish shell
+│   │   │   ├── nvim/          # Neovim
+│   │   │   ├── opencode/      # OpenCode AI
+│   │   │   └── systemd/       # User systemd services
+│   │   ├── .local/
+│   │   │   ├── bin/           # Custom scripts and commands
+│   │   │   └── lib/           # Shared library scripts
+│   │   ├── .gitconfig         # Git configuration
+│   │   ├── .vimrc             # Vim configuration
+│   │   └── .ssh/config        # SSH configuration
+│   └── etc/                    # System-wide configs
+│       ├── hosts              # Custom /etc/hosts
+│       └── udev/rules.d/      # Udev rules
+├── install.sh                  # Simple package installer
+└── setup.sh                    # Main setup script
+
+Custom Scripts in .local/bin:
+  • btrfs-snapshot      - Create BTRFS snapshots
+  • clean-disk          - System cleanup script
+  • clean-memory        - Free up system memory
+  • gg                  - AI-powered git commit helper
+  • update              - System update script
+  • update-firmware     - Firmware update script
+  • vpn                 - VPN management (home/proton/usu)
+  • sync-*              - NAS sync scripts (documents/music/photos/audiobooks)
 ```
 
-**Total:** 500+ tracked files
+---
+
+## Core Installed Tools
+
+**CLI Essentials:**
+- `bat` - Better cat with syntax highlighting
+- `eza` - Better ls with colors and icons
+- `fd` - Better find
+- `ripgrep` - Better grep
+- `fzf` - Fuzzy finder
+- `zoxide` - Smart cd
+- `dust` - Better du
+- `starship` - Shell prompt
+- `btop` - System monitor
+
+**Git Tools:**
+- `git` - Version control
+- `gh` - GitHub CLI
+- `lazygit` - Git TUI
+
+**Development:**
+- `neovim` - Text editor
+- `mise` - Runtime version manager
+- `docker` - Containers
+- `lazydocker` - Docker TUI
+- `act` - GitHub Actions locally
+- `rust` - Rust toolchain
+- `python-pip` - Python package manager
+
+**Desktop:**
+- `hyprland` - Wayland compositor
+- `waybar` - Status bar
+- `ghostty` - Terminal
+- `librewolf` - Browser
+- `flatpak` - App sandboxing
 
 ---
 
-## Notes
+## Philosophy
 
-* **Safe by default**: The setup script aborts on conflicts (use `--backup` for safety)
-* **Use `--dry-run`** to preview actions before applying
-* **NAS sync**: Optional - use `--with-nas-sync` flag to enable automatic hourly syncing
-* **Proton Drive sync**: Manual sync scripts available in `~/.local/bin/`
-* Designed to work on Arch Linux, NixOS, Ubuntu, and other Linux distros
+This dotfiles repository follows these principles:
+
+1. **Minimalism** - Only install what you actually use
+2. **Arch-only** - One distro, one way, no complexity
+3. **Idempotency** - Safe to run setup repeatedly
+4. **Transparency** - Every file is visible and editable
+5. **Version control** - Everything tracked in git
+6. **Modularity** - Each installer is independent
 
 ---
 
-## Security
+## Maintenance
 
-- NAS rsync password stored in `~/.config/nas-sync/rsync-password` with 600 permissions
-- ClamAV configured to scan user directories with proper ACLs
-- GPG and SSH keys managed separately (see `install/packages/special/`)
+### Updating all packages
+
+```bash
+update                # Uses custom script (yay + flatpak + omarchy + firmware)
+```
+
+Or manually:
+```bash
+yay -Syu              # Update system
+flatpak update        # Update flatpaks
+```
+
+### Clean up old packages
+
+```bash
+clean-disk            # Comprehensive cleanup script
+```
+
+Or manually:
+```bash
+yay -Yc               # Clean unneeded dependencies
+flatpak uninstall --unused
+```
+
+---
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details

@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly Books sync with NAS
+Requires=nas-sync-books.service
+
+[Timer]
+OnBootSec=25min
+OnUnitActiveSec=1h
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target

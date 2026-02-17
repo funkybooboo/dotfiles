@@ -5,9 +5,9 @@
 set -euo pipefail
 
 # VPN definitions
-# Format: ["friendly-name"]="type:nm-connection-name" or "type"
+# Format: ["friendly-name"]="type:connection-name" or "type"
 declare -A VPNS=(
-    ["home"]="nm:debbie-local"
+    ["home"]="wg:debbie-local"
     ["proton"]="protonvpn"
     ["usu"]="globalprotect:gp.usu.edu"
 )
@@ -55,12 +55,12 @@ function is_active() {
     read -r type conn_name <<< "$(parse_vpn "$vpn")"
 
     case $type in
-        nm)
-            nmcli connection show --active | grep -q "^$conn_name "
+        wg)
+            ip link show "$conn_name" &>/dev/null
             ;;
         protonvpn)
-            # Check if ProtonVPN connection exists in NetworkManager
-            nmcli connection show --active | grep -q "^ProtonVPN " || \
+            # Check if ProtonVPN connection exists in NetworkManager or via interface
+            (command -v nmcli &>/dev/null && nmcli connection show --active | grep -q "^ProtonVPN ") || \
             ip link show proton0 &>/dev/null
             ;;
         globalprotect)
@@ -95,7 +95,7 @@ function status() {
             active_count=$((active_count + 1))
 
             case $type in
-                nm)
+                wg)
                     ip addr show dev "$conn_name" 2>/dev/null | grep "inet " | awk '{print "  IP: " $2}'
                     ;;
                 protonvpn)
@@ -158,8 +158,8 @@ function up() {
     info "Connecting to $vpn..."
 
     case $type in
-        nm)
-            nmcli connection up "$conn_name" || error "Failed to connect to $vpn"
+        wg)
+            sudo wg-quick up "$conn_name" || error "Failed to connect to $vpn"
             ;;
         protonvpn)
             protonvpn connect || error "Failed to connect to Proton VPN"
@@ -210,8 +210,8 @@ function down() {
     info "Disconnecting $vpn..."
 
     case $type in
-        nm)
-            nmcli connection down "$conn_name" || error "Failed to disconnect $vpn"
+        wg)
+            sudo wg-quick down "$conn_name" || error "Failed to disconnect $vpn"
             ;;
         protonvpn)
             protonvpn disconnect || error "Failed to disconnect from Proton VPN"
@@ -261,16 +261,13 @@ function autoconnect() {
     read -r type conn_name <<< "$(parse_vpn "$vpn")"
 
     case $type in
-        nm)
-            # NetworkManager autoconnect
-            local current
-            current=$(nmcli -g connection.autoconnect connection show "$conn_name")
-
-            if [ "$current" = "yes" ]; then
-                nmcli connection modify "$conn_name" connection.autoconnect no
+        wg)
+            # wg-quick systemd service autoconnect
+            if systemctl is-enabled "wg-quick@${conn_name}" &>/dev/null; then
+                sudo systemctl disable "wg-quick@${conn_name}"
                 success "Auto-connect disabled for $vpn"
             else
-                nmcli connection modify "$conn_name" connection.autoconnect yes
+                sudo systemctl enable "wg-quick@${conn_name}"
                 success "Auto-connect enabled for $vpn"
             fi
             ;;
@@ -339,8 +336,8 @@ function list() {
 
         # Check autoconnect status
         case $type in
-            nm)
-                if [ "$(nmcli -g connection.autoconnect connection show "$conn_name" 2>/dev/null)" = "yes" ]; then
+            wg)
+                if systemctl is-enabled "wg-quick@${conn_name}" &>/dev/null; then
                     autoconnect_status=" ${BLUE}[autoconnect]${NC}"
                 fi
                 ;;

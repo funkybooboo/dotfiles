@@ -1,1 +1,0 @@
-/home/nate/.local/share/omarchy/default/elephant/omarchy_themes.lua
