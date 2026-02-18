@@ -48,6 +48,7 @@ Or combine with setup:
 
 **What gets installed:**
 - **Core:** git, curl, wget, base-devel, linux-headers
+- **Security:** linux-hardened, linux-lts, apparmor, apparmor.d (2000+ profiles)
 - **Shell:** fish, starship, zoxide, fzf, ripgrep, fd, bat, eza, dust, btop, fastfetch, jq, wl-clipboard
 - **Dev:** neovim, docker, rust, go, python, lazygit, lazydocker, act, github-cli
 - **Desktop:** librewolf-bin (via AUR)
@@ -85,6 +86,7 @@ What this does:
 * Symlinks all remaining dotfiles in `home/` → `$HOME`
 * Enables battery notification timer
 * Installs power profile auto-switching udev rule
+* Configures AppArmor kernel parameters and regenerates boot configuration
 
 **Flags:**
 - `--dry-run, -n`: Preview actions without executing
@@ -222,6 +224,47 @@ This dotfiles repository follows these principles:
 4. **Transparency** - Every file is visible and editable
 5. **Version control** - Everything tracked in git
 6. **Modularity** - Each installer is independent
+
+---
+
+## Security
+
+This setup includes comprehensive security hardening:
+
+### Hardened Kernels
+
+- **linux-hardened** - Security-focused kernel with additional hardening patches
+- **linux-lts** - Long-term support kernel for stability
+
+Both kernels are installed and available in your bootloader.
+
+### AppArmor Mandatory Access Control
+
+AppArmor is configured and enabled with:
+- **2000+ security profiles** covering system applications and popular software
+- **LSM (Linux Security Modules)** properly configured in kernel parameters
+- **Complain mode by default** - Logs violations without blocking (safe for testing)
+
+Key applications protected by AppArmor:
+- Firefox, Brave, Chromium (browsers)
+- Docker and containerization
+- VS Code and development tools
+- Flatpak sandboxed applications
+- System services and daemons
+
+**Check AppArmor status:**
+```bash
+sudo aa-status                    # View loaded profiles and active processes
+sudo journalctl -xe | grep apparmor  # View AppArmor logs
+```
+
+**Switch to enforce mode** (after testing):
+```bash
+yay -S apparmor.d.enforced       # Replace complain mode with enforce mode
+sudo reboot
+```
+
+In enforce mode, AppArmor will actively block policy violations for maximum security.
 
 ---
 
