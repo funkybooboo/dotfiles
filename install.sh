@@ -86,7 +86,8 @@ sudo pacman -S --needed --noconfirm \
   neovim \
   docker \
   docker-compose \
-  github-cli
+  github-cli \
+  git-delta
 
 yay -S --needed --noconfirm \
   lazygit \
