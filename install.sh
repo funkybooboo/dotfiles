@@ -64,6 +64,23 @@ sudo pacman -S --needed --noconfirm \
   linux-headers
 echo ""
 
+# Security: Hardened kernels
+echo -e "${BLUE}>>> Installing hardened kernels...${NC}"
+sudo pacman -S --needed --noconfirm \
+  linux-hardened \
+  linux-hardened-headers \
+  linux-lts \
+  linux-lts-headers
+echo -e "${GREEN}✓${NC} Hardened and LTS kernels installed"
+echo ""
+
+# Security: AppArmor
+echo -e "${BLUE}>>> Installing AppArmor security framework...${NC}"
+sudo pacman -S --needed --noconfirm apparmor
+yay -S --needed --noconfirm apparmor.d
+echo -e "${GREEN}✓${NC} AppArmor installed with comprehensive profiles"
+echo ""
+
 # Shell & Terminal utilities
 echo -e "${BLUE}>>> Installing shell utilities...${NC}"
 sudo pacman -S --needed --noconfirm \
@@ -127,6 +144,9 @@ echo -e "${GREEN}✓${NC} Docker enabled"
 sudo systemctl enable power-profiles-daemon.service
 sudo systemctl start power-profiles-daemon.service
 echo -e "${GREEN}✓${NC} Power profiles daemon enabled"
+
+sudo systemctl enable apparmor.service
+echo -e "${GREEN}✓${NC} AppArmor enabled"
 echo ""
 
 echo -e "${GREEN}============================================${NC}"

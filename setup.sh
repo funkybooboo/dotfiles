@@ -293,6 +293,33 @@ if [[ -f "$DOTFILES_ROOT_ETC/udev/rules.d/99-power-profile.rules" ]]; then
   fi
 fi
 
+# Configure AppArmor kernel parameters
+echo ">>> Configuring AppArmor kernel parameters"
+LIMINE_CONFIG="/etc/default/limine"
+APPARMOR_PARAM="lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+
+if [[ -f "$LIMINE_CONFIG" ]]; then
+  if grep -q "KERNEL_CMDLINE.*${APPARMOR_PARAM}" "$LIMINE_CONFIG"; then
+    echo "AppArmor kernel parameters already configured"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    echo "+ sudo sed -i '/KERNEL_CMDLINE\[default\]+=\"quiet splash\"/a KERNEL_CMDLINE[default]+=\" $APPARMOR_PARAM\"' $LIMINE_CONFIG"
+    echo "+ sudo limine-mkinitcpio"
+  else
+    echo "Adding AppArmor LSM parameter to Limine config..."
+    if sudo sed -i "/KERNEL_CMDLINE\[default\]+=\"quiet splash\"/a KERNEL_CMDLINE[default]+=\" ${APPARMOR_PARAM}\"" "$LIMINE_CONFIG"; then
+      echo "Regenerating boot configuration with AppArmor..."
+      sudo limine-mkinitcpio
+      echo -e "\n${YELLOW}⚠ Reboot required for AppArmor to be active${NC}"
+    else
+      echo "Warning: Failed to configure AppArmor kernel parameters"
+    fi
+  fi
+else
+  echo "Note: $LIMINE_CONFIG not found - skipping AppArmor kernel parameters"
+  echo "  If using a different bootloader, add this kernel parameter manually:"
+  echo "  $APPARMOR_PARAM"
+fi
+
 # =============================================================================
 # 4. SYSTEMD SERVICES
 # =============================================================================
