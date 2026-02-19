@@ -156,9 +156,29 @@ check_should_create() {
   return 0
 }
 
+# Returns all submodule paths listed in .gitmodules (relative to repo root).
+_submodule_paths() {
+  git config --file .gitmodules --get-regexp 'submodule\..*\.path' \
+    | awk '{print $2}'
+}
+
+# link_tree <src_root> <dest_root>
+#   Symlinks individual files from src_root into dest_root, preserving the
+#   directory structure. Automatically skips submodule directories (use
+#   link_dir for those instead).
 link_tree() {
   local src_root="$1"
   local dest_root="$2"
+
+  # Exclude any submodule directories that live under src_root
+  local find_args=(find "$src_root" -type f)
+  while IFS= read -r submod; do
+    local abs_submod="$PWD/$submod"
+    if [[ "$abs_submod" == "$src_root/"* ]]; then
+      find_args+=(-not -path "$abs_submod/*")
+    fi
+  done < <(_submodule_paths)
+
   run_cmd mkdir -p "$dest_root"
   while IFS= read -r src; do
     local rel="${src#"${src_root}/"}"
@@ -167,7 +187,45 @@ link_tree() {
       run_cmd mkdir -p "$(dirname "$dest")"
       run_cmd ln -s "$src" "$dest"
     fi
-  done < <(find "$src_root" -type f)
+  done < <("${find_args[@]}")
+}
+
+# link_dir <src> <dest>
+#   Symlinks an entire directory as a single unit. Respects --backup, --force,
+#   and --dry-run. Use this for submodules and any directory that must remain
+#   a real git repo on disk (not a collection of individual file symlinks).
+link_dir() {
+  local src="$1"
+  local dest="$2"
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "+ ln -sfn $src $dest"
+    return
+  fi
+
+  # Already correctly symlinked — nothing to do
+  if [[ -L "$dest" ]] && [[ "$(readlink "$dest")" == "$src" ]]; then
+    return
+  fi
+
+  # Resolve conflicts with whatever is currently at dest
+  if [[ -e "$dest" ]] || [[ -L "$dest" ]]; then
+    if [[ $BACKUP -eq 1 ]]; then
+      local bak="${dest}.bak.$(date +%s)"
+      echo "  Backing up: $dest → $bak"
+      mv "$dest" "$bak"
+    elif [[ $FORCE -eq 1 ]]; then
+      echo "  Removing: $dest"
+      rm -rf "$dest"
+    else
+      echo "conflict: '$dest' already exists. Use --backup or --force to resolve."
+      exit 1
+    fi
+  fi
+
+  mkdir -p "$(dirname "$dest")"
+  ln -sfn "$src" "$dest"
+  echo "  linked: $dest → $src"
 }
 
 # -----------------------------------------------------------------------------
@@ -367,6 +425,17 @@ fi
 if [[ -d "$DOTFILES_HOME/.local/share" ]]; then
   echo ">>> Linking shared files into ~/.local/share"
   link_tree "$DOTFILES_HOME/.local/share" "$HOME/.local/share"
+
+  # Submodule directories under .local/share are linked as whole units so
+  # their internal .git references stay intact (link_tree only does files).
+  while IFS= read -r submod; do
+    local_share_prefix="root/home/.local/share/"
+    if [[ "$submod" == "$local_share_prefix"* ]]; then
+      rel="${submod#root/home/}"
+      echo ">>> Linking submodule dir: ~/.${rel#.}"
+      link_dir "$PWD/$submod" "$HOME/$rel"
+    fi
+  done < <(_submodule_paths)
 fi
 
 echo ">>> Linking config files into ~/.config"
@@ -383,42 +452,6 @@ while IFS= read -r src; do
 done < <(find "$DOTFILES_HOME" -type f \
   ! -path "$DOTFILES_HOME/.config/*" \
   ! -path "$DOTFILES_HOME/.local/*")
-
-# =============================================================================
-# 2b. OMARCHY SUBMODULE → ~/.local/share/omarchy
-# =============================================================================
-
-echo ">>> Linking omarchy submodule into ~/.local/share/omarchy"
-
-OMARCHY_SRC="$PWD/omarchy"
-OMARCHY_DEST="$HOME/.local/share/omarchy"
-
-if [[ -d "$OMARCHY_SRC" ]]; then
-  if [[ $DRY_RUN -eq 1 ]]; then
-    echo "+ backup/remove $OMARCHY_DEST if it exists and is not already the correct symlink"
-    echo "+ ln -sfn $OMARCHY_SRC $OMARCHY_DEST"
-  else
-    # Already correctly symlinked — nothing to do
-    if [[ -L "$OMARCHY_DEST" ]] && [[ "$(readlink "$OMARCHY_DEST")" == "$OMARCHY_SRC" ]]; then
-      echo "  already symlinked — skipping"
-    else
-      # Back up any existing real directory
-      if [[ -d "$OMARCHY_DEST" && ! -L "$OMARCHY_DEST" ]]; then
-        OMARCHY_BACKUP="${OMARCHY_DEST}.bak.$(date +%s)"
-        echo "  backing up existing $OMARCHY_DEST → $OMARCHY_BACKUP"
-        mv "$OMARCHY_DEST" "$OMARCHY_BACKUP"
-      elif [[ -L "$OMARCHY_DEST" ]]; then
-        # Wrong symlink target — remove it
-        rm "$OMARCHY_DEST"
-      fi
-      run_cmd mkdir -p "$HOME/.local/share"
-      run_cmd ln -sfn "$OMARCHY_SRC" "$OMARCHY_DEST"
-      echo "  linked: $OMARCHY_DEST → $OMARCHY_SRC"
-    fi
-  fi
-else
-  echo "  warning: omarchy submodule not found at $OMARCHY_SRC — skipping"
-fi
 
 # =============================================================================
 # 3. PERMISSIONS
