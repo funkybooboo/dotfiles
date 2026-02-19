@@ -143,56 +143,46 @@ After adding new configs or scripts under `root/home/`, re-run:
 
 ## Repository Structure
 
-```
-dotfiles/
-├── omarchy/                    # Omarchy fork (git submodule → ~/.local/share/omarchy)
-├── root/                       # Files to be symlinked
-│   ├── home/                   # User home directory files
-│   │   ├── .config/           # Configuration files
-│   │   │   ├── fish/          # Fish shell
-│   │   │   ├── nvim/          # Neovim
-│   │   │   ├── opencode/      # OpenCode AI
-│   │   │   └── systemd/       # User systemd services
-│   │   ├── .local/
-│   │   │   ├── bin/           # Custom scripts and commands
-│   │   │   └── lib/           # Shared library scripts
-│   │   ├── .gitconfig         # Git configuration
-│   │   ├── .vimrc             # Vim configuration
-│   │   └── .ssh/config        # SSH configuration
-│   └── etc/                    # System-wide configs
-│       ├── hosts              # Custom /etc/hosts
-│       └── udev/rules.d/      # Udev rules
-└── install.sh                  # Single installer: packages + dotfiles + services
-```
-dotfiles/
-├── root/                       # Files to be symlinked
-│   ├── home/                   # User home directory files
-│   │   ├── .config/           # Configuration files
-│   │   │   ├── fish/          # Fish shell
-│   │   │   ├── nvim/          # Neovim
-│   │   │   ├── opencode/      # OpenCode AI
-│   │   │   └── systemd/       # User systemd services
-│   │   ├── .local/
-│   │   │   ├── bin/           # Custom scripts and commands
-│   │   │   └── lib/           # Shared library scripts
-│   │   ├── .gitconfig         # Git configuration
-│   │   ├── .vimrc             # Vim configuration
-│   │   └── .ssh/config        # SSH configuration
-│   └── etc/                    # System-wide configs
-│       ├── hosts              # Custom /etc/hosts
-│       └── udev/rules.d/      # Udev rules
-└── install.sh                  # Single installer: packages + dotfiles + services
+`root/` is a **mirror of the filesystem** — its layout maps exactly to where files land on disk.
+Individual files are symlinked by `link_tree`; whole directories (submodules) are symlinked by
+`link_dir`.
 
-Custom Scripts in .local/bin:
-  • btrfs-snapshot      - Create BTRFS snapshots
-  • clean-disk          - System cleanup script
-  • clean-memory        - Free up system memory
-  • gg                  - AI-powered git commit helper
-  • update              - System update script
-  • update-firmware     - Firmware update script
-  • vpn                 - VPN management (home/proton/usu)
-  • sync-*              - NAS sync scripts (documents/music/photos/audiobooks)
 ```
+dotfiles/
+├── root/                           # Mirrors the filesystem
+│   ├── home/                       # → $HOME
+│   │   ├── .config/
+│   │   │   ├── fish/               # Fish shell config
+│   │   │   ├── hypr/               # Hyprland config
+│   │   │   ├── nvim/               # Neovim config
+│   │   │   ├── omarchy/            # Omarchy user overrides (hooks, branding, themes)
+│   │   │   ├── opencode/           # OpenCode AI config
+│   │   │   └── systemd/            # User systemd services
+│   │   ├── .local/
+│   │   │   ├── bin/                # Custom scripts (update, gg, vpn, …)
+│   │   │   ├── lib/                # Shared library scripts
+│   │   │   └── share/
+│   │   │       └── omarchy/        # [submodule] funkybooboo/omarchy fork
+│   │   ├── .gitconfig
+│   │   ├── .vimrc
+│   │   └── .ssh/config
+│   └── etc/                        # → /etc
+│       ├── hosts
+│       └── udev/rules.d/
+└── install.sh                      # Packages + symlinks + services
+```
+
+**Custom scripts in `.local/bin`:**
+
+| Script | Purpose |
+|--------|---------|
+| `update` | Full system update (yay + flatpak + omarchy + firmware) |
+| `gg` | AI-powered git commit helper |
+| `vpn` | VPN management (home / proton / usu) |
+| `clean-disk` | System cleanup |
+| `clean-memory` | Free up memory |
+| `btrfs-snapshot` | Create BTRFS snapshots |
+| `sync-*` | NAS sync scripts (documents / music / photos / audiobooks) |
 
 ---
 
@@ -281,73 +271,121 @@ In enforce mode, AppArmor will actively block policy violations for maximum secu
 
 ---
 
-## Omarchy Submodule
+## Submodules
 
-Omarchy is tracked as a git submodule pointing at the personal fork:
-[`github.com/funkybooboo/omarchy`](https://github.com/funkybooboo/omarchy)
+Submodules are full git repositories nested inside this repo. They live under `root/` so their
+path mirrors where they land on disk. `install.sh` symlinks each submodule directory as a whole
+unit (via `link_dir`) so the internal `.git` reference stays intact and all git operations work
+normally inside them.
 
-`install.sh` symlinks `dotfiles/omarchy/` → `~/.local/share/omarchy`, which is where
-Omarchy expects to live. The `omarchy-*` commands all work normally against the fork.
+### How it works
 
-### Fresh clone
+| Location in repo | Symlinked to | Purpose |
+|---|---|---|
+| `root/home/.local/share/omarchy/` | `~/.local/share/omarchy` | Omarchy fork — all `omarchy-*` commands run from here |
 
-When cloning dotfiles on a new machine, the submodule is initialised automatically by `install.sh`:
+`install.sh` reads `.gitmodules` automatically — any submodule placed under
+`root/home/.local/share/` is picked up and linked without any code changes.
+
+---
+
+### Installing on a fresh machine
+
+`install.sh` initialises and clones all submodules before symlinking:
 
 ```bash
 git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./install.sh --backup
+./install.sh --backup        # backs up any existing ~/.local/share/omarchy
 ```
 
-Or manually:
+Or clone with submodules already populated:
 
 ```bash
 git clone --recurse-submodules git@github.com:funkybooboo/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh --skip-packages --backup
 ```
 
-### Editing omarchy
+---
 
-Make changes directly inside `dotfiles/omarchy/` (or the separate clone at `~/projects/omarchy/`
-— they share the same remote). Commit and push from within that directory:
+### Editing a submodule
+
+The submodule is a normal git repo. Make changes, commit, and push from inside it:
 
 ```bash
-cd ~/dotfiles/omarchy
+cd ~/dotfiles/root/home/.local/share/omarchy
 # ... make changes ...
 git add .
 git commit -m "my change"
 git push
 ```
 
-Then record the new commit in dotfiles:
+Then record the new commit pin in dotfiles so others (and future installs) get the same version:
 
 ```bash
 cd ~/dotfiles
-git add omarchy
+git add root/home/.local/share/omarchy
 git commit -m "chore: advance omarchy submodule pin"
 git push
 ```
 
-### Pulling your latest fork changes
+> The `update` script does the pin advance automatically after `omarchy-update` runs.
+
+---
+
+### Updating a submodule to its latest fork commit
+
+Pull the latest from the fork remote and advance the pin:
 
 ```bash
 cd ~/dotfiles
-git submodule update --remote omarchy
-git add omarchy
+git submodule update --remote root/home/.local/share/omarchy
+git add root/home/.local/share/omarchy
 git commit -m "chore: advance omarchy submodule pin"
+git push
 ```
 
-The `update` script does this automatically after running `omarchy-update`.
+Or just run `update` — it does this automatically.
 
-### Syncing upstream changes from basecamp/omarchy
+---
+
+### Syncing upstream changes from basecamp/omarchy into your fork
 
 ```bash
-cd ~/dotfiles/omarchy
+cd ~/dotfiles/root/home/.local/share/omarchy
 git fetch https://github.com/basecamp/omarchy.git master
 git merge FETCH_HEAD          # or: git rebase FETCH_HEAD
 git push                      # push merged result to your fork
 ```
 
 Then advance the pin in dotfiles as above.
+
+---
+
+### Adding a new submodule
+
+Place it under `root/home/` at the path that mirrors its destination on disk:
+
+```bash
+# Example: adding a new tool that lives at ~/.local/share/mytool
+git submodule add git@github.com:you/mytool.git root/home/.local/share/mytool
+git add .gitmodules root/home/.local/share/mytool
+git commit -m "add mytool as submodule"
+```
+
+`install.sh` will automatically detect it (via `.gitmodules`) and symlink it on the next run.
+
+---
+
+### Removing a submodule
+
+```bash
+git submodule deinit root/home/.local/share/omarchy
+git rm root/home/.local/share/omarchy
+git add .gitmodules
+git commit -m "remove omarchy submodule"
+```
 
 ---
 

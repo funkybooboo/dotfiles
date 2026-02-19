@@ -32,14 +32,16 @@ if command -v omarchy-update >/dev/null 2>&1; then
 fi
 
 # Step 3b: Advance dotfiles submodule pin to match the pulled omarchy commit
-# Resolve the real path of this script to find the dotfiles repo root
+# Resolve the real path of this script to find the dotfiles repo root.
+# Script lives at dotfiles/root/home/.local/bin/update — 4 levels deep.
 _SCRIPT_REAL="$(readlink -f "${BASH_SOURCE[0]}")"
-_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../.." && pwd)"
+_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../../.." && pwd)"
 if [[ -f "$_DOTFILES_DIR/.gitmodules" ]] && grep -q "omarchy" "$_DOTFILES_DIR/.gitmodules" 2>/dev/null; then
+    _OMARCHY_SUBMOD="root/home/.local/share/omarchy"
     echo "→ Updating omarchy submodule pin in dotfiles..."
-    if git -C "$_DOTFILES_DIR" submodule update --remote omarchy 2>/dev/null; then
-        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- omarchy 2>/dev/null; then
-            git -C "$_DOTFILES_DIR" add omarchy
+    if git -C "$_DOTFILES_DIR" submodule update --remote "$_OMARCHY_SUBMOD" 2>/dev/null; then
+        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- "$_OMARCHY_SUBMOD" 2>/dev/null; then
+            git -C "$_DOTFILES_DIR" add "$_OMARCHY_SUBMOD"
             git -C "$_DOTFILES_DIR" commit -m "chore: advance omarchy submodule pin"
             echo "  dotfiles submodule pin updated and committed"
         else
