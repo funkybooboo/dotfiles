@@ -31,6 +31,26 @@ if command -v omarchy-update >/dev/null 2>&1; then
     echo ""
 fi
 
+# Step 3b: Advance dotfiles submodule pin to match the pulled omarchy commit
+# Resolve the real path of this script to find the dotfiles repo root
+_SCRIPT_REAL="$(readlink -f "${BASH_SOURCE[0]}")"
+_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../.." && pwd)"
+if [[ -f "$_DOTFILES_DIR/.gitmodules" ]] && grep -q "omarchy" "$_DOTFILES_DIR/.gitmodules" 2>/dev/null; then
+    echo "→ Updating omarchy submodule pin in dotfiles..."
+    if git -C "$_DOTFILES_DIR" submodule update --remote omarchy 2>/dev/null; then
+        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- omarchy 2>/dev/null; then
+            git -C "$_DOTFILES_DIR" add omarchy
+            git -C "$_DOTFILES_DIR" commit -m "chore: advance omarchy submodule pin"
+            echo "  dotfiles submodule pin updated and committed"
+        else
+            echo "  omarchy submodule pin already up to date"
+        fi
+    else
+        echo "  warning: could not update omarchy submodule — skipping pin update"
+    fi
+    echo ""
+fi
+
 # Step 4: Update firmware
 if command -v fwupdmgr >/dev/null 2>&1; then
     echo "→ Checking for firmware updates..."

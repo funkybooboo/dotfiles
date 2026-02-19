@@ -176,6 +176,9 @@ link_tree() {
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+# Ensure submodules (e.g. omarchy) are initialised and up to date
+git submodule update --init --recursive
+
 DOTFILES_ROOT="$PWD/root"
 DOTFILES_ROOT_ETC="$DOTFILES_ROOT/etc"
 DOTFILES_HOME="$DOTFILES_ROOT/home"
@@ -380,6 +383,42 @@ while IFS= read -r src; do
 done < <(find "$DOTFILES_HOME" -type f \
   ! -path "$DOTFILES_HOME/.config/*" \
   ! -path "$DOTFILES_HOME/.local/*")
+
+# =============================================================================
+# 2b. OMARCHY SUBMODULE → ~/.local/share/omarchy
+# =============================================================================
+
+echo ">>> Linking omarchy submodule into ~/.local/share/omarchy"
+
+OMARCHY_SRC="$PWD/omarchy"
+OMARCHY_DEST="$HOME/.local/share/omarchy"
+
+if [[ -d "$OMARCHY_SRC" ]]; then
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "+ backup/remove $OMARCHY_DEST if it exists and is not already the correct symlink"
+    echo "+ ln -sfn $OMARCHY_SRC $OMARCHY_DEST"
+  else
+    # Already correctly symlinked — nothing to do
+    if [[ -L "$OMARCHY_DEST" ]] && [[ "$(readlink "$OMARCHY_DEST")" == "$OMARCHY_SRC" ]]; then
+      echo "  already symlinked — skipping"
+    else
+      # Back up any existing real directory
+      if [[ -d "$OMARCHY_DEST" && ! -L "$OMARCHY_DEST" ]]; then
+        OMARCHY_BACKUP="${OMARCHY_DEST}.bak.$(date +%s)"
+        echo "  backing up existing $OMARCHY_DEST → $OMARCHY_BACKUP"
+        mv "$OMARCHY_DEST" "$OMARCHY_BACKUP"
+      elif [[ -L "$OMARCHY_DEST" ]]; then
+        # Wrong symlink target — remove it
+        rm "$OMARCHY_DEST"
+      fi
+      run_cmd mkdir -p "$HOME/.local/share"
+      run_cmd ln -sfn "$OMARCHY_SRC" "$OMARCHY_DEST"
+      echo "  linked: $OMARCHY_DEST → $OMARCHY_SRC"
+    fi
+  fi
+else
+  echo "  warning: omarchy submodule not found at $OMARCHY_SRC — skipping"
+fi
 
 # =============================================================================
 # 3. PERMISSIONS

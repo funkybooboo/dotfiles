@@ -145,6 +145,26 @@ After adding new configs or scripts under `root/home/`, re-run:
 
 ```
 dotfiles/
+├── omarchy/                    # Omarchy fork (git submodule → ~/.local/share/omarchy)
+├── root/                       # Files to be symlinked
+│   ├── home/                   # User home directory files
+│   │   ├── .config/           # Configuration files
+│   │   │   ├── fish/          # Fish shell
+│   │   │   ├── nvim/          # Neovim
+│   │   │   ├── opencode/      # OpenCode AI
+│   │   │   └── systemd/       # User systemd services
+│   │   ├── .local/
+│   │   │   ├── bin/           # Custom scripts and commands
+│   │   │   └── lib/           # Shared library scripts
+│   │   ├── .gitconfig         # Git configuration
+│   │   ├── .vimrc             # Vim configuration
+│   │   └── .ssh/config        # SSH configuration
+│   └── etc/                    # System-wide configs
+│       ├── hosts              # Custom /etc/hosts
+│       └── udev/rules.d/      # Udev rules
+└── install.sh                  # Single installer: packages + dotfiles + services
+```
+dotfiles/
 ├── root/                       # Files to be symlinked
 │   ├── home/                   # User home directory files
 │   │   ├── .config/           # Configuration files
@@ -258,6 +278,76 @@ sudo reboot
 ```
 
 In enforce mode, AppArmor will actively block policy violations for maximum security.
+
+---
+
+## Omarchy Submodule
+
+Omarchy is tracked as a git submodule pointing at the personal fork:
+[`github.com/funkybooboo/omarchy`](https://github.com/funkybooboo/omarchy)
+
+`install.sh` symlinks `dotfiles/omarchy/` → `~/.local/share/omarchy`, which is where
+Omarchy expects to live. The `omarchy-*` commands all work normally against the fork.
+
+### Fresh clone
+
+When cloning dotfiles on a new machine, the submodule is initialised automatically by `install.sh`:
+
+```bash
+git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh --backup
+```
+
+Or manually:
+
+```bash
+git clone --recurse-submodules git@github.com:funkybooboo/dotfiles.git ~/dotfiles
+```
+
+### Editing omarchy
+
+Make changes directly inside `dotfiles/omarchy/` (or the separate clone at `~/projects/omarchy/`
+— they share the same remote). Commit and push from within that directory:
+
+```bash
+cd ~/dotfiles/omarchy
+# ... make changes ...
+git add .
+git commit -m "my change"
+git push
+```
+
+Then record the new commit in dotfiles:
+
+```bash
+cd ~/dotfiles
+git add omarchy
+git commit -m "chore: advance omarchy submodule pin"
+git push
+```
+
+### Pulling your latest fork changes
+
+```bash
+cd ~/dotfiles
+git submodule update --remote omarchy
+git add omarchy
+git commit -m "chore: advance omarchy submodule pin"
+```
+
+The `update` script does this automatically after running `omarchy-update`.
+
+### Syncing upstream changes from basecamp/omarchy
+
+```bash
+cd ~/dotfiles/omarchy
+git fetch https://github.com/basecamp/omarchy.git master
+git merge FETCH_HEAD          # or: git rebase FETCH_HEAD
+git push                      # push merged result to your fork
+```
+
+Then advance the pin in dotfiles as above.
 
 ---
 
