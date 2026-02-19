@@ -7,7 +7,7 @@ Minimalist Arch Linux dotfiles focused on Hyprland/Omarchy desktop with essentia
 This repository provides a clean, reproducible Arch Linux setup with:
 
 - **Configuration management** - Just 16 essential configs, nothing more
-- **Package management** - 48 curated installers for core tools only
+- **Package management** - Curated set of core tools only
 - **Hyprland/Omarchy** - Wayland compositor with custom configurations
 - **Developer tools** - Neovim, Git, Docker, and essential CLI utilities
 - **Minimalist philosophy** - No bloat, only what you actually use
@@ -34,89 +34,88 @@ cd ~/dotfiles
 
 ---
 
-### 2. Install packages (optional)
+### 2. Run the installer
 
-Install all packages:
+A single script handles everything — packages, symlinks, services, and optional extras:
+
 ```bash
 ./install.sh
 ```
 
-Or combine with setup:
-```bash
-./setup.sh --install --backup
-```
+**What it does (in order):**
+1. Installs all Arch Linux packages via `pacman` and `yay`
+2. Symlinks dotfiles and configs into `$HOME`
+3. Sets permissions on `.ssh` and `.gnupg`
+4. Deploys `/etc/hosts` and udev rules
+5. Configures AppArmor kernel parameters
+6. Enables systemd user services
 
-**What gets installed:**
+**Packages installed:**
 - **Core:** git, curl, wget, base-devel, linux-headers
 - **Security:** linux-hardened, linux-lts, apparmor, apparmor.d (2000+ profiles)
-- **Shell:** fish, starship, zoxide, fzf, ripgrep, fd, bat, eza, dust, btop, fastfetch, jq, wl-clipboard
-- **Dev:** neovim, docker, rust, go, python, lazygit, lazydocker, act, github-cli
+- **Shell:** fish, fzf, ripgrep, fd, bat, eza, dust, btop, fastfetch, jq, wl-clipboard
+- **Dev:** neovim, docker, docker-compose, lazygit, lazydocker, act, github-cli, git-delta
 - **Desktop:** librewolf-bin (via AUR)
-- **System:** flatpak, power-profiles-daemon, fwupd
+- **System:** flatpak, power-profiles-daemon, fwupd, openssh, wireguard-tools, rsync
 
 ---
 
-### 3. Bootstrap your dotfiles
-
-Preview what will be linked:
+### 3. Flags
 
 ```bash
-./setup.sh --dry-run
+./install.sh [options]
 ```
 
-Then apply (choose one):
+| Flag | Description |
+|------|-------------|
+| `--dry-run, -n` | Preview all actions without executing |
+| `--skip-packages` | Skip package installation (symlinks/services only) |
+| `--backup, -b` | Backup conflicting files with `.bak` suffix (recommended) |
+| `--force, -f` | Remove conflicting files/symlinks (destructive) |
+| `--merge, -m` | Open nvim diff to merge conflicts into dotfiles source |
+| `--with-vpn` | Install WireGuard config to `/etc/wireguard/` |
+| `--with-nas-sync` | Enable NAS sync timers |
+| `--help, -h` | Show help message |
+
+**Common invocations:**
 
 ```bash
-# Safe mode: Abort if conflicts exist
-./setup.sh
+# Preview everything without making changes
+./install.sh --dry-run
 
-# Backup mode: Backup existing files with .bak suffix (recommended)
-./setup.sh --backup
+# Fresh install (backup any conflicts)
+./install.sh --backup
 
-# Force mode: Remove existing files/symlinks (destructive)
-./setup.sh --force
+# Skip packages, just re-symlink dotfiles
+./install.sh --skip-packages --backup
+
+# Full install with VPN and NAS sync
+./install.sh --backup --with-vpn --with-nas-sync
 ```
-
-What this does:
-
-* Symlinks commands from `home/.local/bin/*` → `~/.local/bin/*`
-* Symlinks library scripts from `home/.local/lib/*` → `~/.local/lib/*`
-* Symlinks omarchy customizations from `home/.local/share/omarchy/*` → `~/.local/share/omarchy/*`
-* Symlinks each folder under `home/.config/*` → `~/.config/*`
-* Symlinks all remaining dotfiles in `home/` → `$HOME`
-* Enables battery notification timer
-* Installs power profile auto-switching udev rule
-* Configures AppArmor kernel parameters and regenerates boot configuration
-
-**Flags:**
-- `--dry-run, -n`: Preview actions without executing
-- `--backup, -b`: Backup existing files with `.bak` suffix (safe, recommended)
-- `--force, -f`: Remove existing files (destructive)
-- `--with-nas-sync`: Enable NAS sync timers setup (optional)
-- `--help, -h`: Show help message
 
 ---
 
 ### 4. Configure NAS sync (optional)
 
-If you want to enable automatic NAS synchronization, run setup with the `--with-nas-sync` flag:
+Run with the `--with-nas-sync` flag to enable automatic NAS synchronization:
 
 ```bash
-./setup.sh --backup --with-nas-sync
+./install.sh --skip-packages --with-nas-sync
 ```
 
-The setup script will prompt for your NAS rsync password. You can also set it manually:
+The script will prompt for your NAS rsync password. You can also set it manually:
 
 ```bash
 echo 'your_nas_password' > ~/.config/nas-sync/rsync-password
 chmod 600 ~/.config/nas-sync/rsync-password
 ```
 
-NAS sync timers will run hourly and sync:
+NAS sync timers run hourly and sync:
 - `~/Documents` ↔ NAS `documents` module
 - `~/Music` ↔ NAS `music` module
 - `~/Photos` ↔ NAS `photos` module
 - `~/Audiobooks` ↔ NAS `audiobooks` module
+- `~/Books` ↔ NAS `books` module
 
 Check sync status:
 ```bash
@@ -134,10 +133,10 @@ systemctl --user start nas-sync-documents.service
 
 ### 5. When you add new files or scripts
 
-After adding new configs or scripts under `home/`, re-run:
+After adding new configs or scripts under `root/home/`, re-run:
 
 ```bash
-./setup.sh --backup  # Re-symlink new files
+./install.sh --skip-packages --backup
 ```
 
 ---
@@ -162,8 +161,7 @@ dotfiles/
 │   └── etc/                    # System-wide configs
 │       ├── hosts              # Custom /etc/hosts
 │       └── udev/rules.d/      # Udev rules
-├── install.sh                  # Simple package installer
-└── setup.sh                    # Main setup script
+└── install.sh                  # Single installer: packages + dotfiles + services
 
 Custom Scripts in .local/bin:
   • btrfs-snapshot      - Create BTRFS snapshots
@@ -186,24 +184,20 @@ Custom Scripts in .local/bin:
 - `fd` - Better find
 - `ripgrep` - Better grep
 - `fzf` - Fuzzy finder
-- `zoxide` - Smart cd
 - `dust` - Better du
-- `starship` - Shell prompt
 - `btop` - System monitor
 
 **Git Tools:**
 - `git` - Version control
 - `gh` - GitHub CLI
 - `lazygit` - Git TUI
+- `git-delta` - Better diffs
 
 **Development:**
 - `neovim` - Text editor
-- `mise` - Runtime version manager
 - `docker` - Containers
 - `lazydocker` - Docker TUI
 - `act` - GitHub Actions locally
-- `rust` - Rust toolchain
-- `python-pip` - Python package manager
 
 **Desktop:**
 - `hyprland` - Wayland compositor
@@ -223,7 +217,6 @@ This dotfiles repository follows these principles:
 3. **Idempotency** - Safe to run setup repeatedly
 4. **Transparency** - Every file is visible and editable
 5. **Version control** - Everything tracked in git
-6. **Modularity** - Each installer is independent
 
 ---
 
