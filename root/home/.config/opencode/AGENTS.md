@@ -6,6 +6,7 @@
 - Follow project conventions and existing patterns
 - Keep functions focused on single responsibilities
 - Slow and steady wins the race - take time to understand before changing
+- Use ASCII only in code and documentation - emojis are allowed in data only
 
 ## Security & Safety
 - Never commit secrets, API keys, or credentials
@@ -37,6 +38,75 @@
 - Prefer specialized tools over bash when available
 - Verify tool outputs before proceeding to next steps
 
+## Permissions & Restrictions
+
+### What You CAN Do (Auto-Allowed)
+**Reading:**
+- Most files (except secrets, credentials, keys, .env files)
+- .env.example and .env.*.example files
+- list, glob, grep, websearch, codesearch tools
+
+**Editing:**
+- Markdown files (*.md, *.mdx)
+- README*, CHANGELOG*, CONTRIBUTING*, LICENSE* files
+- Other files require permission
+
+**Bash:**
+- Git read-only: `git status/log/diff/show/branch/remote/ls-files`
+- Package managers: `npm/yarn/pnpm list/outdated/view`
+- File viewing: `ls/cat/head/tail/grep/find/wc`
+- Docker/K8s read-only: `docker ps/images/inspect`, `kubectl get/describe`
+- System info: `which/whereis/env/printenv/echo/date/pwd/whoami`
+
+**Tasks:**
+- explore subagent (free to use)
+- Other subagents require permission
+
+### What You CANNOT Do (Denied)
+**Never Read:**
+- .env, secrets, credentials, keys (.pem/.key/.p12/.pfx/.cer/.crt)
+- SSH keys (.ssh/id_*, *_rsa*, *_dsa*, *_ecdsa*, *_ed25519*)
+- Auth files (*token*, *bearer*, *password*.txt, auth.json, .netrc, .git-credentials)
+- Cloud configs (.aws/credentials, .kube/config, firebase-adminsdk-*.json)
+- Package auth (.npmrc, .pypirc)
+- GPG (.gnupg/**), keystores, database.yml
+
+**Never Edit:**
+- .git/**, node_modules/**
+- Lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, Cargo.lock, Gemfile.lock, poetry.lock, composer.lock, Pipfile.lock)
+
+**Never Run:**
+- `rm/rm -rf` - **Instead: Give user exact commands to run**
+- `dd`, `mkfs*`, `fdisk*`, `parted*`, `> /dev/*`
+- `chmod 777`, `chown root`
+
+### What Requires Permission (Ask First)
+- Most bash commands (except auto-allowed)
+- Editing non-markdown code files
+- webfetch, task subagents (except explore)
+- External directories (except /usr/share/doc, /usr/share/man)
+- Doom loop operations
+
+## File Deletion Protocol
+**You cannot run `rm` directly.** When files need deletion:
+
+1. Identify what to remove
+2. Provide exact commands:
+```bash
+rm path/to/file.txt
+rm -rf path/to/directory
+rm file1.txt file2.txt dir1/ dir2/
+```
+3. Explain why
+4. Wait for user to execute
+
+Example:
+> "Found 3 obsolete test files. Please run:
+> ```bash
+> rm tests/old_test.js tests/deprecated_test.js tests/unused_test.js
+> ```
+> These are no longer referenced in the test suite."
+
 ## Best Practices
 - Premature optimization is the root of all evil - measure before optimizing
 - Make it work, make it right, then make it fast (in that order)
@@ -48,4 +118,4 @@
 
 ---
 
-**Goal**: Be a reliable coding partner who writes quality code, communicates clearly, and respects user preferences.
+**Goal**: Be a reliable coding partner who writes quality code, communicates clearly, respects user preferences, and operates within defined permissions.
