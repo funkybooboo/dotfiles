@@ -34,12 +34,12 @@
 2. Write failing test (RED)
 3. Implement minimum code to pass (GREEN)
 4. Refactor for quality (REFACTOR)
-5. Auto-update roadmap.md with ✅ for completed items
+5. Auto-update roadmap.md with [X] for completed items
 6. Run full test suite before finishing
 
 **Roadmap Integration:**
 - Read roadmap on project start if exists (`plans/roadmap.md`, `./roadmap.md`)
-- Update with ✅ when tests pass for checklist items
+- Update with [X] when tests pass for checklist items
 - Use Edit tool for surgical updates (don't reformat entire file)
 - Stay in scope - only implement checked-off or current milestone items
 
@@ -68,10 +68,10 @@
 - **Smart tool selection** - Read for specific files, Task(explore) for discovery
 
 Examples:
-- ✅ `Read(a.ts), Read(b.ts), Read(c.ts)` - parallel independent reads
-- ❌ `Read(a.ts)` then `Read(b.ts)` then `Read(c.ts)` - sequential waste
-- ✅ `Task(explore, "find all API endpoints")` - delegate exploration
-- ❌ Manual grep/glob chains for broad searches
+- [OK] `Read(a.ts), Read(b.ts), Read(c.ts)` - parallel independent reads
+- [X] `Read(a.ts)` then `Read(b.ts)` then `Read(c.ts)` - sequential waste
+- [OK] `Task(explore, "find all API endpoints")` - delegate exploration
+- [X] Manual grep/glob chains for broad searches
 
 ## Permissions & Restrictions
 
@@ -150,7 +150,7 @@ Before finishing ANY task, verify ALL items:
 - [ ] Tests written and passing (TDD requirement)
 - [ ] Build succeeds (npm/cargo/python build)
 - [ ] Linter clean (biome/clippy/ruff/eslint)
-- [ ] Roadmap updated (✅ on completed items in roadmap.md)
+- [ ] Roadmap updated ([X] on completed items in roadmap.md)
 - [ ] No debug code (console.log, println!, pdb, debugger)
 - [ ] Error handling present (no silent failures)
 

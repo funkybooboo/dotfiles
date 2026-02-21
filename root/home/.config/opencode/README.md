@@ -2,7 +2,7 @@
 
 Enhanced AI coding assistant configuration with TDD workflow, roadmap integration, and performance optimizations.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Default mode (fast, efficient)
@@ -18,7 +18,7 @@ opencode --agent explanatory
 opencode --agent learning
 ```
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 ~/.config/opencode/
@@ -39,7 +39,7 @@ opencode --agent learning
         └── SKILL.md
 ```
 
-## ✨ New Features (v2.0)
+## New Features (v2.0)
 
 ### TDD Agent
 - Enforces Red-Green-Refactor workflow
@@ -55,12 +55,12 @@ Auto-allowed commands (no permission needed):
 
 ### Pre-Completion Checklist
 All agents verify before finishing:
-- ✅ Tests passing
-- ✅ Build succeeds
-- ✅ Linter clean
-- ✅ Roadmap updated
-- ✅ No debug code
-- ✅ Error handling present
+- [X] Tests passing
+- [X] Build succeeds
+- [X] Linter clean
+- [X] Roadmap updated
+- [X] No debug code
+- [X] Error handling present
 
 ### Performance Optimizations
 - Parallel file reads
@@ -68,7 +68,7 @@ All agents verify before finishing:
 - Avoid redundant operations
 - Concise communication
 
-## 🎯 Agent Comparison
+## Agent Comparison
 
 | Agent | Temperature | Best For | Communication |
 |-------|-------------|----------|---------------|
@@ -77,33 +77,33 @@ All agents verify before finishing:
 | **explanatory** | 0.45 | Learning, understanding code | Detailed, educational |
 | **learning** | 0.55 | Hands-on practice, tutorials | Interactive, guided |
 
-## 📚 Documentation
+## Documentation
 
 - **[USAGE.md](USAGE.md)** - Complete usage guide with examples
 - **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
 - **[AGENTS.md](AGENTS.md)** - Full rules and guidelines
 
-## 🔧 Skills
+## Skills
 
 ### Roadmap Tracker
-**Location:** `skills/roadmap/SKILL.md`  
-**Triggers:** When `plans/roadmap.md` exists  
+**Location:** `skills/roadmap/SKILL.md`
+**Triggers:** When `plans/roadmap.md` exists
 **Features:**
 - Automatic progress tracking
-- Checkbox updates with ✅
+- Checkbox updates with [X]
 - Milestone-aware development
 - Scope management
 
 ### Omarchy
-**Location:** `skills/omarchy/SKILL.md` (symlink)  
-**Triggers:** System config changes (Hyprland, waybar, etc.)  
+**Location:** `skills/omarchy/SKILL.md` (symlink)
+**Triggers:** System config changes (Hyprland, waybar, etc.)
 **Features:**
 - Safe system configuration
 - Window manager rules
 - Theme management
 - Display configuration
 
-## 🎓 Examples
+## Examples
 
 ### Using TDD Agent
 ```bash
@@ -113,7 +113,7 @@ opencode --agent tdd
 # Agent automatically:
 # 1. Reads plans/roadmap.md
 # 2. Enforces test-first development
-# 3. Updates roadmap with ✅
+# 3. Updates roadmap with [X]
 # 4. Runs cargo test && cargo clippy
 ```
 
@@ -121,11 +121,11 @@ opencode --agent tdd
 ```markdown
 ## v1.0.0 - Feature Name
 - [ ] Unchecked task (not started)
-- [x] Completed task ✅
+- [x] Completed task
 - [x] Another completed task
 ```
 
-## 🔍 Verification
+## Verification
 
 Check your configuration:
 ```bash
@@ -145,7 +145,7 @@ cat ~/.config/opencode/skills/omarchy/SKILL.md | head -5
 cat ~/.config/opencode/skills/roadmap/SKILL.md | head -5
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Agent not found?**
 - Check `opencode.json` has agent definition
@@ -164,22 +164,22 @@ cat ~/.config/opencode/skills/roadmap/SKILL.md | head -5
 - Verify `SKILL.md` exists in skill directory
 - Check skill frontmatter has `name` and `description`
 
-## 📊 Status
+## Status
 
-**Version:** 2.0.0  
-**Last Updated:** Feb 21, 2026  
-**Agents:** 4 (build, tdd, explanatory, learning)  
-**Skills:** 2 (omarchy, roadmap)  
+**Version:** 2.0.0
+**Last Updated:** Feb 21, 2026
+**Agents:** 4 (build, tdd, explanatory, learning)
+**Skills:** 2 (omarchy, roadmap)
 **Auto-Allowed Commands:** 15+
 
-## 🎉 Success!
+## Success!
 
 Your OpenCode configuration is now optimized for:
-- ✅ TDD-driven development
-- ✅ Roadmap-based milestone tracking
-- ✅ Token-efficient operations
-- ✅ Automated quality gates
-- ✅ Systematic debugging
-- ✅ Performance optimization
+- [X] TDD-driven development
+- [X] Roadmap-based milestone tracking
+- [X] Token-efficient operations
+- [X] Automated quality gates
+- [X] Systematic debugging
+- [X] Performance optimization
 
-**Ready to code!** 🚀
+**Ready to code!**

@@ -2,35 +2,35 @@
 
 ## Available Agents
 
-### 🔧 build (default)
-**Description:** Fast and efficient coding assistant  
-**Use when:** General development work, quick fixes, feature implementation  
-**Temperature:** 0.3  
+### build (default)
+**Description:** Fast and efficient coding assistant
+**Use when:** General development work, quick fixes, feature implementation
+**Temperature:** 0.3
 **Switch to:** `opencode --agent build` (or just `opencode`)
 
-### 🧪 tdd (NEW)
-**Description:** Strict TDD mode - tests first, roadmap-driven  
-**Use when:** Working on milestone-based projects with roadmap.md  
-**Temperature:** 0.25  
+### tdd
+**Description:** Strict TDD mode - tests first, roadmap-driven
+**Use when:** Working on milestone-based projects with roadmap.md
+**Temperature:** 0.25
 **Switch to:** `opencode --agent tdd`
 
 **TDD Agent Workflow:**
 1. Reads `plans/roadmap.md` or `roadmap.md` automatically
 2. Enforces Red-Green-Refactor cycle
-3. Auto-updates roadmap with ✅ checkmarks
+3. Auto-updates roadmap with [X] checkmarks
 4. Runs tests before finishing
 5. Concise, token-efficient communication
 
-### 📚 explanatory
-**Description:** Educational mode with detailed reasoning  
-**Use when:** Learning new concepts, understanding complex code  
-**Temperature:** 0.45  
+### explanatory
+**Description:** Educational mode with detailed reasoning
+**Use when:** Learning new concepts, understanding complex code
+**Temperature:** 0.45
 **Switch to:** `opencode --agent explanatory`
 
-### 🎓 learning
-**Description:** Interactive teaching mode - learn by doing  
-**Use when:** Hands-on learning, guided practice  
-**Temperature:** 0.55  
+### learning
+**Description:** Interactive teaching mode - learn by doing
+**Use when:** Hands-on learning, guided practice
+**Temperature:** 0.55
 **Switch to:** `opencode --agent learning`
 
 ---
@@ -51,17 +51,17 @@ Agents can now run these without asking permission:
 
 ### Pre-Completion Checklist
 All agents now verify before finishing:
-- ✅ Tests written and passing
-- ✅ Build succeeds
-- ✅ Linter clean
-- ✅ Roadmap updated (if exists)
-- ✅ No debug code left behind
-- ✅ Error handling present
+- [X] Tests written and passing
+- [X] Build succeeds
+- [X] Linter clean
+- [X] Roadmap updated (if exists)
+- [X] No debug code left behind
+- [X] Error handling present
 
 ### Roadmap Integration
 When `plans/roadmap.md` or `roadmap.md` exists:
 - Agents read it on project start
-- Update with ✅ as tasks complete
+- Update with [X] as tasks complete
 - Stay in scope (current milestone only)
 - Use surgical edits (preserve formatting)
 
@@ -72,15 +72,15 @@ When `plans/roadmap.md` or `roadmap.md` exists:
 ### Parallel Tool Calls
 Agents now batch independent operations:
 ```
-✅ Read(file1.ts), Read(file2.ts), Read(file3.ts)
-❌ Sequential reads (wasteful)
+[OK] Read(file1.ts), Read(file2.ts), Read(file3.ts)
+[X] Sequential reads (wasteful)
 ```
 
 ### Smart Exploration
 Use Task(explore) for broad searches:
 ```
-✅ Task(explore, "find all API endpoints")
-❌ Manual grep/glob chains
+[OK] Task(explore, "find all API endpoints")
+[X] Manual grep/glob chains
 ```
 
 ---
@@ -100,12 +100,12 @@ All agents follow systematic debugging:
 ## Skills
 
 ### Roadmap Tracker (Optional)
-**Location:** `~/.config/opencode/skills/roadmap/SKILL.md`  
-**Auto-loads when:** Project has `plans/roadmap.md`  
+**Location:** `~/.config/opencode/skills/roadmap/SKILL.md`
+**Auto-loads when:** Project has `plans/roadmap.md`
 **Features:**
 - Automatic progress tracking
 - Milestone-aware development
-- Checkbox updates with ✅
+- Checkbox updates with [X]
 - Scope management
 
 ---
@@ -139,7 +139,7 @@ opencode --agent tdd
 # Agent automatically:
 # 1. Reads plans/roadmap.md
 # 2. Enforces test-first development
-# 3. Updates roadmap with ✅
+# 3. Updates roadmap with [X]
 # 4. Runs cargo test && cargo clippy before finishing
 ```
 
@@ -185,5 +185,5 @@ opencode
 
 ---
 
-**Last Updated:** Feb 21, 2026  
+**Last Updated:** Feb 21, 2026
 **Version:** 2.0 (TDD + Roadmap Integration)

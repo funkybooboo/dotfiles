@@ -2,7 +2,7 @@
 
 ## Version 2.0 - TDD & Roadmap Integration (Feb 21, 2026)
 
-### 🎯 Major Improvements
+### Major Improvements
 
 #### New TDD Agent
 - **Strict TDD mode** enforcing Red-Green-Refactor workflow
@@ -35,7 +35,7 @@ Auto-allowed commands (no permission needed):
 
 ---
 
-### 📊 Comparison: Before vs After
+### Comparison: Before vs After
 
 | Feature | Before | After |
 |---------|--------|-------|
@@ -52,7 +52,7 @@ Auto-allowed commands (no permission needed):
 
 ---
 
-### 🚀 Usage Examples
+### Usage Examples
 
 #### Before (Manual TDD)
 ```bash
@@ -77,14 +77,14 @@ opencode --agent tdd
 # Agent: Reads plans/roadmap.md automatically
 # Agent: "RED: Writing failing test for login function"
 # Agent: "GREEN: Test passing, implementation complete"
-# Agent: "Updated roadmap: ✅ Login function"
+# Agent: "Updated roadmap: [X] Login function"
 # Agent: Runs npm test && npm run build automatically
 # Agent: "All checks passed. Work complete."
 ```
 
 ---
 
-### 📁 File Changes
+### File Changes
 
 #### Modified Files
 - `AGENTS.md` - Added 4 new sections (TDD, Performance, Checklist, Debugging)
@@ -99,7 +99,7 @@ opencode --agent tdd
 
 ---
 
-### 🎓 Migration Guide
+### Migration Guide
 
 #### For Existing Users
 
@@ -120,12 +120,12 @@ opencode  # Same as before
 ```markdown
 ## v1.0.0 - Feature Name
 - [ ] Unchecked task
-- [x] Completed task ✅
+- [x] Completed task
 ```
 
 ---
 
-### 🔧 Technical Details
+### Technical Details
 
 #### Agent Temperature Settings
 - **build:** 0.3 (balanced)
@@ -151,13 +151,13 @@ All agents now verify:
 
 ---
 
-### 🐛 Known Issues
+### Known Issues
 
 None currently. Report issues to the configuration maintainer.
 
 ---
 
-### 🔮 Future Enhancements
+### Future Enhancements
 
 Potential improvements for v3.0:
 - Per-project `.opencode/config.json` support
@@ -169,7 +169,7 @@ Potential improvements for v3.0:
 
 ---
 
-### 📚 Resources
+### Resources
 
 - **USAGE.md** - Quick reference for all features
 - **AGENTS.md** - Complete rules and guidelines
@@ -178,6 +178,6 @@ Potential improvements for v3.0:
 
 ---
 
-**Contributors:** AI Assistant  
-**Date:** February 21, 2026  
+**Contributors:** AI Assistant
+**Date:** February 21, 2026
 **Version:** 2.0.0
