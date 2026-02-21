@@ -26,6 +26,28 @@
 - Commit early, commit often - small commits tell a story
 - Delete code aggressively; it's all in version control
 
+## TDD Workflow
+**Red → Green → Refactor** - Write failing tests first, make them pass, then improve.
+
+**Workflow:**
+1. Check `plans/roadmap.md` (or `roadmap.md`) for current milestone
+2. Write failing test (RED)
+3. Implement minimum code to pass (GREEN)
+4. Refactor for quality (REFACTOR)
+5. Auto-update roadmap.md with ✅ for completed items
+6. Run full test suite before finishing
+
+**Roadmap Integration:**
+- Read roadmap on project start if exists (`plans/roadmap.md`, `./roadmap.md`)
+- Update with ✅ when tests pass for checklist items
+- Use Edit tool for surgical updates (don't reformat entire file)
+- Stay in scope - only implement checked-off or current milestone items
+
+**Test Locations:**
+- Unit tests: alongside code (`foo.test.ts`, `test_foo.py`, `foo_test.rs`)
+- Integration tests: `tests/` directory
+- E2E tests: `e2e/`, `tests/e2e/`, `playwright/`
+
 ## Communication
 - Reference code with file paths and line numbers
 - When in doubt, ask - assumptions are the enemy of good software
@@ -37,6 +59,19 @@
 - Use explore subagent for codebase research
 - Prefer specialized tools over bash when available
 - Verify tool outputs before proceeding to next steps
+
+## Performance & Token Efficiency
+- **Parallel reads** - batch independent file reads in one response
+- **Task tool for exploration** - use explore subagent for "find all X" queries
+- **Avoid re-reading** - remember file contents within conversation
+- **Concise updates** - facts only, no filler
+- **Smart tool selection** - Read for specific files, Task(explore) for discovery
+
+Examples:
+- ✅ `Read(a.ts), Read(b.ts), Read(c.ts)` - parallel independent reads
+- ❌ `Read(a.ts)` then `Read(b.ts)` then `Read(c.ts)` - sequential waste
+- ✅ `Task(explore, "find all API endpoints")` - delegate exploration
+- ❌ Manual grep/glob chains for broad searches
 
 ## Permissions & Restrictions
 
@@ -57,6 +92,9 @@
 - File viewing: `ls/cat/head/tail/grep/find/wc`
 - Docker/K8s read-only: `docker ps/images/inspect`, `kubectl get/describe`
 - System info: `which/whereis/env/printenv/echo/date/pwd/whoami`
+- Testing: `npm test`, `cargo test`, `pytest`, `bun test`, `go test`
+- Building: `npm run build`, `cargo build`, `tsc --noEmit`, `go build`
+- Linting: `biome check`, `cargo clippy`, `ruff check`, `eslint`
 
 **Tasks:**
 - explore subagent (free to use)
@@ -106,6 +144,39 @@ Example:
 > rm tests/old_test.js tests/deprecated_test.js tests/unused_test.js
 > ```
 > These are no longer referenced in the test suite."
+
+## Pre-Completion Checklist
+Before finishing ANY task, verify ALL items:
+- [ ] Tests written and passing (TDD requirement)
+- [ ] Build succeeds (npm/cargo/python build)
+- [ ] Linter clean (biome/clippy/ruff/eslint)
+- [ ] Roadmap updated (✅ on completed items in roadmap.md)
+- [ ] No debug code (console.log, println!, pdb, debugger)
+- [ ] Error handling present (no silent failures)
+
+**Auto-run before finishing:**
+```bash
+# Run appropriate command for project type:
+npm test && npm run build && biome check    # TypeScript/JS
+cargo test && cargo clippy                  # Rust
+pytest && ruff check                        # Python
+```
+
+**If any fail:** Fix before marking complete. No exceptions.
+
+## Debugging Protocol
+**Systematic approach:**
+1. **Reproduce** - Confirm error (run test/build, capture output)
+2. **Isolate** - Find exact failure point (stack trace, line number)
+3. **Hypothesize** - Theory about root cause
+4. **Fix** - Smallest possible change
+5. **Verify** - Run tests to confirm
+6. **Prevent** - Add regression test
+
+**Never:**
+- Make multiple changes simultaneously
+- Assume cause without evidence
+- Skip regression test after bug fix
 
 ## Best Practices
 - Premature optimization is the root of all evil - measure before optimizing
