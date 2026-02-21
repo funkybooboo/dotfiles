@@ -14,10 +14,10 @@ description: >
 
 ## Core Rules
 1. Read roadmap BEFORE coding
-2. Check off items with ✅ when tests pass
+2. Check off items with [X] when tests pass
 3. Stay in scope (current milestone only)
 4. Use Edit tool (surgical updates, preserve formatting)
-5. Update format: `- [x] Item ✅` or `- [x] Item`
+5. Update format: `- [x] Item` or `- [x] Item`
 
 ## Locations (Priority)
 1. `./plans/roadmap.md`
@@ -28,12 +28,12 @@ description: >
 
 ## Progress Format
 After each completion:
-"✅ Completed: [item]
-📍 Next: [next unchecked item]
+"[X] Completed: [item]
+[NEXT] Next: [next unchecked item]
 Progress: X/Y in [milestone name]"
 
 ## Update Protocol
-- Use Edit tool to add ✅ to completed items
+- Use Edit tool to add [X] to completed items
 - Never remove context or reformat entire sections
 - Surgical edits only
 - Preserve existing formatting and structure
