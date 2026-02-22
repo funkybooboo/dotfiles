@@ -27,7 +27,7 @@
 - Delete code aggressively; it's all in version control
 
 ## TDD Workflow
-**Red → Green → Refactor** - Write failing tests first, make them pass, then improve.
+**Red -> Green -> Refactor** - Write failing tests first, make them pass, then improve.
 
 **Workflow:**
 1. Check `plans/roadmap.md` (or `roadmap.md`) for current milestone
@@ -114,6 +114,7 @@ Examples:
 - Lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, Cargo.lock, Gemfile.lock, poetry.lock, composer.lock, Pipfile.lock)
 
 **Never Run:**
+- `sudo` commands - **Instead: Give user exact sudo commands to run, then wait for them to paste the output**
 - `rm/rm -rf` - **Instead: Give user exact commands to run**
 - `dd`, `mkfs*`, `fdisk*`, `parted*`, `> /dev/*`
 - `chmod 777`, `chown root`
@@ -124,6 +125,26 @@ Examples:
 - webfetch, task subagents (except explore)
 - External directories (except /usr/share/doc, /usr/share/man)
 - Doom loop operations
+
+## Sudo Command Protocol
+**You cannot run `sudo` commands directly.** When sudo is needed:
+
+1. Identify what needs elevated privileges
+2. Provide exact sudo commands:
+```bash
+sudo systemctl restart service
+sudo cp file /etc/config
+sudo pacman -S package
+```
+3. Explain why sudo is needed
+4. Wait for user to execute and paste the output
+
+Example:
+> "Need to check the libvirt network configuration. Please run:
+> ```bash
+> sudo virsh net-dumpxml default
+> ```
+> This will show the current network settings."
 
 ## File Deletion Protocol
 **You cannot run `rm` directly.** When files need deletion:
