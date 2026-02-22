@@ -8,7 +8,7 @@
       "mode": "primary",
       "prompt": "{file:~/.config/opencode/prompts/default.txt}",
       "temperature": 0.3,
-      "color": "primary"
+      "color": "warning"
     },
     "tdd": {
       "description": "Strict TDD mode - tests first, roadmap-driven",
@@ -22,7 +22,7 @@
       "mode": "primary",
       "prompt": "{file:~/.config/opencode/prompts/explanatory.txt}",
       "temperature": 0.45,
-      "color": "info"
+      "color": "success"
     },
     "learning": {
       "description": "Interactive teaching mode - learn by doing",
