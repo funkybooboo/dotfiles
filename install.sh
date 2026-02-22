@@ -879,15 +879,33 @@ if [[ -f "$LIBVIRT_NETWORK_XML" ]]; then
   if [[ $DRY_RUN -eq 1 ]]; then
     info "would configure libvirt default network with DNS forwarders"
   else
-    # Check if network exists
-    if sudo virsh net-info default &>/dev/null; then
-      skip "libvirt default network (already configured)"
+    # Check if libvirtd is running
+    if ! systemctl is-active --quiet libvirtd.service; then
+      skip "libvirt default network (libvirtd not running — will be configured on first start)"
     else
-      info "configuring libvirt default network..."
-      sudo virsh net-define "$LIBVIRT_NETWORK_XML"
-      sudo virsh net-autostart default
-      sudo virsh net-start default
-      ok "libvirt default network configured"
+      # Get network info
+      NET_INFO=$(virsh -c qemu:///system net-info default 2>/dev/null)
+      
+      if [[ -z "$NET_INFO" ]]; then
+        # Network doesn't exist - define it
+        info "configuring libvirt default network..."
+        if virsh -c qemu:///system net-define "$LIBVIRT_NETWORK_XML" &>/dev/null; then
+          virsh -c qemu:///system net-autostart default &>/dev/null
+          virsh -c qemu:///system net-start default &>/dev/null || true
+          ok "libvirt default network configured"
+        else
+          warn "failed to configure libvirt network — check libvirt group membership"
+          _add_warning "libvirt network configuration failed — may need to log out/in for group membership"
+        fi
+      elif echo "$NET_INFO" | grep -q "Active:.*yes"; then
+        # Network exists and is active
+        skip "libvirt default network (already active)"
+      else
+        # Network exists but is not active
+        info "starting libvirt default network..."
+        virsh -c qemu:///system net-start default &>/dev/null || true
+        ok "libvirt default network started"
+      fi
     fi
   fi
 fi
@@ -897,38 +915,43 @@ if command -v ufw &>/dev/null; then
   if [[ $DRY_RUN -eq 1 ]]; then
     info "would configure UFW rules for libvirt (virbr0)"
   else
-    info "configuring UFW firewall rules for libvirt..."
-    
-    # Allow traffic on virbr0 interface
-    if ! sudo ufw status | grep -q "Anywhere on virbr0"; then
-      sudo ufw allow in on virbr0 comment 'libvirt bridge'
-      sudo ufw allow out on virbr0
-      ok "UFW: allowed traffic on virbr0"
+    # Check if UFW is enabled
+    if ! sudo ufw status | grep -q "Status: active"; then
+      skip "UFW firewall rules (UFW not enabled)"
     else
-      skip "UFW: virbr0 rules already configured"
-    fi
-    
-    # Allow DNS to libvirt bridge
-    if ! sudo ufw status | grep -q "192.168.122.1 53"; then
-      sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS'
-      ok "UFW: allowed DNS on virbr0"
-    else
-      skip "UFW: DNS rule already configured"
-    fi
-    
-    # Allow routing from virbr0 to internet (detect primary interface)
-    PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
-    if [[ -n "$PRIMARY_IFACE" ]]; then
-      if ! sudo ufw status | grep -q "virbr0.*$PRIMARY_IFACE"; then
-        sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT'
-        ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
+      info "configuring UFW firewall rules for libvirt..."
+      
+      # Allow traffic on virbr0 interface
+      if sudo ufw status | grep -q "Anywhere on virbr0.*ALLOW IN.*Anywhere"; then
+        skip "UFW: virbr0 input rules already configured"
       else
-        skip "UFW: routing rule already configured"
+        sudo ufw allow in on virbr0 comment 'libvirt bridge' &>/dev/null
+        sudo ufw allow out on virbr0 &>/dev/null
+        ok "UFW: allowed traffic on virbr0"
       fi
-    else
-      warn "could not detect primary network interface — add UFW route rule manually:"
-      echo -e "    ${DIM}sudo ufw route allow in on virbr0 out on <interface>${NC}"
-      _add_warning "UFW routing rule not added — primary interface not detected"
+      
+      # Allow DNS to libvirt bridge
+      if sudo ufw status | grep -q "192.168.122.1 53.*ALLOW IN"; then
+        skip "UFW: DNS rule already configured"
+      else
+        sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS' &>/dev/null
+        ok "UFW: allowed DNS on virbr0"
+      fi
+      
+      # Allow routing from virbr0 to internet (detect primary interface)
+      PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
+      if [[ -n "$PRIMARY_IFACE" ]]; then
+        if sudo ufw status | grep -q "ALLOW FWD.*Anywhere on virbr0.*Anywhere on $PRIMARY_IFACE"; then
+          skip "UFW: routing rule already configured"
+        else
+          sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT' &>/dev/null
+          ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
+        fi
+      else
+        warn "could not detect primary network interface — add UFW route rule manually:"
+        echo -e "    ${DIM}sudo ufw route allow in on virbr0 out on <interface>${NC}"
+        _add_warning "UFW routing rule not added — primary interface not detected"
+      fi
     fi
   fi
 else
