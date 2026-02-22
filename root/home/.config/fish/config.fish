@@ -19,6 +19,9 @@ set -gx VISUAL nvim
 set -gx PAGER less
 set -gx LESS -R
 
+# Libvirt: Use system connection by default for virt-manager and virsh
+set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
+
 # ============================================================================
 # PATH
 # ============================================================================
@@ -70,3 +73,5 @@ set -gx GPG_TTY (tty)
 # ============================================================================
 set -g fish_greeting
 fish_vi_key_bindings
+set -x VISUAL nvim
+set -x EDITOR nvim
