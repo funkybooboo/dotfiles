@@ -1,0 +1,20 @@
+<!--
+Libvirt default network configuration with DNS forwarders
+This network provides NAT-based internet access to VMs with proper DNS resolution.
+-->
+<network>
+  <name>default</name>
+  <uuid>0f94de52-3bc5-45dc-9344-96f79885971f</uuid>
+  <forward mode='nat'/>
+  <bridge name='virbr0' stp='on' delay='0'/>
+  <mac address='52:54:00:28:82:03'/>
+  <dns>
+    <forwarder addr='8.8.8.8'/>
+    <forwarder addr='1.1.1.1'/>
+  </dns>
+  <ip address='192.168.122.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.122.2' end='192.168.122.254'/>
+    </dhcp>
+  </ip>
+</network>

@@ -643,12 +643,18 @@ else
     power-profiles-daemon fwupd openssh wireguard-tools openresolv rsync
   [[ $DRY_RUN -eq 0 ]] && ok "system utilities"
 
+  # ── Virtualization ────────────────────────────────────────────────────────
+  info "installing virt-manager and dependencies..."
+  run_cmd sudo pacman -S --needed --noconfirm \
+    libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
+  [[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU"
+
   # ── System services ───────────────────────────────────────────────────────
   info "enabling system services..."
 
   if [[ $DRY_RUN -eq 1 ]]; then
-    info "would enable: docker.service, power-profiles-daemon.service, apparmor.service"
-    info "would add $USER to docker group"
+    info "would enable: docker.service, power-profiles-daemon.service, apparmor.service, libvirtd.service"
+    info "would add $USER to docker and libvirt groups"
   else
     # Docker
     if systemctl is-enabled --quiet docker.service 2>/dev/null; then
@@ -680,6 +686,23 @@ else
     else
       sudo systemctl enable apparmor.service
       ok "apparmor.service enabled"
+    fi
+
+    # Libvirt
+    if systemctl is-enabled --quiet libvirtd.service 2>/dev/null; then
+      skip "libvirtd.service (already enabled)"
+    else
+      sudo systemctl enable --now libvirtd.service
+      sudo systemctl enable --now virtlogd.service
+      ok "libvirtd.service enabled"
+    fi
+
+    if groups "$USER" | grep -qw libvirt; then
+      skip "libvirt group (already a member)"
+    else
+      sudo usermod -aG libvirt "$USER"
+      warn "added $USER to libvirt group — log out and back in for this to take effect"
+      _add_warning "log out and back in for libvirt group membership to take effect"
     fi
   fi
 fi
@@ -799,6 +822,25 @@ if [[ -f "$UDEV_SRC" ]]; then
   fi
 fi
 
+# Libvirt environment variable
+LIBVIRT_PROFILE_SRC="$DOTFILES_ROOT_ETC/profile.d/libvirt.sh"
+LIBVIRT_PROFILE_DEST="/etc/profile.d/libvirt.sh"
+if [[ -f "$LIBVIRT_PROFILE_SRC" ]]; then
+  if [[ -f "$LIBVIRT_PROFILE_DEST" ]] && cmp -s "$LIBVIRT_PROFILE_SRC" "$LIBVIRT_PROFILE_DEST"; then
+    skip "libvirt profile.d script (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    info "would install libvirt profile.d script → $LIBVIRT_PROFILE_DEST"
+  else
+    if sudo cp "$LIBVIRT_PROFILE_SRC" "$LIBVIRT_PROFILE_DEST"; then
+      sudo chmod 644 "$LIBVIRT_PROFILE_DEST"
+      ok "libvirt profile.d script installed"
+    else
+      warn "failed to install libvirt profile.d script — skipping"
+      _add_warning "libvirt profile.d script install failed: $LIBVIRT_PROFILE_DEST"
+    fi
+  fi
+fi
+
 # AppArmor kernel parameters (Limine bootloader)
 LIMINE_CONFIG="/etc/default/limine"
 APPARMOR_PARAM="lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
@@ -826,7 +868,75 @@ else
 fi
 
 # =============================================================================
-# 4. SYSTEMD USER SERVICES
+# 4. LIBVIRT NETWORK & FIREWALL
+# =============================================================================
+
+section "Libvirt Network Configuration"
+
+# Configure libvirt default network with proper DNS
+LIBVIRT_NETWORK_XML="$DOTFILES_ROOT_ETC/libvirt/networks/default.xml"
+if [[ -f "$LIBVIRT_NETWORK_XML" ]]; then
+  if [[ $DRY_RUN -eq 1 ]]; then
+    info "would configure libvirt default network with DNS forwarders"
+  else
+    # Check if network exists
+    if sudo virsh net-info default &>/dev/null; then
+      skip "libvirt default network (already configured)"
+    else
+      info "configuring libvirt default network..."
+      sudo virsh net-define "$LIBVIRT_NETWORK_XML"
+      sudo virsh net-autostart default
+      sudo virsh net-start default
+      ok "libvirt default network configured"
+    fi
+  fi
+fi
+
+# Configure UFW rules for libvirt
+if command -v ufw &>/dev/null; then
+  if [[ $DRY_RUN -eq 1 ]]; then
+    info "would configure UFW rules for libvirt (virbr0)"
+  else
+    info "configuring UFW firewall rules for libvirt..."
+    
+    # Allow traffic on virbr0 interface
+    if ! sudo ufw status | grep -q "Anywhere on virbr0"; then
+      sudo ufw allow in on virbr0 comment 'libvirt bridge'
+      sudo ufw allow out on virbr0
+      ok "UFW: allowed traffic on virbr0"
+    else
+      skip "UFW: virbr0 rules already configured"
+    fi
+    
+    # Allow DNS to libvirt bridge
+    if ! sudo ufw status | grep -q "192.168.122.1 53"; then
+      sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS'
+      ok "UFW: allowed DNS on virbr0"
+    else
+      skip "UFW: DNS rule already configured"
+    fi
+    
+    # Allow routing from virbr0 to internet (detect primary interface)
+    PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
+    if [[ -n "$PRIMARY_IFACE" ]]; then
+      if ! sudo ufw status | grep -q "virbr0.*$PRIMARY_IFACE"; then
+        sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT'
+        ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
+      else
+        skip "UFW: routing rule already configured"
+      fi
+    else
+      warn "could not detect primary network interface — add UFW route rule manually:"
+      echo -e "    ${DIM}sudo ufw route allow in on virbr0 out on <interface>${NC}"
+      _add_warning "UFW routing rule not added — primary interface not detected"
+    fi
+  fi
+else
+  skip "UFW not installed — libvirt firewall rules skipped"
+fi
+
+# =============================================================================
+# 5. SYSTEMD USER SERVICES
 # =============================================================================
 
 section "Systemd User Services"
