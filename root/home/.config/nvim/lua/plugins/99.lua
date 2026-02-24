@@ -1,52 +1,94 @@
 return {
   "funkybooboo/99",
-  branch = "no-cmp-requirement",
   dir = "/home/nate/projects/99", -- Use local development version
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
   config = function()
-    local Providers = require("99").Providers
+    local _99 = require("99")
 
-    require("99").setup({
-      provider = Providers.OpenCodeProvider,
-      model = "opencode/kimi-k2.5-free", -- Use a free model
-      display_errors = true, -- Show errors in the UI
-      show_in_flight_requests = true, -- Show when requests are running
+    -- For logging that is to a file if you wish to trace through requests
+    -- for reporting bugs, i would not rely on this, but instead the provided
+    -- logging mechanisms within 99.  This is for more debugging purposes
+    local cwd = vim.uv.cwd()
+    local basename = vim.fs.basename(cwd)
+    _99.setup({
+      provider = _99.Providers.OpenCodeProvider,
+      model = "anthropic/claude-sonnet-4-5",
+      tmp_dir = "/tmp",
       logger = {
-        level = require("99").DEBUG,
-        path = vim.fn.stdpath("state") .. "/99.log",
+        level = _99.DEBUG,
+        path = "/tmp/" .. basename .. ".99.debug",
+        print_on_error = true,
       },
-      -- DON'T set completion.source - this allows it to run without nvim-cmp
+
+      --- Completions: #rules and @files in the prompt buffer
       completion = {
-        source = nil, -- Explicitly disable cmp integration
+        -- I am going to disable these until i understand the
+        -- problem better.  Inside of cursor rules there is also
+        -- application rules, which means i need to apply these
+        -- differently
+        -- cursor_rules = "<custom path to cursor rules>"
+
+        --- A list of folders where you have your own SKILL.md
+        --- Expected format:
+        --- /path/to/dir/<skill_name>/SKILL.md
+        ---
+        --- Example:
+        --- Input Path:
+        --- "scratch/custom_rules/"
+        ---
+        --- Output Rules:
+        --- {path = "scratch/custom_rules/vim/SKILL.md", name = "vim"},
+        --- ... the other rules in that dir ...
+        ---
         custom_rules = {},
+
+        --- Configure @file completion (all fields optional, sensible defaults)
+        files = {
+          -- enabled = true,
+          -- max_file_size = 102400,     -- bytes, skip files larger than this
+          -- max_files = 5000,            -- cap on total discovered files
+          -- exclude = { ".env", ".env.*", "node_modules", ".git", ... },
+        },
+
+        --- What autocomplete do you use.  We currently only
+        --- support cmp right now
+        source = nil, -- "cmp" | "blink" | nil to disable
+      },
+
+      --- WARNING: if you change cwd then this is likely broken
+      --- ill likely fix this in a later change
+      ---
+      --- md_files is a list of files to look for and auto add based on the location
+      --- of the originating request.  That means if you are at /foo/bar/baz.lua
+      --- the system will automagically look for:
+      --- /foo/bar/AGENT.md
+      --- /foo/AGENT.md
+      --- assuming that /foo is project root (based on cwd)
+      md_files = {
+        "AGENT.md",
       },
     })
 
-    -- Set up keybindings
-    vim.keymap.set("n", "<leader>9v", function()
-      require("99").visual()
-    end, { desc = "99: AI Visual Request" })
-
+    -- take extra note that i have visual selection only in v mode
+    -- technically whatever your last visual selection is, will be used
+    -- so i have this set to visual mode so i dont screw up and use an
+    -- old visual selection
+    --
+    -- likely ill add a mode check and assert on required visual mode
+    -- so just prepare for it now
     vim.keymap.set("v", "<leader>9v", function()
-      require("99").visual()
-    end, { desc = "99: AI Visual Request" })
+      _99.visual()
+    end)
+
+    --- if you have a request you dont want to make any changes, just cancel it
+    vim.keymap.set("n", "<leader>9x", function()
+      _99.stop_all_requests()
+    end)
 
     vim.keymap.set("n", "<leader>9s", function()
-      require("99").stop_all_requests()
-    end, { desc = "99: Stop All Requests" })
-
-    vim.keymap.set("n", "<leader>9i", function()
-      require("99").info()
-    end, { desc = "99: Show Info" })
-
-    vim.keymap.set("n", "<leader>9l", function()
-      vim.cmd("edit " .. vim.fn.stdpath("state") .. "/99.log")
-    end, { desc = "99: View Log File" })
-
-    vim.keymap.set("n", "<leader>9d", function()
-      require("99").view_logs()
-    end, { desc = "99: View Debug Logs" })
+      _99.search()
+    end)
   end,
 }
