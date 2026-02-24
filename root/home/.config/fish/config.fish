@@ -27,6 +27,7 @@ set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
 # ============================================================================
 fish_add_path -p $HOME/.local/bin
 fish_add_path -p $HOME/.cargo/bin
+fish_add_path -p $HOME/.luarocks/bin
 fish_add_path -p /var/lib/flatpak/exports/share
 fish_add_path -p $HOME/.local/share/flatpak/exports/share
 
