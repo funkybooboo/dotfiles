@@ -25,14 +25,8 @@ return {
             },
           },
         },
-        -- Alternative: Ruff LSP (fast linter/formatter)
-        ruff_lsp = {
-          init_options = {
-            settings = {
-              args = {},
-            },
-          },
-        },
+        -- Ruff (fast linter/formatter)
+        ruff = {},
       },
     },
   },
@@ -43,10 +37,8 @@ return {
     opts = {
       ensure_installed = {
         "pyright",      -- Python LSP
-        "ruff-lsp",     -- Python linter/formatter LSP
+        "ruff",         -- Python linter/formatter LSP (replaces ruff-lsp)
         "debugpy",      -- Python debugger
-        "black",        -- Python formatter (optional)
-        "isort",        -- Import sorter (optional)
       },
     },
   },

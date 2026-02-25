@@ -1,0 +1,319 @@
+#!/usr/bin/env bash
+# opencode-ascii-convert - Normalize non-ASCII characters to ASCII
+# Recursively processes text files in current directory
+
+set -euo pipefail
+
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# Default options
+APPLY=false
+CREATE_BACKUP=true
+DIRECTORY="."
+
+# File extensions to process
+EXTENSIONS=(
+  "md" "txt" "py" "js" "ts" "tsx" "jsx" "sh" "bash" "zsh"
+  "yaml" "yml" "json" "toml" "conf" "config" "ini" "rs" "go"
+  "java" "c" "cpp" "h" "hpp" "html" "css" "scss" "sql" "xml"
+  "csv" "lua" "vim" "el" "rb" "php" "pl" "r"
+)
+
+# Directories to exclude
+EXCLUDED_DIRS=(
+  "node_modules" ".git" "dist" "build" "target" "vendor"
+  ".next" ".cache" "__pycache__"
+)
+
+# Statistics
+TOTAL_FILES=0
+MODIFIED_FILES=0
+TOTAL_REPLACEMENTS=0
+
+show_help() {
+  cat << EOF
+Usage: opencode-ascii-convert [OPTIONS] [DIRECTORY]
+
+Normalize non-ASCII characters to ASCII in text files.
+
+OPTIONS:
+  --apply          Apply changes (default is dry-run)
+  --no-backup      Skip creating .bak files (not recommended)
+  --help           Show this help message
+
+ARGUMENTS:
+  DIRECTORY        Directory to process (default: current directory)
+
+EXAMPLES:
+  opencode-ascii-convert              # Dry run in current directory
+  opencode-ascii-convert --apply      # Apply changes with backups
+  opencode-ascii-convert ~/project    # Process specific directory
+
+CHARACTER CONVERSIONS:
+  Smart quotes:  " " ' ' -> " " ' '
+  Dashes:        — – -> -- -
+  Ellipsis:      … -> ...
+  Tree chars:    ├─ └─ │ -> |- \- |
+  Accented:      é ñ -> e n
+  Emojis:        Removed entirely
+
+For full documentation, see:
+  ~/.config/opencode/skills/ascii-convert/SKILL.md
+EOF
+}
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --apply)
+        APPLY=true
+        shift
+        ;;
+      --no-backup)
+        CREATE_BACKUP=false
+        shift
+        ;;
+      --help)
+        show_help
+        exit 0
+        ;;
+      -*)
+        echo -e "${RED}Error: Unknown option: $1${NC}" >&2
+        echo "Use --help for usage information" >&2
+        exit 1
+        ;;
+      *)
+        DIRECTORY="$1"
+        shift
+        ;;
+    esac
+  done
+}
+
+build_find_command() {
+  local cmd="find \"$DIRECTORY\" -type f"
+  
+  # Add extension filters
+  cmd="$cmd \("
+  for i in "${!EXTENSIONS[@]}"; do
+    if [[ $i -gt 0 ]]; then
+      cmd="$cmd -o"
+    fi
+    cmd="$cmd -name \"*.${EXTENSIONS[$i]}\""
+  done
+  cmd="$cmd \)"
+  
+  # Exclude directories
+  for dir in "${EXCLUDED_DIRS[@]}"; do
+    cmd="$cmd -not -path \"*/$dir/*\""
+  done
+  
+  # Exclude .bak files
+  cmd="$cmd -not -name \"*.bak\""
+  
+  echo "$cmd"
+}
+
+check_non_ascii() {
+  local file="$1"
+  
+  # Check if file contains non-ASCII characters
+  if LC_ALL=C grep -q '[^[:print:][:space:]]' "$file" 2>/dev/null || \
+     grep -qP '[^\x00-\x7F]' "$file" 2>/dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+count_replacements() {
+  local file="$1"
+  local count=0
+  
+  # Count smart quotes
+  local smart_quotes=$(grep -o '[""''„‚]' "$file" 2>/dev/null | wc -l || echo 0)
+  
+  # Count dashes
+  local dashes=$(grep -o '[—–‒]' "$file" 2>/dev/null | wc -l || echo 0)
+  
+  # Count ellipsis
+  local ellipsis=$(grep -o '…' "$file" 2>/dev/null | wc -l || echo 0)
+  
+  # Count tree characters
+  local tree_chars=$(grep -o '[├└│─┌┐┘┼]' "$file" 2>/dev/null | wc -l || echo 0)
+  
+  # Count accented characters
+  local accented=$(grep -oP '[À-ÿ]' "$file" 2>/dev/null | wc -l || echo 0)
+  
+  # Count other non-ASCII (approximation)
+  local other=$(grep -oP '[^\x00-\x7F]' "$file" 2>/dev/null | wc -l || echo 0)
+  other=$((other - smart_quotes - dashes - ellipsis - tree_chars - accented))
+  if [[ $other -lt 0 ]]; then
+    other=0
+  fi
+  
+  echo "$smart_quotes:$dashes:$ellipsis:$tree_chars:$accented:$other"
+}
+
+convert_file() {
+  local file="$1"
+  local temp_file="${file}.tmp"
+  
+  # Apply all conversions using sed
+  sed \
+    -e 's/"/"/g' -e 's/"/"/g' \
+    -e "s/'/'/g" -e "s/'/'/g" \
+    -e 's/„/"/g' -e 's/‚/'\''/g' \
+    -e 's/—/--/g' -e 's/–/-/g' -e 's/‒/-/g' \
+    -e 's/…/.../g' \
+    -e 's/ / /g' -e 's/ / /g' \
+    -e 's/•/-/g' -e 's/·/-/g' \
+    -e 's/×/x/g' -e 's/÷/\//g' \
+    -e 's/├─/|-/g' -e 's/├──/|--/g' -e 's/├/|-/g' \
+    -e 's/└─/\\-/g' -e 's/└──/\\--/g' -e 's/└/\\-/g' \
+    -e 's/│/|/g' \
+    -e 's/─/-/g' \
+    -e 's/┌─/\/-/g' -e 's/┐/-\\/g' \
+    -e 's/┘/-\//g' -e 's/┼─/+-/g' \
+    -e 'y/ÀÁÂÃÄÅÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝÑÇ/AAAAAAEEEEIIIIOOOOOOUUUUYNC/' \
+    -e 'y/àáâãäåèéêëìíîïòóôõöøùúûüýÿñç/aaaaaaeeeeiiiioooooouuuuyynic/' \
+    -e 's/Æ/AE/g' -e 's/æ/ae/g' \
+    -e 's/Œ/OE/g' -e 's/œ/oe/g' \
+    -e 's/[^\x00-\x7F]//g' \
+    "$file" > "$temp_file"
+  
+  mv "$temp_file" "$file"
+}
+
+process_file() {
+  local file="$1"
+  
+  # Skip if file doesn't exist or is not readable
+  if [[ ! -f "$file" ]] || [[ ! -r "$file" ]]; then
+    return
+  fi
+  
+  # Skip binary files
+  if file "$file" | grep -q "text"; then
+    :
+  else
+    return
+  fi
+  
+  ((TOTAL_FILES++))
+  
+  # Check if file has non-ASCII characters
+  if ! check_non_ascii "$file"; then
+    if [[ "$APPLY" == false ]]; then
+      echo -e "${GREEN}✓${NC} No non-ASCII characters: $file"
+    fi
+    return
+  fi
+  
+  # Count replacements by category
+  IFS=':' read -r smart_quotes dashes ellipsis tree_chars accented other <<< "$(count_replacements "$file")"
+  
+  local total=$((smart_quotes + dashes + ellipsis + tree_chars + accented + other))
+  
+  if [[ $total -eq 0 ]]; then
+    return
+  fi
+  
+  echo -e "\n${CYAN}Processing:${NC} $file"
+  
+  # Show what will be changed
+  if [[ $smart_quotes -gt 0 ]]; then
+    echo -e "  - $smart_quotes smart quotes -> regular quotes"
+  fi
+  if [[ $dashes -gt 0 ]]; then
+    echo -e "  - $dashes dashes -> hyphens"
+  fi
+  if [[ $ellipsis -gt 0 ]]; then
+    echo -e "  - $ellipsis ellipsis -> three dots"
+  fi
+  if [[ $tree_chars -gt 0 ]]; then
+    echo -e "  - $tree_chars tree characters -> ASCII equivalents"
+  fi
+  if [[ $accented -gt 0 ]]; then
+    echo -e "  - $accented accented characters -> ASCII"
+  fi
+  if [[ $other -gt 0 ]]; then
+    echo -e "  - $other other non-ASCII characters removed"
+  fi
+  
+  if [[ "$APPLY" == true ]]; then
+    # Create backup if requested
+    if [[ "$CREATE_BACKUP" == true ]]; then
+      cp "$file" "${file}.bak"
+      echo -e "  ${GREEN}✓${NC} Backed up to ${file}.bak"
+    fi
+    
+    # Apply conversions
+    convert_file "$file"
+    echo -e "  ${GREEN}✓${NC} Modified"
+    
+    ((MODIFIED_FILES++))
+    TOTAL_REPLACEMENTS=$((TOTAL_REPLACEMENTS + total))
+  else
+    echo -e "  ${YELLOW}(dry-run - use --apply to modify)${NC}"
+  fi
+}
+
+main() {
+  parse_args "$@"
+  
+  # Validate directory
+  if [[ ! -d "$DIRECTORY" ]]; then
+    echo -e "${RED}Error: Directory not found: $DIRECTORY${NC}" >&2
+    exit 1
+  fi
+  
+  # Show mode
+  if [[ "$APPLY" == true ]]; then
+    echo -e "${YELLOW}Mode: APPLY (files will be modified)${NC}"
+    if [[ "$CREATE_BACKUP" == true ]]; then
+      echo -e "${CYAN}Backups: Enabled (.bak files will be created)${NC}"
+    else
+      echo -e "${RED}Backups: Disabled${NC}"
+    fi
+  else
+    echo -e "${CYAN}Mode: DRY-RUN (preview only, use --apply to modify)${NC}"
+  fi
+  echo ""
+  
+  # Build and execute find command
+  local find_cmd=$(build_find_command)
+  
+  # Process each file
+  while IFS= read -r file; do
+    process_file "$file"
+  done < <(eval "$find_cmd")
+  
+  # Show summary
+  echo ""
+  echo -e "${CYAN}Summary:${NC}"
+  echo -e "  Files processed: $TOTAL_FILES"
+  
+  if [[ "$APPLY" == true ]]; then
+    echo -e "  Files modified: $MODIFIED_FILES"
+    echo -e "  Total replacements: $TOTAL_REPLACEMENTS"
+    
+    if [[ $MODIFIED_FILES -gt 0 ]]; then
+      echo -e "\n${GREEN}✓ Conversion complete${NC}"
+      if [[ "$CREATE_BACKUP" == true ]]; then
+        echo -e "${CYAN}Backups saved with .bak extension${NC}"
+      fi
+    else
+      echo -e "\n${GREEN}✓ No files needed modification${NC}"
+    fi
+  else
+    echo -e "\n${YELLOW}This was a dry-run. Use --apply to make changes.${NC}"
+  fi
+}
+
+main "$@"
