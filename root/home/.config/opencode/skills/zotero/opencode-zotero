@@ -1,0 +1,391 @@
+#!/usr/bin/env python3
+"""
+OpenCode Zotero Helper Script
+Convenient CLI for common Zotero API operations
+"""
+
+import sys
+import os
+import json
+import argparse
+import requests
+from typing import List, Dict, Optional
+
+# Configuration from environment
+API_KEY = os.getenv("ZOTERO_API_KEY")
+USER_ID = os.getenv("ZOTERO_USER_ID")
+GROUP_ID = os.getenv("ZOTERO_GROUP_ID")
+BASE_URL = "https://api.zotero.org"
+
+# Colors for output
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    END = '\033[0m'
+    BOLD = '\033[1m'
+
+def get_headers(version: Optional[int] = None) -> Dict[str, str]:
+    """Get standard headers for API requests"""
+    if not API_KEY:
+        print(f"{Colors.RED}Error: ZOTERO_API_KEY not set{Colors.END}")
+        print("Set it with: export ZOTERO_API_KEY='your_key'")
+        sys.exit(1)
+    
+    headers = {
+        "Zotero-API-Key": API_KEY,
+        "Zotero-API-Version": "3",
+        "Content-Type": "application/json"
+    }
+    if version:
+        headers["If-Unmodified-Since-Version"] = str(version)
+    return headers
+
+def get_library_prefix(user_id: Optional[str] = None, group_id: Optional[str] = None) -> str:
+    """Get library prefix for API URLs"""
+    if group_id:
+        return f"/groups/{group_id}"
+    elif user_id:
+        return f"/users/{user_id}"
+    elif GROUP_ID:
+        return f"/groups/{GROUP_ID}"
+    elif USER_ID:
+        return f"/users/{USER_ID}"
+    else:
+        print(f"{Colors.RED}Error: No library specified{Colors.END}")
+        print("Set ZOTERO_USER_ID or ZOTERO_GROUP_ID, or use --user/--group")
+        sys.exit(1)
+
+def cmd_collections(args):
+    """List all collections"""
+    prefix = get_library_prefix(args.user, args.group)
+    url = f"{BASE_URL}{prefix}/collections"
+    
+    response = requests.get(url, headers=get_headers())
+    response.raise_for_status()
+    collections = response.json()
+    
+    print(f"{Colors.HEADER}Collections:{Colors.END}\n")
+    for c in collections:
+        data = c['data']
+        meta = c['meta']
+        name = data['name']
+        key = data['key']
+        num_items = meta['numItems']
+        
+        # Indent subcollections
+        indent = "  " if data.get('parentCollection') else ""
+        print(f"{indent}{Colors.BOLD}{name}{Colors.END} ({Colors.CYAN}{key}{Colors.END})")
+        print(f"{indent}  Items: {num_items}")
+        print()
+
+def cmd_items(args):
+    """Get items from a collection"""
+    prefix = get_library_prefix(args.user, args.group)
+    url = f"{BASE_URL}{prefix}/collections/{args.collection}/items/top"
+    
+    params = {}
+    if args.format:
+        params['format'] = args.format
+    
+    response = requests.get(url, headers=get_headers(), params=params)
+    response.raise_for_status()
+    
+    if args.format in ['bibtex', 'biblatex', 'ris', 'bib']:
+        print(response.text)
+        return
+    
+    items = response.json()
+    
+    print(f"{Colors.HEADER}Items in collection {args.collection}:{Colors.END}\n")
+    for i, item in enumerate(items, 1):
+        data = item['data']
+        title = data.get('title', 'No title')
+        key = data['key']
+        item_type = data.get('itemType', 'unknown')
+        
+        creators = data.get('creators', [])
+        if creators:
+            first = creators[0].get('lastName', creators[0].get('name', 'Unknown'))
+            author = f"{first} et al." if len(creators) > 1 else first
+        else:
+            author = "Unknown"
+        
+        print(f"{i}. {Colors.BOLD}{title}{Colors.END}")
+        print(f"   {Colors.CYAN}[{key}]{Colors.END} {author} | {item_type}")
+        
+        if args.verbose:
+            abstract = data.get('abstractNote', '')
+            if abstract:
+                snippet = abstract[:150] + "..." if len(abstract) > 150 else abstract
+                print(f"   {snippet}")
+        print()
+
+def cmd_search(args):
+    """Search for items"""
+    prefix = get_library_prefix(args.user, args.group)
+    url = f"{BASE_URL}{prefix}/items"
+    
+    params = {"q": args.query}
+    if args.type:
+        params['itemType'] = args.type
+    if args.tag:
+        params['tag'] = args.tag
+    
+    response = requests.get(url, headers=get_headers(), params=params)
+    response.raise_for_status()
+    items = response.json()
+    
+    print(f"{Colors.HEADER}Search results for '{args.query}':{Colors.END}")
+    print(f"Found {len(items)} items\n")
+    
+    for i, item in enumerate(items, 1):
+        data = item['data']
+        title = data.get('title', 'No title')
+        key = data['key']
+        print(f"{i}. {Colors.BOLD}{title}{Colors.END} {Colors.CYAN}[{key}]{Colors.END}")
+
+def cmd_show(args):
+    """Show item details"""
+    prefix = get_library_prefix(args.user, args.group)
+    url = f"{BASE_URL}{prefix}/items/{args.item}"
+    
+    response = requests.get(url, headers=get_headers())
+    response.raise_for_status()
+    item = response.json()
+    
+    data = item['data']
+    
+    print(f"{Colors.HEADER}Item Details:{Colors.END}\n")
+    print(f"{Colors.BOLD}Title:{Colors.END} {data.get('title', 'N/A')}")
+    print(f"{Colors.BOLD}Key:{Colors.END} {data['key']}")
+    print(f"{Colors.BOLD}Type:{Colors.END} {data.get('itemType', 'N/A')}")
+    print(f"{Colors.BOLD}Version:{Colors.END} {item['version']}")
+    
+    creators = data.get('creators', [])
+    if creators:
+        print(f"\n{Colors.BOLD}Creators:{Colors.END}")
+        for c in creators:
+            name = c.get('name') or f"{c.get('firstName', '')} {c.get('lastName', '')}".strip()
+            print(f"  - {name} ({c['creatorType']})")
+    
+    collections = data.get('collections', [])
+    if collections:
+        print(f"\n{Colors.BOLD}Collections:{Colors.END}")
+        for c in collections:
+            print(f"  - {c}")
+    
+    tags = data.get('tags', [])
+    if tags:
+        print(f"\n{Colors.BOLD}Tags:{Colors.END}")
+        for t in tags:
+            print(f"  - {t['tag']}")
+    
+    abstract = data.get('abstractNote', '')
+    if abstract:
+        print(f"\n{Colors.BOLD}Abstract:{Colors.END}")
+        print(abstract)
+    
+    if args.json:
+        print(f"\n{Colors.BOLD}Full JSON:{Colors.END}")
+        print(json.dumps(item, indent=2))
+
+def cmd_export(args):
+    """Export collection to file"""
+    prefix = get_library_prefix(args.user, args.group)
+    url = f"{BASE_URL}{prefix}/collections/{args.collection}/items"
+    
+    params = {"format": args.format}
+    if args.style:
+        params['style'] = args.style
+    
+    response = requests.get(url, headers=get_headers(), params=params)
+    response.raise_for_status()
+    
+    with open(args.output, 'w') as f:
+        f.write(response.text)
+    
+    print(f"{Colors.GREEN}Exported to {args.output}{Colors.END}")
+
+def cmd_move(args):
+    """Move items between collections"""
+    prefix = get_library_prefix(args.user, args.group)
+    
+    success = 0
+    failed = 0
+    
+    for item_key in args.items:
+        try:
+            # Get item
+            url = f"{BASE_URL}{prefix}/items/{item_key}"
+            response = requests.get(url, headers=get_headers())
+            response.raise_for_status()
+            item = response.json()
+            
+            # Update collections
+            collections = item['data']['collections']
+            if args.from_collection:
+                collections = [c for c in collections if c != args.from_collection]
+            if args.to not in collections:
+                collections.append(args.to)
+            
+            # PATCH
+            patch_data = {"collections": collections}
+            response = requests.patch(
+                url,
+                headers=get_headers(item['version']),
+                json=patch_data
+            )
+            response.raise_for_status()
+            
+            print(f"{Colors.GREEN}✓{Colors.END} Moved {item_key}")
+            success += 1
+            
+        except Exception as e:
+            print(f"{Colors.RED}✗{Colors.END} Failed {item_key}: {e}")
+            failed += 1
+    
+    print(f"\n{Colors.BOLD}Summary:{Colors.END} {success} succeeded, {failed} failed")
+
+def cmd_tag(args):
+    """Add tags to items"""
+    prefix = get_library_prefix(args.user, args.group)
+    
+    for item_key in args.items:
+        try:
+            # Get item
+            url = f"{BASE_URL}{prefix}/items/{item_key}"
+            response = requests.get(url, headers=get_headers())
+            response.raise_for_status()
+            item = response.json()
+            
+            # Add tags
+            tags = item['data']['tags']
+            for tag in args.add:
+                if {"tag": tag} not in tags:
+                    tags.append({"tag": tag})
+            
+            # PATCH
+            patch_data = {"tags": tags}
+            response = requests.patch(
+                url,
+                headers=get_headers(item['version']),
+                json=patch_data
+            )
+            response.raise_for_status()
+            
+            print(f"{Colors.GREEN}✓{Colors.END} Tagged {item_key}")
+            
+        except Exception as e:
+            print(f"{Colors.RED}✗{Colors.END} Failed {item_key}: {e}")
+
+def cmd_stats(args):
+    """Show collection statistics"""
+    prefix = get_library_prefix(args.user, args.group)
+    
+    if args.collection:
+        url = f"{BASE_URL}{prefix}/collections/{args.collection}/items/top"
+    else:
+        url = f"{BASE_URL}{prefix}/items/top"
+    
+    response = requests.get(url, headers=get_headers())
+    response.raise_for_status()
+    items = response.json()
+    
+    # Count by type
+    types = {}
+    for item in items:
+        item_type = item['data'].get('itemType', 'unknown')
+        types[item_type] = types.get(item_type, 0) + 1
+    
+    print(f"{Colors.HEADER}Statistics:{Colors.END}\n")
+    print(f"Total items: {len(items)}\n")
+    print(f"{Colors.BOLD}By type:{Colors.END}")
+    for item_type, count in sorted(types.items(), key=lambda x: -x[1]):
+        print(f"  {item_type}: {count}")
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="OpenCode Zotero Helper - CLI for Zotero API",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    # Global options
+    parser.add_argument('--user', help='User ID (overrides ZOTERO_USER_ID)')
+    parser.add_argument('--group', help='Group ID (overrides ZOTERO_GROUP_ID)')
+    
+    subparsers = parser.add_subparsers(dest='command', help='Command to run')
+    
+    # collections command
+    p_collections = subparsers.add_parser('collections', help='List all collections')
+    p_collections.set_defaults(func=cmd_collections)
+    
+    # items command
+    p_items = subparsers.add_parser('items', help='Get items from collection')
+    p_items.add_argument('collection', help='Collection key')
+    p_items.add_argument('--format', choices=['json', 'bib', 'bibtex', 'ris'], help='Output format')
+    p_items.add_argument('-v', '--verbose', action='store_true', help='Show abstracts')
+    p_items.set_defaults(func=cmd_items)
+    
+    # search command
+    p_search = subparsers.add_parser('search', help='Search for items')
+    p_search.add_argument('query', help='Search query')
+    p_search.add_argument('--type', help='Filter by item type')
+    p_search.add_argument('--tag', help='Filter by tag')
+    p_search.set_defaults(func=cmd_search)
+    
+    # show command
+    p_show = subparsers.add_parser('show', help='Show item details')
+    p_show.add_argument('item', help='Item key')
+    p_show.add_argument('--json', action='store_true', help='Show full JSON')
+    p_show.set_defaults(func=cmd_show)
+    
+    # export command
+    p_export = subparsers.add_parser('export', help='Export collection')
+    p_export.add_argument('collection', help='Collection key')
+    p_export.add_argument('--format', required=True, 
+                          choices=['bibtex', 'biblatex', 'ris', 'bib', 'csljson'],
+                          help='Export format')
+    p_export.add_argument('--style', default='apa', help='Citation style (for bib format)')
+    p_export.add_argument('--output', required=True, help='Output file')
+    p_export.set_defaults(func=cmd_export)
+    
+    # move command
+    p_move = subparsers.add_parser('move', help='Move items between collections')
+    p_move.add_argument('items', nargs='+', help='Item keys to move')
+    p_move.add_argument('--from', dest='from_collection', help='Source collection key')
+    p_move.add_argument('--to', required=True, help='Destination collection key')
+    p_move.set_defaults(func=cmd_move)
+    
+    # tag command
+    p_tag = subparsers.add_parser('tag', help='Add tags to items')
+    p_tag.add_argument('items', nargs='+', help='Item keys')
+    p_tag.add_argument('--add', nargs='+', required=True, help='Tags to add')
+    p_tag.set_defaults(func=cmd_tag)
+    
+    # stats command
+    p_stats = subparsers.add_parser('stats', help='Show statistics')
+    p_stats.add_argument('collection', nargs='?', help='Collection key (optional)')
+    p_stats.set_defaults(func=cmd_stats)
+    
+    args = parser.parse_args()
+    
+    if not args.command:
+        parser.print_help()
+        sys.exit(1)
+    
+    try:
+        args.func(args)
+    except requests.exceptions.HTTPError as e:
+        print(f"{Colors.RED}HTTP Error: {e.response.status_code}{Colors.END}")
+        print(e.response.text)
+        sys.exit(1)
+    except Exception as e:
+        print(f"{Colors.RED}Error: {e}{Colors.END}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
