@@ -220,7 +220,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama (Remote Kenny)",
       "options": {
-        "baseURL": "http://192.168.8.182:11434/v1"
+        "baseURL": "http://kenny.tail54538d.ts.net:11434/v1"
       },
       "models": {
         "qwen3-coder:30b": {
