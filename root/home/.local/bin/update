@@ -3,6 +3,10 @@
 
 set -euo pipefail
 
+# Resolve dotfiles directory once for use throughout script
+_SCRIPT_REAL="$(readlink -f "${BASH_SOURCE[0]}")"
+_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../../.." && pwd)"
+
 echo "=== System Update (Arch Linux) ==="
 echo ""
 
@@ -24,6 +28,26 @@ if command -v flatpak >/dev/null 2>&1; then
     echo ""
 fi
 
+# Step 2.5: Update dotfiles git submodules from remote
+if [[ -f "$_DOTFILES_DIR/.gitmodules" ]]; then
+    echo "→ Updating dotfiles git submodules..."
+    if git -C "$_DOTFILES_DIR" submodule update --init --remote --recursive; then
+        # Check if submodule pointers changed (only check .gitmodules and submodule paths)
+        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- .gitmodules $(git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}') 2>/dev/null; then
+            # Only add .gitmodules and submodule paths, not all changes
+            git -C "$_DOTFILES_DIR" add .gitmodules
+            git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}' | xargs -I {} git -C "$_DOTFILES_DIR" add {}
+            git -C "$_DOTFILES_DIR" commit -m "chore: update git submodules from remote"
+            echo "  dotfiles submodules updated and committed"
+        else
+            echo "  dotfiles submodules already up to date"
+        fi
+    else
+        echo "  warning: could not update submodules"
+    fi
+    echo ""
+fi
+
 # Step 3: Update Omarchy
 if command -v omarchy-update >/dev/null 2>&1; then
     echo "→ Updating Omarchy..."
@@ -31,24 +55,19 @@ if command -v omarchy-update >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 3b: Advance dotfiles submodule pin to match the pulled omarchy commit
-# Resolve the real path of this script to find the dotfiles repo root.
-# Script lives at dotfiles/root/home/.local/bin/update — 4 levels deep.
-_SCRIPT_REAL="$(readlink -f "${BASH_SOURCE[0]}")"
-_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../../.." && pwd)"
+# Step 3b: Sync omarchy submodule pin after omarchy-update
+# The omarchy-update command may have pulled changes to the local checkout.
+# Ensure the dotfiles submodule pointer reflects the current local commit.
 if [[ -f "$_DOTFILES_DIR/.gitmodules" ]] && grep -q "omarchy" "$_DOTFILES_DIR/.gitmodules" 2>/dev/null; then
     _OMARCHY_SUBMOD="root/home/.local/share/omarchy"
-    echo "→ Updating omarchy submodule pin in dotfiles..."
-    if git -C "$_DOTFILES_DIR" submodule update --remote "$_OMARCHY_SUBMOD" 2>/dev/null; then
-        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- "$_OMARCHY_SUBMOD" 2>/dev/null; then
-            git -C "$_DOTFILES_DIR" add "$_OMARCHY_SUBMOD"
-            git -C "$_DOTFILES_DIR" commit -m "chore: advance omarchy submodule pin"
-            echo "  dotfiles submodule pin updated and committed"
-        else
-            echo "  omarchy submodule pin already up to date"
-        fi
+    echo "→ Syncing omarchy submodule pin in dotfiles..."
+    # Check if the submodule working tree differs from the recorded commit
+    if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- "$_OMARCHY_SUBMOD" 2>/dev/null; then
+        git -C "$_DOTFILES_DIR" add "$_OMARCHY_SUBMOD"
+        git -C "$_DOTFILES_DIR" commit -m "chore: sync omarchy submodule pin after omarchy-update"
+        echo "  omarchy submodule pin synced and committed"
     else
-        echo "  warning: could not update omarchy submodule — skipping pin update"
+        echo "  omarchy submodule pin already in sync"
     fi
     echo ""
 fi
