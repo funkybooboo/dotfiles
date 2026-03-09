@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# vpn — unified VPN manager for debbie-local, Proton VPN, and GlobalProtect
+# vpn — unified VPN manager for Proton VPN and GlobalProtect
 
 set -euo pipefail
 
 # VPN definitions
 # Format: ["friendly-name"]="type:connection-name" or "type"
 declare -A VPNS=(
-    ["home"]="wg:debbie-local"
     ["proton"]="protonvpn"
     ["usu"]="globalprotect:gp.usu.edu"
 )
@@ -55,9 +54,6 @@ function is_active() {
     read -r type conn_name <<< "$(parse_vpn "$vpn")"
 
     case $type in
-        wg)
-            ip link show "$conn_name" &>/dev/null
-            ;;
         protonvpn)
             # Check if ProtonVPN connection exists in NetworkManager or via interface
             (command -v nmcli &>/dev/null && nmcli connection show --active | grep -q "^ProtonVPN ") || \
@@ -95,9 +91,6 @@ function status() {
             active_count=$((active_count + 1))
 
             case $type in
-                wg)
-                    ip addr show dev "$conn_name" 2>/dev/null | grep "inet " | awk '{print "  IP: " $2}'
-                    ;;
                 protonvpn)
                     # Show Proton server info from active connection
                     local server_info
@@ -131,7 +124,7 @@ function up() {
     local vpn=${1:-}
 
     if [ -z "$vpn" ]; then
-        error "No VPN specified. Usage: vpn up {debbie-local|proton}"
+        error "No VPN specified. Usage: vpn up {proton|usu}"
     fi
 
     if [ -z "${VPNS[$vpn]:-}" ]; then
@@ -158,9 +151,6 @@ function up() {
     info "Connecting to $vpn..."
 
     case $type in
-        wg)
-            sudo wg-quick up "$conn_name" || error "Failed to connect to $vpn"
-            ;;
         protonvpn)
             protonvpn connect || error "Failed to connect to Proton VPN"
             ;;
@@ -210,9 +200,6 @@ function down() {
     info "Disconnecting $vpn..."
 
     case $type in
-        wg)
-            sudo wg-quick down "$conn_name" || error "Failed to disconnect $vpn"
-            ;;
         protonvpn)
             protonvpn disconnect || error "Failed to disconnect from Proton VPN"
             ;;
@@ -237,7 +224,7 @@ function switch() {
     local vpn=${1:-}
 
     if [ -z "$vpn" ]; then
-        error "No VPN specified. Usage: vpn switch {debbie-local|proton}"
+        error "No VPN specified. Usage: vpn switch {proton|usu}"
     fi
 
     if [ -z "${VPNS[$vpn]:-}" ]; then
@@ -251,7 +238,11 @@ function switch() {
 
 # Toggle autoconnect for VPNs
 function autoconnect() {
-    local vpn=${1:-home}
+    local vpn=${1:-}
+
+    if [ -z "$vpn" ]; then
+        error "No VPN specified. Usage: vpn autoconnect {proton}"
+    fi
 
     if [ -z "${VPNS[$vpn]:-}" ]; then
         error "Unknown VPN '$vpn'. Available: ${!VPNS[*]}"
@@ -261,16 +252,6 @@ function autoconnect() {
     read -r type conn_name <<< "$(parse_vpn "$vpn")"
 
     case $type in
-        wg)
-            # wg-quick systemd service autoconnect
-            if systemctl is-enabled "wg-quick@${conn_name}" &>/dev/null; then
-                sudo systemctl disable "wg-quick@${conn_name}"
-                success "Auto-connect disabled for $vpn"
-            else
-                sudo systemctl enable "wg-quick@${conn_name}"
-                success "Auto-connect enabled for $vpn"
-            fi
-            ;;
         protonvpn)
             # Systemd user service autoconnect
             local service_dir="$HOME/.config/systemd/user"
@@ -336,11 +317,6 @@ function list() {
 
         # Check autoconnect status
         case $type in
-            wg)
-                if systemctl is-enabled "wg-quick@${conn_name}" &>/dev/null; then
-                    autoconnect_status=" ${BLUE}[autoconnect]${NC}"
-                fi
-                ;;
             protonvpn)
                 if [ -f "$HOME/.config/systemd/user/protonvpn-autoconnect.service" ]; then
                     autoconnect_status=" ${BLUE}[autoconnect]${NC}"
@@ -359,24 +335,21 @@ Usage: vpn <command> [args]
 Commands:
   status              Show status of all VPNs
   list                List available VPNs with autoconnect status
-  up <name>           Connect to VPN (home|proton|usu)
+  up <name>           Connect to VPN (proton|usu)
   down [name]         Disconnect VPN (or all if no name given)
   switch <name>       Switch to a different VPN
-  autoconnect [name]  Toggle autoconnect on login (default: home)
+  autoconnect [name]  Toggle autoconnect on login
 
 Examples:
   vpn status
   vpn list
   vpn up proton
-  vpn up home
   vpn up usu
   vpn switch proton
   vpn down
-  vpn autoconnect home
   vpn autoconnect proton
 
 Autoconnect:
-  home   - Uses NetworkManager autoconnect (immediate)
   proton - Uses systemd user service (connects on login)
 EOF
     exit 1

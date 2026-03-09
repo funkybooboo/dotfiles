@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-# install.sh — install packages, symlink dotfiles, enable services, set up VPN/NAS
+# install.sh — install packages, symlink dotfiles, enable services
 #
 # Order of operations:
 #   0. Preflight   (distro check, not-root, internet, git submodules)
-#   1. Packages    (pacman/yay; skip with --skip-packages)
+#   1. Packages    (pacman/yay)
 #   2. Symlinks    (bins, libs, share, configs, dotfiles, /etc files)
 #   3. Permissions (.ssh, .gnupg, /etc/hosts, udev, AppArmor)
 #   4. systemd     (daemon-reload, enable user services)
-#   5. VPN         (--with-vpn: install WireGuard config)
-#   6. NAS sync    (--with-nas-sync: initial clone + enable timers)
+#   5. VPN clients (proton-vpn-cli, globalprotect-openconnect-git)
+#   6. Tailscale   (install if missing, prompt to authenticate)
+#   7. NAS sync    (initial clone + enable timers)
 
 set -euo pipefail
 
@@ -53,9 +54,6 @@ FORCE=0
 BACKUP=0
 MERGE=0
 RESTORE=0
-WITH_VPN=0
-WITH_NAS_SYNC=0
-SKIP_PACKAGES=0
 
 usage() {
   echo -e "${BOLD}Usage:${NC} $0 [options]"
@@ -68,32 +66,24 @@ usage() {
   echo -e "${BOLD}Options:${NC}"
   echo -e "  --restore,  -r  Undo installation by restoring .bak files and removing symlinks"
   echo -e "  --dry-run,  -n  Preview all actions without executing"
-  echo -e "  --skip-packages Skip package installation (symlinks/services only)"
-  echo -e "  --with-vpn      Install WireGuard config to /etc/wireguard/"
-  echo -e "  --with-nas-sync Enable hourly NAS rsync timers"
   echo -e "  --help,     -h  Show this help message"
   echo ""
   echo -e "${BOLD}Common invocations:${NC}"
-  echo -e "  $0 --dry-run                           ${DIM}# preview without changes${NC}"
-  echo -e "  $0 --backup                            ${DIM}# fresh install${NC}"
-  echo -e "  $0 --skip-packages --backup            ${DIM}# re-symlink only${NC}"
-  echo -e "  $0 --backup --with-vpn --with-nas-sync ${DIM}# full install${NC}"
-  echo -e "  $0 --restore --dry-run                 ${DIM}# preview restore${NC}"
-  echo -e "  $0 --restore                           ${DIM}# undo installation${NC}"
+  echo -e "  $0 --dry-run           ${DIM}# preview without changes${NC}"
+  echo -e "  $0 --backup            ${DIM}# fresh install (recommended)${NC}"
+  echo -e "  $0 --restore --dry-run ${DIM}# preview restore${NC}"
+  echo -e "  $0 --restore           ${DIM}# undo installation${NC}"
   exit 0
 }
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  -n | --dry-run)      DRY_RUN=1;        shift ;;
-  -f | --force)        FORCE=1;          shift ;;
-  -b | --backup)       BACKUP=1;         shift ;;
-  -m | --merge)        MERGE=1;          shift ;;
-  -r | --restore)      RESTORE=1;        shift ;;
-  --with-vpn)          WITH_VPN=1;       shift ;;
-  --with-nas-sync)     WITH_NAS_SYNC=1;  shift ;;
-  --skip-packages)     SKIP_PACKAGES=1;  shift ;;
-  -h | --help)         usage ;;
+  -n | --dry-run)  DRY_RUN=1;  shift ;;
+  -f | --force)    FORCE=1;    shift ;;
+  -b | --backup)   BACKUP=1;   shift ;;
+  -m | --merge)    MERGE=1;    shift ;;
+  -r | --restore)  RESTORE=1;  shift ;;
+  -h | --help)     usage ;;
   *)
     echo -e "${RED}✗ Unknown option: $1${NC}"
     echo -e "  Run '$0 --help' for usage."
@@ -111,8 +101,8 @@ fi
 
 # Validate: --restore is mutually exclusive with install-related flags
 if [[ $RESTORE -eq 1 ]]; then
-  if [[ $conflict_flags -gt 0 ]] || [[ $WITH_VPN -eq 1 ]] || [[ $WITH_NAS_SYNC -eq 1 ]] || [[ $SKIP_PACKAGES -eq 1 ]]; then
-    echo -e "${RED}✗ --restore cannot be combined with install flags (--backup, --merge, --force, --with-vpn, --with-nas-sync, --skip-packages).${NC}"
+  if [[ $conflict_flags -gt 0 ]]; then
+    echo -e "${RED}✗ --restore cannot be combined with --backup, --merge, or --force.${NC}"
     echo -e "  Use: $0 --restore [--dry-run]"
     exit 1
   fi
@@ -540,23 +530,20 @@ if [[ $conflict_flags -eq 0 ]] && [[ $DRY_RUN -eq 0 ]]; then
   warn "consider re-running with --backup (recommended)"
 fi
 
-# Internet check — only required when installing packages
-if [[ $SKIP_PACKAGES -eq 0 ]]; then
-  if ping -c1 -W2 archlinux.org &>/dev/null; then
-    ok "internet connectivity"
-  else
-    fail "no internet connection — required for package installation"
-    echo -e "\n  ${DIM}Tip: use --skip-packages to skip package installation${NC}"
-    exit 1
-  fi
+# Internet check
+if ping -c1 -W2 archlinux.org &>/dev/null; then
+  ok "internet connectivity"
+else
+  fail "no internet connection — required for package installation"
+  exit 1
 fi
 
-# Initialise git submodules (e.g. omarchy fork)
-info "initialising git submodules..."
-if git submodule update --init --recursive --quiet; then
+# Initialise and update git submodules (e.g. omarchy fork)
+info "initialising and updating git submodules..."
+if git submodule update --init --recursive --remote --quiet; then
   ok "submodules up to date"
 else
-  warn "submodule init had issues — continuing anyway"
+  warn "submodule update had issues — continuing anyway"
   _add_warning "git submodule update had a non-zero exit"
 fi
 
@@ -569,141 +556,187 @@ fi
 # 1. PACKAGES
 # =============================================================================
 
-if [[ $SKIP_PACKAGES -eq 1 ]]; then
-  section "Packages  [skipped]"
-  skip "package installation skipped (--skip-packages)"
+section "Package Installation"
+
+# System update
+info "updating system packages..."
+run_cmd sudo pacman -Syu --noconfirm
+[[ $DRY_RUN -eq 0 ]] && ok "system updated"
+
+# Install yay (AUR helper) if not already present
+if command -v yay &>/dev/null; then
+  skip "yay already installed"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  info "would install yay (AUR helper)"
 else
-  section "Package Installation"
+  info "installing yay (AUR helper)..."
+  sudo pacman -S --needed --noconfirm git base-devel
+  yay_tmp=$(mktemp -d)
+  git clone --quiet https://aur.archlinux.org/yay.git "$yay_tmp/yay"
+  (cd "$yay_tmp/yay" && makepkg -si --noconfirm)
+  rm -rf "$yay_tmp"
+  ok "yay installed"
+fi
 
-  # System update
-  info "updating system packages..."
-  run_cmd sudo pacman -Syu --noconfirm
-  [[ $DRY_RUN -eq 0 ]] && ok "system updated"
+# ── Core ──────────────────────────────────────────────────────────────────
+info "installing core packages..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  base base-devel git curl wget linux-headers linux-firmware intel-ucode
+[[ $DRY_RUN -eq 0 ]] && ok "core packages"
 
-  # Install yay (AUR helper) if not already present
-  if command -v yay &>/dev/null; then
-    skip "yay already installed"
-  elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would install yay (AUR helper)"
+# ── Security ──────────────────────────────────────────────────────────────
+info "installing hardened kernels..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  linux-hardened linux-hardened-headers \
+  linux-lts linux-lts-headers
+[[ $DRY_RUN -eq 0 ]] && ok "hardened + LTS kernels"
+
+info "installing AppArmor..."
+run_cmd sudo pacman -S --needed --noconfirm apparmor
+run_cmd yay -S --needed --noconfirm apparmor.d
+[[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles"
+
+# ── Shell utilities ────────────────────────────────────────────────────────
+info "installing shell utilities..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  fish fzf ripgrep fd bat eza dust btop fastfetch jq wl-clipboard \
+  starship zoxide tree tldr man-db less unzip rsync wget
+run_cmd yay -S --needed --noconfirm gum
+[[ $DRY_RUN -eq 0 ]] && ok "shell utilities"
+
+# ── Dev tools ─────────────────────────────────────────────────────────────
+info "installing dev tools..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  neovim docker docker-compose docker-buildx github-cli git-delta \
+  go rust python python-poetry-core nodejs npm
+run_cmd yay -S --needed --noconfirm lazygit lazydocker act mise opencode
+[[ $DRY_RUN -eq 0 ]] && ok "dev tools"
+
+# ── Desktop / Hyprland ────────────────────────────────────────────────────
+info "installing Hyprland and Wayland tools..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  hyprland waybar mako hyprlock hypridle hyprpicker hyprsunset \
+  swaybg grim slurp satty swayosd wl-clipboard wtype \
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
+  qt5-wayland qt6-wayland polkit-gnome sddm
+run_cmd yay -S --needed --noconfirm \
+  omarchy-walker omarchy-chromium omarchy-fish omarchy-nvim omarchy-keyring \
+  hyprland-guiutils nwg-displays wayfreeze uwsm
+[[ $DRY_RUN -eq 0 ]] && ok "Hyprland ecosystem"
+
+info "installing fonts..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra \
+  ttf-cascadia-mono-nerd ttf-jetbrains-mono-nerd fontconfig
+[[ $DRY_RUN -eq 0 ]] && ok "fonts"
+
+info "installing flatpak..."
+run_cmd sudo pacman -S --needed --noconfirm flatpak
+run_cmd flatpak remote-add --if-not-exists flathub \
+  https://flathub.org/repo/flathub.flatpakrepo
+[[ $DRY_RUN -eq 0 ]] && ok "flatpak + flathub remote"
+
+info "installing terminal emulators..."
+run_cmd yay -S --needed --noconfirm ghostty
+[[ $DRY_RUN -eq 0 ]] && ok "terminal emulators"
+
+info "installing browsers..."
+run_cmd sudo pacman -S --needed --noconfirm firefox
+run_cmd yay -S --needed --noconfirm librewolf-bin brave-bin
+[[ $DRY_RUN -eq 0 ]] && ok "browsers"
+
+info "installing audio/video..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber \
+  mpv obs-studio playerctl pamixer
+[[ $DRY_RUN -eq 0 ]] && ok "audio/video"
+
+info "installing productivity apps..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  libreoffice-fresh evince nautilus gnome-calculator gnome-disk-utility \
+  gnome-keyring
+run_cmd yay -S --needed --noconfirm obsidian signal-desktop
+[[ $DRY_RUN -eq 0 ]] && ok "productivity apps"
+
+# ── System utilities ──────────────────────────────────────────────────────
+info "installing system utilities..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  power-profiles-daemon fwupd openssh openresolv yazi \
+  snapper plymouth ufw brightnessctl bluez bluez-utils \
+  cups cups-pdf system-config-printer \
+  btrfs-progs dosfstools exfatprogs efibootmgr \
+  iwd wireless-regdb bind
+run_cmd yay -S --needed --noconfirm \
+  limine limine-mkinitcpio-hook limine-snapper-sync \
+  zram-generator ufw-docker
+[[ $DRY_RUN -eq 0 ]] && ok "system utilities"
+
+# ── Gaming ────────────────────────────────────────────────────────────────
+info "installing Steam and gaming dependencies..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  steam vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
+[[ $DRY_RUN -eq 0 ]] && ok "Steam + Vulkan drivers (Intel)"
+
+# ── Virtualization ────────────────────────────────────────────────────────
+info "installing virt-manager and dependencies..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
+[[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU"
+
+# ── System services ───────────────────────────────────────────────────────
+info "enabling system services..."
+
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would enable: docker.service, power-profiles-daemon.service, apparmor.service, libvirtd.service"
+  info "would add $USER to docker and libvirt groups"
+else
+  # Docker
+  if systemctl is-enabled --quiet docker.service 2>/dev/null; then
+    skip "docker.service (already enabled)"
   else
-    info "installing yay (AUR helper)..."
-    sudo pacman -S --needed --noconfirm git base-devel
-    yay_tmp=$(mktemp -d)
-    git clone --quiet https://aur.archlinux.org/yay.git "$yay_tmp/yay"
-    (cd "$yay_tmp/yay" && makepkg -si --noconfirm)
-    rm -rf "$yay_tmp"
-    ok "yay installed"
+    sudo systemctl enable --now docker.service
+    ok "docker.service enabled"
   fi
 
-  # ── Core ──────────────────────────────────────────────────────────────────
-  info "installing core packages..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    git curl wget base-devel linux-headers
-  [[ $DRY_RUN -eq 0 ]] && ok "core packages"
-
-  # ── Security ──────────────────────────────────────────────────────────────
-  info "installing hardened kernels..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    linux-hardened linux-hardened-headers \
-    linux-lts linux-lts-headers
-  [[ $DRY_RUN -eq 0 ]] && ok "hardened + LTS kernels"
-
-  info "installing AppArmor..."
-  run_cmd sudo pacman -S --needed --noconfirm apparmor
-  run_cmd yay -S --needed --noconfirm apparmor.d
-  [[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles"
-
-  # ── Shell utilities ────────────────────────────────────────────────────────
-  info "installing shell utilities..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    fish fzf ripgrep fd bat eza dust btop fastfetch jq wl-clipboard
-  [[ $DRY_RUN -eq 0 ]] && ok "shell utilities"
-
-  # ── Dev tools ─────────────────────────────────────────────────────────────
-  info "installing dev tools..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    neovim docker docker-compose github-cli git-delta
-  run_cmd yay -S --needed --noconfirm lazygit lazydocker act
-  [[ $DRY_RUN -eq 0 ]] && ok "dev tools"
-
-  # ── Desktop ───────────────────────────────────────────────────────────────
-  info "installing flatpak..."
-  run_cmd sudo pacman -S --needed --noconfirm flatpak
-  run_cmd flatpak remote-add --if-not-exists flathub \
-    https://flathub.org/repo/flathub.flatpakrepo
-  [[ $DRY_RUN -eq 0 ]] && ok "flatpak + flathub remote"
-
-  info "installing LibreWolf..."
-  run_cmd yay -S --needed --noconfirm librewolf-bin
-  [[ $DRY_RUN -eq 0 ]] && ok "LibreWolf"
-
-  # ── System utilities ──────────────────────────────────────────────────────
-  info "installing system utilities..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    power-profiles-daemon fwupd openssh wireguard-tools openresolv rsync
-  [[ $DRY_RUN -eq 0 ]] && ok "system utilities"
-
-  # ── Virtualization ────────────────────────────────────────────────────────
-  info "installing virt-manager and dependencies..."
-  run_cmd sudo pacman -S --needed --noconfirm \
-    libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
-  [[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU"
-
-  # ── System services ───────────────────────────────────────────────────────
-  info "enabling system services..."
-
-  if [[ $DRY_RUN -eq 1 ]]; then
-    info "would enable: docker.service, power-profiles-daemon.service, apparmor.service, libvirtd.service"
-    info "would add $USER to docker and libvirt groups"
+  if groups "$USER" | grep -qw docker; then
+    skip "docker group (already a member)"
   else
-    # Docker
-    if systemctl is-enabled --quiet docker.service 2>/dev/null; then
-      skip "docker.service (already enabled)"
-    else
-      sudo systemctl enable --now docker.service
-      ok "docker.service enabled"
-    fi
+    sudo usermod -aG docker "$USER"
+    warn "added $USER to docker group — log out and back in for this to take effect"
+    _add_warning "log out and back in for docker group membership to take effect"
+  fi
 
-    if groups "$USER" | grep -qw docker; then
-      skip "docker group (already a member)"
-    else
-      sudo usermod -aG docker "$USER"
-      warn "added $USER to docker group — log out and back in for this to take effect"
-      _add_warning "log out and back in for docker group membership to take effect"
-    fi
+  # Power profiles daemon
+  if systemctl is-enabled --quiet power-profiles-daemon.service 2>/dev/null; then
+    skip "power-profiles-daemon.service (already enabled)"
+  else
+    sudo systemctl enable --now power-profiles-daemon.service
+    ok "power-profiles-daemon.service enabled"
+  fi
 
-    # Power profiles daemon
-    if systemctl is-enabled --quiet power-profiles-daemon.service 2>/dev/null; then
-      skip "power-profiles-daemon.service (already enabled)"
-    else
-      sudo systemctl enable --now power-profiles-daemon.service
-      ok "power-profiles-daemon.service enabled"
-    fi
+  # AppArmor
+  if systemctl is-enabled --quiet apparmor.service 2>/dev/null; then
+    skip "apparmor.service (already enabled)"
+  else
+    sudo systemctl enable apparmor.service
+    ok "apparmor.service enabled"
+  fi
 
-    # AppArmor
-    if systemctl is-enabled --quiet apparmor.service 2>/dev/null; then
-      skip "apparmor.service (already enabled)"
-    else
-      sudo systemctl enable apparmor.service
-      ok "apparmor.service enabled"
-    fi
+  # Libvirt
+  if systemctl is-enabled --quiet libvirtd.service 2>/dev/null; then
+    skip "libvirtd.service (already enabled)"
+  else
+    sudo systemctl enable --now libvirtd.service
+    sudo systemctl enable --now virtlogd.service
+    ok "libvirtd.service enabled"
+  fi
 
-    # Libvirt
-    if systemctl is-enabled --quiet libvirtd.service 2>/dev/null; then
-      skip "libvirtd.service (already enabled)"
-    else
-      sudo systemctl enable --now libvirtd.service
-      sudo systemctl enable --now virtlogd.service
-      ok "libvirtd.service enabled"
-    fi
-
-    if groups "$USER" | grep -qw libvirt; then
-      skip "libvirt group (already a member)"
-    else
-      sudo usermod -aG libvirt "$USER"
-      warn "added $USER to libvirt group — log out and back in for this to take effect"
-      _add_warning "log out and back in for libvirt group membership to take effect"
-    fi
+  if groups "$USER" | grep -qw libvirt; then
+    skip "libvirt group (already a member)"
+  else
+    sudo usermod -aG libvirt "$USER"
+    warn "added $USER to libvirt group — log out and back in for this to take effect"
+    _add_warning "log out and back in for libvirt group membership to take effect"
   fi
 fi
 
@@ -868,7 +901,7 @@ else
 fi
 
 # =============================================================================
-# 4. LIBVIRT NETWORK & FIREWALL
+# 4a. LIBVIRT NETWORK & FIREWALL
 # =============================================================================
 
 section "Libvirt Network Configuration"
@@ -959,7 +992,7 @@ else
 fi
 
 # =============================================================================
-# 5. SYSTEMD USER SERVICES
+# 4b. SYSTEMD USER SERVICES
 # =============================================================================
 
 section "Systemd User Services"
@@ -973,125 +1006,135 @@ enable_user_service "power-profile-switch.service"
 enable_user_service "battery-notify.timer"
 
 # =============================================================================
-# 5. VPN (optional)
+# 5. VPN CLIENTS
 # =============================================================================
 
-section "VPN Setup"
+section "VPN Clients"
 
-if [[ $WITH_VPN -eq 0 ]]; then
-  skip "VPN setup skipped (use --with-vpn to enable)"
+info "installing Proton VPN CLI..."
+run_cmd yay -S --needed --noconfirm proton-vpn-cli
+[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-cli"
+
+info "installing GlobalProtect OpenConnect..."
+run_cmd yay -S --needed --noconfirm globalprotect-openconnect-git
+[[ $DRY_RUN -eq 0 ]] && ok "globalprotect-openconnect-git"
+
+# =============================================================================
+# 6. TAILSCALE
+# =============================================================================
+
+section "Tailscale"
+
+if command -v tailscale &>/dev/null; then
+  skip "Tailscale already installed ($(tailscale version | head -1))"
 else
-  VPN_CONF_NAME="debbie-local"
-  VPN_CONF_DEST="/etc/wireguard/${VPN_CONF_NAME}.conf"
-  VPN_CONF_SEARCH=(
-    "$HOME/Downloads/debbie.conf"
-    "$REPO_ROOT/debbie.conf"
-  )
-
-  if [[ -f "$VPN_CONF_DEST" ]]; then
-    skip "VPN config already at $VPN_CONF_DEST"
+  info "installing Tailscale..."
+  if [[ $DRY_RUN -eq 1 ]]; then
+    info "would run: curl -fsSL https://tailscale.com/install.sh | sh"
   else
-    VPN_CONF=""
-    for candidate in "${VPN_CONF_SEARCH[@]}"; do
-      if [[ -f "$candidate" ]]; then
-        VPN_CONF="$candidate"
-        break
-      fi
-    done
+    curl -fsSL https://tailscale.com/install.sh | sh
+    ok "Tailscale installed"
+  fi
+fi
 
-    if [[ -z "$VPN_CONF" ]]; then
-      warn "debbie.conf not found (checked: ${VPN_CONF_SEARCH[*]})"
-      warn "place it in ~/Downloads and re-run with --with-vpn"
-      _add_warning "VPN config not found — place debbie.conf in ~/Downloads and re-run"
-    elif [[ $DRY_RUN -eq 1 ]]; then
-      info "would install: $VPN_CONF → $VPN_CONF_DEST"
-    else
-      info "found: $VPN_CONF"
-      sudo install -o root -g root -m 600 "$VPN_CONF" "$VPN_CONF_DEST"
-      ok "VPN '$VPN_CONF_NAME' installed"
-      info "connect with:     vpn up home"
-      info "autoconnect with: vpn autoconnect home"
-    fi
+if [[ $DRY_RUN -eq 0 ]]; then
+  # Enable and start the daemon
+  if systemctl is-enabled --quiet tailscaled 2>/dev/null; then
+    skip "tailscaled (already enabled)"
+  else
+    sudo systemctl enable --now tailscaled
+    ok "tailscaled enabled"
+  fi
+
+  # Authenticate if not already connected
+  if tailscale status &>/dev/null; then
+    skip "Tailscale already authenticated and connected"
+  else
+    info "authenticating with Tailscale..."
+    sudo tailscale up --accept-routes
+    ok "Tailscale connected"
   fi
 fi
 
 # =============================================================================
-# 6. NAS SYNC (optional)
+# 7. NAS SYNC
 # =============================================================================
 
 section "NAS Sync"
 
-if [[ $WITH_NAS_SYNC -eq 0 ]]; then
-  skip "NAS sync skipped (use --with-nas-sync to enable)"
+run_cmd mkdir -p "$HOME/.config/nas-sync"
+
+PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
+if [[ -f "$PASSWORD_FILE" ]]; then
+  skip "rsync password file already exists"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  info "would prompt for NAS rsync password"
 else
-  run_cmd mkdir -p "$HOME/.config/nas-sync"
-
-  PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
-  if [[ -f "$PASSWORD_FILE" ]]; then
-    skip "rsync password file already exists"
-  elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would prompt for NAS rsync password"
+  echo ""
+  echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
+  read -r -s -p "  Password: " nas_password
+  echo ""
+  if [[ -n "$nas_password" ]]; then
+    printf '%s' "$nas_password" > "$PASSWORD_FILE"
+    chmod 600 "$PASSWORD_FILE"
+    ok "password file created: $PASSWORD_FILE"
   else
-    echo ""
-    echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
-    read -r -s -p "  Password: " nas_password
-    echo ""
-    if [[ -n "$nas_password" ]]; then
-      printf '%s' "$nas_password" > "$PASSWORD_FILE"
-      chmod 600 "$PASSWORD_FILE"
-      ok "password file created: $PASSWORD_FILE"
-    else
-      warn "skipped password setup — create it later:"
-      echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
-    fi
+    warn "skipped password setup — create it later:"
+    echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
   fi
+fi
 
-  # Initial clone from NAS (ordered list — associative arrays have undefined iteration order)
-  NAS_MODULES=(
-    "documents:Documents"
-    "music:Music"
-    "photos:Photos"
-    "audiobooks:Audiobooks"
-    "books:Books"
-  )
+# Initial clone from NAS (ordered list — associative arrays have undefined iteration order)
+NAS_MODULES=(
+  "documents:Documents"
+  "music:Music"
+  "photos:Photos"
+  "audiobooks:Audiobooks"
+  "books:Books"
+)
 
-  if [[ $DRY_RUN -eq 1 ]]; then
-    info "would check NAS connectivity and clone:"
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would check NAS connectivity and clone:"
+  for entry in "${NAS_MODULES[@]}"; do
+    local_dir="${entry##*:}"
+    info "  ~/$local_dir"
+  done
+else
+  info "checking NAS connectivity..."
+  if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
+    ok "NAS reachable — checking for initial clone"
     for entry in "${NAS_MODULES[@]}"; do
+      module="${entry%%:*}"
       local_dir="${entry##*:}"
-      info "  ~/$local_dir"
-    done
-  else
-    info "checking NAS connectivity..."
-    if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
-      ok "NAS reachable — starting initial clone"
-      for entry in "${NAS_MODULES[@]}"; do
-        module="${entry%%:*}"
-        local_dir="${entry##*:}"
+      
+      # Skip if directory exists and has content (already synced)
+      if [[ -d "$HOME/$local_dir" ]] && [[ -n "$(ls -A "$HOME/$local_dir" 2>/dev/null)" ]]; then
+        skip "$module (already synced to ~/$local_dir)"
+      else
         mkdir -p "$HOME/$local_dir"
         info "syncing $module → ~/$local_dir..."
         if rsync -az --password-file="$PASSWORD_FILE" \
-          "rsync://nate@nas.lan:873/$module/" "$HOME/$local_dir/" 2>/dev/null; then
+          "rsync://nate@tnas.tail54538d.ts.net:873/$module/" "$HOME/$local_dir/" 2>/dev/null; then
           ok "$module synced"
         else
           warn "failed to sync $module — continuing"
           _add_warning "NAS initial sync failed for: $module"
         fi
-      done
-    else
-      warn "NAS not reachable — skipping initial clone"
-      warn "timers will sync automatically once NAS is accessible"
-      _add_warning "NAS not reachable during install — initial clone skipped"
-    fi
+      fi
+    done
+  else
+    warn "NAS not reachable — skipping initial clone"
+    warn "timers will sync automatically once NAS is accessible"
+    _add_warning "NAS not reachable during install — initial clone skipped"
   fi
-
-  # Enable NAS sync timers
-  info "enabling NAS sync timers..."
-  for entry in "${NAS_MODULES[@]}"; do
-    module="${entry%%:*}"
-    enable_user_service "nas-sync-${module}.timer"
-  done
 fi
+
+# Enable NAS sync timers
+info "enabling NAS sync timers..."
+for entry in "${NAS_MODULES[@]}"; do
+  module="${entry%%:*}"
+  enable_user_service "nas-sync-${module}.timer"
+done
 
 # =============================================================================
 # SUMMARY
