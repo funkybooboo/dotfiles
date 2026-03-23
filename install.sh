@@ -672,9 +672,14 @@ run_cmd sudo pacman -S --needed --noconfirm \
 run_cmd yay -S --needed --noconfirm obsidian signal-desktop
 [[ $DRY_RUN -eq 0 ]] && ok "productivity apps"
 
+info "installing finance/crypto apps..."
+run_cmd sudo pacman -S --needed --noconfirm monero-gui
+[[ $DRY_RUN -eq 0 ]] && ok "finance/crypto apps"
+
 # ── System utilities ──────────────────────────────────────────────────────
 info "installing system utilities..."
 run_cmd sudo pacman -S --needed --noconfirm \
+  earlyoom \
   power-profiles-daemon fwupd openssh openresolv yazi \
   snapper plymouth ufw brightnessctl bluez bluez-utils \
   cups cups-pdf system-config-printer \
@@ -774,6 +779,14 @@ else
   else
     sudo systemctl enable --now auditd.service
     ok "auditd.service enabled"
+  fi
+
+  # earlyoom — kill memory-hungry processes before OOM freeze
+  if systemctl is-enabled --quiet earlyoom.service 2>/dev/null; then
+    skip "earlyoom.service (already enabled)"
+  else
+    sudo systemctl enable --now earlyoom.service
+    ok "earlyoom.service enabled"
   fi
 
   # cups-browsed — disable and mask (attack surface, CVE-2024-47176, no printer use)
