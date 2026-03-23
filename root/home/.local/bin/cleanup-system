@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# cleanup-system — run all system cleanup and diagnostic scripts
+#
+set -euo pipefail
+
+TS() { date '+%F %T'; }
+
+echo "[$(TS)] ================================================"
+echo "[$(TS)] === Starting full system cleanup ==="
+echo "[$(TS)] ================================================"
+echo ""
+
+echo "[$(TS)] --- Step 1/4: Memory cleanup ---"
+clean-memory
+echo ""
+
+echo "[$(TS)] --- Step 2/4: Disk cleanup ---"
+clean-disk
+echo ""
+
+echo "[$(TS)] --- Step 3/4: Checking for runaway processes ---"
+hot-procs
+echo ""
+
+echo "[$(TS)] --- Step 4/4: Security audit ---"
+cleanup-audit
+echo ""
+
+echo "[$(TS)] ================================================"
+echo "[$(TS)] === Full system cleanup complete! ==="
+echo "[$(TS)] ================================================"

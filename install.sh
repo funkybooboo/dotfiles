@@ -596,6 +596,20 @@ run_cmd sudo pacman -S --needed --noconfirm apparmor
 run_cmd yay -S --needed --noconfirm apparmor.d
 [[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles"
 
+# ── Application security ───────────────────────────────────────────────────
+info "installing application security tools..."
+run_cmd sudo pacman -S --needed --noconfirm \
+  usbguard opensnitch
+run_cmd yay -S --needed --noconfirm \
+  usbguard-qt
+[[ $DRY_RUN -eq 0 ]] && ok "usbguard + opensnitch"
+
+# ── Intrusion detection ────────────────────────────────────────────────────
+info "installing intrusion detection tools..."
+run_cmd sudo pacman -S --needed --noconfirm rkhunter audit
+run_cmd yay -S --needed --noconfirm chkrootkit
+[[ $DRY_RUN -eq 0 ]] && ok "rkhunter + chkrootkit + auditd"
+
 # ── Shell utilities ────────────────────────────────────────────────────────
 info "installing shell utilities..."
 run_cmd sudo pacman -S --needed --noconfirm \
@@ -721,6 +735,65 @@ else
     sudo systemctl enable apparmor.service
     ok "apparmor.service enabled"
   fi
+
+  # USBGuard
+  if systemctl is-enabled --quiet usbguard.service 2>/dev/null; then
+    skip "usbguard.service (already enabled)"
+  else
+    sudo systemctl enable --now usbguard.service
+    ok "usbguard.service enabled"
+  fi
+
+  # USBGuard IPC + initial policy
+  if grep -q "IPCAllowedUsers=root $USER" /etc/usbguard/usbguard-daemon.conf 2>/dev/null; then
+    skip "usbguard IPC (already configured)"
+  else
+    sudo sed -i "s/IPCAllowedUsers=root/IPCAllowedUsers=root $USER/" \
+      /etc/usbguard/usbguard-daemon.conf
+    ok "usbguard IPC configured"
+  fi
+
+  if [[ -s /etc/usbguard/rules.conf ]]; then
+    skip "usbguard policy (already exists)"
+  else
+    sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf > /dev/null
+    ok "usbguard policy generated"
+  fi
+
+  # OpenSnitch
+  if systemctl is-enabled --quiet opensnitchd.service 2>/dev/null; then
+    skip "opensnitchd.service (already enabled)"
+  else
+    sudo systemctl enable --now opensnitchd.service
+    ok "opensnitchd.service enabled"
+  fi
+
+  # auditd
+  if systemctl is-enabled --quiet auditd.service 2>/dev/null; then
+    skip "auditd.service (already enabled)"
+  else
+    sudo systemctl enable --now auditd.service
+    ok "auditd.service enabled"
+  fi
+
+  # cups-browsed — disable and mask (attack surface, CVE-2024-47176, no printer use)
+  if systemctl is-masked --quiet cups-browsed.service 2>/dev/null; then
+    skip "cups-browsed.service (already masked)"
+  else
+    sudo systemctl disable --now cups-browsed.service 2>/dev/null || true
+    sudo systemctl mask cups-browsed.service
+    ok "cups-browsed.service disabled and masked"
+  fi
+
+  # rkhunter + chkrootkit weekly scan timers
+  for timer in rkhunter-scan.timer chkrootkit-scan.timer; do
+    if systemctl is-enabled --quiet "$timer" 2>/dev/null; then
+      skip "$timer (already enabled)"
+    else
+      sudo systemctl enable --now "$timer"
+      ok "$timer enabled"
+    fi
+  done
 
   # Libvirt
   if systemctl is-enabled --quiet libvirtd.service 2>/dev/null; then
@@ -900,6 +973,115 @@ else
   skip "AppArmor kernel params ($LIMINE_CONFIG not found — add manually: $APPARMOR_PARAM)"
 fi
 
+# Hardened kernel as default boot entry
+BOOT_ORDER_TARGET="linux-hardened, *, *fallback, Snapshots"
+if [[ -f "$LIMINE_CONFIG" ]]; then
+  if grep -q "^BOOT_ORDER=\"linux-hardened," "$LIMINE_CONFIG"; then
+    skip "hardened kernel boot default (already set)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    info "would set hardened kernel as default boot entry in $LIMINE_CONFIG"
+  else
+    info "setting hardened kernel as default boot entry..."
+    if sudo sed -i "s|^BOOT_ORDER=.*|BOOT_ORDER=\"${BOOT_ORDER_TARGET}\"|" "$LIMINE_CONFIG"; then
+      sudo limine-update
+      ok "hardened kernel set as default boot entry"
+    else
+      warn "failed to set hardened kernel as default boot entry"
+      _add_warning "hardened kernel boot default configuration failed"
+    fi
+  fi
+else
+  skip "hardened kernel boot default ($LIMINE_CONFIG not found)"
+fi
+
+# =============================================================================
+# 3b. SECURITY HARDENING
+# =============================================================================
+
+section "Security Hardening"
+
+# ── rkhunter config ───────────────────────────────────────────────────────
+RKHUNTER_SRC="$DOTFILES_ROOT_ETC/rkhunter.conf"
+RKHUNTER_DEST="/etc/rkhunter.conf"
+if [[ -f "$RKHUNTER_SRC" ]]; then
+  if [[ -f "$RKHUNTER_DEST" ]] && cmp -s "$RKHUNTER_SRC" "$RKHUNTER_DEST"; then
+    skip "rkhunter.conf (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    info "would deploy rkhunter.conf → $RKHUNTER_DEST"
+  else
+    sudo cp "$RKHUNTER_SRC" "$RKHUNTER_DEST"
+    sudo chown root:root "$RKHUNTER_DEST"
+    sudo chmod 640 "$RKHUNTER_DEST"
+    ok "rkhunter.conf deployed"
+  fi
+fi
+
+# ── auditd rules ──────────────────────────────────────────────────────────
+AUDIT_SRC="$DOTFILES_ROOT_ETC/audit/rules.d/hardening.rules"
+AUDIT_DEST="/etc/audit/rules.d/hardening.rules"
+if [[ -f "$AUDIT_SRC" ]]; then
+  if [[ -f "$AUDIT_DEST" ]] && cmp -s "$AUDIT_SRC" "$AUDIT_DEST"; then
+    skip "audit rules (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    info "would deploy audit rules → $AUDIT_DEST"
+  else
+    sudo mkdir -p /etc/audit/rules.d
+    sudo cp "$AUDIT_SRC" "$AUDIT_DEST"
+    sudo chown root:root "$AUDIT_DEST"
+    sudo chmod 640 "$AUDIT_DEST"
+    sudo augenrules --load
+    ok "audit rules deployed and loaded"
+  fi
+fi
+
+# ── rkhunter + chkrootkit systemd units ───────────────────────────────────
+for unit in rkhunter-scan.service rkhunter-scan.timer chkrootkit-scan.service chkrootkit-scan.timer; do
+  UNIT_SRC="$DOTFILES_ROOT_ETC/systemd/system/$unit"
+  UNIT_DEST="/etc/systemd/system/$unit"
+  if [[ -f "$UNIT_SRC" ]]; then
+    if [[ -f "$UNIT_DEST" ]] && cmp -s "$UNIT_SRC" "$UNIT_DEST"; then
+      skip "$unit (already up to date)"
+    elif [[ $DRY_RUN -eq 1 ]]; then
+      info "would deploy $unit → $UNIT_DEST"
+    else
+      sudo cp "$UNIT_SRC" "$UNIT_DEST"
+      sudo chown root:root "$UNIT_DEST"
+      sudo chmod 644 "$UNIT_DEST"
+      ok "$unit deployed"
+    fi
+  fi
+done
+
+# ── pacman hook ───────────────────────────────────────────────────────────
+HOOK_SRC="$DOTFILES_ROOT_ETC/pacman.d/hooks/rkhunter-propupd.hook"
+HOOK_DEST="/etc/pacman.d/hooks/rkhunter-propupd.hook"
+if [[ -f "$HOOK_SRC" ]]; then
+  if [[ -f "$HOOK_DEST" ]] && cmp -s "$HOOK_SRC" "$HOOK_DEST"; then
+    skip "rkhunter pacman hook (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    info "would deploy rkhunter pacman hook → $HOOK_DEST"
+  else
+    sudo mkdir -p /etc/pacman.d/hooks
+    sudo cp "$HOOK_SRC" "$HOOK_DEST"
+    sudo chown root:root "$HOOK_DEST"
+    sudo chmod 644 "$HOOK_DEST"
+    ok "rkhunter pacman hook deployed"
+  fi
+fi
+
+# ── rkhunter baseline ─────────────────────────────────────────────────────
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would initialize rkhunter file properties database"
+elif command -v rkhunter &>/dev/null; then
+  if [[ ! -f /var/lib/rkhunter/db/rkhunter.dat ]]; then
+    info "initializing rkhunter file properties database..."
+    sudo rkhunter --propupd 2>/dev/null
+    ok "rkhunter database initialized"
+  else
+    skip "rkhunter database (already exists)"
+  fi
+fi
+
 # =============================================================================
 # 4a. LIBVIRT NETWORK & FIREWALL
 # =============================================================================
@@ -1014,6 +1196,10 @@ section "VPN Clients"
 info "installing Proton VPN CLI..."
 run_cmd yay -S --needed --noconfirm proton-vpn-cli
 [[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-cli"
+
+info "installing Proton VPN (GUI)..."
+run_cmd yay -S --needed --noconfirm proton-vpn-gtk-app
+[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-gtk-app"
 
 info "installing GlobalProtect OpenConnect..."
 run_cmd yay -S --needed --noconfirm globalprotect-openconnect-git

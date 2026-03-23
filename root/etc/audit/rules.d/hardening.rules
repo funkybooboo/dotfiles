@@ -1,0 +1,31 @@
+# Delete all existing rules
+-D
+
+# Increase buffer size
+-b 8192
+
+# Failure mode: 1=printk (log and continue)
+-f 1
+
+# Authentication files
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/sudoers -p wa -k sudoers
+-w /etc/sudoers.d/ -p wa -k sudoers
+
+# SSH config
+-w /etc/ssh/sshd_config -p wa -k sshd
+
+# Binary directories (catches binary replacement)
+-w /usr/bin/ -p wa -k binaries
+-w /usr/sbin/ -p wa -k binaries
+
+# Kernel module loading
+-w /sbin/insmod -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+
+# Privilege escalation
+-w /bin/su -p x -k priv_esc
+-w /usr/bin/sudo -p x -k priv_esc

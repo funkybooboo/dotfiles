@@ -177,6 +177,21 @@ else
 fi
 echo ""
 
+# --- Zombie process notice ---
+echo "[$(TS)] Checking for zombie processes..."
+ZOMBIES=$(ps aux | awk '$8 == "Z" { print $2, $11 }')
+if [ -n "$ZOMBIES" ]; then
+  echo "-> Zombie processes found (kill their parent to reap them):"
+  echo "$ZOMBIES" | while read -r zpid zcmd; do
+    PPID=$(awk '/PPid/ { print $2 }' /proc/"$zpid"/status 2>/dev/null || echo "?")
+    PCMD=$(ps -p "$PPID" -o comm= 2>/dev/null || echo "unknown")
+    echo "   zombie PID $zpid ($zcmd) — parent PID $PPID ($PCMD)  →  kill $PPID"
+  done
+else
+  echo "-> No zombie processes found."
+fi
+echo ""
+
 echo "[$(TS)] === Memory cleanup complete! ==="
 echo ""
 echo "Current memory status:"
