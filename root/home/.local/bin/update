@@ -32,6 +32,13 @@ fi
 if [[ -f "$_DOTFILES_DIR/.gitmodules" ]]; then
     echo "→ Updating dotfiles git submodules..."
     if git -C "$_DOTFILES_DIR" submodule update --init --remote --recursive; then
+        # Ensure each submodule is on its tracked branch (not detached HEAD)
+        git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}' | while read -r submod_path; do
+            submod_branch=$(git -C "$_DOTFILES_DIR" config --file .gitmodules --get "submodule.$submod_path.branch" 2>/dev/null || echo "")
+            if [[ -n "$submod_branch" ]]; then
+                git -C "$_DOTFILES_DIR/$submod_path" checkout "$submod_branch" 2>/dev/null || true
+            fi
+        done
         # Check if submodule pointers changed (only check .gitmodules and submodule paths)
         if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- .gitmodules $(git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}') 2>/dev/null; then
             # Only add .gitmodules and submodule paths, not all changes
