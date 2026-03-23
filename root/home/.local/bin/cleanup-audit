@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+#
+# cleanup-audit — review security scan logs and recent auditd events
+#
+set -uo pipefail
+
+TS() { date '+%F %T'; }
+
+echo "[$(TS)] === Starting security audit review ==="
+echo ""
+
+# --- rkhunter last scan results ---
+echo "[$(TS)] rkhunter last scan results:"
+RKHUNTER_LOG="/var/log/rkhunter.log"
+if [ ! -f "$RKHUNTER_LOG" ] || ! sudo grep -q "System checks summary" "$RKHUNTER_LOG" 2>/dev/null; then
+  echo "-> WARNING: no scan results found — timer has not run yet"
+else
+  LAST_SCAN_LINE=$(sudo grep "Possible rootkits:" "$RKHUNTER_LOG" 2>/dev/null | tail -1)
+  LAST_RUN=$(echo "$LAST_SCAN_LINE" | grep -oP '^\[\K\d{2}:\d{2}:\d{2}' || echo "unknown")
+  ROOTKITS=$(echo "$LAST_SCAN_LINE" | awk '{print $NF}')
+  WARNINGS=$(sudo grep "Warning" "$RKHUNTER_LOG" 2>/dev/null | wc -l)
+  echo "-> Last scan: $LAST_RUN"
+  echo "-> Possible rootkits: ${ROOTKITS:-unknown}"
+  if [ "$WARNINGS" -eq 0 ]; then
+    echo "-> Warnings: none"
+  else
+    echo "-> Warnings ($WARNINGS):"
+    sudo grep "Warning" "$RKHUNTER_LOG" | tail -20 | sed 's/^/   /'
+  fi
+fi
+echo ""
+
+# --- chkrootkit last scan results ---
+echo "[$(TS)] chkrootkit last scan results:"
+if systemctl cat chkrootkit-scan.service >/dev/null 2>&1; then
+  LAST_RUN=$(systemctl show chkrootkit-scan.service --property=ExecMainStartTimestamp --value 2>/dev/null || echo "")
+  if [ -z "$LAST_RUN" ] || [ "$LAST_RUN" = "n/a" ]; then
+    echo "-> WARNING: timer has not run yet"
+  else
+    echo "-> Last run: $LAST_RUN"
+  fi
+  INFECTED=$(journalctl -u chkrootkit-scan.service -n 200 --no-pager 2>/dev/null | grep -i "INFECTED" || true)
+  if [ -z "$INFECTED" ]; then
+    echo "-> Nothing infected."
+  else
+    echo "-> Potential issues found:"
+    echo "$INFECTED" | sed 's/^/   /'
+  fi
+else
+  echo "-> chkrootkit-scan.service not found — timer not installed?"
+fi
+echo ""
+
+# --- auditd recent events ---
+if command -v ausearch >/dev/null 2>&1 && systemctl is-active --quiet auditd 2>/dev/null; then
+  echo "[$(TS)] Recent auditd events (last 24h)..."
+  echo ""
+
+  echo "-> Identity file changes (/etc/passwd, /etc/shadow, /etc/sudoers):"
+  sudo ausearch -k identity --start today 2>/dev/null \
+    | grep -E "^time|comm=|name=" | head -20 || echo "   none"
+  echo ""
+
+  echo "-> Privilege escalation (su, sudo):"
+  sudo ausearch -k priv_esc --start today 2>/dev/null \
+    | grep -E "^time|comm=|exe=" | head -20 || echo "   none"
+  echo ""
+
+  echo "-> Binary directory writes:"
+  sudo ausearch -k binaries --start today 2>/dev/null \
+    | grep -E "^time|name=" | head -20 || echo "   none"
+  echo ""
+
+  echo "-> Kernel module loads/unloads:"
+  sudo ausearch -k modules --start today 2>/dev/null \
+    | grep -E "^time|comm=|name=" | head -20 || echo "   none"
+  echo ""
+
+  echo "-> SSH config changes:"
+  sudo ausearch -k sshd --start today 2>/dev/null \
+    | grep -E "^time|name=" | head -20 || echo "   none"
+  echo ""
+
+  AUDIT_LOG="/var/log/audit/audit.log"
+  if [ -f "$AUDIT_LOG" ]; then
+    LOG_SIZE=$(du -sh "$AUDIT_LOG" | cut -f1)
+    echo "-> Audit log size: $LOG_SIZE ($AUDIT_LOG)"
+  fi
+else
+  echo "[$(TS)] auditd not running or ausearch not available. Skipping."
+fi
+echo ""
+
+echo "[$(TS)] === Security audit review complete! ==="

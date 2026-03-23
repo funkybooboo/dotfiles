@@ -117,9 +117,10 @@ fi
 
 # pnpm
 if command -v pnpm >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning pnpm store..."
+    echo "[$(TS)] Cleaning pnpm store and cache..."
     pnpm store prune
-    echo "-> pnpm store cleaned."
+    rm -rf ~/.cache/pnpm || true
+    echo "-> pnpm store and cache cleaned."
 fi
 
 # bun
@@ -146,6 +147,18 @@ if command -v go >/dev/null 2>&1; then
     go clean -cache -modcache -testcache
     echo "-> Go cache cleaned."
 fi
+
+# uv
+if command -v uv >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning uv cache..."
+    uv cache clean
+    echo "-> uv cache cleaned."
+fi
+
+# Trash
+echo "[$(TS)] Emptying trash..."
+rm -rf ~/.local/share/Trash/files/* ~/.local/share/Trash/info/* 2>/dev/null || true
+echo "-> Trash emptied."
 
 echo "[$(TS)] === System cleanup complete! ==="
 

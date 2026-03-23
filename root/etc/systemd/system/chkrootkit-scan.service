@@ -1,0 +1,7 @@
+[Unit]
+Description=chkrootkit rootkit scan
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/chkrootkit
+StandardOutput=journal

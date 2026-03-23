@@ -95,19 +95,78 @@ if command -v cargo >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 6: Update Go packages
-if command -v go >/dev/null 2>&1 && [ -d "$HOME/go/bin" ]; then
+# Step 6: Update Go packages (extract module paths via go version -m)
+if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1; then
     echo "→ Updating Go packages..."
     for bin in "$HOME/go/bin/"*; do
         [ -f "$bin" ] || continue
-        pkg_name=$(basename "$bin")
-        echo "  → Reinstalling $pkg_name..."
-        go install "$pkg_name@latest" 2>/dev/null || true
+        mod_path=$(go version -m "$bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
+        if [[ -n "$mod_path" ]]; then
+            echo "  → Updating $mod_path..."
+            go install "${mod_path}@latest" 2>/dev/null || echo "    warning: could not update $mod_path"
+        fi
     done
     echo ""
 fi
 
-# Step 7: Clean package cache
+# Step 7: Update mise-managed tools (mise itself is updated by pacman in Step 1)
+if command -v mise >/dev/null 2>&1; then
+    echo "→ Upgrading mise-managed tools..."
+    mise upgrade --yes 2>/dev/null || true
+    echo ""
+fi
+
+# Step 8: Update npm global packages
+if command -v npm >/dev/null 2>&1; then
+    echo "→ Updating npm global packages..."
+    npm update -g 2>/dev/null || true
+    echo ""
+fi
+
+# Step 9: Update uv (Python package manager) and uv-managed tools
+if command -v uv >/dev/null 2>&1; then
+    echo "→ Updating uv..."
+    uv self update 2>/dev/null || true
+    echo "  → Upgrading uv-managed tools..."
+    uv tool upgrade --all 2>/dev/null || true
+    echo ""
+fi
+
+# Step 10: Update ghcup (the ghcup binary itself) and Stack
+if command -v ghcup >/dev/null 2>&1; then
+    echo "→ Updating ghcup..."
+    ghcup upgrade 2>/dev/null || true
+    echo ""
+fi
+if command -v stack >/dev/null 2>&1; then
+    echo "→ Upgrading Stack..."
+    stack upgrade 2>/dev/null || true
+    echo ""
+fi
+if command -v cabal >/dev/null 2>&1; then
+    echo "→ Refreshing Hackage package index (cabal)..."
+    cabal update 2>/dev/null || true
+    echo ""
+fi
+
+# Step 11: Update Neovim Mason packages (LSP servers, formatters, linters)
+# MasonUpdate runs async jobs; quit only after it signals completion.
+if command -v nvim >/dev/null 2>&1; then
+    echo "→ Updating Neovim Mason packages..."
+    nvim --headless \
+        -c "autocmd User MasonUpdateCompleted qall" \
+        -c "MasonUpdate" 2>/dev/null || echo "  warning: Mason update failed or Mason not installed"
+    echo ""
+fi
+
+# Step 12: Update tldr cache
+if command -v tldr >/dev/null 2>&1; then
+    echo "→ Updating tldr cache..."
+    tldr --update 2>/dev/null || true
+    echo ""
+fi
+
+# Step 13: Clean package cache
 if command -v yay >/dev/null 2>&1; then
     echo "→ Cleaning package cache..."
     yay -Sc --noconfirm
