@@ -149,16 +149,6 @@ if command -v cabal >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 11: Update Neovim Mason packages (LSP servers, formatters, linters)
-# MasonUpdate runs async jobs; quit only after it signals completion.
-if command -v nvim >/dev/null 2>&1; then
-    echo "→ Updating Neovim Mason packages..."
-    nvim --headless \
-        -c "autocmd User MasonUpdateCompleted qall" \
-        -c "MasonUpdate" 2>/dev/null || echo "  warning: Mason update failed or Mason not installed"
-    echo ""
-fi
-
 # Step 12: Update tldr cache
 if command -v tldr >/dev/null 2>&1; then
     echo "→ Updating tldr cache..."
