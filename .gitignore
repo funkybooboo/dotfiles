@@ -66,3 +66,5 @@ root/home/.gnupg/*
 !root/home/.gnupg/gpg.conf
 !root/home/.gnupg/gpg-agent.conf
 !root/home/.gnupg/common.conf
+
+node_modules/
