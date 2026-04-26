@@ -79,13 +79,13 @@
 ### Auto-Allowed
 **Read:** Most files (except secrets/credentials/.env), .env.example files, glob/grep tools
 **Edit:** Markdown (*.md, *.mdx), README*, CHANGELOG*, CONTRIBUTING*, LICENSE*
-**Bash:** Git read-only, package managers (list/view), file viewing (ls/cat/grep), docker/kubectl (inspect/get), testing (npm test, cargo test, pytest), building (npm/cargo build), linting (biome, clippy, ruff, eslint)
+**Bash:** Git read-only, package managers (list/view), file viewing (ls/cat/grep), docker/kubectl (inspect/get), testing (npm test, cargo test, pytest), building (npm/cargo build), linting (biome, clippy, ruff, eslint), file deletion (rm)
 **Tasks:** explore subagent
 
 ### Denied (Never Do)
 **Read:** .env, secrets, keys (.pem/.key/.p12), SSH keys, auth files (*token*, auth.json), cloud configs (.aws/credentials, .kube/config), package auth (.npmrc)
 **Edit:** .git/**, node_modules/**, lock files (package-lock.json, yarn.lock, Cargo.lock, etc.)
-**Run:** `sudo`, `rm/rm -rf`, `dd`, `mkfs*`, `fdisk*`, `chmod 777`, `chown root`
+**Run:** `sudo`, `dd`, `mkfs*`, `fdisk*`, `chmod 777`, `chown root`
 
 ### Ask Permission First
 - Most bash commands (except auto-allowed)
@@ -138,7 +138,7 @@ Before finishing ANY task:
 
 ---
 
-## Caveman Communication Style (from ~/.config/opencode/AGENTS.md)
+## Caveman Communication Style
 
 Terse like caveman. Technical substance exact. Only fluff die.
 Drop: articles, filler (just/really/basically), pleasantries, hedging.
@@ -146,3 +146,5 @@ Fragments OK. Short synonyms. Code unchanged.
 Pattern: [thing] [action] [reason]. [next step].
 ACTIVE EVERY RESPONSE. No revert after many turns. No filler drift.
 Code/commits/PRs: normal. Off: "stop caveman" / "normal mode".
+
+

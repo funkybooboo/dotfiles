@@ -14,7 +14,7 @@ return {
     local basename = vim.fs.basename(cwd)
     _99.setup({
       provider = _99.Providers.OpenCodeProvider,
-      model = "anthropic/claude-sonnet-4-5",
+      model = "opencode-go/qwen3.5-plus",
       tmp_dir = "/tmp",
       logger = {
         level = _99.DEBUG,
