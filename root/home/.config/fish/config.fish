@@ -58,7 +58,12 @@ if command -v fzf &>/dev/null
         set -gx FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
     end
 
-    fzf --fish | source
+    set -l fzf_cache ~/.cache/fzf_fish_init.fish
+    if not test -f $fzf_cache
+        mkdir -p ~/.cache
+        fzf --fish > $fzf_cache
+    end
+    source $fzf_cache
 end
 
 # direnv
@@ -66,16 +71,16 @@ if command -v direnv &>/dev/null
     direnv hook fish | source
 end
 
-# GPG
-set -gx GPG_TTY (tty)
+# GPG - lazy load TTY on first prompt
+function __gpg_tty_lazy --on-event fish_prompt
+    set -gx GPG_TTY (tty)
+    functions --erase __gpg_tty_lazy
+end
 
 # ============================================================================
 # SETTINGS
 # ============================================================================
 set -g fish_greeting
-fish_vi_key_bindings
-set -x VISUAL nvim
-set -x EDITOR nvim
 
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/nate/.ghcup/bin $PATH # ghcup-env
 

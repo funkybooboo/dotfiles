@@ -68,3 +68,4 @@ root/home/.gnupg/*
 !root/home/.gnupg/common.conf
 
 node_modules/
+dist/

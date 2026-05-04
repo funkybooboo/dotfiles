@@ -31,12 +31,6 @@ return {
             },
           },
         },
-        -- ESLint LSP
-        eslint = {
-          settings = {
-            workingDirectories = { mode = "auto" },
-          },
-        },
       },
     },
   },
@@ -47,8 +41,6 @@ return {
     opts = {
       ensure_installed = {
         "typescript-language-server", -- TypeScript/JavaScript LSP
-        "eslint-lsp",                 -- ESLint LSP
-        "prettier",                   -- Formatter
       },
     },
   },

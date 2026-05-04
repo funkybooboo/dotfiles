@@ -1,0 +1,37 @@
+#!/bin/bash
+# Usage: set-openviking-key "your-gemini-api-key"
+# Sets the API key in ~/.openviking/ov.conf and restarts the service
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+  echo "Usage: set-openviking-key \"your-gemini-api-key\""
+  exit 1
+fi
+
+CONF="$HOME/.openviking/ov.conf"
+KEY="$1"
+
+if [[ ! -f "$CONF" ]]; then
+  echo "Error: $CONF not found. Run install.sh first."
+  exit 1
+fi
+
+# Use python to update JSON (handles formatting properly)
+python3 -c "
+import json, sys
+with open('$CONF') as f:
+    c = json.load(f)
+c['embedding']['dense']['api_key'] = '$KEY'
+c['vlm']['api_key'] = '$KEY'
+with open('$CONF', 'w') as f:
+    json.dump(c, f, indent=2)
+    f.write('\n')
+"
+
+echo "API key set in $CONF"
+if systemctl --user is-active openviking.service &>/dev/null; then
+  systemctl --user restart openviking.service
+  echo "Service restarted."
+else
+  echo "Service not running. Start with: systemctl --user start openviking.service"
+fi

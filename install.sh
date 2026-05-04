@@ -217,12 +217,20 @@ _resolve_conflict() {
   local dest="$1"
   local src="$2"
 
-  # Already correctly symlinked — idempotent, skip silently
+  # Handle existing symlink
   if [[ -L "$dest" ]]; then
     local current_target
     current_target=$(readlink "$dest")
     if [[ "$current_target" == "$src" ]]; then
+      # Already correctly symlinked — idempotent, skip silently
       return 1
+    else
+      # Wrong target — remove it
+      if [[ $DRY_RUN -eq 0 ]]; then
+        rm -f "$dest"
+      else
+        echo -e "  ${DIM}+ rm $dest (wrong target)${NC}"
+      fi
     fi
   fi
 
@@ -260,19 +268,32 @@ _resolve_conflict() {
     run_cmd rm -rf "$dest"
     return 0
   else
-    fail "conflict: '${dest/$HOME/\~}' already exists"
-    _add_error "conflict: '$dest' — use --backup, --merge, or --force"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      warn "conflict: '${dest/$HOME/\~}' already exists (content differs)"
+      if [[ -f "$dest" ]] && [[ -f "$src" ]]; then
+        info "Differences:"
+        diff -u "$dest" "$src" 2>/dev/null | head -20 | while IFS= read -r line; do
+          echo -e "    ${DIM}$line${NC}"
+        done || true
+      fi
+      _add_warning "conflict: '$dest' — use --backup, --merge, or --force"
+    else
+      fail "conflict: '${dest/$HOME/\~}' already exists"
+      _add_error "conflict: '$dest' — use --backup, --merge, or --force"
+    fi
     return 1
   fi
 }
 
-# link_tree <src_root> <dest_root>
+# link_tree <src_root> <dest_root> [exclude_dirs...]
 #   Symlinks individual files from src_root into dest_root, preserving
-#   directory structure. Submodule directories are skipped automatically
-#   (use link_dir for those instead).
+#   directory structure. Submodule directories and specified dirs are
+#   excluded (use link_dir for those instead).
 link_tree() {
   local src_root="$1"
   local dest_root="$2"
+  shift 2
+  local exclude_dirs=("$@")
 
   # Build find exclusions for any submodule dirs under src_root
   local find_args=(find "$src_root" -type f)
@@ -282,6 +303,11 @@ link_tree() {
       find_args+=(-not -path "$abs_submod/*")
     fi
   done < <(_submodule_paths)
+
+  # Exclude specified directories
+  for dir in "${exclude_dirs[@]}"; do
+    find_args+=(-not -path "$src_root/$dir/*")
+  done
 
   [[ $DRY_RUN -eq 0 ]] && mkdir -p "$dest_root"
 
@@ -300,8 +326,8 @@ link_tree() {
 }
 
 # link_dir <src> <dest>
-#   Symlinks an entire directory as a single unit (used for submodules so
-#   their internal .git reference stays intact).
+#   Symlinks an entire directory as a single unit (used for submodules and
+#   grouped config dirs so internal structure stays intact).
 link_dir() {
   local src="$1"
   local dest="$2"
@@ -311,9 +337,16 @@ link_dir() {
     return
   fi
 
-  # Already correctly symlinked — nothing to do
-  if [[ -L "$dest" ]] && [[ "$(readlink "$dest")" == "$src" ]]; then
-    return
+  # Check if already correctly symlinked
+  if [[ -L "$dest" ]]; then
+    local current_target
+    current_target=$(readlink "$dest")
+    if [[ "$current_target" == "$src" ]]; then
+      return
+    else
+      # Wrong symlink - remove it
+      rm -f "$dest"
+    fi
   fi
 
   if [[ -e "$dest" ]] || [[ -L "$dest" ]]; then
@@ -418,6 +451,28 @@ restore_dotfiles() {
       fi
     fi
   done < <(_submodule_paths) || true
+  
+  # Restore ~/.config/opencode directory symlink
+  OPENCODE_DEST="$HOME/.config/opencode"
+  OPENCODE_SRC="$DOTFILES_HOME/.config/opencode"
+  if [[ -L "$OPENCODE_DEST" ]]; then
+    target=$(readlink "$OPENCODE_DEST")
+    if [[ "$target" == "$OPENCODE_SRC" ]]; then
+      # Check for timestamped backups
+      newest_backup=""
+      for bak in "${OPENCODE_DEST}.bak"*; do
+        [[ -e "$bak" ]] && newest_backup="$bak"
+      done
+      
+      if [[ -n "$newest_backup" ]]; then
+        info "restoring: ${OPENCODE_DEST/$HOME/\~}"
+        run_cmd rm "$OPENCODE_DEST"
+        run_cmd mv "$newest_backup" "$OPENCODE_DEST"
+        [[ $DRY_RUN -eq 0 ]] && ok "restored: ${OPENCODE_DEST/$HOME/\~}"
+        ((restored_count++))
+      fi
+    fi
+  fi
   
   # Restore /etc/hosts
   if [[ -f "$DOTFILES_ROOT_ETC/hosts" ]]; then
@@ -634,7 +689,7 @@ run_cmd sudo pacman -S --needed --noconfirm \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
   qt5-wayland qt6-wayland polkit-gnome sddm
 run_cmd yay -S --needed --noconfirm \
-  omarchy-walker omarchy-chromium omarchy-fish omarchy-nvim omarchy-keyring \
+  omarchy-walker omarchy-fish omarchy-nvim omarchy-keyring \
   hyprland-guiutils nwg-displays wayfreeze uwsm
 [[ $DRY_RUN -eq 0 ]] && ok "Hyprland ecosystem"
 
@@ -827,6 +882,65 @@ else
 fi
 
 # =============================================================================
+# 1b. OPENVKING SETUP
+# =============================================================================
+
+section "OpenViking Setup"
+
+info "installing OpenViking and dependencies..."
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would install: openviking (via uv tool), google-genai"
+else
+  if ! command -v openviking-server &>/dev/null; then
+    info "installing openviking via uv tool..."
+    uv tool install openviking --force 2>&1 | tail -5 && ok "openviking installed" || warn "openviking install failed"
+  else
+    skip "openviking already installed"
+  fi
+
+  # Install google-genai into openviking's venv
+  OV_VENV=$(uv tool dir)/openviking/bin/python
+  if [[ -f "$OV_VENV" ]]; then
+    info "installing google-genai into openviking venv..."
+    uv pip install --python "$OV_VENV" "google-genai>=1.0.0" 2>&1 | tail -5 && ok "google-genai installed" || warn "google-genai install failed"
+  else
+    warn "openviking venv not found — skipping google-genai"
+  fi
+fi
+
+PLUGIN_FILE="$DOTFILES_ROOT/home/.config/opencode/plugins/openviking-memory.ts"
+if [[ $DRY_RUN -eq 1 ]]; then
+  if [[ -f "$PLUGIN_FILE" ]]; then
+    info "would install: openviking-memory.ts (via symlink)"
+  else
+    warn "openviking-memory.ts not found in dotfiles"
+  fi
+elif [[ ! -f "$PLUGIN_FILE" ]]; then
+  warn "openviking-memory.ts not found in dotfiles"
+else
+  skip "openviking-memory.ts (installed via symlink)"
+fi
+
+# Deploy OpenViking config if not present
+OV_CONF_SRC="$DOTFILES_ROOT/home/.openviking/ov.conf"
+OV_CONF_DEST="$HOME/.openviking/ov.conf"
+if [[ -f "$OV_CONF_SRC" ]]; then
+  if [[ -f "$OV_CONF_DEST" ]] && cmp -s "$OV_CONF_SRC" "$OV_CONF_DEST"; then
+    skip "ov.conf (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    if [[ -f "$OV_CONF_DEST" ]]; then
+      skip "ov.conf (already exists)"
+    else
+      info "would install: ov.conf → $OV_CONF_DEST"
+    fi
+  else
+    mkdir -p "$(dirname "$OV_CONF_DEST")"
+    cp "$OV_CONF_SRC" "$OV_CONF_DEST"
+    ok "ov.conf deployed"
+  fi
+fi
+
+# =============================================================================
 # 2. SYMLINKS
 # =============================================================================
 
@@ -855,7 +969,10 @@ if [[ -d "$DOTFILES_HOME/.local/share" ]]; then
 fi
 
 info "~/.config"
-link_tree "$DOTFILES_HOME/.config" "$HOME/.config"
+link_tree "$DOTFILES_HOME/.config" "$HOME/.config" "opencode"
+
+info "~/.config/opencode (directory symlink)"
+link_dir "$DOTFILES_HOME/.config/opencode" "$HOME/.config/opencode"
 
 info "\$HOME dotfiles (.gitconfig, .vimrc, .ssh/config, …)"
 while IFS= read -r src; do
@@ -916,8 +1033,17 @@ if [[ -f "$DOTFILES_ROOT_ETC/hosts" ]]; then
     run_cmd sudo chmod 644 "$HOSTS_DEST"
     [[ $DRY_RUN -eq 0 ]] && ok "/etc/hosts deployed"
   else
-    fail "/etc/hosts conflict — use --merge, --backup, or --force"
-    _add_error "conflict: /etc/hosts already exists"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      warn "conflict: /etc/hosts already exists (content differs)"
+      info "Differences:"
+      diff -u "$HOSTS_DEST" "$HOSTS_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+        echo -e "    ${DIM}$line${NC}"
+      done || true
+      _add_warning "conflict: /etc/hosts — use --backup, --merge, or --force"
+    else
+      fail "/etc/hosts conflict — use --merge, --backup, or --force"
+      _add_error "conflict: /etc/hosts already exists"
+    fi
   fi
 fi
 
@@ -928,7 +1054,12 @@ if [[ -f "$UDEV_SRC" ]]; then
   if [[ -f "$UDEV_DEST" ]] && cmp -s "$UDEV_SRC" "$UDEV_DEST"; then
     skip "power profile udev rule (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would install udev rule → $UDEV_DEST"
+    warn "conflict: '$UDEV_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$UDEV_DEST" "$UDEV_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$UDEV_DEST' — use --backup, --merge, or --force"
   else
     if sudo cp "$UDEV_SRC" "$UDEV_DEST"; then
       sudo udevadm control --reload-rules
@@ -948,7 +1079,12 @@ if [[ -f "$LIBVIRT_PROFILE_SRC" ]]; then
   if [[ -f "$LIBVIRT_PROFILE_DEST" ]] && cmp -s "$LIBVIRT_PROFILE_SRC" "$LIBVIRT_PROFILE_DEST"; then
     skip "libvirt profile.d script (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would install libvirt profile.d script → $LIBVIRT_PROFILE_DEST"
+    warn "conflict: '$LIBVIRT_PROFILE_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$LIBVIRT_PROFILE_DEST" "$LIBVIRT_PROFILE_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$LIBVIRT_PROFILE_DEST' — use --backup, --merge, or --force"
   else
     if sudo cp "$LIBVIRT_PROFILE_SRC" "$LIBVIRT_PROFILE_DEST"; then
       sudo chmod 644 "$LIBVIRT_PROFILE_DEST"
@@ -1017,17 +1153,34 @@ section "Security Hardening"
 RKHUNTER_SRC="$DOTFILES_ROOT_ETC/rkhunter.conf"
 RKHUNTER_DEST="/etc/rkhunter.conf"
 if [[ -f "$RKHUNTER_SRC" ]]; then
-  if [[ -f "$RKHUNTER_DEST" ]] && cmp -s "$RKHUNTER_SRC" "$RKHUNTER_DEST"; then
-    skip "rkhunter.conf (already up to date)"
-  elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would deploy rkhunter.conf → $RKHUNTER_DEST"
+  if [[ -f "$RKHUNTER_DEST" ]]; then
+    # Compare files, using sudo if destination is protected
+    if cmp -s "$RKHUNTER_SRC" "$RKHUNTER_DEST" 2>/dev/null || sudo sh -c "cmp -s '$RKHUNTER_SRC' '$RKHUNTER_DEST'" 2>/dev/null; then
+      skip "rkhunter.conf (already up to date)"
+    elif [[ $DRY_RUN -eq 1 ]]; then
+      warn "conflict: '$RKHUNTER_DEST' already exists (content differs)"
+      info "Differences:"
+      sudo diff -u "$RKHUNTER_DEST" "$RKHUNTER_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+        echo -e "    ${DIM}$line${NC}"
+      done || true
+      _add_warning "conflict: '$RKHUNTER_DEST' — use --backup, --merge, or --force"
+    else
+      sudo cp "$RKHUNTER_SRC" "$RKHUNTER_DEST"
+      sudo chown root:root "$RKHUNTER_DEST"
+      sudo chmod 640 "$RKHUNTER_DEST"
+      ok "rkhunter.conf deployed"
+    fi
   else
-    sudo cp "$RKHUNTER_SRC" "$RKHUNTER_DEST"
-    sudo chown root:root "$RKHUNTER_DEST"
-    sudo chmod 640 "$RKHUNTER_DEST"
-    ok "rkhunter.conf deployed"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      info "would install: rkhunter.conf"
+    else
+      sudo cp "$RKHUNTER_SRC" "$RKHUNTER_DEST"
+      sudo chown root:root "$RKHUNTER_DEST"
+      sudo chmod 640 "$RKHUNTER_DEST"
+      ok "rkhunter.conf deployed"
+    fi
+    fi
   fi
-fi
 
 # ── auditd rules ──────────────────────────────────────────────────────────
 AUDIT_SRC="$DOTFILES_ROOT_ETC/audit/rules.d/hardening.rules"
@@ -1036,7 +1189,12 @@ if [[ -f "$AUDIT_SRC" ]]; then
   if [[ -f "$AUDIT_DEST" ]] && cmp -s "$AUDIT_SRC" "$AUDIT_DEST"; then
     skip "audit rules (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would deploy audit rules → $AUDIT_DEST"
+    warn "conflict: '$AUDIT_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$AUDIT_DEST" "$AUDIT_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$AUDIT_DEST' — use --backup, --merge, or --force"
   else
     sudo mkdir -p /etc/audit/rules.d
     sudo cp "$AUDIT_SRC" "$AUDIT_DEST"
@@ -1055,7 +1213,12 @@ for unit in rkhunter-scan.service rkhunter-scan.timer chkrootkit-scan.service ch
     if [[ -f "$UNIT_DEST" ]] && cmp -s "$UNIT_SRC" "$UNIT_DEST"; then
       skip "$unit (already up to date)"
     elif [[ $DRY_RUN -eq 1 ]]; then
-      info "would deploy $unit → $UNIT_DEST"
+      warn "conflict: '$UNIT_DEST' already exists (content differs)"
+      info "Differences:"
+      diff -u "$UNIT_DEST" "$UNIT_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+        echo -e "    ${DIM}$line${NC}"
+      done || true
+      _add_warning "conflict: '$UNIT_DEST' — use --backup, --merge, or --force"
     else
       sudo cp "$UNIT_SRC" "$UNIT_DEST"
       sudo chown root:root "$UNIT_DEST"
@@ -1072,7 +1235,12 @@ if [[ -f "$HOOK_SRC" ]]; then
   if [[ -f "$HOOK_DEST" ]] && cmp -s "$HOOK_SRC" "$HOOK_DEST"; then
     skip "rkhunter pacman hook (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would deploy rkhunter pacman hook → $HOOK_DEST"
+    warn "conflict: '$HOOK_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$HOOK_DEST" "$HOOK_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$HOOK_DEST' — use --backup, --merge, or --force"
   else
     sudo mkdir -p /etc/pacman.d/hooks
     sudo cp "$HOOK_SRC" "$HOOK_DEST"
@@ -1199,6 +1367,8 @@ fi
 enable_user_service "ssh-agent.service"
 enable_user_service "power-profile-switch.service"
 enable_user_service "battery-notify.timer"
+
+enable_user_service "openviking.service"
 
 # =============================================================================
 # 5. VPN CLIENTS
@@ -1358,13 +1528,27 @@ fi
 
 if [[ ${#ERRORS[@]} -gt 0 ]]; then
   echo ""
-  echo -e "  ${RED}Errors (${#ERRORS[@]}):${NC}"
-  for e in "${ERRORS[@]}"; do
-    fail "$e"
-  done
-  echo ""
-  echo -e "  ${RED}Install completed with errors — see above.${NC}"
-  exit 1
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo -e "  ${YELLOW}Would encounter errors (${#ERRORS[@]}):${NC}"
+    for e in "${ERRORS[@]}"; do
+      warn "$e"
+    done
+  else
+    if [[ $DRY_RUN -eq 1 ]]; then
+      echo -e "  ${YELLOW}Would encounter errors (${#ERRORS[@]}):${NC}"
+      for e in "${ERRORS[@]}"; do
+        warn "$e"
+      done
+    else
+      echo -e "  ${RED}Errors (${#ERRORS[@]}):${NC}"
+      for e in "${ERRORS[@]}"; do
+        fail "$e"
+      done
+      echo ""
+      echo -e "  ${RED}Install completed with errors — see above.${NC}"
+      exit 1
+    fi
+  fi
 else
   echo ""
   echo -e "  ${GREEN}✓ Install complete!${NC}"

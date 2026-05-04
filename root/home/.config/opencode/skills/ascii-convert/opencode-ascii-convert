@@ -57,9 +57,9 @@ EXAMPLES:
 CHARACTER CONVERSIONS:
   Smart quotes:  " " ' ' -> " " ' '
   Dashes:        — – -> -- -
-  Ellipsis:      … -> ...
-  Tree chars:    ├─ └─ │ -> |- \- |
-  Accented:      é ñ -> e n
+  Ellipsis:      ... -> ...
+  Tree chars:    +-- +-- | -> |- \- |
+  Accented:      e n -> e n
   Emojis:        Removed entirely
 
 For full documentation, see:
@@ -97,31 +97,26 @@ parse_args() {
 
 build_find_command() {
   local cmd="find \"$DIRECTORY\" -type f"
-  
   # Add extension filters
-  cmd="$cmd \("
+  cmd="$cmd ("
   for i in "${!EXTENSIONS[@]}"; do
     if [[ $i -gt 0 ]]; then
       cmd="$cmd -o"
     fi
     cmd="$cmd -name \"*.${EXTENSIONS[$i]}\""
   done
-  cmd="$cmd \)"
-  
+  cmd="$cmd )"
   # Exclude directories
   for dir in "${EXCLUDED_DIRS[@]}"; do
     cmd="$cmd -not -path \"*/$dir/*\""
   done
-  
   # Exclude .bak files
   cmd="$cmd -not -name \"*.bak\""
-  
   echo "$cmd"
 }
 
 check_non_ascii() {
   local file="$1"
-  
   # Check if file contains non-ASCII characters
   if LC_ALL=C grep -q '[^[:print:][:space:]]' "$file" 2>/dev/null || \
      grep -qP '[^\x00-\x7F]' "$file" 2>/dev/null; then
@@ -134,41 +129,41 @@ check_non_ascii() {
 count_replacements() {
   local file="$1"
   local count=0
-  
+
   # Count smart quotes
-  local smart_quotes=$(grep -o '[""''„‚]' "$file" 2>/dev/null | wc -l || echo 0)
-  
+  local smart_quotes=$(grep -o '["\"'"'"'„‚]' "$file" 2>/dev/null | wc -l || echo 0)
+
   # Count dashes
   local dashes=$(grep -o '[—–‒]' "$file" 2>/dev/null | wc -l || echo 0)
-  
+
   # Count ellipsis
   local ellipsis=$(grep -o '…' "$file" 2>/dev/null | wc -l || echo 0)
-  
+
   # Count tree characters
   local tree_chars=$(grep -o '[├└│─┌┐┘┼]' "$file" 2>/dev/null | wc -l || echo 0)
-  
+
   # Count accented characters
   local accented=$(grep -oP '[À-ÿ]' "$file" 2>/dev/null | wc -l || echo 0)
-  
+
   # Count other non-ASCII (approximation)
   local other=$(grep -oP '[^\x00-\x7F]' "$file" 2>/dev/null | wc -l || echo 0)
   other=$((other - smart_quotes - dashes - ellipsis - tree_chars - accented))
   if [[ $other -lt 0 ]]; then
     other=0
   fi
-  
+
   echo "$smart_quotes:$dashes:$ellipsis:$tree_chars:$accented:$other"
 }
 
 convert_file() {
   local file="$1"
   local temp_file="${file}.tmp"
-  
+
   # Apply all conversions using sed
   sed \
     -e 's/"/"/g' -e 's/"/"/g' \
     -e "s/'/'/g" -e "s/'/'/g" \
-    -e 's/„/"/g' -e 's/‚/'\''/g' \
+    -e 's/„/"/g' -e 's/‚/'"'"'/g' \
     -e 's/—/--/g' -e 's/–/-/g' -e 's/‒/-/g' \
     -e 's/…/.../g' \
     -e 's/ / /g' -e 's/ / /g' \
@@ -186,27 +181,27 @@ convert_file() {
     -e 's/Œ/OE/g' -e 's/œ/oe/g' \
     -e 's/[^\x00-\x7F]//g' \
     "$file" > "$temp_file"
-  
+
   mv "$temp_file" "$file"
 }
 
 process_file() {
   local file="$1"
-  
+
   # Skip if file doesn't exist or is not readable
   if [[ ! -f "$file" ]] || [[ ! -r "$file" ]]; then
     return
   fi
-  
+
   # Skip binary files
   if file "$file" | grep -q "text"; then
     :
   else
     return
   fi
-  
+
   ((TOTAL_FILES++))
-  
+
   # Check if file has non-ASCII characters
   if ! check_non_ascii "$file"; then
     if [[ "$APPLY" == false ]]; then
@@ -214,18 +209,18 @@ process_file() {
     fi
     return
   fi
-  
+
   # Count replacements by category
   IFS=':' read -r smart_quotes dashes ellipsis tree_chars accented other <<< "$(count_replacements "$file")"
-  
+
   local total=$((smart_quotes + dashes + ellipsis + tree_chars + accented + other))
-  
+
   if [[ $total -eq 0 ]]; then
     return
   fi
-  
+
   echo -e "\n${CYAN}Processing:${NC} $file"
-  
+
   # Show what will be changed
   if [[ $smart_quotes -gt 0 ]]; then
     echo -e "  - $smart_quotes smart quotes -> regular quotes"
@@ -245,18 +240,18 @@ process_file() {
   if [[ $other -gt 0 ]]; then
     echo -e "  - $other other non-ASCII characters removed"
   fi
-  
+
   if [[ "$APPLY" == true ]]; then
     # Create backup if requested
     if [[ "$CREATE_BACKUP" == true ]]; then
       cp "$file" "${file}.bak"
       echo -e "  ${GREEN}✓${NC} Backed up to ${file}.bak"
     fi
-    
+
     # Apply conversions
     convert_file "$file"
     echo -e "  ${GREEN}✓${NC} Modified"
-    
+
     ((MODIFIED_FILES++))
     TOTAL_REPLACEMENTS=$((TOTAL_REPLACEMENTS + total))
   else
@@ -266,13 +261,13 @@ process_file() {
 
 main() {
   parse_args "$@"
-  
+
   # Validate directory
   if [[ ! -d "$DIRECTORY" ]]; then
     echo -e "${RED}Error: Directory not found: $DIRECTORY${NC}" >&2
     exit 1
   fi
-  
+
   # Show mode
   if [[ "$APPLY" == true ]]; then
     echo -e "${YELLOW}Mode: APPLY (files will be modified)${NC}"
@@ -285,24 +280,24 @@ main() {
     echo -e "${CYAN}Mode: DRY-RUN (preview only, use --apply to modify)${NC}"
   fi
   echo ""
-  
+
   # Build and execute find command
   local find_cmd=$(build_find_command)
-  
+
   # Process each file
   while IFS= read -r file; do
     process_file "$file"
   done < <(eval "$find_cmd")
-  
+
   # Show summary
   echo ""
   echo -e "${CYAN}Summary:${NC}"
   echo -e "  Files processed: $TOTAL_FILES"
-  
+
   if [[ "$APPLY" == true ]]; then
     echo -e "  Files modified: $MODIFIED_FILES"
     echo -e "  Total replacements: $TOTAL_REPLACEMENTS"
-    
+
     if [[ $MODIFIED_FILES -gt 0 ]]; then
       echo -e "\n${GREEN}✓ Conversion complete${NC}"
       if [[ "$CREATE_BACKUP" == true ]]; then

@@ -163,4 +163,7 @@ if command -v yay >/dev/null 2>&1; then
     echo ""
 fi
 
+# Step 14: Refresh shell caches
+rm -f ~/.cache/fzf_fish_init.fish
+
 echo "=== Update Complete ==="
