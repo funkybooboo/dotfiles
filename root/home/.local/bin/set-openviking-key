@@ -1,22 +1,23 @@
 #!/bin/bash
-# Usage: set-openviking-key "your-gemini-api-key"
-# Sets the API key in ~/.openviking/ov.conf and restarts the service
+# Set the Gemini API key for OpenViking.
+# Uses OPENVIKING_API_KEY env var — never writes the key to disk.
 set -euo pipefail
 
-if [[ -z "${1:-}" ]]; then
+KEY="${1:-}"
+if [[ -z "$KEY" ]]; then
   echo "Usage: set-openviking-key \"your-gemini-api-key\""
+  echo ""
+  echo "This writes the API key to ~/.openviking/ov.conf."
+  echo "Alternatively, set OPENVIKING_API_KEY environment variable instead."
   exit 1
 fi
 
 CONF="$HOME/.openviking/ov.conf"
-KEY="$1"
-
 if [[ ! -f "$CONF" ]]; then
   echo "Error: $CONF not found. Run install.sh first."
   exit 1
 fi
 
-# Use python to update JSON (handles formatting properly)
 python3 -c "
 import json, sys
 with open('$CONF') as f:
