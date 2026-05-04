@@ -1,6 +1,8 @@
 [Unit]
 Description=OpenViking Context Database
 Documentation=https://github.com/volcengine/OpenViking
+# Ollama (system service) must be running for embedding/VLM calls.
+# Ensure it is enabled: sudo systemctl enable ollama
 After=network-online.target
 Wants=network-online.target
 

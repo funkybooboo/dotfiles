@@ -887,9 +887,9 @@ fi
 
 section "OpenViking Setup"
 
-info "installing OpenViking and dependencies..."
+info "installing OpenViking..."
 if [[ $DRY_RUN -eq 1 ]]; then
-  info "would install: openviking (via uv tool), google-genai"
+  info "would install: openviking (via uv tool)"
 else
   if ! command -v openviking-server &>/dev/null; then
     info "installing openviking via uv tool..."
@@ -897,14 +897,29 @@ else
   else
     skip "openviking already installed"
   fi
+fi
 
-  # Install google-genai into openviking's venv
-  OV_VENV=$(uv tool dir)/openviking/bin/python
-  if [[ -f "$OV_VENV" ]]; then
-    info "installing google-genai into openviking venv..."
-    uv pip install --python "$OV_VENV" "google-genai>=1.0.0" 2>&1 | tail -5 && ok "google-genai installed" || warn "google-genai install failed"
+# Pull Ollama models for OpenViking (embedding + VLM)
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would pull: ollama models (nomic-embed-text, qwen3:4b)"
+else
+  if ! systemctl is-active --quiet ollama.service 2>/dev/null; then
+    warn "ollama.service not running — start with: sudo systemctl start ollama"
+    _add_warning "ollama not running — OpenViking will fail until ollama is started"
   else
-    warn "openviking venv not found — skipping google-genai"
+    for model in nomic-embed-text qwen3:4b; do
+      if ollama list 2>/dev/null | grep -q "$model"; then
+        skip "ollama model $model (already pulled)"
+      else
+        info "pulling ollama model: $model..."
+        if ollama pull "$model" 2>&1 | tail -3; then
+          ok "ollama model $model pulled"
+        else
+          warn "failed to pull ollama model $model"
+          _add_warning "ollama pull failed: $model"
+        fi
+      fi
+    done
   fi
 fi
 
