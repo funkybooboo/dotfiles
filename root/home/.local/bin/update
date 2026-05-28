@@ -156,6 +156,148 @@ if command -v tldr >/dev/null 2>&1; then
     echo ""
 fi
 
+# Step 12.5: Sync GitHub forks with upstream
+if command -v gh >/dev/null 2>&1; then
+    echo "→ Syncing GitHub forks with upstream..."
+    for repo in $(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner'); do
+        echo "  → Syncing $repo..."
+        if gh repo sync "$repo" 2>/dev/null; then
+            echo "    synced"
+        else
+            echo "    warning: could not sync $repo"
+        fi
+    done
+    echo ""
+fi
+
+# Step 12.75: Update git repos in ~/sources
+if [[ -d "$HOME/sources" ]]; then
+    echo "→ Updating git repos in ~/sources..."
+    for repo in "$HOME/sources"/*/; do
+        [[ -d "$repo/.git" ]] || continue
+        repo_name=$(basename "$repo")
+        if git -C "$repo" pull --ff-only 2>/dev/null; then
+            echo "  ✓ $repo_name"
+        else
+            echo "  ✗ $repo_name (diverged or error)"
+        fi
+    done
+    echo ""
+fi
+
+# Step 12.875: Rebuild ~/sources repos (auto-detected build systems)
+_build_repo() {
+    local repo="$1"
+    local name
+    name=$(basename "$repo")
+
+    # CMake with existing Ninja build dir
+    local ninja_dir=""
+    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+        if [[ -f "$d/build.ninja" ]]; then ninja_dir="$d"; break; fi
+    done
+    if [[ -n "$ninja_dir" ]]; then
+        echo "  → $name (ninja)"
+        if ninja -C "$ninja_dir" 2>/dev/null; then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # CMake with existing Makefile build dir
+    local cmake_make_dir=""
+    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+        if [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]]; then cmake_make_dir="$d"; break; fi
+    done
+    if [[ -n "$cmake_make_dir" ]]; then
+        echo "  → $name (cmake+make)"
+        if make -C "$cmake_make_dir" 2>/dev/null; then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # Go module
+    if [[ -f "$repo/go.mod" ]]; then
+        echo "  → $name (go install)"
+        if (cd "$repo" && go install . 2>/dev/null); then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # Cargo (Rust)
+    if [[ -f "$repo/Cargo.toml" ]]; then
+        echo "  → $name (cargo build)"
+        if (cd "$repo" && cargo build --release 2>/dev/null); then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # Meson
+    if [[ -f "$repo/meson.build" ]]; then
+        local builddir="$repo/builddir"
+        if [[ -f "$builddir/build.ninja" ]]; then
+            echo "  → $name (meson+ninja)"
+            if ninja -C "$builddir" 2>/dev/null; then
+                echo "    ✓ $name"; return 0
+            else
+                echo "    ✗ $name failed"; return 1
+            fi
+        fi
+    fi
+
+    # Makefile (standalone, not cmake-generated)
+    if [[ -f "$repo/Makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+        echo "  → $name (make)"
+        if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # Gemfile (Ruby deps only)
+    if [[ -f "$repo/Gemfile" ]]; then
+        echo "  → $name (bundle install)"
+        if (cd "$repo" && bundle install 2>/dev/null); then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    # package.json (Node deps + build)
+    if [[ -f "$repo/package.json" ]]; then
+        echo "  → $name (npm)"
+        if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then
+            echo "    ✓ $name"; return 0
+        else
+            echo "    ✗ $name failed"; return 1
+        fi
+    fi
+
+    return 2
+}
+
+if [[ -d "$HOME/sources" ]]; then
+    echo "→ Rebuilding ~/sources repos..."
+    for repo in "$HOME/sources"/*/; do
+        [[ -d "$repo/.git" ]] || continue
+        _build_repo "$repo"
+        ((_rc=$?))
+        if [[ $_rc -eq 2 ]]; then
+            echo "  ⊘ $(basename "$repo") (no recognized build system)"
+        fi
+    done
+    echo ""
+fi
+
 # Step 13: Clean package cache
 if command -v yay >/dev/null 2>&1; then
     echo "→ Cleaning package cache..."
