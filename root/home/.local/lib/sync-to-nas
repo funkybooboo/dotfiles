@@ -25,11 +25,22 @@ if ! "$HOME/.local/lib/check-nas-connection"; then
     exit 0
 fi
 
-# Check if password file exists
+# Check if password file exists; try secretmgr as fallback
 if [ ! -f "$PASSWORD_FILE" ]; then
-    echo "Error: Password file not found at $PASSWORD_FILE"
-    echo "Create it with: echo 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
-    exit 1
+    if command -v secretmgr &>/dev/null && secretmgr status &>/dev/null; then
+        NAS_PASS=$(secretmgr get NAS/rsync password 2>/dev/null) || true
+        if [ -n "$NAS_PASS" ]; then
+            printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
+            chmod 600 "$PASSWORD_FILE"
+        fi
+    fi
+    # Re-check after fallback attempt
+    if [ ! -f "$PASSWORD_FILE" ]; then
+        echo "Error: Password file not found at $PASSWORD_FILE"
+        echo "Create it with: secretmgr get NAS/rsync password > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
+        echo "Or manually: printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
+        exit 1
+    fi
 fi
 
 # Ensure local directory exists

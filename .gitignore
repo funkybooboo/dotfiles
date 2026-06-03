@@ -52,6 +52,10 @@ stow-backups/
 # NAS sync credentials (never commit passwords!)
 root/home/.config/nas-sync/rsync-password
 
+# Secret manager — injected outputs (templates are tracked, real files are not)
+root/home/.config/opencode/opencode.json
+root/home/.openviking/openviking-config.json
+
 # Claude AI temp files
 CLAUDE.md
 .claude.json

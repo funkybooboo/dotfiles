@@ -1,0 +1,29 @@
+# Secret Manager Configuration
+# Backend: protonpass (swap to "1password", "bitwarden", etc. in the future)
+[backend]
+type = "protonpass"
+
+[protonpass]
+cli = "pass-cli"
+
+# Vault name aliases — map short names to Proton Pass vault names
+[vaults]
+nas = "NAS"
+api = "API"
+ssh = "SSH"
+gpg = "GPG"
+vpn = "VPN"
+servers = "Servers"
+
+[ssh]
+# Load SSH keys into existing systemd ssh-agent on login/bootstrap
+load_on_login = true
+agent = "systemd"
+
+[inject]
+# Template files and their output destinations
+# Each entry: "template_path:output_path"
+templates = [
+    "~/.config/opencode/opencode.json.tmpl:~/.config/opencode/opencode.json",
+    "~/.openviking/openviking-config.json.tmpl:~/.openviking/openviking-config.json",
+]

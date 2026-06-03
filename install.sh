@@ -1441,7 +1441,80 @@ if [[ $DRY_RUN -eq 0 ]]; then
 fi
 
 # =============================================================================
-# 7. NAS SYNC
+# 7. PROTON PASS & SECRETS
+# =============================================================================
+
+section "Proton Pass & Secrets"
+
+# Install Proton Pass CLI
+if command -v pass-cli &>/dev/null; then
+  skip "pass-cli (already installed)"
+else
+  info "Installing Proton Pass CLI..."
+  if command -v yay &>/dev/null; then
+    yay -S --noconfirm proton-pass-cli-bin 2>/dev/null || \
+      { info "AUR install failed, using official script..."; curl -fsSL https://proton.me/download/pass-cli/install.sh | bash; }
+  else
+    curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
+  fi
+  ok "pass-cli installed"
+fi
+
+# Install Proton Pass GUI
+if command -v proton-pass &>/dev/null || flatpak list 2>/dev/null | grep -qi proton-pass; then
+  skip "proton-pass GUI (already installed)"
+else
+  info "Installing Proton Pass GUI..."
+  if command -v yay &>/dev/null; then
+    yay -S --noconfirm proton-pass-bin
+    ok "proton-pass GUI installed"
+  else
+    warn "Install proton-pass GUI manually from https://proton.me/pass/download/linux"
+  fi
+fi
+
+# Install shell completions for pass-cli
+if command -v pass-cli &>/dev/null; then
+  SHELL_NAME="${SHELL##*/}"
+  case "$SHELL_NAME" in
+    bash)
+      mkdir -p ~/.local/share/bash-completion/completions
+      pass-cli completions bash > ~/.local/share/bash-completion/completions/pass-cli 2>/dev/null || true
+      ;;
+    zsh)
+      mkdir -p ~/.zfunc
+      pass-cli completions zsh > ~/.zfunc/_pass-cli 2>/dev/null || true
+      ;;
+    fish)
+      mkdir -p ~/.config/fish/completions
+      pass-cli completions fish > ~/.config/fish/completions/pass-cli.fish 2>/dev/null || true
+      ;;
+  esac
+fi
+
+# Proton Pass login (interactive)
+if pass-cli info &>/dev/null 2>&1; then
+  skip "Proton Pass (already logged in)"
+else
+  echo ""
+  info "Proton Pass login required — opening browser for authentication..."
+  echo -e "  ${DIM}After completing login in the browser, press Enter to continue.${NC}"
+  pass-cli login
+  ok "Proton Pass logged in"
+fi
+
+# Bootstrap secrets with secretmgr
+if command -v secretmgr &>/dev/null; then
+  info "Bootstrapping secrets with secretmgr..."
+  secretmgr bootstrap
+  ok "Secrets bootstrapped"
+else
+  warn "secretmgr not found in PATH — skipping secret bootstrap"
+  _add_warning "secretmgr not in PATH; run 'secretmgr bootstrap' manually after login"
+fi
+
+# =============================================================================
+# 8. NAS SYNC
 # =============================================================================
 
 section "NAS Sync"
@@ -1451,6 +1524,27 @@ run_cmd mkdir -p "$HOME/.config/nas-sync"
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 if [[ -f "$PASSWORD_FILE" ]]; then
   skip "rsync password file already exists"
+elif command -v secretmgr &>/dev/null && secretmgr status &>/dev/null; then
+  # Try Proton Pass first
+  NAS_PASS=$(secretmgr get NAS/rsync password 2>/dev/null) || true
+  if [[ -n "$NAS_PASS" ]]; then
+    printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
+    chmod 600 "$PASSWORD_FILE"
+    ok "NAS password set from Proton Pass"
+  else
+    echo ""
+    echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
+    read -r -s -p "  Password: " nas_password
+    echo ""
+    if [[ -n "$nas_password" ]]; then
+      printf '%s' "$nas_password" > "$PASSWORD_FILE"
+      chmod 600 "$PASSWORD_FILE"
+      ok "password file created: $PASSWORD_FILE"
+    else
+      warn "skipped password setup — create it later:"
+      echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
+    fi
+  fi
 elif [[ $DRY_RUN -eq 1 ]]; then
   info "would prompt for NAS rsync password"
 else
