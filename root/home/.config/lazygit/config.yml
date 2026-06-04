@@ -1,0 +1,50 @@
+os: 200
+gui:
+  showIcons: true
+  theme:
+    activeBorderColor:
+      - "#89b4fa"
+      - bold
+    inactiveBorderColor:
+      - "#6c7086"
+    optionsTextColor:
+      - "#cdd6f4"
+    selectedLineBgColor:
+      - "#45475a"
+    selectedRangeBgColor:
+      - "#45475a"
+  authorColors:
+    coAuthored: "#a6e3a1"
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+  log:
+    showWholeGraph: true
+  autoFetch: true
+  autoRefresh: true
+refresher:
+  fetchInterval: 60
+update:
+  method: prompt
+keybinding:
+  universal:
+    quit: q
+    quit-alt1: "<c-c>"
+    return: "<esc>"
+    togglePanel: "<tab>"
+    prevItem: "<up>"
+    nextItem: "<down>"
+    prevItem-alt: k
+    nextItem-alt: j
+    scrollUpMain: "<pgup>"
+    scrollDownMain: "<pgdown>"
+    gotoTop: "<home>"
+    gotoBottom: "<end>"
+    createPatchOptionsMenu: "<c-p>"
+  files:
+    commitFile: c
+  commits:
+    amendOldCommit: "<c-a>"
+  status:
+    checkForChanges: "<c-r>"

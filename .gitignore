@@ -8,14 +8,7 @@
 root/home/.config/fish/fish_plugins/
 root/home/.config/fish/fish_variables
 root/home/.config/hypr/monitors.conf
-
-# Omarchy-managed files (never commit - managed by omarchy)
-root/home/.config/btop/
-root/home/.config/mako/
-root/home/.config/hypridle.conf
-root/home/.config/alacritty/
-root/home/.config/walker/
-root/home/.config/waybar/style.css
+root/home/.config/hypr/workspaces.conf
 
 # Application cache & state
 root/home/.config/discord/
@@ -31,6 +24,12 @@ root/home/.config/zoom.conf
 root/home/.config/go/telemetry/
 root/home/.config/fcitx/dbus/
 root/home/.config/tea/config.yml
+root/home/.config/atuin/
+root/home/.config/television/cable/
+root/home/.config/yt-dlp/
+root/home/.config/lazygit/+
+root/home/.config/gh/
+root/home/.config/h/
 
 # Auto-generated documentation (AI working notes)
 docs/

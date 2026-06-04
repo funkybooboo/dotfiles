@@ -1,0 +1,7 @@
+#!/bin/bash
+current=$(hyprctl monitors -j | jq -r '.[] | select(.name == "eDP-1") | .name')
+if [[ -n "$current" ]]; then
+    hyprctl keyword monitor eDP-1,disabled
+else
+    hyprctl keyword monitor eDP-1,preferred,auto,1.33
+fi

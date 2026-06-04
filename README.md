@@ -1,6 +1,6 @@
 # Dotfiles
 
-Minimalist Arch Linux dotfiles for a Hyprland/Omarchy desktop.
+Minimalist Arch Linux dotfiles for a Hyprland desktop.
 
 ## Quick Start
 
@@ -18,23 +18,18 @@ cd ~/dotfiles
 |------|-------------|
 | `--restore, -r` | Undo installation by restoring `.bak` files and removing symlinks |
 | `--dry-run, -n` | Preview all actions without executing |
-| `--skip-packages` | Skip package installation (symlinks/services only) |
 | `--backup, -b` | Backup conflicting files with `.bak` suffix (creates `.bak` files) |
 | `--force, -f` | Remove conflicting files/symlinks (destructive) |
 | `--merge, -m` | Open nvim diff to merge conflicts — edit the **right pane** (dotfiles source), which is saved and symlinked (creates `.bak` files) |
-| `--with-vpn` | Install WireGuard config to `/etc/wireguard/` |
-| `--with-nas-sync` | Enable hourly NAS rsync timers |
 | `--help, -h` | Show help message |
 
 **Common invocations:**
 
 ```bash
-./install.sh --dry-run                            # preview without changes
-./install.sh --backup                             # fresh install
-./install.sh --skip-packages --backup             # re-symlink only
-./install.sh --backup --with-vpn --with-nas-sync  # full install
-./install.sh --restore --dry-run                  # preview restore
-./install.sh --restore                            # undo installation
+./install.sh --dry-run           # preview without changes
+./install.sh --backup             # fresh install (recommended)
+./install.sh --restore --dry-run  # preview restore
+./install.sh --restore            # undo installation
 ```
 
 ## Structure
@@ -43,19 +38,18 @@ cd ~/dotfiles
 
 ```
 dotfiles/
+├── installers/                     # Numbered package/setup scripts
 ├── root/
 │   ├── home/                       # → $HOME
 │   │   ├── .config/
 │   │   │   ├── fish/               # Fish shell
 │   │   │   ├── hypr/               # Hyprland overrides
 │   │   │   ├── nvim/               # Neovim plugins
-│   │   │   ├── omarchy/            # Omarchy hooks, branding, extensions
 │   │   │   ├── opencode/           # OpenCode AI config
 │   │   │   └── systemd/            # User services (NAS sync, power, SSH agent)
 │   │   ├── .local/
 │   │   │   ├── bin/                # Custom scripts
-│   │   │   ├── lib/                # Shared library scripts
-│   │   │   └── share/omarchy/      # [submodule] funkybooboo/omarchy fork
+│   │   │   └── lib/                # Shared library scripts
 │   │   ├── .gitconfig
 │   │   ├── .vimrc
 │   │   └── .ssh/config
@@ -69,7 +63,7 @@ dotfiles/
 
 | Script | Purpose |
 |--------|---------|
-| `update` | Full system update (yay + flatpak + omarchy + firmware) |
+| `update` | Full system update (yay + flatpak + firmware) |
 | `gg` | AI-powered git commit helper |
 | `vpn` | VPN management (home / proton / usu) |
 | `clean-disk` | System cleanup |
@@ -112,28 +106,10 @@ Undo the installation by restoring `.bak` files and removing symlinks:
 - Only works if you used `--backup` or `--merge` during installation (both create `.bak` files)
 - `--force` does NOT create backups, so `--restore` won't find anything to restore
 
-## Submodule (Omarchy)
-
-The Omarchy fork lives at `root/home/.local/share/omarchy/` and is symlinked as a whole directory so its `.git` stays intact.
-
-```bash
-# Update to latest fork commit
-git submodule update --remote root/home/.local/share/omarchy
-git add root/home/.local/share/omarchy
-git commit -m "chore: advance omarchy submodule pin"
-
-# Sync upstream omarchy changes into fork
-cd root/home/.local/share/omarchy
-git fetch https://github.com/basecamp/omarchy.git master
-git merge FETCH_HEAD && git push
-```
-
-> The `update` script advances the submodule pin automatically after `omarchy-update` runs.
-
 ## Maintenance
 
 ```bash
-update       # yay + flatpak + omarchy + firmware
+update       # yay + flatpak + firmware
 clean-disk   # remove orphans, caches, unused flatpaks
 ```
 

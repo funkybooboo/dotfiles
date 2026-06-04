@@ -1,0 +1,1 @@
+hyprctl clients -j | jq -r ".[] | select(.workspace.id == $(hyprctl activeworkspace -j | jq .id)) | .address" | xargs -I{} hyprctl dispatch killwindow {}

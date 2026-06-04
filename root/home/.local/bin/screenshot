@@ -1,0 +1,20 @@
+#!/bin/bash
+
+tmpfile="/tmp/screenshot-$(date +%Y%m%d_%H%M%S).png"
+
+case "$1" in
+    region)
+        grim -g "$(slurp)" "$tmpfile" || { notify-send "Screenshot" "Cancelled"; exit 1; }
+        ;;
+    window)
+        region=$(hyprctl activewindow -j | python3 -c "import json,sys; w=json.load(sys.stdin); print(f\"{w['at'][0]},{w['at'][1]} {w['size'][0]}x{w['size'][1]}\")")
+        grim -g "$region" "$tmpfile" || { notify-send "Screenshot" "Failed"; exit 1; }
+        ;;
+    full|*)
+        grim "$tmpfile" || { notify-send "Screenshot" "Failed"; exit 1; }
+        ;;
+esac
+
+wl-copy < "$tmpfile"
+satty --filename "$tmpfile"
+rm -f "$tmpfile"

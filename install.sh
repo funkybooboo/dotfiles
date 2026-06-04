@@ -2,14 +2,13 @@
 # install.sh — install packages, symlink dotfiles, enable services
 #
 # Order of operations:
-#   0. Preflight   (distro check, not-root, internet, git submodules)
-#   1. Packages    (pacman/yay)
-#   2. Symlinks    (bins, libs, share, configs, dotfiles, /etc files)
-#   3. Permissions (.ssh, .gnupg, /etc/hosts, udev, AppArmor)
-#   4. systemd     (daemon-reload, enable user services)
-#   5. VPN clients (proton-vpn-cli, globalprotect-openconnect-git)
-#   6. Tailscale   (install if missing, prompt to authenticate)
-#   7. NAS sync    (initial clone + enable timers)
+#   0. Preflight    (distro check, not-root, internet)
+#   1. Installers    (run scripts in installers/ — packages + system setup)
+#   2. Symlinks      (bins, libs, share, configs, dotfiles)
+#   3. Permissions   (.ssh, .gnupg)
+#   4. /etc files    (hosts, udev rules, libvirt profile, security configs)
+#   5. systemd       (daemon-reload, enable user + custom system services)
+#   6. Late setup    (secretmgr bootstrap, NAS initial sync)
 
 set -euo pipefail
 
@@ -201,15 +200,6 @@ merge_into_src() {
 # SYMLINK HELPERS
 # =============================================================================
 
-# Returns all submodule paths listed in .gitmodules (relative to repo root).
-_submodule_paths() {
-  if [[ ! -f .gitmodules ]]; then
-    return 0
-  fi
-  git config --file .gitmodules --get-regexp 'submodule\..*\.path' \
-    | awk '{print $2}'
-}
-
 # _resolve_conflict <dest> <src>
 #   Handles an existing file/symlink at dest before linking src → dest.
 #   Returns 0 to proceed with linking, 1 to skip (already correct or error).
@@ -287,22 +277,14 @@ _resolve_conflict() {
 
 # link_tree <src_root> <dest_root> [exclude_dirs...]
 #   Symlinks individual files from src_root into dest_root, preserving
-#   directory structure. Submodule directories and specified dirs are
-#   excluded (use link_dir for those instead).
+#   directory structure. Specified dirs are excluded (use link_dir for those instead).
 link_tree() {
   local src_root="$1"
   local dest_root="$2"
   shift 2
   local exclude_dirs=("$@")
 
-  # Build find exclusions for any submodule dirs under src_root
   local find_args=(find "$src_root" -type f)
-  while IFS= read -r submod; do
-    local abs_submod="$REPO_ROOT/$submod"
-    if [[ "$abs_submod" == "$src_root/"* ]]; then
-      find_args+=(-not -path "$abs_submod/*")
-    fi
-  done < <(_submodule_paths)
 
   # Exclude specified directories
   for dir in "${exclude_dirs[@]}"; do
@@ -326,8 +308,8 @@ link_tree() {
 }
 
 # link_dir <src> <dest>
-#   Symlinks an entire directory as a single unit (used for submodules and
-#   grouped config dirs so internal structure stays intact).
+#   Symlinks an entire directory as a single unit so internal structure
+#   stays intact.
 link_dir() {
   local src="$1"
   local dest="$2"
@@ -417,40 +399,7 @@ restore_dotfiles() {
       warn "orphaned backup: ${backup/$HOME/\~} (no symlink found)"
       ((orphaned_count++))
     fi
-  done < <(find "$DOTFILES_HOME" -type f \
-    ! -path "$DOTFILES_HOME/.local/share/omarchy/*") || true
-  
-  # Restore directory symlinks (submodules)
-  while IFS= read -r submod; do
-    local_share_prefix="root/home/.local/share/"
-    if [[ "$submod" == "$local_share_prefix"* ]]; then
-      rel="${submod#root/home/}"
-      dest="$HOME/$rel"
-      backup="${dest}.bak"
-      
-      if [[ -L "$dest" ]]; then
-        target=$(readlink "$dest")
-        if [[ "$target" == "$REPO_ROOT/$submod" ]]; then
-          # Check for timestamped backups (dir.bak.TIMESTAMP)
-          local newest_backup=""
-          for bak in "${dest}.bak"*; do
-            [[ -e "$bak" ]] && newest_backup="$bak"
-          done
-          
-          if [[ -n "$newest_backup" ]]; then
-            info "restoring directory: ${dest/$HOME/\~}"
-            run_cmd rm "$dest"
-            run_cmd mv "$newest_backup" "$dest"
-            [[ $DRY_RUN -eq 0 ]] && ok "restored: ${dest/$HOME/\~}"
-            ((restored_count++))
-          fi
-        fi
-      elif [[ ! -L "$dest" ]] && [[ -e "$backup" ]]; then
-        warn "orphaned backup: ${backup/$HOME/\~} (no symlink found)"
-        ((orphaned_count++))
-      fi
-    fi
-  done < <(_submodule_paths) || true
+  done < <(find "$DOTFILES_HOME" -type f) || true
   
   # Restore ~/.config/opencode directory symlink
   OPENCODE_DEST="$HOME/.config/opencode"
@@ -593,367 +542,25 @@ else
   exit 1
 fi
 
-# Initialise and update git submodules (e.g. omarchy fork)
-info "initialising and updating git submodules..."
-if git submodule update --init --recursive --remote --quiet; then
-  ok "submodules up to date"
-else
-  warn "submodule update had issues — continuing anyway"
-  _add_warning "git submodule update had a non-zero exit"
-fi
-
 if [[ $DRY_RUN -eq 1 ]]; then
   echo ""
   echo -e "  ${YELLOW}DRY RUN — no changes will be made${NC}"
 fi
 
 # =============================================================================
-# 1. PACKAGES
+# 1. INSTALLERS
 # =============================================================================
 
-section "Package Installation"
+section "Package Installation & System Setup"
 
-# System update
-info "updating system packages..."
-run_cmd sudo pacman -Syu --noconfirm
-[[ $DRY_RUN -eq 0 ]] && ok "system updated"
-
-# Install yay (AUR helper) if not already present
-if command -v yay &>/dev/null; then
-  skip "yay already installed"
-elif [[ $DRY_RUN -eq 1 ]]; then
-  info "would install yay (AUR helper)"
-else
-  info "installing yay (AUR helper)..."
-  sudo pacman -S --needed --noconfirm git base-devel
-  yay_tmp=$(mktemp -d)
-  git clone --quiet https://aur.archlinux.org/yay.git "$yay_tmp/yay"
-  (cd "$yay_tmp/yay" && makepkg -si --noconfirm)
-  rm -rf "$yay_tmp"
-  ok "yay installed"
-fi
-
-# ── Core ──────────────────────────────────────────────────────────────────
-info "installing core packages..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  base base-devel git curl wget linux-headers linux-firmware intel-ucode
-[[ $DRY_RUN -eq 0 ]] && ok "core packages"
-
-# ── Security ──────────────────────────────────────────────────────────────
-info "installing hardened kernels..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  linux-hardened linux-hardened-headers \
-  linux-lts linux-lts-headers
-[[ $DRY_RUN -eq 0 ]] && ok "hardened + LTS kernels"
-
-info "installing AppArmor..."
-run_cmd sudo pacman -S --needed --noconfirm apparmor
-run_cmd yay -S --needed --noconfirm apparmor.d
-[[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles"
-
-# ── Application security ───────────────────────────────────────────────────
-info "installing application security tools..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  usbguard opensnitch
-run_cmd yay -S --needed --noconfirm \
-  usbguard-qt
-[[ $DRY_RUN -eq 0 ]] && ok "usbguard + opensnitch"
-
-# ── Intrusion detection ────────────────────────────────────────────────────
-info "installing intrusion detection tools..."
-run_cmd sudo pacman -S --needed --noconfirm rkhunter audit
-run_cmd yay -S --needed --noconfirm chkrootkit
-[[ $DRY_RUN -eq 0 ]] && ok "rkhunter + chkrootkit + auditd"
-
-# ── Shell utilities ────────────────────────────────────────────────────────
-info "installing shell utilities..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  fish fzf ripgrep fd bat eza dust btop fastfetch jq wl-clipboard \
-  starship zoxide tree tldr man-db less unzip rsync wget
-run_cmd yay -S --needed --noconfirm gum
-[[ $DRY_RUN -eq 0 ]] && ok "shell utilities"
-
-# ── Dev tools ─────────────────────────────────────────────────────────────
-info "installing dev tools..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  neovim docker docker-compose docker-buildx github-cli git-delta \
-  go rust python python-poetry-core nodejs npm
-run_cmd yay -S --needed --noconfirm lazygit lazydocker act mise opencode
-[[ $DRY_RUN -eq 0 ]] && ok "dev tools"
-
-# ── Desktop / Hyprland ────────────────────────────────────────────────────
-info "installing Hyprland and Wayland tools..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  hyprland waybar mako hyprlock hypridle hyprpicker hyprsunset \
-  swaybg grim slurp satty swayosd wl-clipboard wtype \
-  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
-  qt5-wayland qt6-wayland polkit-gnome sddm
-run_cmd yay -S --needed --noconfirm \
-  omarchy-walker omarchy-fish omarchy-nvim omarchy-keyring \
-  hyprland-guiutils nwg-displays wayfreeze uwsm
-[[ $DRY_RUN -eq 0 ]] && ok "Hyprland ecosystem"
-
-info "installing fonts..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra \
-  ttf-cascadia-mono-nerd ttf-jetbrains-mono-nerd fontconfig
-[[ $DRY_RUN -eq 0 ]] && ok "fonts"
-
-info "installing flatpak..."
-run_cmd sudo pacman -S --needed --noconfirm flatpak
-run_cmd flatpak remote-add --if-not-exists flathub \
-  https://flathub.org/repo/flathub.flatpakrepo
-[[ $DRY_RUN -eq 0 ]] && ok "flatpak + flathub remote"
-
-info "installing terminal emulators..."
-run_cmd yay -S --needed --noconfirm ghostty
-[[ $DRY_RUN -eq 0 ]] && ok "terminal emulators"
-
-info "installing browsers..."
-run_cmd sudo pacman -S --needed --noconfirm firefox
-run_cmd yay -S --needed --noconfirm librewolf-bin brave-bin
-[[ $DRY_RUN -eq 0 ]] && ok "browsers"
-
-info "installing audio/video..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber \
-  mpv obs-studio playerctl pamixer
-[[ $DRY_RUN -eq 0 ]] && ok "audio/video"
-
-info "installing productivity apps..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  libreoffice-fresh evince nautilus gnome-calculator gnome-disk-utility \
-  gnome-keyring
-run_cmd yay -S --needed --noconfirm obsidian signal-desktop
-[[ $DRY_RUN -eq 0 ]] && ok "productivity apps"
-
-info "installing finance/crypto apps..."
-run_cmd sudo pacman -S --needed --noconfirm monero-gui
-[[ $DRY_RUN -eq 0 ]] && ok "finance/crypto apps"
-
-# ── System utilities ──────────────────────────────────────────────────────
-info "installing system utilities..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  earlyoom \
-  power-profiles-daemon fwupd openssh openresolv yazi \
-  snapper plymouth ufw brightnessctl bluez bluez-utils \
-  cups cups-pdf system-config-printer \
-  btrfs-progs dosfstools exfatprogs efibootmgr \
-  iwd wireless-regdb bind
-run_cmd yay -S --needed --noconfirm \
-  limine limine-mkinitcpio-hook limine-snapper-sync \
-  zram-generator ufw-docker
-[[ $DRY_RUN -eq 0 ]] && ok "system utilities"
-
-# ── Gaming ────────────────────────────────────────────────────────────────
-info "installing Steam and gaming dependencies..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  steam vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
-[[ $DRY_RUN -eq 0 ]] && ok "Steam + Vulkan drivers (Intel)"
-
-# ── Virtualization ────────────────────────────────────────────────────────
-info "installing virt-manager and dependencies..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
-[[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU"
-
-# ── System services ───────────────────────────────────────────────────────
-info "enabling system services..."
-
-if [[ $DRY_RUN -eq 1 ]]; then
-  info "would enable: docker.service, power-profiles-daemon.service, apparmor.service, libvirtd.service"
-  info "would add $USER to docker and libvirt groups"
-else
-  # Docker
-  if systemctl is-enabled --quiet docker.service 2>/dev/null; then
-    skip "docker.service (already enabled)"
+for _installer in "$REPO_ROOT"/installers/[0-9]*.sh; do
+  if [[ -f "$_installer" ]]; then
+    source "$_installer"
   else
-    sudo systemctl enable --now docker.service
-    ok "docker.service enabled"
+    warn "no installers found in $REPO_ROOT/installers/"
+    break
   fi
-
-  if groups "$USER" | grep -qw docker; then
-    skip "docker group (already a member)"
-  else
-    sudo usermod -aG docker "$USER"
-    warn "added $USER to docker group — log out and back in for this to take effect"
-    _add_warning "log out and back in for docker group membership to take effect"
-  fi
-
-  # Power profiles daemon
-  if systemctl is-enabled --quiet power-profiles-daemon.service 2>/dev/null; then
-    skip "power-profiles-daemon.service (already enabled)"
-  else
-    sudo systemctl enable --now power-profiles-daemon.service
-    ok "power-profiles-daemon.service enabled"
-  fi
-
-  # AppArmor
-  if systemctl is-enabled --quiet apparmor.service 2>/dev/null; then
-    skip "apparmor.service (already enabled)"
-  else
-    sudo systemctl enable apparmor.service
-    ok "apparmor.service enabled"
-  fi
-
-  # USBGuard
-  if systemctl is-enabled --quiet usbguard.service 2>/dev/null; then
-    skip "usbguard.service (already enabled)"
-  else
-    sudo systemctl enable --now usbguard.service
-    ok "usbguard.service enabled"
-  fi
-
-  # USBGuard IPC + initial policy
-  if grep -q "IPCAllowedUsers=root $USER" /etc/usbguard/usbguard-daemon.conf 2>/dev/null; then
-    skip "usbguard IPC (already configured)"
-  else
-    sudo sed -i "s/IPCAllowedUsers=root/IPCAllowedUsers=root $USER/" \
-      /etc/usbguard/usbguard-daemon.conf
-    ok "usbguard IPC configured"
-  fi
-
-  if [[ -s /etc/usbguard/rules.conf ]]; then
-    skip "usbguard policy (already exists)"
-  else
-    sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf > /dev/null
-    ok "usbguard policy generated"
-  fi
-
-  # OpenSnitch
-  if systemctl is-enabled --quiet opensnitchd.service 2>/dev/null; then
-    skip "opensnitchd.service (already enabled)"
-  else
-    sudo systemctl enable --now opensnitchd.service
-    ok "opensnitchd.service enabled"
-  fi
-
-  # auditd
-  if systemctl is-enabled --quiet auditd.service 2>/dev/null; then
-    skip "auditd.service (already enabled)"
-  else
-    sudo systemctl enable --now auditd.service
-    ok "auditd.service enabled"
-  fi
-
-  # earlyoom — kill memory-hungry processes before OOM freeze
-  if systemctl is-enabled --quiet earlyoom.service 2>/dev/null; then
-    skip "earlyoom.service (already enabled)"
-  else
-    sudo systemctl enable --now earlyoom.service
-    ok "earlyoom.service enabled"
-  fi
-
-  # cups-browsed — disable and mask (attack surface, CVE-2024-47176, no printer use)
-  if systemctl is-masked --quiet cups-browsed.service 2>/dev/null; then
-    skip "cups-browsed.service (already masked)"
-  else
-    sudo systemctl disable --now cups-browsed.service 2>/dev/null || true
-    sudo systemctl mask cups-browsed.service
-    ok "cups-browsed.service disabled and masked"
-  fi
-
-  # rkhunter + chkrootkit weekly scan timers
-  for timer in rkhunter-scan.timer chkrootkit-scan.timer; do
-    if systemctl is-enabled --quiet "$timer" 2>/dev/null; then
-      skip "$timer (already enabled)"
-    else
-      sudo systemctl enable --now "$timer"
-      ok "$timer enabled"
-    fi
-  done
-
-  # Libvirt
-  if systemctl is-enabled --quiet libvirtd.service 2>/dev/null; then
-    skip "libvirtd.service (already enabled)"
-  else
-    sudo systemctl enable --now libvirtd.service
-    sudo systemctl enable --now virtlogd.service
-    ok "libvirtd.service enabled"
-  fi
-
-  if groups "$USER" | grep -qw libvirt; then
-    skip "libvirt group (already a member)"
-  else
-    sudo usermod -aG libvirt "$USER"
-    warn "added $USER to libvirt group — log out and back in for this to take effect"
-    _add_warning "log out and back in for libvirt group membership to take effect"
-  fi
-fi
-
-# =============================================================================
-# 1b. OPENVKING SETUP
-# =============================================================================
-
-section "OpenViking Setup"
-
-info "installing OpenViking..."
-if [[ $DRY_RUN -eq 1 ]]; then
-  info "would install: openviking (via uv tool)"
-else
-  if ! command -v openviking-server &>/dev/null; then
-    info "installing openviking via uv tool..."
-    uv tool install openviking --force 2>&1 | tail -5 && ok "openviking installed" || warn "openviking install failed"
-  else
-    skip "openviking already installed"
-  fi
-fi
-
-# Pull Ollama models for OpenViking (embedding + VLM)
-if [[ $DRY_RUN -eq 1 ]]; then
-  info "would pull: ollama models (nomic-embed-text, qwen3:4b)"
-else
-  if ! systemctl is-active --quiet ollama.service 2>/dev/null; then
-    warn "ollama.service not running — start with: sudo systemctl start ollama"
-    _add_warning "ollama not running — OpenViking will fail until ollama is started"
-  else
-    for model in nomic-embed-text qwen3:4b; do
-      if ollama list 2>/dev/null | grep -q "$model"; then
-        skip "ollama model $model (already pulled)"
-      else
-        info "pulling ollama model: $model..."
-        if ollama pull "$model" 2>&1 | tail -3; then
-          ok "ollama model $model pulled"
-        else
-          warn "failed to pull ollama model $model"
-          _add_warning "ollama pull failed: $model"
-        fi
-      fi
-    done
-  fi
-fi
-
-PLUGIN_FILE="$DOTFILES_ROOT/home/.config/opencode/plugins/openviking-memory.ts"
-if [[ $DRY_RUN -eq 1 ]]; then
-  if [[ -f "$PLUGIN_FILE" ]]; then
-    info "would install: openviking-memory.ts (via symlink)"
-  else
-    warn "openviking-memory.ts not found in dotfiles"
-  fi
-elif [[ ! -f "$PLUGIN_FILE" ]]; then
-  warn "openviking-memory.ts not found in dotfiles"
-else
-  skip "openviking-memory.ts (installed via symlink)"
-fi
-
-# Deploy OpenViking config if not present
-OV_CONF_SRC="$DOTFILES_ROOT/home/.openviking/ov.conf"
-OV_CONF_DEST="$HOME/.openviking/ov.conf"
-if [[ -f "$OV_CONF_SRC" ]]; then
-  if [[ -f "$OV_CONF_DEST" ]] && cmp -s "$OV_CONF_SRC" "$OV_CONF_DEST"; then
-    skip "ov.conf (already up to date)"
-  elif [[ $DRY_RUN -eq 1 ]]; then
-    if [[ -f "$OV_CONF_DEST" ]]; then
-      skip "ov.conf (already exists)"
-    else
-      info "would install: ov.conf → $OV_CONF_DEST"
-    fi
-  else
-    mkdir -p "$(dirname "$OV_CONF_DEST")"
-    cp "$OV_CONF_SRC" "$OV_CONF_DEST"
-    ok "ov.conf deployed"
-  fi
-fi
+done
 
 # =============================================================================
 # 2. SYMLINKS
@@ -972,15 +579,6 @@ fi
 if [[ -d "$DOTFILES_HOME/.local/share" ]]; then
   info "~/.local/share"
   link_tree "$DOTFILES_HOME/.local/share" "$HOME/.local/share"
-
-  # Submodule directories are linked as whole units so their .git stays intact
-  while IFS= read -r submod; do
-    local_share_prefix="root/home/.local/share/"
-    if [[ "$submod" == "$local_share_prefix"* ]]; then
-      rel="${submod#root/home/}"
-      link_dir "$REPO_ROOT/$submod" "$HOME/$rel"
-    fi
-  done < <(_submodule_paths)
 fi
 
 info "~/.config"
@@ -1020,6 +618,12 @@ if [[ -d "$HOME/.gnupg" ]]; then
   run_cmd chmod 700 "$HOME/.gnupg"
   [[ $DRY_RUN -eq 0 ]] && ok "~/.gnupg → 700"
 fi
+
+# =============================================================================
+# 4. /etc FILES
+# =============================================================================
+
+section "System Configuration"
 
 # /etc/hosts
 if [[ -f "$DOTFILES_ROOT_ETC/hosts" ]]; then
@@ -1111,55 +715,83 @@ if [[ -f "$LIBVIRT_PROFILE_SRC" ]]; then
   fi
 fi
 
-# AppArmor kernel parameters (Limine bootloader)
-LIMINE_CONFIG="/etc/default/limine"
-APPARMOR_PARAM="lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
-if [[ -f "$LIMINE_CONFIG" ]]; then
-  if grep -q "${APPARMOR_PARAM}" "$LIMINE_CONFIG"; then
-    skip "AppArmor kernel parameters (already configured)"
+# ── fstab (machine-specific — deploy with caution) ──────────────────────────
+FSTAB_SRC="$DOTFILES_ROOT_ETC/fstab"
+FSTAB_DEST="/etc/fstab"
+if [[ -f "$FSTAB_SRC" ]]; then
+  if [[ -f "$FSTAB_DEST" ]] && cmp -s "$FSTAB_SRC" "$FSTAB_DEST"; then
+    skip "/etc/fstab (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would add AppArmor LSM params to $LIMINE_CONFIG"
+    warn "conflict: '$FSTAB_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$FSTAB_DEST" "$FSTAB_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$FSTAB_DEST' — use --backup, --merge, or --force"
   else
-    info "adding AppArmor LSM params to Limine config..."
-    if sudo sed -i \
-      "/KERNEL_CMDLINE\[default\]+=\"quiet splash\"/a KERNEL_CMDLINE[default]+=\" ${APPARMOR_PARAM}\"" \
-      "$LIMINE_CONFIG"; then
-      sudo limine-mkinitcpio
-      ok "AppArmor kernel parameters configured"
-      warn "reboot required for AppArmor to become active"
-      _add_warning "reboot required for AppArmor kernel parameters to take effect"
-    else
-      warn "failed to configure AppArmor kernel parameters"
-      _add_warning "AppArmor kernel parameter configuration failed"
+    if [[ $BACKUP -eq 1 ]] && [[ -f "$FSTAB_DEST" ]]; then
+      local fstab_bak="${FSTAB_DEST}.bak.$(date +%s)"
+      info "backing up /etc/fstab → $fstab_bak"
+      run_cmd sudo cp "$FSTAB_DEST" "$fstab_bak"
     fi
+    run_cmd sudo cp "$FSTAB_SRC" "$FSTAB_DEST"
+    ok "/etc/fstab deployed"
   fi
-else
-  skip "AppArmor kernel params ($LIMINE_CONFIG not found — add manually: $APPARMOR_PARAM)"
 fi
 
-# Hardened kernel as default boot entry
-BOOT_ORDER_TARGET="linux-hardened, *, *fallback, Snapshots"
-if [[ -f "$LIMINE_CONFIG" ]]; then
-  if grep -q "^BOOT_ORDER=\"linux-hardened," "$LIMINE_CONFIG"; then
-    skip "hardened kernel boot default (already set)"
+# ── crypttab (machine-specific — deploy with caution) ──────────────────────
+CRYPTTAB_SRC="$DOTFILES_ROOT_ETC/crypttab"
+CRYPTTAB_DEST="/etc/crypttab"
+if [[ -f "$CRYPTTAB_SRC" ]]; then
+  if [[ -f "$CRYPTTAB_DEST" ]] && cmp -s "$CRYPTTAB_SRC" "$CRYPTTAB_DEST"; then
+    skip "/etc/crypttab (already up to date)"
   elif [[ $DRY_RUN -eq 1 ]]; then
-    info "would set hardened kernel as default boot entry in $LIMINE_CONFIG"
+    warn "conflict: '$CRYPTTAB_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$CRYPTTAB_DEST" "$CRYPTTAB_SRC" 2>/dev/null | head -20 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$CRYPTTAB_DEST' — use --backup, --merge, or --force"
   else
-    info "setting hardened kernel as default boot entry..."
-    if sudo sed -i "s|^BOOT_ORDER=.*|BOOT_ORDER=\"${BOOT_ORDER_TARGET}\"|" "$LIMINE_CONFIG"; then
-      sudo limine-update
-      ok "hardened kernel set as default boot entry"
-    else
-      warn "failed to set hardened kernel as default boot entry"
-      _add_warning "hardened kernel boot default configuration failed"
+    if [[ $BACKUP -eq 1 ]] && [[ -f "$CRYPTTAB_DEST" ]]; then
+      local crypttab_bak="${CRYPTTAB_DEST}.bak.$(date +%s)"
+      info "backing up /etc/crypttab → $crypttab_bak"
+      run_cmd sudo cp "$CRYPTTAB_DEST" "$crypttab_bak"
     fi
+    run_cmd sudo cp "$CRYPTTAB_SRC" "$CRYPTTAB_DEST"
+    run_cmd sudo chmod 600 "$CRYPTTAB_DEST"
+    ok "/etc/crypttab deployed"
   fi
-else
-  skip "hardened kernel boot default ($LIMINE_CONFIG not found)"
+fi
+
+# ── mkinitcpio.conf (machine-specific — deploy with caution) ────────────────
+MKINITCPIO_SRC="$DOTFILES_ROOT_ETC/mkinitcpio.conf"
+MKINITCPIO_DEST="/etc/mkinitcpio.conf"
+if [[ -f "$MKINITCPIO_SRC" ]]; then
+  if [[ -f "$MKINITCPIO_DEST" ]] && cmp -s "$MKINITCPIO_SRC" "$MKINITCPIO_DEST"; then
+    skip "/etc/mkinitcpio.conf (already up to date)"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    warn "conflict: '$MKINITCPIO_DEST' already exists (content differs)"
+    info "Differences:"
+    diff -u "$MKINITCPIO_DEST" "$MKINITCPIO_SRC" 2>/dev/null | head -30 | while IFS= read -r line; do
+      echo -e "    ${DIM}$line${NC}"
+    done || true
+    _add_warning "conflict: '$MKINITCPIO_DEST' — use --backup, --merge, or --force"
+  else
+    if [[ $BACKUP -eq 1 ]] && [[ -f "$MKINITCPIO_DEST" ]]; then
+      local mkinit_bak="${MKINITCPIO_DEST}.bak.$(date +%s)"
+      info "backing up /etc/mkinitcpio.conf → $mkinit_bak"
+      run_cmd sudo cp "$MKINITCPIO_DEST" "$mkinit_bak"
+    fi
+    run_cmd sudo cp "$MKINITCPIO_SRC" "$MKINITCPIO_DEST"
+    ok "/etc/mkinitcpio.conf deployed"
+    warn "mkinitcpio.conf changed — run 'mkinitcpio -P' to regenerate initramfs"
+    _add_warning "run 'sudo mkinitcpio -P' to regenerate initramfs after mkinitcpio.conf change"
+  fi
 fi
 
 # =============================================================================
-# 3b. SECURITY HARDENING
+# 4b. SECURITY HARDENING CONFIG
 # =============================================================================
 
 section "Security Hardening"
@@ -1194,8 +826,8 @@ if [[ -f "$RKHUNTER_SRC" ]]; then
       sudo chmod 640 "$RKHUNTER_DEST"
       ok "rkhunter.conf deployed"
     fi
-    fi
   fi
+fi
 
 # ── auditd rules ──────────────────────────────────────────────────────────
 AUDIT_SRC="$DOTFILES_ROOT_ETC/audit/rules.d/hardening.rules"
@@ -1278,99 +910,22 @@ elif command -v rkhunter &>/dev/null; then
   fi
 fi
 
-# =============================================================================
-# 4a. LIBVIRT NETWORK & FIREWALL
-# =============================================================================
-
-section "Libvirt Network Configuration"
-
-# Configure libvirt default network with proper DNS
-LIBVIRT_NETWORK_XML="$DOTFILES_ROOT_ETC/libvirt/networks/default.xml"
-if [[ -f "$LIBVIRT_NETWORK_XML" ]]; then
-  if [[ $DRY_RUN -eq 1 ]]; then
-    info "would configure libvirt default network with DNS forwarders"
+# Enable rkhunter + chkrootkit timers (unit files now deployed)
+for timer in rkhunter-scan.timer chkrootkit-scan.timer; do
+  if systemctl is-enabled --quiet "$timer" 2>/dev/null; then
+    skip "$timer (already enabled)"
   else
-    # Check if libvirtd is running
-    if ! systemctl is-active --quiet libvirtd.service; then
-      skip "libvirt default network (libvirtd not running — will be configured on first start)"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      info "would enable: $timer"
     else
-      # Get network info
-      NET_INFO=$(virsh -c qemu:///system net-info default 2>/dev/null)
-      
-      if [[ -z "$NET_INFO" ]]; then
-        # Network doesn't exist - define it
-        info "configuring libvirt default network..."
-        if virsh -c qemu:///system net-define "$LIBVIRT_NETWORK_XML" &>/dev/null; then
-          virsh -c qemu:///system net-autostart default &>/dev/null
-          virsh -c qemu:///system net-start default &>/dev/null || true
-          ok "libvirt default network configured"
-        else
-          warn "failed to configure libvirt network — check libvirt group membership"
-          _add_warning "libvirt network configuration failed — may need to log out/in for group membership"
-        fi
-      elif echo "$NET_INFO" | grep -q "Active:.*yes"; then
-        # Network exists and is active
-        skip "libvirt default network (already active)"
-      else
-        # Network exists but is not active
-        info "starting libvirt default network..."
-        virsh -c qemu:///system net-start default &>/dev/null || true
-        ok "libvirt default network started"
-      fi
+      sudo systemctl enable --now "$timer"
+      ok "$timer enabled"
     fi
   fi
-fi
-
-# Configure UFW rules for libvirt
-if command -v ufw &>/dev/null; then
-  if [[ $DRY_RUN -eq 1 ]]; then
-    info "would configure UFW rules for libvirt (virbr0)"
-  else
-    # Check if UFW is enabled
-    if ! sudo ufw status | grep -q "Status: active"; then
-      skip "UFW firewall rules (UFW not enabled)"
-    else
-      info "configuring UFW firewall rules for libvirt..."
-      
-      # Allow traffic on virbr0 interface
-      if sudo ufw status | grep -q "Anywhere on virbr0.*ALLOW IN.*Anywhere"; then
-        skip "UFW: virbr0 input rules already configured"
-      else
-        sudo ufw allow in on virbr0 comment 'libvirt bridge' &>/dev/null
-        sudo ufw allow out on virbr0 &>/dev/null
-        ok "UFW: allowed traffic on virbr0"
-      fi
-      
-      # Allow DNS to libvirt bridge
-      if sudo ufw status | grep -q "192.168.122.1 53.*ALLOW IN"; then
-        skip "UFW: DNS rule already configured"
-      else
-        sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS' &>/dev/null
-        ok "UFW: allowed DNS on virbr0"
-      fi
-      
-      # Allow routing from virbr0 to internet (detect primary interface)
-      PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
-      if [[ -n "$PRIMARY_IFACE" ]]; then
-        if sudo ufw status | grep -q "ALLOW FWD.*Anywhere on virbr0.*Anywhere on $PRIMARY_IFACE"; then
-          skip "UFW: routing rule already configured"
-        else
-          sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT' &>/dev/null
-          ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
-        fi
-      else
-        warn "could not detect primary network interface — add UFW route rule manually:"
-        echo -e "    ${DIM}sudo ufw route allow in on virbr0 out on <interface>${NC}"
-        _add_warning "UFW routing rule not added — primary interface not detected"
-      fi
-    fi
-  fi
-else
-  skip "UFW not installed — libvirt firewall rules skipped"
-fi
+done
 
 # =============================================================================
-# 4b. SYSTEMD USER SERVICES
+# 5. SYSTEMD USER SERVICES
 # =============================================================================
 
 section "Systemd User Services"
@@ -1386,124 +941,12 @@ enable_user_service "battery-notify.timer"
 enable_user_service "openviking.service"
 
 # =============================================================================
-# 5. VPN CLIENTS
+# 6. LATE SETUP
 # =============================================================================
 
-section "VPN Clients"
+section "Secrets & Sync"
 
-info "installing Proton VPN CLI..."
-run_cmd yay -S --needed --noconfirm proton-vpn-cli
-[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-cli"
-
-info "installing Proton VPN (GUI)..."
-run_cmd yay -S --needed --noconfirm proton-vpn-gtk-app
-[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-gtk-app"
-
-info "installing GlobalProtect OpenConnect..."
-run_cmd yay -S --needed --noconfirm globalprotect-openconnect-git
-[[ $DRY_RUN -eq 0 ]] && ok "globalprotect-openconnect-git"
-
-# =============================================================================
-# 6. TAILSCALE
-# =============================================================================
-
-section "Tailscale"
-
-if command -v tailscale &>/dev/null; then
-  skip "Tailscale already installed ($(tailscale version | head -1))"
-else
-  info "installing Tailscale..."
-  if [[ $DRY_RUN -eq 1 ]]; then
-    info "would run: curl -fsSL https://tailscale.com/install.sh | sh"
-  else
-    curl -fsSL https://tailscale.com/install.sh | sh
-    ok "Tailscale installed"
-  fi
-fi
-
-if [[ $DRY_RUN -eq 0 ]]; then
-  # Enable and start the daemon
-  if systemctl is-enabled --quiet tailscaled 2>/dev/null; then
-    skip "tailscaled (already enabled)"
-  else
-    sudo systemctl enable --now tailscaled
-    ok "tailscaled enabled"
-  fi
-
-  # Authenticate if not already connected
-  if tailscale status &>/dev/null; then
-    skip "Tailscale already authenticated and connected"
-  else
-    info "authenticating with Tailscale..."
-    sudo tailscale up --accept-routes
-    ok "Tailscale connected"
-  fi
-fi
-
-# =============================================================================
-# 7. PROTON PASS & SECRETS
-# =============================================================================
-
-section "Proton Pass & Secrets"
-
-# Install Proton Pass CLI
-if command -v pass-cli &>/dev/null; then
-  skip "pass-cli (already installed)"
-else
-  info "Installing Proton Pass CLI..."
-  if command -v yay &>/dev/null; then
-    yay -S --noconfirm proton-pass-cli-bin 2>/dev/null || \
-      { info "AUR install failed, using official script..."; curl -fsSL https://proton.me/download/pass-cli/install.sh | bash; }
-  else
-    curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
-  fi
-  ok "pass-cli installed"
-fi
-
-# Install Proton Pass GUI
-if command -v proton-pass &>/dev/null || flatpak list 2>/dev/null | grep -qi proton-pass; then
-  skip "proton-pass GUI (already installed)"
-else
-  info "Installing Proton Pass GUI..."
-  if command -v yay &>/dev/null; then
-    yay -S --noconfirm proton-pass-bin
-    ok "proton-pass GUI installed"
-  else
-    warn "Install proton-pass GUI manually from https://proton.me/pass/download/linux"
-  fi
-fi
-
-# Install shell completions for pass-cli
-if command -v pass-cli &>/dev/null; then
-  SHELL_NAME="${SHELL##*/}"
-  case "$SHELL_NAME" in
-    bash)
-      mkdir -p ~/.local/share/bash-completion/completions
-      pass-cli completions bash > ~/.local/share/bash-completion/completions/pass-cli 2>/dev/null || true
-      ;;
-    zsh)
-      mkdir -p ~/.zfunc
-      pass-cli completions zsh > ~/.zfunc/_pass-cli 2>/dev/null || true
-      ;;
-    fish)
-      mkdir -p ~/.config/fish/completions
-      pass-cli completions fish > ~/.config/fish/completions/pass-cli.fish 2>/dev/null || true
-      ;;
-  esac
-fi
-
-# Proton Pass login (interactive)
-if pass-cli info &>/dev/null 2>&1; then
-  skip "Proton Pass (already logged in)"
-else
-  echo ""
-  info "Proton Pass login required — opening browser for authentication..."
-  echo -e "  ${DIM}After completing login in the browser, press Enter to continue.${NC}"
-  pass-cli login
-  ok "Proton Pass logged in"
-fi
-
-# Bootstrap secrets with secretmgr
+# secretmgr bootstrap (needs symlinked configs in place)
 if command -v secretmgr &>/dev/null; then
   info "Bootstrapping secrets with secretmgr..."
   secretmgr bootstrap
@@ -1513,56 +956,7 @@ else
   _add_warning "secretmgr not in PATH; run 'secretmgr bootstrap' manually after login"
 fi
 
-# =============================================================================
-# 8. NAS SYNC
-# =============================================================================
-
-section "NAS Sync"
-
-run_cmd mkdir -p "$HOME/.config/nas-sync"
-
-PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
-if [[ -f "$PASSWORD_FILE" ]]; then
-  skip "rsync password file already exists"
-elif command -v secretmgr &>/dev/null && secretmgr status &>/dev/null; then
-  # Try Proton Pass first
-  NAS_PASS=$(secretmgr get NAS/rsync password 2>/dev/null) || true
-  if [[ -n "$NAS_PASS" ]]; then
-    printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-    ok "NAS password set from Proton Pass"
-  else
-    echo ""
-    echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
-    read -r -s -p "  Password: " nas_password
-    echo ""
-    if [[ -n "$nas_password" ]]; then
-      printf '%s' "$nas_password" > "$PASSWORD_FILE"
-      chmod 600 "$PASSWORD_FILE"
-      ok "password file created: $PASSWORD_FILE"
-    else
-      warn "skipped password setup — create it later:"
-      echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
-    fi
-  fi
-elif [[ $DRY_RUN -eq 1 ]]; then
-  info "would prompt for NAS rsync password"
-else
-  echo ""
-  echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
-  read -r -s -p "  Password: " nas_password
-  echo ""
-  if [[ -n "$nas_password" ]]; then
-    printf '%s' "$nas_password" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-    ok "password file created: $PASSWORD_FILE"
-  else
-    warn "skipped password setup — create it later:"
-    echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
-  fi
-fi
-
-# Initial clone from NAS (ordered list — associative arrays have undefined iteration order)
+# NAS initial sync (needs symlinked helper scripts in PATH)
 NAS_MODULES=(
   "documents:Documents"
   "music:Music"
@@ -1570,6 +964,8 @@ NAS_MODULES=(
   "audiobooks:Audiobooks"
   "books:Books"
 )
+
+PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 
 if [[ $DRY_RUN -eq 1 ]]; then
   info "would check NAS connectivity and clone:"
@@ -1637,27 +1033,13 @@ fi
 
 if [[ ${#ERRORS[@]} -gt 0 ]]; then
   echo ""
-  if [[ $DRY_RUN -eq 1 ]]; then
-    echo -e "  ${YELLOW}Would encounter errors (${#ERRORS[@]}):${NC}"
-    for e in "${ERRORS[@]}"; do
-      warn "$e"
-    done
-  else
-    if [[ $DRY_RUN -eq 1 ]]; then
-      echo -e "  ${YELLOW}Would encounter errors (${#ERRORS[@]}):${NC}"
-      for e in "${ERRORS[@]}"; do
-        warn "$e"
-      done
-    else
-      echo -e "  ${RED}Errors (${#ERRORS[@]}):${NC}"
-      for e in "${ERRORS[@]}"; do
-        fail "$e"
-      done
-      echo ""
-      echo -e "  ${RED}Install completed with errors — see above.${NC}"
-      exit 1
-    fi
-  fi
+  echo -e "  ${RED}Errors (${#ERRORS[@]}):${NC}"
+  for e in "${ERRORS[@]}"; do
+    fail "$e"
+  done
+  echo ""
+  echo -e "  ${RED}Install completed with errors — see above.${NC}"
+  exit 1
 else
   echo ""
   echo -e "  ${GREEN}✓ Install complete!${NC}"

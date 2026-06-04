@@ -1,4 +1,0 @@
-[submodule "root/home/.local/share/omarchy"]
-	path = root/home/.local/share/omarchy
-	url = git@github.com:funkybooboo/omarchy.git
-	branch = dev

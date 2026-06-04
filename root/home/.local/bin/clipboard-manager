@@ -1,0 +1,18 @@
+#!/bin/bash
+
+selection=$(cliphist list | fzf \
+    --prompt="Clipboard > " \
+    --no-multi \
+    --height=~80% \
+    --layout=reverse \
+    --border=rounded \
+    --no-info \
+    --color=fg:#c0c0c0,bg:#1a1a2e,hl:#ffffff \
+    --color=fg+:#ffffff,bg+:#2a2a4a,hl+:#ffffff \
+    --color=border:#444466,header:#888888 \
+    --color=gutter:#1a1a2e,spinner:#666666 \
+    --color=pointer:#ffffff,marker:#888888)
+
+[[ -z "$selection" ]] && exit 0
+
+cliphist decode <<< "$selection" | wl-copy

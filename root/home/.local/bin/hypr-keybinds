@@ -1,0 +1,89 @@
+#!/bin/bash
+
+tmp=$(mktemp)
+display=$(mktemp)
+trap 'rm -f "$tmp" "$display"' EXIT
+
+hyprctl -j binds | python3 -c '
+import json, sys
+
+MODMAP = {
+    1: "SHIFT", 4: "CTRL", 5: "SHIFT CTRL",
+    8: "ALT", 9: "SHIFT ALT", 12: "CTRL ALT", 13: "SHIFT CTRL ALT",
+    64: "SUPER", 65: "SUPER SHIFT", 68: "SUPER CTRL", 69: "SUPER SHIFT CTRL",
+    72: "SUPER ALT", 73: "SUPER SHIFT ALT", 76: "SUPER CTRL ALT", 77: "SUPER SHIFT CTRL ALT",
+}
+
+MOUSE = {272: "Left Click", 273: "Right Click", 274: "Middle Click"}
+
+binds = json.load(sys.stdin)
+seen = set()
+
+for b in binds:
+    if b.get("submap", ""):
+        continue
+
+    mods = MODMAP.get(b["modmask"], str(b["modmask"]))
+    key = b.get("key", "")
+
+    if not key and b.get("keycode", 0):
+        kc = b["keycode"]
+        key = MOUSE.get(kc, f"code:{kc}")
+
+    key_combo = (mods + " + " + key) if mods else key
+
+    desc = b.get("description", "")
+    dispatcher = b.get("dispatcher", "")
+    arg = b.get("arg", "")
+
+    if desc:
+        action = desc
+    elif dispatcher == "exec":
+        action = arg.replace("uwsm app -- ", "").replace("uwsm-app -- ", "")
+        if "hyprlauncher" in action:
+            action = "App launcher"
+    else:
+        action = (dispatcher + " " + arg).strip() if arg else dispatcher
+
+    action = action.strip()
+    if not action:
+        continue
+
+    unique = (key_combo, action)
+    if unique in seen:
+        continue
+    seen.add(unique)
+
+    print(f"{mods}\t{key_combo}\t{action}\t{dispatcher}\t{arg}")
+' | sort -t$'\t' -k1,1.2 -k2,2 > "$tmp"
+
+awk -F'\t' '{
+    pad = sprintf("%-28s", $2)
+    printf "%s  %s\n", pad, $3
+}' "$tmp" > "$display"
+
+selection=$(fzf \
+    --prompt="Keybindings > " \
+    --no-multi \
+    --height=~100% \
+    --layout=reverse \
+    --border=none \
+    --no-info \
+    --no-scrollbar \
+    --color=fg:#c0c0c0,bg:#1a1a2e,hl:#ffffff \
+    --color=fg+:#ffffff,bg+:#2a2a4a,hl+:#ffffff \
+    --color=border:#444466,header:#888888 \
+    --color=gutter:#1a1a2e,spinner:#666666 \
+    --color=pointer:#ffffff,marker:#888888 \
+    < "$display")
+
+[[ -z "$selection" ]] && exit 0
+
+action_part=$(echo "$selection" | sed 's/^.\{28\}  //')
+record=$(awk -F'\t' -v a="$action_part" '$3 == a {print $4 "\t" $5; exit}' "$tmp")
+
+if [[ -n "$record" ]]; then
+    dispatcher=$(echo "$record" | cut -f1)
+    arg=$(echo "$record" | cut -f2)
+    hyprctl dispatch "$dispatcher" "$arg"
+fi

@@ -1,0 +1,333 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+THEMES_DIR="$HOME/.local/share/themes"
+CURRENT_LINK="$HOME/.config/themes/current"
+
+usage() {
+    echo "Usage: theme-switch <theme-name>"
+    echo "       theme-switch -l|--list"
+    echo ""
+    echo "Available themes:"
+    list_themes
+    exit 1
+}
+
+list_themes() {
+    for f in "$THEMES_DIR"/*; do
+        [ -f "$f" ] || continue
+        name=$(basename "$f")
+        if [ -L "$CURRENT_LINK" ] && [ "$(basename "$(readlink "$CURRENT_LINK")")" = "$name" ]; then
+            echo "  $name (current)"
+        else
+            echo "  $name"
+        fi
+    done
+}
+
+hex_to_rgb() {
+    local hex="${1#\#}"
+    printf "%d, %d, %d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+}
+
+hex_to_rgba_hex() {
+    local hex="${1#\#}"
+    local alpha="${2:-ff}"
+    echo "${hex}${alpha}"
+}
+
+if [ $# -eq 0 ]; then
+    usage
+fi
+
+case "$1" in
+    -l|--list)
+        list_themes
+        exit 0
+        ;;
+esac
+
+THEME_FILE="$THEMES_DIR/$1"
+if [ ! -f "$THEME_FILE" ]; then
+    echo "Error: Theme '$1' not found in $THEMES_DIR"
+    exit 1
+fi
+
+source "$THEME_FILE"
+
+mkdir -p "$HOME/.config/themes"
+ln -sf "$THEME_FILE" "$CURRENT_LINK"
+
+echo "Applying theme: $THEME_NAME"
+
+# --- hyprtoolkit.conf ---
+cat > "$HOME/.config/hypr/hyprtoolkit.conf" <<EOF
+background = rgb(${BASE#\#})
+text = rgb(${TEXT#\#})
+base = rgb(${BASE#\#})
+alternate_base = rgb(${MANTLE#\#})
+bright_text = rgb(${ROSEWATER#\#})
+link_text = rgb(${BLUE#\#})
+accent = rgb(${MAUVE#\#})
+accent_secondary = rgb(${PINK#\#})
+
+font_family = JetBrainsMono Nerd Font
+font_family_monospace = JetBrainsMono Nerd Font
+icon_theme = Adwaita
+
+rounding_large = 10
+rounding_small = 5
+EOF
+
+# --- hyprland.conf (only themed lines) ---
+sed -i \
+    -e "s/col\.active_border = rgba([^ ]*) # THEME: active_border/col.active_border = rgba($(hex_to_rgba_hex "$ACTIVE_BORDER")) # THEME: active_border/" \
+    -e "s/col\.inactive_border = rgba([^ ]*) # THEME: inactive_border/col.inactive_border = rgba($(hex_to_rgba_hex "$SURFACE1" aa)) # THEME: inactive_border/" \
+    -e "s/color = rgba([^ ]*) # THEME: shadow/color = rgba($(hex_to_rgba_hex "$CRUST" ee)) # THEME: shadow/" \
+    "$HOME/.config/hypr/hyprland.conf"
+
+# --- hyprlock.conf ---
+cat > "$HOME/.config/hypr/hyprlock.conf" <<EOF
+background {
+    monitor =
+    path = ~/Pictures/wallpapers/yellowstone.jpg
+    blur_passes = 3
+    blur_size = 7
+    brightness = 0.5
+}
+
+input-field {
+    monitor =
+    size = 300, 50
+    outline_thickness = 2
+    dots_size = 0.3
+    outer_color = rgb(${MAUVE#\#})
+    inner_color = rgba(${BASE#\#}, 0.5)
+    font_color = rgb(${TEXT#\#})
+    fade_on_empty = true
+    placeholder_text = <i>Password...</i>
+    position = 0, -100
+    halign = center
+    valign = center
+}
+
+label {
+    monitor =
+    text = cmd[update:1000] echo "$(date +"%I:%M %p")"
+    color = rgb(${TEXT#\#})
+    font_size = 72
+    font_family = JetBrains Mono Nerd Font
+    position = 0, 100
+    halign = center
+    valign = center
+}
+EOF
+
+# --- mako.conf ---
+cat > "$HOME/.config/hypr/mako.conf" <<EOF
+background-color=${BASE}
+text-color=${TEXT}
+border-color=${MAUVE}
+border-radius=0
+border-size=0
+font=JetBrainsMono Nerd Font 12
+width=350
+height=110
+margin=10
+padding=12
+default-timeout=5000
+ignore-timeout=0
+
+[urgency=high]
+border-color=${RED}
+border-size=2
+default-timeout=0
+EOF
+
+# --- waybar style.css ---
+MAUVE_RGB=$(hex_to_rgb "$MAUVE")
+cat > "$HOME/.config/waybar/style.css" <<EOF
+@define-color base ${BASE};
+@define-color mantle ${MANTLE};
+@define-color text ${TEXT};
+@define-color mauve ${MAUVE};
+@define-color blue ${BLUE};
+@define-color red ${RED};
+@define-color peach ${PEACH};
+
+* {
+    background-color: @base;
+    color: @text;
+
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    font-family: 'JetBrainsMono Nerd Font';
+    font-size: 12px;
+}
+
+.modules-left {
+    margin-left: 8px;
+}
+
+.modules-right {
+    margin-right: 8px;
+}
+
+#workspaces button {
+    all: initial;
+    padding: 0 6px;
+    margin: 0 1.5px;
+    min-width: 9px;
+}
+
+#workspaces button.empty {
+    opacity: 0.5;
+}
+
+#workspaces button.active {
+    color: @mauve;
+}
+
+#workspaces button:hover {
+    background: rgba(${MAUVE_RGB}, 0.1);
+    color: @text;
+}
+
+#window {
+    padding: 0 10px;
+    color: @blue;
+}
+
+#clock {
+    margin-left: 8.75px;
+    color: @text;
+    font-weight: bold;
+}
+
+#pulseaudio,
+#network,
+#battery,
+#backlight,
+#bluetooth,
+#cpu,
+#memory,
+#disk,
+#custom-expand-icon {
+    min-width: 12px;
+    margin: 0 7.5px;
+}
+
+#tray {
+    margin-right: 16px;
+}
+
+#custom-expand-icon {
+    margin: 0 7.5px;
+}
+
+#custom-expand-icon.drawer-closed {
+    opacity: 0.5;
+}
+
+#custom-expand-icon.drawer-opened {
+    opacity: 1;
+}
+
+.tray-group-item {
+    margin: 0 1px;
+}
+
+#custom-recording {
+    margin: 0 7.5px;
+    min-width: 0;
+}
+
+#custom-recording.recording {
+    min-width: 12px;
+    color: @red;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    to {
+        color: @base;
+    }
+}
+
+#battery.warning {
+    color: @peach;
+}
+
+#battery.critical {
+    color: @red;
+}
+EOF
+
+# --- ghostty ---
+sed -i "s/^theme = .*/theme = ${GHOSTTY_THEME}/" "$HOME/.config/ghostty/config"
+
+# --- starship.toml ---
+ACCENT="${STARSHIP_ACCENT}"
+cat > "$HOME/.config/starship.toml" <<EOF
+add_newline = true
+command_timeout = 200
+format = "[\$directory\$git_branch\$git_status](\$style)\$character"
+
+[character]
+error_symbol = "[✗](bold ${ACCENT})"
+success_symbol = "[❯](bold ${ACCENT})"
+
+[directory]
+truncation_length = 2
+truncation_symbol = "…/"
+repo_root_style = "bold ${ACCENT}"
+repo_root_format = "[\$repo_root](\$repo_root_style)[\$path](\$style)[\$read_only](\$read_only_style) "
+
+[git_branch]
+format = "[\$branch](\$style) "
+style = "italic ${ACCENT}"
+
+[git_status]
+format     = '[\$all_status](\$style)'
+style      = "${ACCENT}"
+ahead      = "⇡\${count} "
+diverged   = "⇕⇡\${ahead_count}⇣\${behind_count} "
+behind     = "⇣\${count} "
+conflicted = " "
+untracked  = "? "
+modified   = " "
+stashed    = ""
+staged     = ""
+renamed    = ""
+deleted    = ""
+EOF
+
+# --- fish colors ---
+sed -i \
+    -e "s/^set -g fish_color_command .*/set -g fish_color_command ${MAUVE#\#}/" \
+    -e "s/^set -g fish_color_keyword .*/set -g fish_color_keyword ${PINK#\#}/" \
+    -e "s/^set -g fish_color_param .*/set -g fish_color_param ${TEXT#\#}/" \
+    -e "s/^set -g fish_color_option .*/set -g fish_color_option ${BLUE#\#}/" \
+    -e "s/^set -g fish_color_normal .*/set -g fish_color_normal ${TEXT#\#}/" \
+    -e "s/^set -g fish_color_comment .*/set -g fish_color_comment ${OVERLAY0#\#}/" \
+    -e "s/^set -g fish_color_error .*/set -g fish_color_error ${RED#\#}/" \
+    -e "s/^set -g fish_color_redirection .*/set -g fish_color_redirection ${PEACH#\#}/" \
+    -e "s/^set -g fish_color_end .*/set -g fish_color_end ${ROSEWATER#\#}/" \
+    -e "s/^set -g fish_color_operator .*/set -g fish_color_operator ${SKY#\#}/" \
+    -e "s/^set -g fish_color_autosuggestion .*/set -g fish_color_autosuggestion ${OVERLAY1#\#}/" \
+    -e "s/^set -g fish_color_search_match .*/set -g fish_color_search_match --background=${SURFACE1#\#}/" \
+    -e "s/^set -g fish_color_selection .*/set -g fish_color_selection --background=${SURFACE1#\#}/" \
+    -e "s/^set -g fish_pager_color_completion .*/set -g fish_pager_color_completion ${TEXT#\#}/" \
+    -e "s/^set -g fish_pager_color_description .*/set -g fish_pager_color_description ${SUBTEXT0#\#}/" \
+    -e "s/^set -g fish_pager_color_prefix .*/set -g fish_pager_color_prefix ${MAUVE#\#}/" \
+    "$HOME/.config/fish/config.fish"
+
+# --- reload services ---
+makoctl reload 2>/dev/null || true
+killall waybar 2>/dev/null; sleep 0.3; uwsm app -- waybar &>/dev/null &
+killall hyprlauncher 2>/dev/null; sleep 0.3; hyprlauncher -d &>/dev/null &
+hyprctl reload 2>/dev/null || true
+
+echo "Theme '$THEME_NAME' applied successfully."
+echo "Open a new terminal/shell to see fish and starship changes."

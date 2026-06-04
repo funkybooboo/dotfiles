@@ -1,0 +1,45 @@
+#!/bin/bash
+
+_pidfile=/tmp/screencast.pid
+_audio_combined=""
+_audio_loopback=""
+_file=""
+
+stop_recording() {
+    wf_pid=$(cat "$_pidfile" 2>/dev/null)
+    [[ -n "$wf_pid" ]] && kill "$wf_pid" 2>/dev/null
+    rm -f "$_pidfile"
+
+    [[ -n "$_audio_loopback" ]] && pactl unload-module "$_audio_loopback" 2>/dev/null
+    [[ -n "$_audio_combined" ]] && pactl unload-module "$_audio_combined" 2>/dev/null
+
+    sleep 0.5
+    [[ -n "$_file" && -f "$_file" ]] && losslesscut "$_file" &
+}
+
+start_recording() {
+    region=$(slurp -b '#cba6f780' -c '#cba6f7' -s '#00000060' -w 2 2>/dev/null)
+
+    if [[ -z "$region" ]]; then
+        region=$(hyprctl monitors -j | python3 -c "import json,sys; m=json.load(sys.stdin); f=[x for x in m if x.get('focused')]; print(f'{m[0][\"x\"]},{m[0][\"y\"]} {m[0][\"width\"]}x{m[0][\"height\"]}') if not f else f'{f[0][\"x\"]},{f[0][\"y\"]} {f[0][\"width\"]}x{f[0][\"height\"]}')")
+    fi
+
+    output_sink=$(pactl get-default-sink)
+    input_source=$(pactl list sources short | grep -v "\.monitor" | head -1 | awk '{print $2}')
+    output=$(hyprctl monitors -j | python3 -c "import json,sys; ms=json.load(sys.stdin); focused=[m for m in ms if m.get('focused')]; print(focused[0]['name'] if focused else ms[0]['name'])")
+
+    _audio_combined=$(pactl load-module module-combine-sink sink_name=screencastCombined sink_properties=device.description="ScreencastCombined" slaves="$output_sink" 2>/dev/null | awk '{print $NF}')
+    _audio_loopback=$(pactl load-module module-loopback source="$input_source" sink=screencastCombined 2>/dev/null | awk '{print $NF}')
+
+    _file="/tmp/screencast-$(date +%Y-%m-%d_%H-%M-%S).mp4"
+
+    wf-recorder -o "$output" -g "$region" -a --audio-source=screencastCombined.monitor -f "$_file" &
+    echo $! > "$_pidfile"
+}
+
+if [[ -f "$_pidfile" ]] && kill -0 "$(cat "$_pidfile")" 2>/dev/null; then
+    _file=$(ls -t /tmp/screencast-*.mp4 2>/dev/null | head -1)
+    stop_recording
+else
+    start_recording
+fi

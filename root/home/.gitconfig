@@ -1,33 +1,22 @@
+# See https://git-scm.com/docs/git-config
+
 [user]
-	name = Nate Stott
+	name = nate
 	email = nate.stott@pm.me
 	github = funkybooboo
-	signingkey = 2EA6A92673E57680
+	signingkey = 940CEDBCFE9E511A6EBF7CB33F60FF7C20F97B74
 
-[core]
-	editor = nvim
-	pager = delta
-
-[column]
-	ui = auto
-
-[branch]
-	sort = -committerdate
-
-[tag]
-	sort = version:refname
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
 
 [init]
 	defaultBranch = main
 
-[rerere]
-	enabled = 1
-	autoupdate = 1
-
-[diff]
-	algorithm = histogram
-	colorMoved = plain
-	renames = true
+[pull]
+	rebase = true
 
 [push]
 	autoSetupRemote = true
@@ -45,23 +34,54 @@
 [merge]
 	conflictStyle = zdiff3
 
-[delta]
-    navigate = true
-    line-numbers = true
+[column]
+	ui = auto
 
-[filter "lfs"]
-	clean    = git-lfs clean -- %f
-	smudge   = git-lfs smudge -- %f
-	process  = git-lfs filter-process
-	required = true
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = -version:refname
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[core]
+	editor = nvim
+	pager = diffnav
+
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	file-decoration-style = blue ol
+	hunk-header-decoration-style = blue ol
+	zero-style = dim syntax
+	merge-conflict-begin-symbol =  ▼
+	merge-conflict-end-symbol =    ▲
+	merge-conflict-ours-delim-style = dim red reverse
+	merge-conflict-theirs-delim-style = dim green reverse
 
 [commit]
+	verbose = true
 	gpgsign = true
 
 [gpg]
 	program = gpg
 	format = openpgp
 
-[interactive]
-	diffFilter = delta --color-only
-
+[filter "lfs"]
+	clean    = git-lfs clean -- %f
+	smudge   = git-lfs smudge -- %f
+	process  = git-lfs filter-process
+	required = true

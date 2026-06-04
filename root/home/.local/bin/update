@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# System update script for Arch Linux with Omarchy
+# System update script for Arch Linux
 
 set -euo pipefail
 
@@ -28,58 +28,7 @@ if command -v flatpak >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 2.5: Update dotfiles git submodules from remote
-if [[ -f "$_DOTFILES_DIR/.gitmodules" ]]; then
-    echo "→ Updating dotfiles git submodules..."
-    if git -C "$_DOTFILES_DIR" submodule update --init --remote --recursive; then
-        # Ensure each submodule is on its tracked branch (not detached HEAD)
-        git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}' | while read -r submod_path; do
-            submod_branch=$(git -C "$_DOTFILES_DIR" config --file .gitmodules --get "submodule.$submod_path.branch" 2>/dev/null || echo "")
-            if [[ -n "$submod_branch" ]]; then
-                git -C "$_DOTFILES_DIR/$submod_path" checkout "$submod_branch" 2>/dev/null || true
-            fi
-        done
-        # Check if submodule pointers changed (only check .gitmodules and submodule paths)
-        if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- .gitmodules $(git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}') 2>/dev/null; then
-            # Only add .gitmodules and submodule paths, not all changes
-            git -C "$_DOTFILES_DIR" add .gitmodules
-            git -C "$_DOTFILES_DIR" config --file .gitmodules --get-regexp path | awk '{print $2}' | xargs -I {} git -C "$_DOTFILES_DIR" add {}
-            git -C "$_DOTFILES_DIR" commit -m "chore: update git submodules from remote"
-            echo "  dotfiles submodules updated and committed"
-        else
-            echo "  dotfiles submodules already up to date"
-        fi
-    else
-        echo "  warning: could not update submodules"
-    fi
-    echo ""
-fi
-
-# Step 3: Update Omarchy
-if command -v omarchy-update >/dev/null 2>&1; then
-    echo "→ Updating Omarchy..."
-    omarchy-update
-    echo ""
-fi
-
-# Step 3b: Sync omarchy submodule pin after omarchy-update
-# The omarchy-update command may have pulled changes to the local checkout.
-# Ensure the dotfiles submodule pointer reflects the current local commit.
-if [[ -f "$_DOTFILES_DIR/.gitmodules" ]] && grep -q "omarchy" "$_DOTFILES_DIR/.gitmodules" 2>/dev/null; then
-    _OMARCHY_SUBMOD="root/home/.local/share/omarchy"
-    echo "→ Syncing omarchy submodule pin in dotfiles..."
-    # Check if the submodule working tree differs from the recorded commit
-    if ! git -C "$_DOTFILES_DIR" diff --quiet HEAD -- "$_OMARCHY_SUBMOD" 2>/dev/null; then
-        git -C "$_DOTFILES_DIR" add "$_OMARCHY_SUBMOD"
-        git -C "$_DOTFILES_DIR" commit -m "chore: sync omarchy submodule pin after omarchy-update"
-        echo "  omarchy submodule pin synced and committed"
-    else
-        echo "  omarchy submodule pin already in sync"
-    fi
-    echo ""
-fi
-
-# Step 4: Update firmware
+# Step 3: Update firmware
 if command -v fwupdmgr >/dev/null 2>&1; then
     echo "→ Checking for firmware updates..."
     fwupdmgr refresh || true
@@ -87,7 +36,7 @@ if command -v fwupdmgr >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 5: Update Rust packages
+# Step 3: Update Rust packages
 if command -v cargo >/dev/null 2>&1; then
     echo "→ Updating Rust packages..."
     cargo install cargo-update 2>/dev/null || true
@@ -95,7 +44,7 @@ if command -v cargo >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 6: Update Go packages (extract module paths via go version -m)
+# Step 4: Update Go packages (extract module paths via go version -m)
 if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1; then
     echo "→ Updating Go packages..."
     for bin in "$HOME/go/bin/"*; do
@@ -109,21 +58,21 @@ if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1;
     echo ""
 fi
 
-# Step 7: Update mise-managed tools (mise itself is updated by pacman in Step 1)
+# Step 5: Update mise-managed tools (mise itself is updated by pacman in Step 1)
 if command -v mise >/dev/null 2>&1; then
     echo "→ Upgrading mise-managed tools..."
     mise upgrade --yes 2>/dev/null || true
     echo ""
 fi
 
-# Step 8: Update npm global packages
+# Step 6: Update npm global packages
 if command -v npm >/dev/null 2>&1; then
     echo "→ Updating npm global packages..."
     npm update -g 2>/dev/null || true
     echo ""
 fi
 
-# Step 9: Update uv (Python package manager) and uv-managed tools
+# Step 7: Update uv (Python package manager) and uv-managed tools
 if command -v uv >/dev/null 2>&1; then
     echo "→ Updating uv..."
     uv self update 2>/dev/null || true
@@ -132,7 +81,7 @@ if command -v uv >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 10: Update ghcup (the ghcup binary itself) and Stack
+# Step 8: Update ghcup and Haskell (the ghcup binary itself) and Stack
 if command -v ghcup >/dev/null 2>&1; then
     echo "→ Updating ghcup..."
     ghcup upgrade 2>/dev/null || true
@@ -149,14 +98,14 @@ if command -v cabal >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 12: Update tldr cache
+# Step 9: Update tldr cache
 if command -v tldr >/dev/null 2>&1; then
     echo "→ Updating tldr cache..."
     tldr --update 2>/dev/null || true
     echo ""
 fi
 
-# Step 12.5: Sync GitHub forks with upstream
+# Step 10: Sync GitHub forks with upstream
 if command -v gh >/dev/null 2>&1; then
     echo "→ Syncing GitHub forks with upstream..."
     for repo in $(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner'); do
@@ -170,7 +119,7 @@ if command -v gh >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 12.75: Update git repos in ~/sources
+# Step 11: Update git repos in ~/sources
 if [[ -d "$HOME/sources" ]]; then
     echo "→ Updating git repos in ~/sources..."
     for repo in "$HOME/sources"/*/; do
@@ -185,7 +134,7 @@ if [[ -d "$HOME/sources" ]]; then
     echo ""
 fi
 
-# Step 12.875: Rebuild ~/sources repos (auto-detected build systems)
+# Step 12: Rebuild ~/sources repos (auto-detected build systems)
 _build_repo() {
     local repo="$1"
     local name

@@ -1,15 +1,6 @@
-# Minimal Fish Configuration
-# Only run in interactive mode
-if not status is-interactive
-    return
-end
+set -g fish_greeting
 
-# ============================================================================
-# OMARCHY INTEGRATION
-# ============================================================================
-if test -f ~/.local/share/omarchy/default/fish/rc
-    source ~/.local/share/omarchy/default/fish/rc
-end
+set -g fish_key_bindings fish_vi_key_bindings
 
 # ============================================================================
 # ENVIRONMENT
@@ -17,7 +8,12 @@ end
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx PAGER less
-set -gx LESS -R
+set -gx MANPAGER less
+set -gx SUDO_EDITOR nvim
+set -gx BAT_THEME ansi
+set -gx MANROFFOPT "-c"
+set -gx LESSHISTFILE -
+set -gx PYTHONSTARTUP $HOME/.config/python/pythonrc
 
 # Libvirt: Use system connection by default for virt-manager and virsh
 set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
@@ -32,16 +28,107 @@ fish_add_path -p /var/lib/flatpak/exports/share
 fish_add_path -p $HOME/.local/share/flatpak/exports/share
 
 # ============================================================================
+# COLORS (Catppuccin Mocha)
+# ============================================================================
+set -g fish_color_command cba6f7
+set -g fish_color_keyword f5c2e7
+set -g fish_color_param cdd6f4
+set -g fish_color_option 89b4fa
+set -g fish_color_normal cdd6f4
+set -g fish_color_comment 6c7086
+set -g fish_color_error f38ba8
+set -g fish_color_redirection fab387
+set -g fish_color_end f5e0dc
+set -g fish_color_operator 89dceb
+set -g fish_color_autosuggestion 7f849c
+set -g fish_color_search_match --background=45475a
+set -g fish_color_selection --background=45475a
+set -g fish_pager_color_completion cdd6f4
+set -g fish_pager_color_description a6adc8
+set -g fish_pager_color_prefix cba6f7
+
+# ============================================================================
+# KEY BINDINGS
+# ============================================================================
+bind -M insert \cp history-search-backward
+bind -M insert \cn history-search-forward
+bind -M insert \cw backward-kill-word
+bind -M insert \ck kill-line
+bind -M insert \cu backward-kill-line
+bind -M insert \cb accept-autosuggestion
+bind -M default yy fish_clipboard_copy
+bind -M default p fish_clipboard_paste
+bind -M insert \e\[1\;5C forward-word
+bind -M insert \e\[1\;5D backward-word
+
+# ============================================================================
+# ALIASES
+# =============================================================================
+
+# eza
+if type -q eza
+    alias ls='eza --group-directories-first --icons=auto'
+    alias l='eza -lh --group-directories-first --icons=auto'
+    alias la='l -a'
+    alias lt='eza --tree --level=2 --long --icons --git'
+    alias lta='lt -a'
+end
+
+# media
+alias ffmpeg='ffmpeg -hide_banner'
+alias yt-dlp='yt-dlp --embed-metadata --restrict-filenames -i'
+alias yt-music='yt-dlp -x --audio-quality 0 --embed-thumbnail -o "%(title)s.%(ext)s"'
+
+# git
+alias g='git'
+alias gcm='git commit -m'
+alias gcam='git commit -a -m'
+alias gcad='git commit -a --amend'
+alias gd='git diff'
+alias gs='git status'
+alias gl='git log --oneline -20'
+alias gco='git checkout'
+alias gb='git branch'
+
+# navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# tools
+alias c='opencode'
+alias d='docker'
+alias t='tmux attach || tmux new -s Work'
+
+# ============================================================================
 # FUNCTIONS
 # ============================================================================
-function mkcd
-    mkdir -p $argv[1]
-    and cd $argv[1]
+
+function n
+    if test (count $argv) -eq 0
+        nvim .
+    else
+        nvim $argv
+    end
+end
+
+function open
+    xdg-open $argv >/dev/null 2>&1 &
+    disown
+end
+
+function compress
+    tar -czf (string replace -r '/$' '' -- $argv[1]).tar.gz $argv[1]
+end
+
+function decompress
+    tar -xzf $argv[1]
 end
 
 # ============================================================================
 # TOOL INITIALIZATION
-# ============================================================================
+# =============================================================================
+
 # SSH agent
 set -gx SSH_AUTH_SOCK $XDG_RUNTIME_DIR/ssh-agent.socket
 
@@ -77,17 +164,28 @@ function __gpg_tty_lazy --on-event fish_prompt
     functions --erase __gpg_tty_lazy
 end
 
-# ============================================================================
-# SETTINGS
-# ============================================================================
-set -g fish_greeting
+# atuin
+if type -q atuin
+    atuin init fish --disable-up-arrow | source
+end
 
+# zoxide
+if type -q zoxide
+    zoxide init fish | source
+end
+
+# mise
+if type -q mise
+    mise activate fish | source
+end
+
+# starship
+if type -q starship
+    starship init fish | source
+end
+
+# ghcup
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/nate/.ghcup/bin $PATH # ghcup-env
 
-# BEGIN opam configuration
-# This is useful if you're using opam as it adds:
-#   - the correct directories to the PATH
-#   - auto-completion for the opam binary
-# This section can be safely removed at any time if needed.
+# opam
 test -r '/home/nate/.opam/opam-init/init.fish' && source '/home/nate/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
-# END opam configuration

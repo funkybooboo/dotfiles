@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pgrep -x hyprsunset >/dev/null; then
+    pkill -x hyprsunset
+    notify-send "Night mode" "Off" -h string:x-canonical-private-synchronous:nightmode
+else
+    hyprsunset -t 4000 &
+    notify-send "Night mode" "On" -h string:x-canonical-private-synchronous:nightmode
+fi
