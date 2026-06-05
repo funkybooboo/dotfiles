@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for Rust
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Rust Analyzer
         rust_analyzer = {
           settings = {
             ["rust-analyzer"] = {
@@ -35,25 +33,23 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "rust-analyzer", -- Rust LSP
-        "codelldb",      -- Rust debugger
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "rust-analyzer",
+        "codelldb",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "rust",
         "toml",
-      },
-    },
+      })
+    end,
   },
 }

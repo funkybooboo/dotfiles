@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for Go
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Go Language Server
         gopls = {
           settings = {
             gopls = {
@@ -47,31 +45,29 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "gopls",            -- Go LSP
-        "gofumpt",          -- Go formatter
-        "goimports-reviser", -- Go imports formatter
-        "gomodifytags",     -- Go struct tags
-        "impl",             -- Go interface implementation
-        "delve",            -- Go debugger
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "gopls",
+        "gofumpt",
+        "goimports-reviser",
+        "gomodifytags",
+        "impl",
+        "delve",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "go",
         "gomod",
         "gowork",
         "gosum",
-      },
-    },
+      })
+    end,
   },
 }

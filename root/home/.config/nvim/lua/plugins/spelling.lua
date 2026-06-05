@@ -1,5 +1,4 @@
 return {
-  -- Enable built-in spell checking
   {
     "neovim/nvim-lspconfig",
     opts = function()
@@ -8,7 +7,6 @@ return {
     end,
   },
 
-  -- LTeX LSP for grammar and spell checking
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -26,13 +24,12 @@ return {
     },
   },
 
-  -- Mason: Install spell checker
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "ltex-ls", -- Grammar and spell checker
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "ltex-ls",
+      })
+    end,
   },
 }

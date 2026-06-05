@@ -1,18 +1,13 @@
 return {
-  -- Enable LazyVim's Python extras
   {
     "LazyVim/LazyVim",
-    opts = {
-      -- This will automatically configure Python LSP
-    },
+    opts = {},
   },
 
-  -- Configure nvim-lspconfig for Python
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Pyright (recommended Python LSP)
         pyright = {
           settings = {
             python = {
@@ -20,36 +15,33 @@ return {
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
                 useLibraryCodeForTypes = true,
-                typeCheckingMode = "basic", -- "off", "basic", "strict"
+                typeCheckingMode = "basic",
               },
             },
           },
         },
-        -- Ruff (fast linter/formatter)
         ruff = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "pyright",      -- Python LSP
-        "ruff",         -- Python linter/formatter LSP (replaces ruff-lsp)
-        "debugpy",      -- Python debugger
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "pyright",
+        "ruff",
+        "debugpy",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "python",
-      },
-    },
+      })
+    end,
   },
 }

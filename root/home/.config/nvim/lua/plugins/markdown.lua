@@ -1,35 +1,31 @@
 return {
-  -- Configure nvim-lspconfig for Markdown
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Markdown Language Server
         marksman = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "marksman",      -- Markdown LSP
-        "markdownlint",  -- Markdown linter
-        "markdown-toc",  -- Table of contents generator
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "marksman",
+        "markdownlint",
+        "markdown-toc",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "markdown",
         "markdown_inline",
-      },
-    },
+      })
+    end,
   },
 }

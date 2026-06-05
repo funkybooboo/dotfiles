@@ -1,16 +1,13 @@
 return {
-  -- Configure nvim-lspconfig for C/C++
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Clangd for C/C++
         clangd = {
           keys = {
             { "<leader>cR", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
           },
           root_dir = function(fname)
-            -- Ensure fname is a string path
             if type(fname) ~= "string" then
               return nil
             end
@@ -51,25 +48,23 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "clangd",       -- C/C++ LSP
-        "clang-format", -- C/C++ formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "clangd",
+        "clang-format",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "c",
         "cpp",
-      },
-    },
+      })
+    end,
   },
 }

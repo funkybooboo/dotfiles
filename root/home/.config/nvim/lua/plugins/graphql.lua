@@ -1,32 +1,28 @@
 return {
-  -- Configure nvim-lspconfig for GraphQL
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- GraphQL Language Server
         graphql = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "graphql-language-service-cli", -- GraphQL LSP
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "graphql-language-service-cli",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "graphql",
-      },
-    },
+      })
+    end,
   },
 }

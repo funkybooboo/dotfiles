@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for Elixir
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Elixir Language Server
         elixirls = {
           settings = {
             elixirLS = {
@@ -17,25 +15,23 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "elixir-ls", -- Elixir LSP
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "elixir-ls",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "elixir",
         "heex",
         "eex",
-      },
-    },
+      })
+    end,
   },
 }

@@ -1,32 +1,28 @@
 return {
-  -- Configure nvim-lspconfig for F#
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- F# Language Server
         fsautocomplete = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "fsautocomplete", -- F# LSP
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "fsautocomplete",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "fsharp",
-      },
-    },
+      })
+    end,
   },
 }

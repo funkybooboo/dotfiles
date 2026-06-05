@@ -1,36 +1,31 @@
 return {
-  -- Configure nvim-lspconfig for Terraform
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Terraform Language Server
         terraformls = {},
-        -- Terraform Linter
         tflint = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "terraform-ls", -- Terraform LSP
-        "tflint",       -- Terraform linter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "terraform-ls",
+        "tflint",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "terraform",
         "hcl",
-      },
-    },
+      })
+    end,
   },
 }

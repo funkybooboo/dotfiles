@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for XML and HTML
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- HTML Language Server
         html = {
           settings = {
             html = {
@@ -20,7 +18,6 @@ return {
             },
           },
         },
-        -- CSS Language Server
         cssls = {
           settings = {
             css = {
@@ -37,7 +34,6 @@ return {
             },
           },
         },
-        -- Emmet for HTML/CSS
         emmet_ls = {
           filetypes = {
             "html",
@@ -55,28 +51,26 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "html-lsp",       -- HTML LSP
-        "css-lsp",        -- CSS LSP
-        "emmet-ls",       -- Emmet LSP
-        "prettier",       -- HTML/CSS formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "html-lsp",
+        "css-lsp",
+        "emmet-ls",
+        "prettier",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "html",
         "css",
         "scss",
-      },
-    },
+      })
+    end,
   },
 }

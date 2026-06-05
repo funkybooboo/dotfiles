@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for C#
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- C# Language Server (OmniSharp)
         omnisharp = {
           cmd = { "omnisharp" },
           enable_roslyn_analyzers = true,
@@ -15,24 +13,22 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "omnisharp",  -- C# LSP
-        "csharpier",  -- C# formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "omnisharp",
+        "csharpier",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "c_sharp",
-      },
-    },
+      })
+    end,
   },
 }

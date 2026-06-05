@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for Bash
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Bash Language Server
         bashls = {
           settings = {
             bashIde = {
@@ -16,25 +14,23 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "bash-language-server", -- Bash LSP
-        "shellcheck",           -- Shell script linter
-        "shfmt",                -- Shell script formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "bash-language-server",
+        "shellcheck",
+        "shfmt",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "bash",
-      },
-    },
+      })
+    end,
   },
 }

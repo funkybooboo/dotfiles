@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for TOML
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- TOML Language Server
         taplo = {
           settings = {
             evenBetterToml = {
@@ -22,23 +20,21 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "taplo", -- TOML LSP
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "taplo",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "toml",
-      },
-    },
+      })
+    end,
   },
 }

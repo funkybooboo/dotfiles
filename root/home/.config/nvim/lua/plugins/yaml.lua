@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for YAML
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- YAML Language Server
         yamlls = {
           settings = {
             yaml = {
@@ -36,25 +34,23 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "yaml-language-server", -- YAML LSP
-        "yamllint",             -- YAML linter
-        "yamlfmt",              -- YAML formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "yaml-language-server",
+        "yamllint",
+        "yamlfmt",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "yaml",
-      },
-    },
+      })
+    end,
   },
 }

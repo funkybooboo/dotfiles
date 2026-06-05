@@ -1,33 +1,29 @@
 return {
-  -- Configure nvim-lspconfig for Kotlin
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Kotlin Language Server
         kotlin_language_server = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "kotlin-language-server", -- Kotlin LSP
-        "ktlint",                 -- Kotlin linter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "kotlin-language-server",
+        "ktlint",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "kotlin",
-      },
-    },
+      })
+    end,
   },
 }

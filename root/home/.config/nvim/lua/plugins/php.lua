@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for PHP
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- PHP Language Server (Intelephense)
         intelephense = {
           settings = {
             intelephense = {
@@ -33,32 +31,28 @@ return {
             },
           },
         },
-        -- Alternative: phpactor
-        -- phpactor = {},
       },
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "intelephense", -- PHP LSP
-        "phpcs",        -- PHP CodeSniffer
-        "php-cs-fixer", -- PHP formatter
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "intelephense",
+        "phpcs",
+        "php-cs-fixer",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "php",
         "phpdoc",
-      },
-    },
+      })
+    end,
   },
 }

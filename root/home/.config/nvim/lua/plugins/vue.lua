@@ -1,10 +1,8 @@
 return {
-  -- Configure nvim-lspconfig for Vue
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Vue Language Server
         volar = {
           filetypes = { "vue" },
         },
@@ -12,23 +10,21 @@ return {
     },
   },
 
-  -- Mason: Automatically install LSP servers
   {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "vue-language-server", -- Vue LSP
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
+        "vue-language-server",
+      })
+    end,
   },
 
-  -- Treesitter for better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "vue",
-      },
-    },
+      })
+    end,
   },
 }
