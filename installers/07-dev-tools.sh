@@ -15,11 +15,17 @@ if [[ $DRY_RUN -eq 1 ]]; then
   info "would enable: podman socket"
   info "would add $USER to podman group"
 else
-  sudo systemctl enable --now podman.socket
-  ok "podman socket enabled"
+  if systemctl is-enabled --quiet podman.socket 2>/dev/null; then
+    skip "podman.socket (already enabled)"
+  else
+    sudo systemctl enable --now podman.socket
+    ok "podman.socket enabled"
+  fi
 
-  # Create docker/docker-compose symlinks to podman
-  if ! command -v docker &>/dev/null || [[ -L "$(command -v docker)" ]]; then
+  if command -v docker &>/dev/null && [[ -L "$(command -v docker)" ]]; then
+    skip "docker/docker-compose symlinks (already present)"
+  elif ! command -v docker &>/dev/null; then
+    mkdir -p "$HOME/.local/bin"
     ln -sf /usr/bin/podman "$HOME/.local/bin/docker"
     ln -sf /usr/bin/podman "$HOME/.local/bin/docker-compose"
     ok "docker/docker-compose symlinks created (→ podman)"

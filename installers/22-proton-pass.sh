@@ -10,7 +10,7 @@ elif [[ $DRY_RUN -eq 1 ]]; then
 else
   info "Installing Proton Pass CLI..."
   if command -v yay &>/dev/null; then
-    yay -S --noconfirm proton-pass-cli-bin 2>/dev/null || \
+    yay -S --needed --noconfirm proton-pass-cli-bin 2>/dev/null || \
       { info "AUR install failed, using official script..."; curl -fsSL https://proton.me/download/pass-cli/install.sh | bash; }
   else
     curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
@@ -26,7 +26,7 @@ elif [[ $DRY_RUN -eq 1 ]]; then
 else
   info "Installing Proton Pass GUI..."
   if command -v yay &>/dev/null; then
-    yay -S --noconfirm proton-pass-bin
+    yay -S --needed --noconfirm proton-pass-bin
     ok "proton-pass GUI installed"
   else
     warn "Install proton-pass GUI manually from https://proton.me/pass/download/linux"
@@ -38,16 +38,34 @@ if [[ $DRY_RUN -eq 0 ]] && command -v pass-cli &>/dev/null; then
   SHELL_NAME="${SHELL##*/}"
   case "$SHELL_NAME" in
     bash)
-      mkdir -p ~/.local/share/bash-completion/completions
-      pass-cli completions bash > ~/.local/share/bash-completion/completions/pass-cli 2>/dev/null || true
+      COMPL_FILE="$HOME/.local/share/bash-completion/completions/pass-cli"
+      mkdir -p "$HOME/.local/share/bash-completion/completions"
+      if [[ ! -f "$COMPL_FILE" ]]; then
+        pass-cli completions bash > "$COMPL_FILE" 2>/dev/null || true
+        ok "bash completions for pass-cli installed"
+      else
+        skip "bash completions for pass-cli (already present)"
+      fi
       ;;
     zsh)
-      mkdir -p ~/.zfunc
-      pass-cli completions zsh > ~/.zfunc/_pass-cli 2>/dev/null || true
+      COMPL_FILE="$HOME/.zfunc/_pass-cli"
+      mkdir -p "$HOME/.zfunc"
+      if [[ ! -f "$COMPL_FILE" ]]; then
+        pass-cli completions zsh > "$COMPL_FILE" 2>/dev/null || true
+        ok "zsh completions for pass-cli installed"
+      else
+        skip "zsh completions for pass-cli (already present)"
+      fi
       ;;
     fish)
-      mkdir -p ~/.config/fish/completions
-      pass-cli completions fish > ~/.config/fish/completions/pass-cli.fish 2>/dev/null || true
+      COMPL_FILE="$HOME/.config/fish/completions/pass-cli.fish"
+      mkdir -p "$HOME/.config/fish/completions"
+      if [[ ! -f "$COMPL_FILE" ]]; then
+        pass-cli completions fish > "$COMPL_FILE" 2>/dev/null || true
+        ok "fish completions for pass-cli installed"
+      else
+        skip "fish completions for pass-cli (already present)"
+      fi
       ;;
   esac
 fi

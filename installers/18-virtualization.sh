@@ -16,8 +16,14 @@ else
     skip "libvirtd.service (already enabled)"
   else
     sudo systemctl enable --now libvirtd.service
-    sudo systemctl enable --now virtlogd.service
     ok "libvirtd.service enabled"
+  fi
+
+  if systemctl is-enabled --quiet virtlogd.service 2>/dev/null; then
+    skip "virtlogd.service (already enabled)"
+  else
+    sudo systemctl enable --now virtlogd.service
+    ok "virtlogd.service enabled"
   fi
 
   if groups "$USER" | grep -qw libvirt; then

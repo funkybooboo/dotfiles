@@ -730,7 +730,7 @@ if [[ -f "$FSTAB_SRC" ]]; then
     _add_warning "conflict: '$FSTAB_DEST' — use --backup, --merge, or --force"
   else
     if [[ $BACKUP -eq 1 ]] && [[ -f "$FSTAB_DEST" ]]; then
-      local fstab_bak="${FSTAB_DEST}.bak.$(date +%s)"
+      fstab_bak="${FSTAB_DEST}.bak.$(date +%s)"
       info "backing up /etc/fstab → $fstab_bak"
       run_cmd sudo cp "$FSTAB_DEST" "$fstab_bak"
     fi
@@ -754,7 +754,7 @@ if [[ -f "$CRYPTTAB_SRC" ]]; then
     _add_warning "conflict: '$CRYPTTAB_DEST' — use --backup, --merge, or --force"
   else
     if [[ $BACKUP -eq 1 ]] && [[ -f "$CRYPTTAB_DEST" ]]; then
-      local crypttab_bak="${CRYPTTAB_DEST}.bak.$(date +%s)"
+      crypttab_bak="${CRYPTTAB_DEST}.bak.$(date +%s)"
       info "backing up /etc/crypttab → $crypttab_bak"
       run_cmd sudo cp "$CRYPTTAB_DEST" "$crypttab_bak"
     fi
@@ -779,7 +779,7 @@ if [[ -f "$MKINITCPIO_SRC" ]]; then
     _add_warning "conflict: '$MKINITCPIO_DEST' — use --backup, --merge, or --force"
   else
     if [[ $BACKUP -eq 1 ]] && [[ -f "$MKINITCPIO_DEST" ]]; then
-      local mkinit_bak="${MKINITCPIO_DEST}.bak.$(date +%s)"
+      mkinit_bak="${MKINITCPIO_DEST}.bak.$(date +%s)"
       info "backing up /etc/mkinitcpio.conf → $mkinit_bak"
       run_cmd sudo cp "$MKINITCPIO_DEST" "$mkinit_bak"
     fi
