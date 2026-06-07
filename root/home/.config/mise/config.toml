@@ -1,0 +1,8 @@
+[tools]
+node = "lts"
+python = "latest"
+go = "latest"
+rust = "latest"
+
+[settings]
+experimental = true
