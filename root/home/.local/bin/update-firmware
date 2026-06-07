@@ -7,7 +7,8 @@ set -euo pipefail
 set -o errtrace
 
 # --- Logging ---
-LOGFILE="/var/log/update-firmware.log"
+LOGFILE="${XDG_STATE_HOME:-$HOME/.local/state}/update-firmware.log"
+mkdir -p "$(dirname "$LOGFILE")"
 exec > >(tee -a "$LOGFILE") 2>&1
 
 # --- Timestamp helper ---
@@ -23,7 +24,8 @@ fi
 trap 'echo "[$(TS)] ERROR: failure at line $LINENO"' ERR
 
 # --- Lockfile to prevent overlapping runs ---
-LOCKFILE=/var/lock/update-firmware.lock
+LOCKFILE="${XDG_RUNTIME_DIR:-/run/user/$UID}/update-firmware.lock"
+mkdir -p "$(dirname "$LOCKFILE")"
 exec 200>"$LOCKFILE"
 flock -n 200 || {
     echo "[$(TS)] Another update-firmware is already running; exiting."
@@ -51,15 +53,21 @@ fi
 
 # --- Refresh metadata ---
 echo "[$(TS)] Refreshing firmware metadata"
-retry sudo -n fwupdmgr refresh
+if ! sudo -n fwupdmgr refresh --force 2>&1; then
+    echo "[$(TS)] WARNING: fwupdmgr refresh failed; continuing anyway"
+fi
 
 # --- Check for updates (also capture which devices need reboot) ---
 echo "[$(TS)] Checking for firmware updates"
-updates=$(fwupdmgr get-updates 2>&1)
+updates=$(sudo -n fwupdmgr get-updates 2>&1) || true
 if echo "$updates" | grep -iqE 'no updatable|no updates'; then
     echo "[$(TS)] No firmware updates available"
     echo "[$(TS)] Finished (no updates)"
     exit 0
+fi
+if [[ -z "$updates" ]]; then
+    echo "[$(TS)] fwupdmgr get-updates returned empty output; aborting"
+    exit 1
 fi
 
 echo "[$(TS)] Updates available:"
@@ -67,7 +75,8 @@ echo "$updates"
 
 # Capture reboot requirement before applying (once applied, get-updates returns empty)
 reboot_required=false
-if fwupdmgr get-updates --json 2>/dev/null | grep -q '"reboot":\s*true'; then
+updates_json=$(sudo -n fwupdmgr get-updates --json 2>/dev/null) || true
+if echo "$updates_json" | grep -q '"reboot":\s*true'; then
     reboot_required=true
 fi
 

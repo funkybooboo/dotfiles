@@ -226,7 +226,7 @@ _build_repo() {
     # Go module
     if [[ -f "$repo/go.mod" ]]; then
         echo "  → $name (go install)"
-        if (cd "$repo" && go install . 2>/dev/null); then
+        if (cd "$repo" && go install ./... 2>/dev/null); then
             echo "    ✓ $name"; return 0
         else
             echo "    ✗ $name failed"; return 1
