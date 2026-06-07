@@ -12,8 +12,16 @@ nas = "NAS"
 api = "API"
 ssh = "SSH"
 gpg = "GPG"
-vpn = "VPN"
-servers = "Servers"
+home = "Home"
+services = "Services"
+subscriptions = "Subscriptions"
+identity = "Identity"
+gaming = "Gaming"
+school = "school"
+projects = "projects"
+apply = "apply"
+finance = "finance"
+aws = "aws"
 
 [ssh]
 # Load SSH keys into existing systemd ssh-agent on login/bootstrap
