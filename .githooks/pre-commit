@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Pre-commit hook: prevent secrets from being committed
+set -euo pipefail
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+found_secrets=0
+
+# Scan staged files for common secret patterns
+while IFS= read -r file; do
+    # Skip binary files
+    if file "$file" | grep -q "binary\|image\|compressed"; then
+        continue
+    fi
+
+    # Check for API keys, tokens, passwords, private keys
+    if git diff --cached --diff-filter=ACMR "$file" 2>/dev/null | grep -qiE \
+        '(AKIA[0-9A-Z]{16}|AIzaSy[0-9A-Za-z_-]{33}|AQ\.[0-9A-Za-z_-]{40,}|sk-[0-9a-zA-Z]{48}|sk_live_[0-9a-zA-Z]{24,}|ghp_[0-9a-zA-Z]{36}|gho_[0-9a-zA-Z]{36}|github_pat_[0-9a-zA-Z_]{82}|-----BEGIN[[:space:]]+RSA[[:space:]]+PRIVATE[[:space:]]+KEY|-----BEGIN[[:space:]]+OPENSSH[[:space:]]+PRIVATE[[:space:]]+KEY|-----BEGIN[[:space:]]+EC[[:space:]]+PRIVATE[[:space:]]+KEY|-----BEGIN[[:space:]]+DSA[[:space:]]+PRIVATE[[:space:]]+KEY|password\s*[:=]\s*["\x27][^"\x27]{8,}|secret\s*[:=]\s*["\x27][^"\x27]{8,}|api[_-]?key\s*[:=]\s*["\x27][^"\x27]{20,})'; then
+        echo -e "${RED}SECRET DETECTED${NC} in $file"
+        git diff --cached --diff-filter=ACMR "$file" 2>/dev/null | grep -iE \
+            '(AKIA[0-9A-Z]{16}|AIzaSy[0-9A-Za-z_-]{33}|AQ\.[0-9A-Za-z_-]{40,}|sk-[0-9a-zA-Z]{48}|sk_live_[0-9a-zA-Z]{24,}|ghp_[0-9a-zA-Z]{36}|gho_[0-9a-zA-Z]{36}|github_pat_[0-9a-zA-Z_]{82}|-----BEGIN[[:space:]]+RSA[[:space:]]+PRIVATE[[:space:]]+KEY|-----BEGIN[[:space:]]+OPENSSH[[:space:]]+PRIVATE[[:space:]]+KEY|password\s*[:=]\s*["\x27][^"\x27]{8,}|secret\s*[:=]\s*["\x27][^"\x27]{8,}|api[_-]?key\s*[:=]\s*["\x27][^"\x27]{20,})' || true
+        found_secrets=1
+    fi
+done < <(git diff --cached --name-only --diff-filter=ACMR)
+
+# Also check for files that should never be committed
+for forbidden in "id_ed25519" "id_rsa" "id_ecdsa" ".pem" ".key" ".p12" ".pfx" "rsync-password" "ov.conf"; do
+    while IFS= read -r file; do
+        if [[ "$file" == *"ov.conf"* && "$file" != *".tmpl"* ]]; then
+            echo -e "${RED}BLOCKED${NC}: $file looks like a secret config (not a .tmpl). Use .tmpl files with secretmgr instead."
+            found_secrets=1
+        fi
+        if [[ "$file" == *"rsync-password"* ]]; then
+            echo -e "${RED}BLOCKED${NC}: $file is a credentials file. It should be in .gitignore."
+            found_secrets=1
+        fi
+        if [[ "$file" == *".pem" || "$file" == *".key" || "$file" == *".p12" || "$file" == *".pfx" ]]; then
+            echo -e "${RED}BLOCKED${NC}: $file is a private key/certificate file."
+            found_secrets=1
+        fi
+        if [[ "$(basename "$file")" == "id_ed25519" || "$(basename "$file")" == "id_rsa" || "$(basename "$file")" == "id_ecdsa" ]]; then
+            echo -e "${RED}BLOCKED${NC}: $file is an SSH private key."
+            found_secrets=1
+        fi
+    done < <(git diff --cached --name-only --diff-filter=ACMR)
+done
+
+if [[ $found_secrets -eq 1 ]]; then
+    echo ""
+    echo -e "${RED}Commit rejected: secrets detected.${NC}"
+    echo "Move secrets to secretmgr templates ({{ secret:... }}) or add to .gitignore."
+    echo "Run: git diff --cached | grep -iE 'api_key|password|secret|token'"
+    exit 1
+fi
+
+exit 0
