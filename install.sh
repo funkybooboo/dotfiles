@@ -120,6 +120,66 @@ run_cmd() {
   fi
 }
 
+# Retry a command up to N times with a delay between attempts.
+# Usage: run_cmd_retry <retries> <delay_secs> <cmd> [args...]
+run_cmd_retry() {
+  local retries="$1"; shift
+  local delay="$1"; shift
+  local attempt=1
+  while [[ $attempt -le $retries ]]; do
+    if [[ $DRY_RUN -eq 1 ]]; then
+      echo -e "  ${DIM}+ $*${NC}"
+      return 0
+    fi
+    if "$@"; then
+      return 0
+    fi
+    if [[ $attempt -lt $retries ]]; then
+      warn "attempt $attempt/$retries failed for: $* — retrying in ${delay}s"
+      sleep "$delay"
+    fi
+    attempt=$((attempt + 1))
+  done
+  return 1
+}
+
+# Install one or more packages via pacman. Skips already-installed ones (pacman
+# --needed handles this). Fails the script if pacman itself fails.
+# Usage: install_pacman pkg1 pkg2 ...
+install_pacman() {
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo -e "  ${DIM}+ sudo pacman -S --needed --noconfirm $*${NC}"
+    return 0
+  fi
+  sudo pacman -S --needed --noconfirm "$@"
+}
+
+# Install AUR packages one at a time via yay. Each package is checked first —
+# if already installed it is skipped. Build/ssl failures on one package do NOT
+# abort the install; they are recorded as warnings instead.
+# Usage: install_aur pkg1 pkg2 ...
+install_aur() {
+  local pkg failures=0
+  for pkg in "$@"; do
+    if pacman -Q "$pkg" &>/dev/null; then
+      skip "$pkg (already installed)"
+      continue
+    fi
+    if [[ $DRY_RUN -eq 1 ]]; then
+      echo -e "  ${DIM}+ yay -S --needed --noconfirm $pkg${NC}"
+      continue
+    fi
+    if ! run_cmd_retry 3 30 yay -S --needed --noconfirm "$pkg"; then
+      warn "$pkg failed to install"
+      _add_warning "AUR package failed to install: $pkg"
+      failures=$((failures + 1))
+    else
+      ok "$pkg"
+    fi
+  done
+  return $failures
+}
+
 # Enable a systemd user service idempotently.
 # Skips silently if already enabled; warns on failure.
 enable_user_service() {
@@ -715,6 +775,36 @@ if [[ -f "$LIBVIRT_PROFILE_SRC" ]]; then
   fi
 fi
 
+# ── systemd-networkd-wait-online override ──────────────────────────────────
+NETWORKD_OVERRIDE_SRC="$DOTFILES_ROOT_ETC/systemd/system/systemd-networkd-wait-online.service.d/override.conf"
+NETWORKD_OVERRIDE_DEST="/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf"
+if [[ -f "$NETWORKD_OVERRIDE_SRC" ]]; then
+  if [[ -f "$NETWORKD_OVERRIDE_DEST" ]] && cmp -s "$NETWORKD_OVERRIDE_SRC" "$NETWORKD_OVERRIDE_DEST"; then
+    skip "networkd-wait-online override (already up to date)"
+  else
+    sudo mkdir -p /etc/systemd/system/systemd-networkd-wait-online.service.d
+    sudo cp "$NETWORKD_OVERRIDE_SRC" "$NETWORKD_OVERRIDE_DEST"
+    sudo chown root:root "$NETWORKD_OVERRIDE_DEST"
+    sudo chmod 644 "$NETWORKD_OVERRIDE_DEST"
+    sudo systemctl daemon-reload
+    ok "networkd-wait-online override installed"
+  fi
+fi
+
+# ── btusb modprobe config (suppress firmware re-download) ───────────────────
+BTUSB_MODPROBE_SRC="$DOTFILES_ROOT_ETC/modprobe.d/btusb.conf"
+BTUSB_MODPROBE_DEST="/etc/modprobe.d/btusb.conf"
+if [[ -f "$BTUSB_MODPROBE_SRC" ]]; then
+  if [[ -f "$BTUSB_MODPROBE_DEST" ]] && cmp -s "$BTUSB_MODPROBE_SRC" "$BTUSB_MODPROBE_DEST"; then
+    skip "btusb modprobe config (already up to date)"
+  else
+    sudo cp "$BTUSB_MODPROBE_SRC" "$BTUSB_MODPROBE_DEST"
+    sudo chown root:root "$BTUSB_MODPROBE_DEST"
+    sudo chmod 644 "$BTUSB_MODPROBE_DEST"
+    ok "btusb modprobe config installed"
+  fi
+fi
+
 # ── fstab (machine-specific — deploy with caution) ──────────────────────────
 FSTAB_SRC="$DOTFILES_ROOT_ETC/fstab"
 FSTAB_DEST="/etc/fstab"
@@ -947,13 +1037,18 @@ enable_user_service "openviking.service"
 section "Secrets & Sync"
 
 # secretmgr bootstrap (needs symlinked configs in place)
-if command -v secretmgr &>/dev/null; then
+_SECRETMGR="$HOME/.local/bin/secretmgr"
+if [[ -x "$_SECRETMGR" ]]; then
   info "Bootstrapping secrets with secretmgr..."
-  secretmgr bootstrap
+  "$_SECRETMGR" bootstrap
   ok "Secrets bootstrapped"
+  # Restart openviking now that API keys have been injected
+  if systemctl --user is-active --quiet openviking.service 2>/dev/null; then
+    systemctl --user restart openviking.service 2>/dev/null && ok "openviking restarted with secrets"
+  fi
 else
-  warn "secretmgr not found in PATH — skipping secret bootstrap"
-  _add_warning "secretmgr not in PATH; run 'secretmgr bootstrap' manually after login"
+  warn "secretmgr not found at $_SECRETMGR — skipping secret bootstrap"
+  _add_warning "secretmgr not found; run '$_SECRETMGR bootstrap' manually after login"
 fi
 
 # NAS initial sync (needs symlinked helper scripts in PATH)
@@ -964,6 +1059,8 @@ NAS_MODULES=(
   "audiobooks:Audiobooks"
   "books:Books"
 )
+
+NAS_RSYNC_BASE="rsync://funkybooboo@tnas:873/public/funkybooboo"
 
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 
@@ -988,7 +1085,7 @@ else
         mkdir -p "$HOME/$local_dir"
         info "syncing $module → ~/$local_dir..."
         if rsync -az --password-file="$PASSWORD_FILE" \
-          "rsync://nate@tnas.tail54538d.ts.net:873/$module/" "$HOME/$local_dir/" 2>/dev/null; then
+          "$NAS_RSYNC_BASE/$module/" "$HOME/$local_dir/" 2>/dev/null; then
           ok "$module synced"
         else
           warn "failed to sync $module — continuing"
