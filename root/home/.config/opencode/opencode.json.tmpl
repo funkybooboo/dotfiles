@@ -1,13 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "opencode-gemini-auth@latest",
-    "opencode-with-claude"
-  ],
   "provider": {
     "opencode-go": {
       "options": {
         "apiKey": "{{ secret:API/OpenCode/api_key }}"
+      }
+    },
+    "ollama": {
+      "options": {
+        "baseURL": "http://localhost:11434"
       }
     }
   },

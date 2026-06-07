@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # Bidirectional sync script for syncing directories with NAS
-# Usage: sync-to-nas <local_dir> <rsync_module> <username>
+# Usage: sync-to-nas <local_dir> <nas_subdir>
 
 set -euo pipefail
 
-if [ $# -ne 3 ]; then
-    echo "Usage: $0 <local_dir> <rsync_module> <username>"
-    echo "Example: $0 ~/Documents documents nate"
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <local_dir> <nas_subdir>"
+    echo "Example: $0 ~/Documents documents"
     exit 1
 fi
 
 LOCAL_DIR="$1"
-RSYNC_MODULE="$2"
-USERNAME="$3"
-NAS_IP="nas.lan"
+NAS_SUBDIR="$2"
+NAS_HOST="tnas"
 NAS_PORT="873"
+USERNAME="funkybooboo"
+NAS_RSYNC_BASE="rsync://$USERNAME@$NAS_HOST:$NAS_PORT/public/funkybooboo"
 
 # Password file location (will be created separately)
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
@@ -56,9 +57,9 @@ mkdir -p "$LOCAL_DIR"
 # --password-file: use password from file
 
 RSYNC_OPTS="-avzu --delete --progress --password-file=$PASSWORD_FILE"
-REMOTE="rsync://$USERNAME@$NAS_IP:$NAS_PORT/$RSYNC_MODULE/"
+REMOTE="$NAS_RSYNC_BASE/$NAS_SUBDIR/"
 
-echo "=== Syncing $LOCAL_DIR with NAS module $RSYNC_MODULE ==="
+echo "=== Syncing $LOCAL_DIR with NAS:$NAS_SUBDIR ==="
 
 # First: Sync local → NAS (upload changes)
 echo "--- Uploading local changes to NAS ---"

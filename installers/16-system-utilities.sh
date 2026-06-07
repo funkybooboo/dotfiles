@@ -3,7 +3,7 @@
 section "System Utilities"
 
 info "installing system utilities..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   earlyoom \
   power-profiles-daemon fwupd openssh openresolv yazi \
   snapper plymouth ufw brightnessctl bluez bluez-utils \
@@ -11,10 +11,10 @@ run_cmd sudo pacman -S --needed --noconfirm \
   btrfs-progs dosfstools exfatprogs efibootmgr \
   iwd wireless-regdb bind xdg-user-dirs \
   greetd sof-firmware sudo
-run_cmd yay -S --needed --noconfirm \
-  limine limine-mkinitcpio-hook limine-snapper-sync \
+install_aur limine limine-mkinitcpio-hook \
   zram-generator ufw-docker greetd-tuigreet
-[[ $DRY_RUN -eq 0 ]] && ok "system utilities"
+install_aur limine-snapper-sync
+[[ $DRY_RUN -eq 0 ]] && ok "system utilities" || true
 
 # Enable system services
 if [[ $DRY_RUN -eq 1 ]]; then

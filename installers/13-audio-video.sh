@@ -3,8 +3,8 @@
 section "Audio/Video"
 
 info "installing audio/video..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber \
   mpv obs-studio playerctl pamixer gst-plugin-pipewire
-run_cmd yay -S --needed --noconfirm wiremix
-[[ $DRY_RUN -eq 0 ]] && ok "audio/video"
+install_aur wiremix
+[[ $DRY_RUN -eq 0 ]] && ok "audio/video" || true

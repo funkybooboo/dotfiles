@@ -4,7 +4,7 @@ section "System Update"
 
 info "updating system packages..."
 run_cmd sudo pacman -Syu --noconfirm
-[[ $DRY_RUN -eq 0 ]] && ok "system updated"
+[[ $DRY_RUN -eq 0 ]] && ok "system updated" || true
 
 if command -v yay &>/dev/null; then
   skip "yay already installed"

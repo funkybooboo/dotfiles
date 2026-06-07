@@ -3,9 +3,9 @@
 section "Intrusion Detection"
 
 info "installing intrusion detection tools..."
-run_cmd sudo pacman -S --needed --noconfirm rkhunter audit
-run_cmd yay -S --needed --noconfirm chkrootkit
-[[ $DRY_RUN -eq 0 ]] && ok "rkhunter + chkrootkit + auditd"
+install_pacman rkhunter audit
+install_aur chkrootkit
+[[ $DRY_RUN -eq 0 ]] && ok "rkhunter + chkrootkit + auditd" || true
 
 # Enable auditd service
 if [[ $DRY_RUN -eq 1 ]]; then

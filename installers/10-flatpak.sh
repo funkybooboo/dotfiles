@@ -3,7 +3,7 @@
 section "Flatpak"
 
 info "installing flatpak..."
-run_cmd sudo pacman -S --needed --noconfirm flatpak
-run_cmd flatpak remote-add --if-not-exists flathub \
+install_pacman flatpak
+run_cmd_retry 3 10 flatpak remote-add --if-not-exists flathub \
   https://flathub.org/repo/flathub.flatpakrepo
-[[ $DRY_RUN -eq 0 ]] && ok "flatpak + flathub remote"
+[[ $DRY_RUN -eq 0 ]] && ok "flatpak + flathub remote" || true

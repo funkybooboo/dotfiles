@@ -3,12 +3,12 @@
 section "Dev Tools"
 
 info "installing dev tools..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   neovim podman github-cli git-delta \
   go rust python python-poetry-core nodejs npm
-run_cmd yay -S --needed --noconfirm lazygit lazydocker act mise opencode \
+install_aur lazygit lazydocker act mise opencode \
   stylua luarocks tree-sitter-cli tectonic nvimpager
-[[ $DRY_RUN -eq 0 ]] && ok "dev tools"
+[[ $DRY_RUN -eq 0 ]] && ok "dev tools" || true
 
 # Podman socket + group
 if [[ $DRY_RUN -eq 1 ]]; then

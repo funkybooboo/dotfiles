@@ -3,7 +3,7 @@
 section "Fonts"
 
 info "installing fonts..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra \
   ttf-cascadia-mono-nerd ttf-jetbrains-mono-nerd \
   otf-atkinsonhyperlegiblemono-nerd otf-aurulent-nerd otf-codenewroman-nerd \
@@ -26,4 +26,4 @@ run_cmd sudo pacman -S --needed --noconfirm \
   ttf-sourcecodepro-nerd ttf-space-mono-nerd ttf-terminus-nerd ttf-tinos-nerd \
   ttf-ubuntu-mono-nerd ttf-ubuntu-nerd ttf-victor-mono-nerd ttf-zed-mono-nerd \
   fontconfig
-[[ $DRY_RUN -eq 0 ]] && ok "fonts"
+[[ $DRY_RUN -eq 0 ]] && ok "fonts" || true

@@ -3,11 +3,9 @@
 section "Application Security"
 
 info "installing application security tools..."
-run_cmd sudo pacman -S --needed --noconfirm \
-  usbguard opensnitch
-run_cmd yay -S --needed --noconfirm \
-  usbguard-qt
-[[ $DRY_RUN -eq 0 ]] && ok "usbguard + opensnitch"
+install_pacman usbguard opensnitch
+install_aur usbguard-qt
+[[ $DRY_RUN -eq 0 ]] && ok "usbguard + opensnitch" || true
 
 # USBGuard service + initial policy
 if [[ $DRY_RUN -eq 1 ]]; then

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=LazyMusic
+Comment=Shuffle play your music directory with mpv
+Exec=/home/nate/Projects/lazymusic/lazymusic
+Icon=audio-x-generic
+Terminal=false
+Categories=AudioVideo;Audio;Player;
+Keywords=music;shuffle;mpv;player;

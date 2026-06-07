@@ -3,9 +3,9 @@
 section "Virtualization"
 
 info "installing virt-manager and dependencies..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
-[[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU"
+[[ $DRY_RUN -eq 0 ]] && ok "virt-manager + libvirt + QEMU" || true
 
 # Enable libvirtd service + group membership
 if [[ $DRY_RUN -eq 1 ]]; then

@@ -9,9 +9,10 @@ run_cmd mkdir -p "$HOME/.config/nas-sync"
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 if [[ -f "$PASSWORD_FILE" ]]; then
   skip "rsync password file already exists"
-elif command -v secretmgr &>/dev/null && secretmgr status &>/dev/null; then
-  # Try Proton Pass first
-  NAS_PASS=$(secretmgr get NAS/rsync password 2>/dev/null) || true
+elif command -v pass-cli &>/dev/null && pass-cli info &>/dev/null; then
+  # Try Proton Pass first (pass-cli is available from installer 22,
+  # but secretmgr won't be in PATH yet since symlinks haven't been created)
+  NAS_PASS=$(pass-cli item view --vault-name NAS --item-title rsync --field password 2>/dev/null) || true
   if [[ -n "$NAS_PASS" ]]; then
     if [[ $DRY_RUN -eq 1 ]]; then
       info "would set NAS password from Proton Pass"

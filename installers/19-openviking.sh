@@ -1,6 +1,16 @@
-# 19-openviking.sh — OpenViking + Ollama models
+# 19-openviking.sh — OpenViking + Ollama
 
 section "OpenViking Setup"
+
+# Install uv (Python package runner) if not present
+if command -v uv &>/dev/null; then
+  skip "uv already installed"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  info "would install: uv"
+else
+  info "installing uv..."
+  sudo pacman -S --needed --noconfirm uv 2>/dev/null && ok "uv installed" || warn "failed to install uv"
+fi
 
 info "installing OpenViking..."
 if [[ $DRY_RUN -eq 1 ]]; then
@@ -14,27 +24,36 @@ else
   fi
 fi
 
-# Pull Ollama models for OpenViking (embedding + VLM)
+# Install and start Ollama for local LLM use (opencode)
+if command -v ollama &>/dev/null; then
+  skip "ollama already installed"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  info "would install: ollama"
+else
+  info "installing ollama..."
+  sudo pacman -S --needed --noconfirm ollama 2>/dev/null && ok "ollama installed" || warn "failed to install ollama"
+  sudo systemctl enable --now ollama 2>/dev/null || warn "failed to start ollama.service"
+fi
+
+# Pull a small Qwen model for opencode local use
 if [[ $DRY_RUN -eq 1 ]]; then
-  info "would pull: ollama models (nomic-embed-text, qwen3:4b)"
+  info "would pull: ollama model qwen3:4b"
 else
   if ! systemctl is-active --quiet ollama.service 2>/dev/null; then
     warn "ollama.service not running — start with: sudo systemctl start ollama"
-    _add_warning "ollama not running — OpenViking will fail until ollama is started"
+    _add_warning "ollama not running — local model pull deferred"
   else
-    for model in nomic-embed-text qwen3:4b; do
-      if ollama list 2>/dev/null | grep -q "$model"; then
-        skip "ollama model $model (already pulled)"
+    if ollama list 2>/dev/null | grep -q "qwen3:4b"; then
+      skip "ollama model qwen3:4b (already pulled)"
+    else
+      info "pulling ollama model: qwen3:4b..."
+      if ollama pull qwen3:4b 2>&1 | tail -3; then
+        ok "ollama model qwen3:4b pulled"
       else
-        info "pulling ollama model: $model..."
-        if ollama pull "$model" 2>&1 | tail -3; then
-          ok "ollama model $model pulled"
-        else
-          warn "failed to pull ollama model $model"
-          _add_warning "ollama pull failed: $model"
-        fi
+        warn "failed to pull ollama model qwen3:4b"
+        _add_warning "ollama pull failed: qwen3:4b"
       fi
-    done
+    fi
   fi
 fi
 

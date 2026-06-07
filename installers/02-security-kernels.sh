@@ -3,10 +3,10 @@
 section "Security Kernels"
 
 info "installing hardened kernels..."
-run_cmd sudo pacman -S --needed --noconfirm \
+install_pacman \
   linux-hardened linux-hardened-headers \
   linux-lts linux-lts-headers
-[[ $DRY_RUN -eq 0 ]] && ok "hardened + LTS kernels"
+[[ $DRY_RUN -eq 0 ]] && ok "hardened + LTS kernels" || true
 
 # Set hardened kernel as default boot entry
 BOOT_ORDER_TARGET="linux-hardened, *, *fallback, Snapshots"

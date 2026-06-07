@@ -3,9 +3,9 @@
 section "AppArmor"
 
 info "installing AppArmor..."
-run_cmd sudo pacman -S --needed --noconfirm apparmor
-run_cmd yay -S --needed --noconfirm apparmor.d
-[[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles"
+install_pacman apparmor
+install_aur apparmor.d
+[[ $DRY_RUN -eq 0 ]] && ok "AppArmor + 2000+ profiles" || true
 
 # Enable AppArmor service
 if [[ $DRY_RUN -eq 1 ]]; then

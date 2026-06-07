@@ -3,13 +3,13 @@
 section "VPN Clients"
 
 info "installing Proton VPN CLI..."
-run_cmd yay -S --needed --noconfirm proton-vpn-cli
-[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-cli"
+install_aur proton-vpn-cli
+[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-cli" || true
 
 info "installing Proton VPN (GUI)..."
-run_cmd yay -S --needed --noconfirm proton-vpn-gtk-app
-[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-gtk-app"
+install_aur proton-vpn-gtk-app
+[[ $DRY_RUN -eq 0 ]] && ok "proton-vpn-gtk-app" || true
 
 info "installing GlobalProtect OpenConnect..."
-run_cmd yay -S --needed --noconfirm globalprotect-openconnect-git
-[[ $DRY_RUN -eq 0 ]] && ok "globalprotect-openconnect-git"
+install_aur globalprotect-openconnect-git
+[[ $DRY_RUN -eq 0 ]] && ok "globalprotect-openconnect-git" || true
