@@ -54,6 +54,7 @@ root/home/.config/nas-sync/rsync-password
 # Secret manager — injected outputs (templates are tracked, real files are not)
 root/home/.config/opencode/opencode.json
 root/home/.openviking/openviking-config.json
+root/home/.openviking/ov.conf
 
 # Claude AI temp files
 CLAUDE.md
@@ -72,3 +73,4 @@ root/home/.gnupg/*
 
 node_modules/
 root/home/.config/opencode/plugins/openviking-memory.log
+root/home/.config/opencode/plugins/openviking-session-map.json

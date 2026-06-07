@@ -1,0 +1,23 @@
+{
+  "storage": {
+    "workspace": "~/.local/share/openviking"
+  },
+  "log": {
+    "level": "INFO",
+    "output": "stdout"
+  },
+  "embedding": {
+    "dense": {
+      "provider": "gemini",
+      "model": "gemini-embedding-2-preview",
+      "dimension": 768,
+      "api_key": "{{ secret:API/OpenViking/api_key }}"
+    },
+    "max_concurrent": 10
+  },
+  "vlm": {
+    "provider": "gemini",
+    "model": "gemini-2.0-flash",
+    "api_key": "{{ secret:API/OpenViking/api_key }}"
+  }
+}
