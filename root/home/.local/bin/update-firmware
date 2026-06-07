@@ -53,7 +53,7 @@ fi
 echo "[$(TS)] Refreshing firmware metadata"
 retry sudo -n fwupdmgr refresh
 
-# --- Check for updates ---
+# --- Check for updates (also capture which devices need reboot) ---
 echo "[$(TS)] Checking for firmware updates"
 updates=$(fwupdmgr get-updates 2>&1)
 if echo "$updates" | grep -iqE 'no updatable|no updates'; then
@@ -65,6 +65,12 @@ fi
 echo "[$(TS)] Updates available:"
 echo "$updates"
 
+# Capture reboot requirement before applying (once applied, get-updates returns empty)
+reboot_required=false
+if fwupdmgr get-updates --json 2>/dev/null | grep -q '"reboot":\s*true'; then
+    reboot_required=true
+fi
+
 # --- Apply updates ---
 echo "[$(TS)] Applying updates"
 if ! sudo -n fwupdmgr --assumeyes update; then
@@ -73,8 +79,7 @@ if ! sudo -n fwupdmgr --assumeyes update; then
 fi
 echo "[$(TS)] Firmware updates applied successfully"
 
-# --- Detect if a reboot is required via JSON output ---
-reboot_required=$(fwupdmgr get-updates --json | grep -Po '"reboot":\s*\Ktrue')
+# --- Detect if a reboot is required (captured before applying updates) ---
 if [[ "$reboot_required" == "true" ]]; then
     echo "[$(TS)] Reboot required"
 

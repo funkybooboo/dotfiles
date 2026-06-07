@@ -1,23 +1,28 @@
 #!/bin/bash
 # Automatically switch power profiles based on AC adapter state
+# Includes retry logic to handle power-profiles-daemon startup timing
 
-# Find AC adapter path
+MAX_RETRIES=10
+RETRY_DELAY=1
+
 AC_PATH=$(find /sys/class/power_supply -name 'AC*' -o -name 'ADP*' | head -1)
 
 if [ -z "$AC_PATH" ]; then
-    echo "Error: Could not find AC adapter path"
+    logger "power-profile-switch: Could not find AC adapter path"
     exit 1
 fi
 
-# Read AC adapter state (1 = plugged in, 0 = on battery)
-AC_STATE=$(cat "$AC_PATH/online")
+AC_STATE=$(cat "$AC_PATH/online" 2>/dev/null)
+TARGET="power-saver"
+[ "$AC_STATE" = "1" ] && TARGET="performance"
 
-if [ "$AC_STATE" = "1" ]; then
-    # Plugged in - switch to performance
-    powerprofilesctl set performance
-    logger "Power profile: Switched to performance (AC plugged in)"
-else
-    # On battery - switch to power-saver
-    powerprofilesctl set power-saver
-    logger "Power profile: Switched to power-saver (on battery)"
-fi
+for i in $(seq 1 $MAX_RETRIES); do
+    if powerprofilesctl set "$TARGET" 2>/dev/null; then
+        logger "power-profile-switch: Switched to $TARGET (AC_STATE=$AC_STATE, attempt=$i)"
+        exit 0
+    fi
+    sleep $RETRY_DELAY
+done
+
+logger "power-profile-switch: Failed to set $TARGET after $MAX_RETRIES attempts"
+exit 1

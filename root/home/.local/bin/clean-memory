@@ -91,25 +91,30 @@ echo ""
 if command -v podman >/dev/null 2>&1; then
   echo "[$(TS)] Stopping and removing Podman containers..."
 
-  # Stop all running containers
-  RUNNING_PODMAN=$(podman ps -q)
-  if [ -n "$RUNNING_PODMAN" ]; then
-    echo "-> Stopping running containers..."
-    podman stop $RUNNING_PODMAN || true
-    echo "-> Stopped Podman containers."
+  if ! podman info >/dev/null 2>&1; then
+    echo "-> Podman storage misconfigured (overlay on btrfs?). Skipping."
+    echo "-> Hint: ensure ~/.config/containers/storage.conf sets driver = \"btrfs\""
   else
-    echo "-> No running Podman containers to stop."
-  fi
+    # Stop all running containers
+    RUNNING_PODMAN=$(podman ps -q)
+    if [ -n "$RUNNING_PODMAN" ]; then
+      echo "-> Stopping running containers..."
+      podman stop $RUNNING_PODMAN || true
+      echo "-> Stopped Podman containers."
+    else
+      echo "-> No running Podman containers to stop."
+    fi
 
-  # Remove all stopped containers
-  STOPPED_PODMAN=$(podman ps -aq)
-  if [ -n "$STOPPED_PODMAN" ]; then
-    echo "-> Removing stopped containers..."
-    podman rm $STOPPED_PODMAN || true
-    echo "-> Removed stopped Podman containers."
-  fi
+    # Remove all stopped containers
+    STOPPED_PODMAN=$(podman ps -aq)
+    if [ -n "$STOPPED_PODMAN" ]; then
+      echo "-> Removing stopped containers..."
+      podman rm $STOPPED_PODMAN || true
+      echo "-> Removed stopped Podman containers."
+    fi
 
-  echo "-> Podman memory cleanup finished."
+    echo "-> Podman memory cleanup finished."
+  fi
 else
   echo "[$(TS)] Podman not installed. Skipping Podman cleanup."
 fi

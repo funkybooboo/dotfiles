@@ -791,6 +791,22 @@ if [[ -f "$NETWORKD_OVERRIDE_SRC" ]]; then
   fi
 fi
 
+# ── sysctl.d configs ────────────────────────────────────────────────────────
+for SYSCTL_FILE in "$DOTFILES_ROOT_ETC"/sysctl.d/*.conf; do
+  if [[ -f "$SYSCTL_FILE" ]]; then
+    SYSCTL_BASENAME="$(basename "$SYSCTL_FILE")"
+    SYSCTL_DEST="/etc/sysctl.d/$SYSCTL_BASENAME"
+    if [[ -f "$SYSCTL_DEST" ]] && cmp -s "$SYSCTL_FILE" "$SYSCTL_DEST"; then
+      skip "$SYSCTL_BASENAME (already up to date)"
+    else
+      sudo cp "$SYSCTL_FILE" "$SYSCTL_DEST"
+      sudo chown root:root "$SYSCTL_DEST"
+      sudo chmod 644 "$SYSCTL_DEST"
+      ok "$SYSCTL_BASENAME installed"
+    fi
+  fi
+done
+
 # ── btusb modprobe config (suppress firmware re-download) ───────────────────
 BTUSB_MODPROBE_SRC="$DOTFILES_ROOT_ETC/modprobe.d/btusb.conf"
 BTUSB_MODPROBE_DEST="/etc/modprobe.d/btusb.conf"

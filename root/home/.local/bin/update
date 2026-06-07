@@ -3,14 +3,15 @@
 
 set -euo pipefail
 
-# Resolve dotfiles directory once for use throughout script
-_SCRIPT_REAL="$(readlink -f "${BASH_SOURCE[0]}")"
-_DOTFILES_DIR="$(cd "$(dirname "$_SCRIPT_REAL")/../../../.." && pwd)"
-
 echo "=== System Update (Arch Linux) ==="
 echo ""
 
-# Step 1: Update Arch packages with yay (AUR helper)
+# Step 1: Refresh Pacman mirrors and update Arch packages
+if command -v reflector >/dev/null 2>&1; then
+    echo "→ Refreshing Pacman mirrorlist..."
+    sudo reflector --latest 20 --sort rate --save /etc/pacman.d/mirrorlist 2>/dev/null || true
+    echo ""
+fi
 if command -v yay >/dev/null 2>&1; then
     echo "→ Updating Arch/AUR packages (yay)..."
     yay -Syu --noconfirm
@@ -20,6 +21,7 @@ else
     sudo pacman -Syu --noconfirm
     echo ""
 fi
+sudo systemctl daemon-reload 2>/dev/null || true
 
 # Step 2: Update Flatpak applications
 if command -v flatpak >/dev/null 2>&1; then
@@ -28,23 +30,32 @@ if command -v flatpak >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 3: Update firmware
-if command -v fwupdmgr >/dev/null 2>&1; then
+# Step 3: Update firmware (delegate to dedicated update-firmware script)
+if command -v update-firmware >/dev/null 2>&1; then
+    echo "→ Running firmware update..."
+    update-firmware
+    echo ""
+elif command -v fwupdmgr >/dev/null 2>&1; then
     echo "→ Checking for firmware updates..."
     fwupdmgr refresh || true
     fwupdmgr update || echo "No firmware updates available"
     echo ""
 fi
 
-# Step 3: Update Rust packages
+# Step 4: Update Rust toolchain and packages
+if command -v rustup >/dev/null 2>&1; then
+    echo "→ Updating Rust toolchain..."
+    rustup update 2>/dev/null || true
+    echo ""
+fi
 if command -v cargo >/dev/null 2>&1; then
     echo "→ Updating Rust packages..."
     cargo install cargo-update 2>/dev/null || true
-    cargo install-update -a || echo "cargo-update not installed"
+    cargo install-update -a 2>/dev/null || echo "warning: cargo package update failed"
     echo ""
 fi
 
-# Step 4: Update Go packages (extract module paths via go version -m)
+# Step 5: Update Go packages (extract module paths via go version -m)
 if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1; then
     echo "→ Updating Go packages..."
     for bin in "$HOME/go/bin/"*; do
@@ -58,21 +69,21 @@ if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1;
     echo ""
 fi
 
-# Step 5: Update mise-managed tools (mise itself is updated by pacman in Step 1)
+# Step 6: Update mise-managed tools (mise itself is updated by pacman in Step 1)
 if command -v mise >/dev/null 2>&1; then
     echo "→ Upgrading mise-managed tools..."
     mise upgrade --yes 2>/dev/null || true
     echo ""
 fi
 
-# Step 6: Update npm global packages
+# Step 7: Update npm global packages
 if command -v npm >/dev/null 2>&1; then
     echo "→ Updating npm global packages..."
     npm update -g 2>/dev/null || true
     echo ""
 fi
 
-# Step 7: Update uv (Python package manager) and uv-managed tools
+# Step 8: Update uv (Python package manager) and uv-managed tools
 if command -v uv >/dev/null 2>&1; then
     echo "→ Updating uv..."
     uv self update 2>/dev/null || true
@@ -81,7 +92,7 @@ if command -v uv >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 8: Update ghcup and Haskell (the ghcup binary itself) and Stack
+# Step 9: Update ghcup and Haskell (the ghcup binary itself) and Stack
 if command -v ghcup >/dev/null 2>&1; then
     echo "→ Updating ghcup..."
     ghcup upgrade 2>/dev/null || true
@@ -98,14 +109,58 @@ if command -v cabal >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 9: Update tldr cache
+# Step 10: Update pipx global tools
+if command -v pipx >/dev/null 2>&1; then
+    echo "→ Upgrading pipx-installed tools..."
+    pipx upgrade-all 2>/dev/null || true
+    echo ""
+fi
+
+# Step 11: Update Ruby gems
+if command -v gem >/dev/null 2>&1; then
+    echo "→ Updating Ruby gems..."
+    gem update --user-install 2>/dev/null || true
+    echo ""
+fi
+
+# Step 12: Update pip (system Python packages)
+if command -v pip >/dev/null 2>&1; then
+    echo "→ Updating pip..."
+    pip install --user --upgrade pip 2>/dev/null || true
+    echo ""
+fi
+
+# Step 13: Update pnpm global packages
+if command -v pnpm >/dev/null 2>&1; then
+    echo "→ Updating pnpm global packages..."
+    pnpm add -g pnpm 2>/dev/null || true
+    echo ""
+fi
+
+# Step 14: Update bun
+if command -v bun >/dev/null 2>&1; then
+    echo "→ Updating bun..."
+    bun upgrade 2>/dev/null || true
+    echo ""
+fi
+
+# Step 15: Update Composer (PHP)
+if command -v composer >/dev/null 2>&1; then
+    echo "→ Updating Composer..."
+    composer self-update 2>/dev/null || true
+    echo "  → Updating Composer global packages..."
+    composer global update 2>/dev/null || true
+    echo ""
+fi
+
+# Step 16: Update tldr cache
 if command -v tldr >/dev/null 2>&1; then
     echo "→ Updating tldr cache..."
     tldr --update 2>/dev/null || true
     echo ""
 fi
 
-# Step 10: Sync GitHub forks with upstream
+# Step 17: Sync GitHub forks with upstream
 if command -v gh >/dev/null 2>&1; then
     echo "→ Syncing GitHub forks with upstream..."
     for repo in $(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner'); do
@@ -119,7 +174,7 @@ if command -v gh >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 11: Update git repos in ~/sources
+# Step 18: Update git repos in ~/sources
 if [[ -d "$HOME/sources" ]]; then
     echo "→ Updating git repos in ~/sources..."
     for repo in "$HOME/sources"/*/; do
@@ -134,7 +189,7 @@ if [[ -d "$HOME/sources" ]]; then
     echo ""
 fi
 
-# Step 12: Rebuild ~/sources repos (auto-detected build systems)
+# Step 19: Rebuild ~/sources repos (auto-detected build systems)
 _build_repo() {
     local repo="$1"
     local name
@@ -201,9 +256,10 @@ _build_repo() {
         fi
     fi
 
-    # Makefile (standalone, not cmake-generated)
-    if [[ -f "$repo/Makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+    # Makefile (standalone, not cmake-generated; handles both Makefile and makefile)
+    if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
         echo "  → $name (make)"
+        # WARNING: sudo make install runs arbitrary install targets from source repos
         if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then
             echo "    ✓ $name"; return 0
         else
@@ -238,8 +294,8 @@ if [[ -d "$HOME/sources" ]]; then
     echo "→ Rebuilding ~/sources repos..."
     for repo in "$HOME/sources"/*/; do
         [[ -d "$repo/.git" ]] || continue
-        _build_repo "$repo"
-        ((_rc=$?))
+        _rc=0
+        _build_repo "$repo" || _rc=$?
         if [[ $_rc -eq 2 ]]; then
             echo "  ⊘ $(basename "$repo") (no recognized build system)"
         fi
@@ -247,14 +303,37 @@ if [[ -d "$HOME/sources" ]]; then
     echo ""
 fi
 
-# Step 13: Clean package cache
-if command -v yay >/dev/null 2>&1; then
-    echo "→ Cleaning package cache..."
-    yay -Sc --noconfirm
+# Step 20: Update Docker container images
+if command -v docker >/dev/null 2>&1; then
+    echo "→ Updating Docker container images..."
+    if sudo docker ps -q >/dev/null 2>&1; then
+        for container in $(sudo docker ps --format '{{.Names}}'); do
+            image=$(sudo docker inspect --format='{{.Config.Image}}' "$container" 2>/dev/null || true)
+            if [[ -n "$image" ]]; then
+                echo "  → Pulling $image for $container..."
+                sudo docker pull "$image" 2>/dev/null || echo "    warning: could not pull $image"
+            fi
+        done
+    fi
     echo ""
 fi
 
-# Step 14: Refresh shell caches
+# Step 21: Update Podman container images
+if command -v podman >/dev/null 2>&1; then
+    echo "→ Updating Podman container images..."
+    if podman ps -q >/dev/null 2>&1; then
+        for container in $(podman ps --format '{{.Names}}'); do
+            image=$(podman inspect --format='{{.Config.Image}}' "$container" 2>/dev/null || true)
+            if [[ -n "$image" ]]; then
+                echo "  → Pulling $image for $container..."
+                podman pull "$image" 2>/dev/null || echo "    warning: could not pull $image"
+            fi
+        done
+    fi
+    echo ""
+fi
+
+# Step 22: Refresh shell caches
 rm -f ~/.cache/fzf_fish_init.fish
 
 echo "=== Update Complete ==="
