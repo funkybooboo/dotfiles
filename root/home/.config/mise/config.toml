@@ -3,6 +3,8 @@ node = "lts"
 python = "latest"
 go = "latest"
 rust = "latest"
+zig = "0.16.0"
+bun = "latest"
 
 [settings]
 experimental = true
