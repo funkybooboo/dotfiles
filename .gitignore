@@ -24,12 +24,12 @@ root/home/.config/zoom.conf
 root/home/.config/go/telemetry/
 root/home/.config/fcitx/dbus/
 root/home/.config/tea/config.yml
-root/home/.config/atuin/
 root/home/.config/television/cable/
 root/home/.config/yt-dlp/
 root/home/.config/lazygit/+
 root/home/.config/gh/
 root/home/.config/h/
+root/home/.config/opensnitch/
 
 # Auto-generated documentation (AI working notes)
 docs/
@@ -51,11 +51,6 @@ stow-backups/
 # NAS sync credentials (never commit passwords!)
 root/home/.config/nas-sync/rsync-password
 
-# Secret manager — injected outputs (templates are tracked, real files are not)
-root/home/.config/opencode/opencode.json
-root/home/.openviking/openviking-config.json
-root/home/.openviking/ov.conf
-
 # Claude AI temp files
 CLAUDE.md
 .claude.json
@@ -72,5 +67,4 @@ root/home/.gnupg/*
 !root/home/.gnupg/common.conf
 
 node_modules/
-root/home/.config/opencode/plugins/openviking-memory.log
-root/home/.config/opencode/plugins/openviking-session-map.json
+
