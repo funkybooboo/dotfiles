@@ -3,7 +3,7 @@
 section "Application Security"
 
 info "installing application security tools..."
-install_pacman usbguard opensnitch
+install_pacman usbguard opensnitch python-qt-material
 install_aur usbguard-qt
 [[ $DRY_RUN -eq 0 ]] && ok "usbguard + opensnitch" || true
 

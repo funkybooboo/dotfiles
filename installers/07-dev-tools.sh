@@ -5,10 +5,22 @@ section "Dev Tools"
 info "installing dev tools..."
 install_pacman \
   neovim podman github-cli git-delta \
-  go rust python python-poetry-core nodejs npm
+  go rust python python-poetry-core nodejs npm \
+  git-filter-repo lua51 python-pynvim
 install_aur lazygit lazydocker act mise opencode \
   stylua luarocks tree-sitter-cli tectonic nvimpager
 [[ $DRY_RUN -eq 0 ]] && ok "dev tools" || true
+
+if [[ $DRY_RUN -eq 1 ]]; then
+  info "would run: mise install (install node, python, go, rust)"
+else
+  if command -v mise &>/dev/null; then
+    mise install
+    ok "mise tools installed"
+  else
+    warn "mise not found — skipping mise install"
+  fi
+fi
 
 # Podman socket + group
 if [[ $DRY_RUN -eq 1 ]]; then
@@ -22,14 +34,9 @@ else
     ok "podman.socket enabled"
   fi
 
-  if command -v docker &>/dev/null && [[ -L "$(command -v docker)" ]]; then
-    skip "docker/docker-compose symlinks (already present)"
-  elif ! command -v docker &>/dev/null; then
-    mkdir -p "$HOME/.local/bin"
-    ln -sf /usr/bin/podman "$HOME/.local/bin/docker"
-    ln -sf /usr/bin/podman "$HOME/.local/bin/docker-compose"
-    ok "docker/docker-compose symlinks created (→ podman)"
+  if command -v docker &>/dev/null; then
+    skip "docker command already available"
   else
-    skip "docker command already exists (not a symlink)"
+    skip "docker/docker-compose wrappers will be symlinked by install.sh"
   fi
 fi

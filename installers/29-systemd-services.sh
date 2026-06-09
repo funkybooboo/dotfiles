@@ -22,3 +22,4 @@ enable_user_service "power-profile-switch.service"
 enable_user_service "battery-notify.timer"
 
 enable_user_service "openviking.service"
+enable_user_service "hypr-wallpaper.service"

@@ -7,7 +7,7 @@ install_pacman \
   earlyoom \
   power-profiles-daemon fwupd openssh openresolv yazi \
   snapper plymouth ufw brightnessctl bluez bluez-utils \
-  cups cups-pdf system-config-printer thunar \
+  cups cups-pdf system-config-printer \
   btrfs-progs dosfstools exfatprogs efibootmgr \
   iwd wireless-regdb bind xdg-user-dirs \
   greetd sof-firmware sudo
