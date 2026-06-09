@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: ${0##*/} <file_path>" >&2
+  exit 1
+fi
+
+FILE="$1"
+
+if [[ ! -f "$FILE" ]]; then
+  echo "Error: '$FILE' is not a regular file" >&2
+  exit 1
+fi
+
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+BAK="${FILE}.bak.${TIMESTAMP}"
+
+cp -- "$FILE" "$BAK" && echo "$BAK"

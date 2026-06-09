@@ -144,7 +144,14 @@ if command -v bun >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 15: Update Composer (PHP)
+# Step 15: Update Pi coding agent
+if command -v pi >/dev/null 2>&1; then
+    echo "→ Updating Pi coding agent..."
+    pi update 2>/dev/null || true
+    echo ""
+fi
+
+# Step 16: Update Composer (PHP)
 if command -v composer >/dev/null 2>&1; then
     echo "→ Updating Composer..."
     composer self-update 2>/dev/null || true
@@ -153,14 +160,14 @@ if command -v composer >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 16: Update tldr cache
+# Step 17: Update tldr cache
 if command -v tldr >/dev/null 2>&1; then
     echo "→ Updating tldr cache..."
     tldr --update 2>/dev/null || true
     echo ""
 fi
 
-# Step 17: Sync GitHub forks with upstream
+# Step 18: Sync GitHub forks with upstream
 if command -v gh >/dev/null 2>&1; then
     echo "→ Syncing GitHub forks with upstream..."
     for repo in $(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner'); do
@@ -174,7 +181,7 @@ if command -v gh >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 18: Update git repos in ~/sources
+# Step 19: Update git repos in ~/sources
 if [[ -d "$HOME/sources" ]]; then
     echo "→ Updating git repos in ~/sources..."
     for repo in "$HOME/sources"/*/; do
@@ -189,7 +196,7 @@ if [[ -d "$HOME/sources" ]]; then
     echo ""
 fi
 
-# Step 19: Rebuild ~/sources repos (auto-detected build systems)
+# Step 20: Rebuild ~/sources repos (auto-detected build systems)
 _build_repo() {
     local repo="$1"
     local name
@@ -303,7 +310,7 @@ if [[ -d "$HOME/sources" ]]; then
     echo ""
 fi
 
-# Step 20: Update Docker container images
+# Step 21: Update Docker container images
 if command -v docker >/dev/null 2>&1; then
     echo "→ Updating Docker container images..."
     if sudo docker ps -q >/dev/null 2>&1; then
@@ -318,7 +325,7 @@ if command -v docker >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 21: Update Podman container images
+# Step 22: Update Podman container images
 if command -v podman >/dev/null 2>&1; then
     echo "→ Updating Podman container images..."
     if podman ps -q >/dev/null 2>&1; then
@@ -333,7 +340,7 @@ if command -v podman >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 22: Refresh shell caches
+# Step 23: Refresh shell caches
 rm -f ~/.cache/fzf_fish_init.fish
 
 echo "=== Update Complete ==="
