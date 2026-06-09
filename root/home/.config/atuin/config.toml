@@ -1,0 +1,25 @@
+style = "compact"
+enter_accept = true
+search_mode = "fuzzy"
+
+[stats]
+common_subcommands = [
+  "apt",
+  "cargo",
+  "dnf",
+  "docker",
+  "git",
+  "go",
+  "ip",
+  "kubectl",
+  "nix",
+  "npm",
+  "pacman",
+  "podman",
+  "systemctl",
+  "tmux",
+  "yarn",
+]
+
+[sync]
+records = true

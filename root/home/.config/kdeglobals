@@ -1,0 +1,9 @@
+[KDE]
+LookAndFeelPackage=org.kde.breezedark.desktop
+
+[Icons]
+Theme=Adwaita
+
+[General]
+ColorScheme=BreezeDark
+widgetStyle=kvantum
