@@ -10,14 +10,8 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 export default async function (pi: ExtensionAPI) {
   const baseUrl = "http://localhost:11434";
 
-  // Try to fetch models; if Ollama isn't running, register with empty list
-  // and it'll work when Ollama starts + /reload
-  let models: Array<{
-    id: string;
-    name?: string;
-    context_window?: number;
-    max_tokens?: number;
-  }> = [];
+  // Try to fetch models; if Ollama isn't running, skip registration
+  let models: Array<{ id: string; name?: string }> = [];
 
   try {
     const response = await fetch(`${baseUrl}/v1/models`, {
@@ -28,12 +22,15 @@ export default async function (pi: ExtensionAPI) {
       models = payload.data ?? [];
     }
   } catch {
-    // Ollama not running — extension still loads, models available after /reload
+    // Ollama not running — skip provider registration entirely
   }
+
+  if (models.length === 0) return;
 
   pi.registerProvider("ollama", {
     name: "Ollama (local)",
     baseUrl: `${baseUrl}/v1`,
+    apiKey: "ollama", // Ollama needs no real key, but pi requires the field
     api: "openai-completions",
     models: models.map((model) => ({
       id: model.id ?? model.name ?? "unknown",
@@ -41,12 +38,8 @@ export default async function (pi: ExtensionAPI) {
       reasoning: false,
       input: ["text"],
       cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-      contextWindow: model.context_window ?? 32768,
-      maxTokens: model.max_tokens ?? 4096,
-      compat: {
-        supportsDeveloperRole: false,
-        thinkingFormat: "qwen-chat-template",
-      },
+      contextWindow: 32768,
+      maxTokens: 4096,
     })),
   });
 }
