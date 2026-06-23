@@ -25,4 +25,25 @@ return {
       })
     end,
   },
+
+  {
+    "mfussenegger/nvim-dap",
+    opts = function()
+      local dap = require("dap")
+      dap.adapters.zig = {
+        type = "executable",
+        command = "/usr/bin/gdb",
+        args = { "-i", "dap" },
+      }
+      dap.configurations.zig = {
+        {
+          name = "Debug lazyrts",
+          type = "zig",
+          request = "launch",
+          program = "${workspaceFolder}/zig-out/bin/lazyrts",
+          cwd = "${workspaceFolder}",
+        },
+      }
+    end,
+  },
 }

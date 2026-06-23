@@ -13,8 +13,8 @@ return {
     local cwd = vim.uv.cwd()
     local basename = vim.fs.basename(cwd)
     _99.setup({
-      provider = _99.Providers.OpenCodeProvider,
-      model = "opencode-go/qwen3.5-plus",
+      provider = _99.Providers.PiProvider,
+      model = "qwen3.7-plus",
       tmp_dir = "/tmp",
       logger = {
         level = _99.DEBUG,

@@ -5,6 +5,7 @@ go = "latest"
 rust = "latest"
 zig = "0.16.0"
 bun = "latest"
+usage = "latest"
 
 [settings]
 experimental = true
