@@ -111,8 +111,8 @@ Numbered, sourced in order by `install.sh`:
 | 18 | virtualization | libvirt, docker |
 | 20 | vpn | WireGuard/OpenVPN |
 | 21 | tailscale | Mesh VPN |
-| 22 | proton-pass | `pass-cli` secret manager |
-| 23 | nas-sync | NAS sync config dir + rsync password |
+| 22 | proton-pass | `pass-cli` + Proton Pass login + shell completions |
+| 23 | nas-sync | NAS sync config dir + rsync password (`secretmgr get nas/rsync password`) |
 | 24 | desktop-apps | GUI apps |
 | 25 | etc-files | /etc configs (hosts, fstab, sysctl, udev) |
 | 26 | security-hardening | sysctl + audit rules |
@@ -120,6 +120,43 @@ Numbered, sourced in order by `install.sh`:
 | 28 | permissions | .ssh, .gnupg perms |
 | 29 | systemd-services | Enable user + system units |
 | 30 | late-setup | secretmgr bootstrap + initial NAS sync |
+
+## Secrets
+
+All secrets live in **Proton Pass** and are accessed via `secretmgr` (`~/.local/bin/secretmgr`, v1.0.0) — a wrapper around `pass-cli`. Config at `~/.config/secretmgr/config.toml`.
+
+| Command | Purpose |
+|---------|---------|
+| `secretmgr init` | Install pass-cli, login, create vaults |
+| `secretmgr status` | Check Proton Pass session |
+| `secretmgr add <vault/item> KEY=val...` | Add/update a secret |
+| `secretmgr get <vault/item> [FIELD]` | Get a secret value |
+| `secretmgr copy <vault/item> FIELD` | Copy to clipboard (auto-clears 45s) |
+| `secretmgr list [vault]` | List secrets |
+| `secretmgr delete <vault/item>` | Delete a secret |
+| `secretmgr inject <template> <output>` | Replace `{{ secret:vault/item/field }}` placeholders |
+| `secretmgr env [vault]` | Print eval-able shell exports |
+| `secretmgr bootstrap` | Deploy all secrets + render templates to this machine |
+| `secretmgr ssh-add` | Load SSH keys from Proton Pass `SSH` vault into systemd ssh-agent |
+
+**Vault aliases** (short name → Proton Pass vault): `nas`, `api`, `ssh`, `gpg`, `home`, `services`, `subscriptions`, `identity`, `gaming`, `school`, `projects`, `apply`, `finance`, `aws`.
+
+**Config templates** — `.tmpl` files rendered by `secretmgr bootstrap`:
+- `~/.config/opencode/opencode.json.tmpl` → `opencode.json`
+- `~/.openviking/openviking-config.json.tmpl` → `openviking-config.json`
+
+`secretmgr bootstrap` runs automatically in installer `30-late-setup.sh` after symlinks are in place. SSH keys load into the agent on login (`load_on_login = true` in config.toml).
+
+Examples:
+
+```bash
+secretmgr get nas/rsync password              # NAS rsync password
+secretmgr add API/OpenCode api_key=sk-xxx      # add a secret
+secretmgr inject opencode.json.tmpl opencode.json
+eval $(secretmgr env API)                      # load secrets as env vars
+```
+
+Because secrets are stored in Proton Pass (cloud), a fresh OS install recovers them via `secretmgr init` + `secretmgr bootstrap` — no local secret files need backing up.
 
 ### Disabled modules
 
@@ -133,7 +170,7 @@ Numbered, sourced in order by `install.sh`:
 | `update-firmware` | fwupd firmware refresh |
 | `gg` | AI-powered git commit helper |
 | `vpn` | VPN management (home / proton / usu) |
-| `secretmgr` | Secret retrieval helper |
+| `secretmgr` | Proton Pass CLI wrapper — see [Secrets](#secrets) |
 | `backup` | System backup driver |
 | `btrfs-snapshot` | Create BTRFS snapshots |
 | `clean-disk` | Remove orphans, caches, unused flatpaks |
@@ -195,10 +232,10 @@ Synced dirs: `Documents`, `Music`, `Photos`, `Audiobooks`, `Books`. Bidirectiona
 
 | Item | Path | Notes |
 |------|------|-------|
-| SSH private key | `~/.ssh/id_ed25519` | Re-export to NAS/USB; update authorized_keys |
-| GPG secret key | `~/.gnupg/private-keys-v1.d/` | `gpg --export-secret-keys --armor > backup.asc` |
+| SSH private key | `~/.ssh/id_ed25519` | Canonical store is Proton Pass `SSH` vault — `secretmgr ssh-add` reloads after fresh install. Disk file optional; export to USB/NAS as belt-and-suspenders |
+| GPG secret key | `~/.gnupg/private-keys-v1.d/` | `gpg --export-secret-keys --armor > backup.asc`; store in Proton Pass `GPG` vault or NAS |
 | GPG ownertrust | `~/.gnupg/trustdb.gpg` | `gpg --export-ownertrust > ownertrust.txt` |
-| NAS rsync password | `~/.config/nas-sync/rsync-password` | Recoverable via Proton Pass (vault: `NAS`, item: `rsync`) |
+| NAS rsync password | `~/.config/nas-sync/rsync-password` | Recoverable via `secretmgr get nas/rsync password` (Proton Pass `NAS` vault) |
 | Browser profiles | `~/.librewolf`, `~/.mozilla` | Bookmarks, logins, history — use browser sync or manual copy |
 | Shell history DB | `~/.local/share/atuin/` | `atuin sync` if cloud sync configured |
 | pi agent sessions | `~/.pi/agent/sessions/` | Local-only conversation history |
