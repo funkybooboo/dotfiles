@@ -85,11 +85,10 @@ ls migrations/
 
 ### Deferred / disabled
 
-- **USBGuard + OpenSnitch** (`000060`) — intentionally not installed or linked;
-  will be added as a new migration at a later date. The `~/.config/usbguard`
-  config sits in `root/` ready for when it's re-enabled.
 - **cups / printing** — dropped entirely (no printing needed).
 - **opencode** — dropped (replaced by the pi coding agent).
+- **USBGuard + OpenSnitch** — not yet implemented; will be added as a new
+  migration at a later date.
 
 ## Secrets
 
