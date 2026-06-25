@@ -9,4 +9,10 @@ section "greetd"
 
 install_pacman greetd
 install_aur greetd-tuigreet
-enable_system_service "greetd.service"
+
+# Enable WITHOUT starting: greetd's default unit targets tty1, so starting it
+# now would take over the active VT and kill this session mid-migration. It
+# launches cleanly on the next reboot instead.
+enable_system_service_no_start "greetd.service"
+warn "greetd enabled but NOT started — it launches on next reboot"
+warn "(starting it now would grab the active TTY and disrupt this session)"

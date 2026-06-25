@@ -157,6 +157,10 @@ enable_user_service() {
 
 # Enable a systemd SYSTEM service idempotently (sudo). Runs daemon-reload first.
 # Usage: enable_system_service "foo.service"
+# Note: Starts the unit immediately (--now). Only use this for services that
+#       cannot disrupt the running session. For services that would (e.g.
+#       greetd grabbing the active TTY, ufw dropping an SSH session), use
+#       enable_system_service_no_start instead — the unit starts on next boot.
 enable_system_service() {
   local unit="$1"
   sudo systemctl daemon-reload 2>/dev/null || true
@@ -166,6 +170,26 @@ enable_system_service() {
   else
     if sudo systemctl enable --now "$unit" 2>/dev/null; then
       ok "enabled: $unit"
+    else
+      warn "failed to enable $unit"
+      _add_warning "systemd system unit failed to enable: $unit"
+    fi
+  fi
+}
+
+# Enable a systemd SYSTEM service idempotently (sudo) WITHOUT starting it now.
+# Use for services that would disrupt the running session if started
+# immediately (greetd takes over the active VT; ufw applies default-deny and
+# can drop an SSH session). The unit is enabled and will start on next boot.
+# Usage: enable_system_service_no_start "foo.service"
+enable_system_service_no_start() {
+  local unit="$1"
+  sudo systemctl daemon-reload 2>/dev/null || true
+  if sudo systemctl is-enabled --quiet "$unit" 2>/dev/null; then
+    skip "$unit (already enabled — starts on next boot)"
+  else
+    if sudo systemctl enable "$unit" 2>/dev/null; then
+      ok "enabled (no start): $unit — starts on next boot"
     else
       warn "failed to enable $unit"
       _add_warning "systemd system unit failed to enable: $unit"
@@ -312,6 +336,18 @@ preflight() {
     exit 1
   fi
   ok "not running as root"
+
+  # sudo is a hard prerequisite: it is used from the very first migration
+  # (000001-system-update). It is intentionally NOT installed by a migration —
+  # on a truly fresh Arch install `base`/`base-devel` do not include it, so we
+  # fail here with a clear instruction instead of dying mid-run later.
+  if command -v sudo &>/dev/null; then
+    ok "sudo available"
+  else
+    fail "sudo is not installed — migrations use it from the first step."
+    fail "install it first:  pacman -S sudo"
+    exit 1
+  fi
 
   if [[ -f /etc/os-release ]]; then
     . /etc/os-release

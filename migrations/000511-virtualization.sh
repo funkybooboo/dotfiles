@@ -56,34 +56,25 @@ else
   skip "libvirt default network (libvirtd not running — will apply on first start)"
 fi
 
-# UFW rules for the virbr0 bridge (only if UFW is active)
-if command -v ufw &>/dev/null && sudo ufw status 2>/dev/null | grep -q "Status: active"; then
-  info "configuring UFW rules for libvirt (virbr0)..."
-  if ! sudo ufw status | grep -q "Anywhere on virbr0.*ALLOW IN.*Anywhere"; then
-    sudo ufw allow in on virbr0 comment 'libvirt bridge' &>/dev/null || true
-    sudo ufw allow out on virbr0 &>/dev/null || true
-    ok "UFW: allowed traffic on virbr0"
-  else
-    skip "UFW: virbr0 input rules already configured"
-  fi
-  if ! sudo ufw status | grep -q "192.168.122.1 53.*ALLOW IN"; then
-    sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS' &>/dev/null || true
-    ok "UFW: allowed DNS on virbr0"
-  else
-    skip "UFW: DNS rule already configured"
-  fi
-  PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
+# UFW rules for the virbr0 bridge (only if UFW is installed). ufw is NOT
+# started during migration (000405-firewall enables it without --now), so
+# these rules are queued and take effect on the next boot when ufw activates.
+# The rules are idempotent: ufw silently no-ops a duplicate `allow`.
+if command -v ufw &>/dev/null; then
+  info "adding UFW rules for libvirt (virbr0)..."
+  sudo ufw allow in on virbr0 comment 'libvirt bridge' 2>/dev/null || true
+  sudo ufw allow out on virbr0 2>/dev/null || true
+  sudo ufw allow in on virbr0 to 192.168.122.1 port 53 proto udp \
+    comment 'libvirt DNS' 2>/dev/null || true
+  PRIMARY_IFACE=$(ip route 2>/dev/null | awk '/^default/{print $5; exit}')
   if [[ -n "$PRIMARY_IFACE" ]]; then
-    if ! sudo ufw status | grep -q "ALLOW FWD.*Anywhere on virbr0.*Anywhere on $PRIMARY_IFACE"; then
-      sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT' &>/dev/null || true
-      ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
-    else
-      skip "UFW: routing rule already configured"
-    fi
+    sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" \
+      comment 'libvirt NAT' 2>/dev/null || true
+    ok "UFW: libvirt virbr0 rules added (apply on next boot)"
   else
-    warn "could not detect primary network interface — add UFW route rule manually"
-    _add_warning "UFW routing rule not added — primary interface not detected"
+    warn "could not detect primary interface — add the UFW route rule manually"
+    _add_warning "UFW libvirt NAT route rule skipped — primary interface not detected"
   fi
 else
-  skip "UFW not active — libvirt firewall rules skipped"
+  skip "ufw not installed — libvirt firewall rules skipped"
 fi

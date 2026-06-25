@@ -65,17 +65,21 @@ shouldn't run in a fresh TTY:
 
 ## Migrations
 
-113 migrations across foundation, shell/editors, dev, desktop, system services,
-and apps. Run in order by `migrate.sh`:
+67 migrations across foundation, shell/editors, dev, desktop, system services,
+and apps. Run in order by `migrate.sh`. Install-only packages with no config or
+service are grouped by category into single migrations to keep the set scannable:
 
 | Range | Group |
 |-------|-------|
 | `000001`–`000082` | System update, base, bootloader, kernels, AppArmor, security scanners |
 | `000100`–`000109` | Shell & editors: bash, fish, starship, atuin, tmux, bat, btop, ripgrep, neovim, vim |
-| `000200`–`000229` | Dev: git, lazygit, mise, python, podman, lazydocker, pi-agent, act + CLI tools (fzf, fd, eza, …) |
-| `000300`–`000325` | Desktop: fonts, flatpak, ghostty, browsers, pipewire, mpv, obs, Hyprland ecosystem, Wayland utilities |
-| `000400`–`000420` | System services: power, bluetooth, network, ssh, gnupg, firewall, btrfs, earlyoom, fwupd, sudo, zram |
-| `000500`–`000545` | Apps: calcure, television, steam, virtualization, VPN, tailscale, proton-pass, secretmgr, nas-sync, monero, GUI apps |
+| `000200`–`000210` | Dev: git, lazygit, mise, python, podman, pi-agent + consolidated CLI utilities |
+| `000300`–`000320` | Desktop: fonts, flatpak, ghostty, browsers, pipewire, mpv, obs, Hyprland ecosystem, Wayland utilities |
+| `000400`–`000420` | System services: power, bluetooth, network, ssh, gnupg, firewall, btrfs, filesystem tools, system utilities, admin scripts |
+| `000500`–`000530` | Apps: calcure, television, steam, virtualization, VPN, tailscale, proton-pass, secretmgr, nas-sync, monero, desktop apps |
+
+`sudo` is not a migration — it is asserted as a prerequisite in preflight (it is
+used from the very first migration, so it must already be present).
 
 Each file is named after what it does. To see the full list:
 
