@@ -65,7 +65,7 @@ shouldn't run in a fresh TTY:
 
 ## Migrations
 
-118 migrations across foundation, shell/editors, dev, desktop, system services,
+117 migrations across foundation, shell/editors, dev, desktop, system services,
 and apps. Run in order by `migrate.sh`:
 
 | Range | Group |
