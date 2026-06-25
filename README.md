@@ -65,12 +65,12 @@ shouldn't run in a fresh TTY:
 
 ## Migrations
 
-115 migrations across foundation, shell/editors, dev, desktop, system services,
+114 migrations across foundation, shell/editors, dev, desktop, system services,
 and apps. Run in order by `migrate.sh`:
 
 | Range | Group |
 |-------|-------|
-| `000001`–`000090` | System update, base, bootloader, mkinitcpio, kernels, AppArmor, security scanners, hosts |
+| `000001`–`000090` | System update, base, bootloader, kernels, AppArmor, security scanners, hosts |
 | `000100`–`000109` | Shell & editors: bash, fish, starship, atuin, tmux, bat, btop, ripgrep, neovim, vim |
 | `000200`–`000229` | Dev: git, lazygit, mise, python, podman, lazydocker, pi-agent, act + CLI tools (fzf, fd, eza, …) |
 | `000300`–`000325` | Desktop: fonts, flatpak, ghostty, browsers, pipewire, mpv, obs, Hyprland ecosystem, Wayland utilities |
@@ -89,9 +89,9 @@ ls migrations/
 - **opencode** — dropped (replaced by the pi coding agent).
 - **USBGuard + OpenSnitch** — not yet implemented; will be added as a new
   migration at a later date.
-- **fstab / crypttab** — not deployed by migrations. These are machine-specific
-  (disk UUIDs, encryption setup) and must be configured manually per machine.
-  They are not stored in the repo.
+- **fstab / crypttab / mkinitcpio.conf** — not deployed by migrations. These
+  are machine-specific (disk UUIDs, encryption setup, initramfs hooks) and too
+  risky to deploy from a shared repo. Configure them manually per machine.
 
 ## Secrets
 
