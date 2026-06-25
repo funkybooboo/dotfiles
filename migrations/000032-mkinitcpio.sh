@@ -5,6 +5,10 @@
 # Note: The config takes effect when kernels are installed/reinstalled next
 #       (their pacman hooks run mkinitcpio). To apply to already-installed
 #       kernels, run: sudo mkinitcpio -P
+# Warning: The HOOKS line includes 'encrypt' — if this machine uses disk
+#       encryption, ensure 'cryptsetup' is installed before running
+#       'mkinitcpio -P' or the initramfs build will fail. If this machine does
+#       NOT use encryption, remove 'encrypt' from HOOKS in root/etc/mkinitcpio.conf.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

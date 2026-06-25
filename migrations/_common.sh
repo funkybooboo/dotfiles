@@ -100,6 +100,9 @@ install_pacman() {
 # Install AUR packages one at a time via yay. Already-installed packages are
 # skipped; a build failure on one package is recorded as a warning, not fatal.
 # Usage: install_aur pkg1 pkg2 ...
+# Note: Always returns 0 so a single AUR failure doesn't abort the migration
+#       run under 'set -e'. Failures are recorded via _add_warning and surface
+#       in the final summary.
 install_aur() {
   local pkg failures=0
   for pkg in "$@"; do
@@ -115,7 +118,7 @@ install_aur() {
       ok "$pkg"
     fi
   done
-  return $failures
+  return 0
 }
 
 # =============================================================================
@@ -355,6 +358,6 @@ print_summary() {
 
   echo ""
   echo -e "  ${GREEN}✓ Migrations complete!${NC}"
-  echo -e "  ${DIM}Next: reboot into Hyprland, then run secrets/setup-secrets.sh${NC}"
+  echo -e "  ${DIM}Next: reboot into Hyprland, then run ./setup-secrets.sh${NC}"
   echo ""
 }
