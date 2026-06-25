@@ -1,6 +1,6 @@
 return {
   "funkybooboo/99",
-  dir = "/home/nate/Projects/99", -- Use local development version
+  dir = "/home/nate/sources/99", -- Use local development version
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
