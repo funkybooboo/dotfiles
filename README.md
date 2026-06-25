@@ -110,6 +110,12 @@ by hand after running `./migrate.sh`:
    - Reboot for the AppArmor params to take effect.
 2. **`/etc/fstab`, `/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`** —
    configure per machine (see above).
+3. **`networkd-wait-online` + Tailscale** — the network migration deploys an
+   override that waits for `wlan0` only. After running `setup-secrets.sh` and
+   authenticating Tailscale, add `--interface=tailscale0` to the
+   `ExecStart=` line in
+   `/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf`
+   so boot also waits for the Tailscale interface.
 
 ## Secrets
 

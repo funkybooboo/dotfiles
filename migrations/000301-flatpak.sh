@@ -8,6 +8,10 @@
 section "flatpak"
 
 install_pacman flatpak
-run_cmd_retry 3 10 flatpak remote-add --if-not-exists flathub \
-  https://flathub.org/repo/flathub.flatpakrepo
-ok "flatpak + flathub remote"
+if run_cmd_retry 3 10 flatpak remote-add --if-not-exists flathub \
+  https://flathub.org/repo/flathub.flatpakrepo; then
+  ok "flatpak + flathub remote"
+else
+  warn "failed to add flathub remote — flatpaks won't install until added manually"
+  _add_warning "flathub remote-add failed; run 'flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo' manually"
+fi

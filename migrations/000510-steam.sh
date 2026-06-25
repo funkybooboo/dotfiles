@@ -13,9 +13,13 @@ section "steam"
 # Enable multilib repo if commented out
 if grep -q '^#\[multilib\]' /etc/pacman.conf; then
   info "enabling multilib repository in /etc/pacman.conf..."
-  sudo sed -i '/^#\[multilib\]/,/^#Include/{s/^#//}' /etc/pacman.conf
-  sudo pacman -Sy --noconfirm
-  ok "multilib repository enabled"
+  if sudo sed -i '/^#\[multilib\]/,/^#Include/{s/^#//}' /etc/pacman.conf && \
+     sudo pacman -Sy --noconfirm; then
+    ok "multilib repository enabled"
+  else
+    warn "failed to enable multilib — steam/lib32 packages may not install"
+    _add_warning "multilib repo enable failed; steam + lib32 packages may fail"
+  fi
 else
   skip "multilib repository (already enabled)"
 fi

@@ -21,9 +21,13 @@ enable_system_service "virtlogd.service"
 if groups "$USER" | grep -qw libvirt; then
   skip "libvirt group (already a member)"
 else
-  sudo usermod -aG libvirt "$USER"
-  warn "added $USER to libvirt group — log out and back in for this to take effect"
-  _add_warning "log out and back in for libvirt group membership to take effect"
+  if sudo usermod -aG libvirt "$USER"; then
+    warn "added $USER to libvirt group — log out and back in for this to take effect"
+    _add_warning "log out and back in for libvirt group membership to take effect"
+  else
+    warn "failed to add $USER to libvirt group"
+    _add_warning "usermod -aG libvirt failed; add manually: sudo usermod -aG libvirt $USER"
+  fi
 fi
 
 # libvirt default network XML + profile.d env var
@@ -56,14 +60,14 @@ fi
 if command -v ufw &>/dev/null && sudo ufw status 2>/dev/null | grep -q "Status: active"; then
   info "configuring UFW rules for libvirt (virbr0)..."
   if ! sudo ufw status | grep -q "Anywhere on virbr0.*ALLOW IN.*Anywhere"; then
-    sudo ufw allow in on virbr0 comment 'libvirt bridge' &>/dev/null
-    sudo ufw allow out on virbr0 &>/dev/null
+    sudo ufw allow in on virbr0 comment 'libvirt bridge' &>/dev/null || true
+    sudo ufw allow out on virbr0 &>/dev/null || true
     ok "UFW: allowed traffic on virbr0"
   else
     skip "UFW: virbr0 input rules already configured"
   fi
   if ! sudo ufw status | grep -q "192.168.122.1 53.*ALLOW IN"; then
-    sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS' &>/dev/null
+    sudo ufw allow in on virbr0 to 192.168.122.1 port 53 comment 'libvirt DNS' &>/dev/null || true
     ok "UFW: allowed DNS on virbr0"
   else
     skip "UFW: DNS rule already configured"
@@ -71,7 +75,7 @@ if command -v ufw &>/dev/null && sudo ufw status 2>/dev/null | grep -q "Status: 
   PRIMARY_IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
   if [[ -n "$PRIMARY_IFACE" ]]; then
     if ! sudo ufw status | grep -q "ALLOW FWD.*Anywhere on virbr0.*Anywhere on $PRIMARY_IFACE"; then
-      sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT' &>/dev/null
+      sudo ufw route allow in on virbr0 out on "$PRIMARY_IFACE" comment 'libvirt NAT' &>/dev/null || true
       ok "UFW: allowed routing virbr0 → $PRIMARY_IFACE"
     else
       skip "UFW: routing rule already configured"
