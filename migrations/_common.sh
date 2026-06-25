@@ -92,9 +92,15 @@ run_cmd_retry() {
 # =============================================================================
 
 # Install pacman packages idempotently (--needed skips already-installed).
+# Always returns 0 so a single pacman failure (package renamed, removed,
+# conflict) doesn't abort the migration run under 'set -e'. Failures are
+# recorded via _add_warning and surface in the final summary.
 # Usage: install_pacman pkg1 pkg2 ...
 install_pacman() {
-  sudo pacman -S --needed --noconfirm "$@"
+  if ! sudo pacman -S --needed --noconfirm "$@"; then
+    warn "pacman install failed for one or more packages: $*"
+    _add_warning "pacman install failed for: $*"
+  fi
 }
 
 # Install AUR packages one at a time via yay. Already-installed packages are
