@@ -14,8 +14,15 @@ if command -v tailscale &>/dev/null; then
   skip "Tailscale already installed ($(tailscale version 2>/dev/null | head -1))"
 else
   info "installing Tailscale..."
-  curl -fsSL https://tailscale.com/install.sh | sh
-  ok "Tailscale installed"
+  _ts_installer=$(mktemp)
+  if curl -fsSL https://tailscale.com/install.sh -o "$_ts_installer"; then
+    sh "$_ts_installer"
+    ok "Tailscale installed"
+  else
+    warn "failed to download Tailscale installer"
+    _add_warning "Tailscale install failed; run the installer manually"
+  fi
+  rm -f "$_ts_installer"
 fi
 
 enable_system_service "tailscaled"

@@ -15,10 +15,16 @@ if command -v pass-cli &>/dev/null; then
 else
   info "Installing Proton Pass CLI..."
   if command -v yay &>/dev/null; then
-    yay -S --needed --noconfirm proton-pass-cli-bin 2>/dev/null || \
-      { info "AUR install failed, using official script..."; curl -fsSL https://proton.me/download/pass-cli/install.sh | bash; }
+    install_aur proton-pass-cli-bin
   else
-    curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
+    _pp_installer=$(mktemp)
+    if curl -fsSL https://proton.me/download/pass-cli/install.sh -o "$_pp_installer"; then
+      bash "$_pp_installer"
+    else
+      warn "failed to download pass-cli installer"
+      _add_warning "pass-cli install failed; run the installer manually"
+    fi
+    rm -f "$_pp_installer"
   fi
   ok "pass-cli installed"
 fi
