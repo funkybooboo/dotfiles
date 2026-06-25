@@ -93,6 +93,24 @@ ls migrations/
   These are machine-specific (disk UUIDs, encryption setup, initramfs hooks,
   hostname) and too risky to deploy from a shared repo. Configure manually.
 
+### Manual post-migration steps
+
+Some things are too critical or machine-specific to automate and must be done
+by hand after running `./migrate.sh`:
+
+1. **Limine boot config** (`/boot/limine/limine.conf`) — migrations install
+   the `limine` package but do NOT edit the boot config. After running the
+   hardened-kernels and apparmor migrations, edit this file by hand:
+   - **Set the hardened kernel as the default boot entry** by reordering the
+     entries so `linux-hardened` is first.
+   - **Add AppArmor LSM parameters** to each entry's `cmdline:` line:
+     ```
+     lsm=landlock,lockdown,yama,integrity,apparmor,bpf
+     ```
+   - Reboot for the AppArmor params to take effect.
+2. **`/etc/fstab`, `/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`** —
+   configure per machine (see above).
+
 ## Secrets
 
 All secrets live in **Proton Pass** and are accessed via `secretmgr`
