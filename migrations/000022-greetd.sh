@@ -16,3 +16,4 @@ install_aur greetd-tuigreet
 enable_system_service_no_start "greetd.service"
 warn "greetd enabled but NOT started — it launches on next reboot"
 warn "(starting it now would grab the active TTY and disrupt this session)"
+_add_warning "greetd enabled but not started — launches on next reboot (takes over tty1)"

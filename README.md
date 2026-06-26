@@ -1,9 +1,47 @@
 # Dotfiles
 
 Minimalist Arch Linux dotfiles for a Hyprland desktop, managed as ordered,
-idempotent migrations — like database migrations for your system.
+idempotent migrations.
 
-## Quick Start
+## Fresh install (archinstall)
+
+Install with these options so `./migrate.sh` applies cleanly:
+
+### Disk layout
+
+| Mount | Size | Type | Encryption |
+|-------|------|------|------------|
+| `/boot` | 1 GiB | FAT32 | **none** |
+| `/` | rest | btrfs | **LUKS** |
+
+Btrfs subvolumes: `@` → `/`, `@home` → `/home`, `@log` → `/var/log`, `@pkg` → `/var/cache/pacman/pkg`.
+
+### archinstall options
+
+- **Disk encryption:** YES
+- **Filesystem:** btrfs, `zstd`
+- **Bootloader:** Limine (or systemd-boot, then migrate to Limine)
+- **Kernels:** `linux-lts` + `linux-hardened` (or just `linux-lts`, migration adds hardened)
+- **Swap:** zram
+- **User:** `nate`, sudo, **shell = bash** (migration sets fish later)
+- **Profile:** minimal (not Hyprland — migration owns it)
+- **Network:** iwd + systemd-networkd (not NetworkManager)
+- **Audio:** pipewire (migration installs it anyway)
+- **Locale:** `en_US.UTF-8`
+
+### Verify encryption before rebooting
+
+```bash
+cryptsetup luksDump /dev/nvme0n1p2
+grep '^HOOKS' /etc/mkinitcpio.conf        # must contain 'encrypt'
+grep cryptdevice /boot/limine/limine.conf  # must have cryptdevice=...:root
+```
+
+`/etc/crypttab` is **not** required for root encryption — the initramfs `encrypt`
+hook unlocks root via `cryptdevice=` in the kernel cmdline. `migrate.sh` enforces
+these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
+
+### After archinstall
 
 ```bash
 git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
@@ -11,244 +49,136 @@ cd ~/dotfiles
 ./migrate.sh
 ```
 
-`migrate.sh` runs every migration in `migrations/` in numeric order. Each
-migration installs its packages, symlinks its configs, and enables its
-services together. Migrations are idempotent — re-running `./migrate.sh` is
-always safe. Conflicting files are backed up to `<dest>.bak.N` before being
-replaced with a symlink.
-
-After migrations finish, **reboot into Hyprland**, then run the interactive
-secrets setup (needs a browser + network):
+Then **reboot into Hyprland** and run:
 
 ```bash
-./setup-secrets.sh
+./setup.sh
 ```
 
 ## How it works
 
 ```
 dotfiles/
-├── migrate.sh              # Orchestrator: preflight → source migrations in order → summary
-├── setup-secrets.sh        # Post-reboot interactive: Proton Pass + Tailscale login, NAS sync
-├── migrations/
-│   ├── _common.sh          # Shared helpers (install/link/enable/output) + globals
-│   └── NNNNNN-name.sh      # One migration per concern, run in lexicographic order
-└── root/                   # Source-of-truth tree (untouched by migrations)
-    ├── home/               # → $HOME  (symlinked)
-    └── etc/                # → /etc   (copied with sudo)
+├── migrate.sh        # preflight → run migrations in order → summary
+├── setup.sh          # post-reboot: Proton Pass, Tailscale, SSH, NAS sync, projects
+├── migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
+└── root/
+    ├── home/         # → $HOME (symlinked)
+    └── etc/          # → /etc (copied with sudo)
 ```
 
-- **`root/`** is the source of truth. Migrations symlink `root/home/**` into
-  `$HOME` and copy `root/etc/**` into `/etc`. `root/` itself is never modified.
-- **`migrations/_common.sh`** provides shared helpers: `install_pacman`,
-  `install_aur`, `link_file`/`link_tree`/`link_dir`, `deploy_etc_file`,
-  `enable_user_service`/`enable_system_service`, and output helpers. Every
-  migration guard-sources it so it can also run standalone.
-- **Each migration** has a header documenting what it installs, links, and
-  enables. Migrations are numbered with 6 digits and gaps for future inserts.
-- **No arguments.** `./migrate.sh` just runs everything. Conflicts resolve by
-  backing up the existing file. There is no dry-run, force, merge, or restore
-  mode.
+- `migrations/_common.sh` provides helpers: `install_pacman`, `install_aur`,
+  `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`, `enable_*_service`.
+- Each migration guard-sources `_common.sh` so it can run standalone.
+- No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
 
-### `setup-secrets.sh`
+### `setup.sh`
 
-Run **after** `./migrate.sh` and a reboot into Hyprland (it needs a desktop
-browser and network). It handles everything interactive/secret-dependent that
-shouldn't run in a fresh TTY:
-
-1. Proton Pass (`pass-cli`) login
-2. Tailscale authentication (`tailscale up`)
-3. NAS rsync password (from Proton Pass, or prompted)
-4. `secretmgr bootstrap` (inject secrets into templated configs)
-5. NAS initial clone (Documents, Music, Photos, Audiobooks, Books)
-6. Ensure NAS sync timers are enabled
+Run after reboot. Handles Proton Pass login, Tailscale auth, NAS rsync
+password, `secretmgr bootstrap`, agent setup (loading the SSH key into
+ssh-agent with a terminal passphrase prompt, and priming the GPG agent's
+passphrase cache via pinentry-qt so git signed commits don't prompt for 8h),
+GitHub SSH verification, switching the dotfiles remote to SSH, cloning
+personal repos into `~/Projects` (from `~/.config/dotfiles/projects-repos.txt`),
+and the initial NAS clone.
 
 ## Migrations
 
-67 migrations across foundation, shell/editors, dev, desktop, system services,
-and apps. Run in order by `migrate.sh`. Install-only packages with no config or
-service are grouped by category into single migrations to keep the set scannable:
+69 migrations grouped by concern. `ls migrations/` for the full list.
 
-| Range | Group |
-|-------|-------|
-| `000001`–`000082` | System update, base, bootloader, kernels, AppArmor, security scanners |
-| `000100`–`000109` | Shell & editors: bash, fish, starship, atuin, tmux, bat, btop, ripgrep, neovim, vim |
-| `000200`–`000210` | Dev: git, lazygit, mise, python, podman, pi-agent + consolidated CLI utilities |
-| `000300`–`000320` | Desktop: fonts, flatpak, ghostty, browsers, pipewire, mpv, obs, Hyprland ecosystem, Wayland utilities |
-| `000400`–`000420` | System services: power, bluetooth, network, ssh, gnupg, firewall, btrfs, filesystem tools, system utilities, admin scripts |
-| `000500`–`000530` | Apps: calcure, television, steam, virtualization, VPN, tailscale, proton-pass, secretmgr, nas-sync, monero, desktop apps |
+| Range | Concern |
+|-------|---------|
+| `000001`–`000082` | System, bootloader, kernels, AppArmor, security |
+| `000100`–`000109` | Shell & editors |
+| `000200`–`000210` | Dev tools |
+| `000300`–`000320` | Desktop, Hyprland, browsers, audio |
+| `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
+| `000500`–`000530` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games |
 
-`sudo` is not a migration — it is asserted as a prerequisite in preflight (it is
-used from the very first migration, so it must already be present).
+`sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
-Each file is named after what it does. To see the full list:
+**Not deployed by migrations** (too machine-specific): `/etc/fstab`,
+`/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`. On an existing install,
+these are already correct.
+
+**Deferred:** USBGuard, OpenSnitch (not yet implemented).
+
+### Reboot checklist
+
+- [ ] `systemctl is-enabled ufw greetd apparmor` — all `enabled`
+- [ ] `sudo grep apparmor=1 /boot/limine/limine.conf` — both kernels
+- [ ] `./setup.sh` (after reboot)
+
+After reboot:
 
 ```bash
-ls migrations/
+systemctl is-active apparmor
+sudo aa-status | head
 ```
-
-### Deferred / disabled
-
-- **cups / printing** — dropped entirely (no printing needed).
-- **opencode** — dropped (replaced by the pi coding agent).
-- **USBGuard + OpenSnitch** — not yet implemented; will be added as a new
-  migration at a later date.
-- **fstab / crypttab / mkinitcpio.conf / hosts** — not deployed by migrations.
-  These are machine-specific (disk UUIDs, encryption setup, initramfs hooks,
-  hostname) and too risky to deploy from a shared repo. Configure manually.
-
-### Manual post-migration steps
-
-Some things are too critical or machine-specific to automate and must be done
-by hand after running `./migrate.sh`:
-
-1. **Limine boot config** (`/boot/limine/limine.conf`) — migrations install
-   the `limine` package but do NOT edit the boot config. After running the
-   hardened-kernels and apparmor migrations, edit this file by hand:
-   - **Set the hardened kernel as the default boot entry** by reordering the
-     entries so `linux-hardened` is first.
-   - **Add AppArmor LSM parameters** to each entry's `cmdline:` line:
-     ```
-     lsm=landlock,lockdown,yama,integrity,apparmor,bpf
-     ```
-   - Reboot for the AppArmor params to take effect.
-2. **`/etc/fstab`, `/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`** —
-   configure per machine (see above).
-3. **`networkd-wait-online` + Tailscale** — the network migration deploys an
-   override that waits for `wlan0` only. After running `setup-secrets.sh` and
-   authenticating Tailscale, add `--interface=tailscale0` to the
-   `ExecStart=` line in
-   `/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf`
-   so boot also waits for the Tailscale interface.
 
 ## Secrets
 
-All secrets live in **Proton Pass** and are accessed via `secretmgr`
-(`~/.local/bin/secretmgr`) — a wrapper around `pass-cli`. Config at
-`~/.config/secretmgr/config.toml`.
+All secrets live in **Proton Pass**, accessed via `secretmgr` (`pass-cli` wrapper).
 
 | Command | Purpose |
 |---------|---------|
-| `secretmgr init` | Install pass-cli, login, create vaults |
-| `secretmgr status` | Check Proton Pass session |
-| `secretmgr add <vault/item> KEY=val...` | Add/update a secret |
-| `secretmgr get <vault/item> [FIELD]` | Get a secret value |
-| `secretmgr copy <vault/item> FIELD` | Copy to clipboard (auto-clears 45s) |
-| `secretmgr list [vault]` | List secrets |
-| `secretmgr delete <vault/item>` | Delete a secret |
-| `secretmgr inject <template> <output>` | Replace `{{ secret:vault/item/field }}` placeholders |
-| `secretmgr env [vault]` | Print eval-able shell exports |
-| `secretmgr bootstrap` | Deploy all secrets + render templates to this machine |
-| `secretmgr ssh-add` | Load SSH keys from Proton Pass `SSH` vault into systemd ssh-agent |
+| `secretmgr init` | Install pass-cli, login |
+| `secretmgr get <vault/item> [FIELD]` | Get a secret |
+| `secretmgr add <vault/item> KEY=val...` | Add/update |
+| `secretmgr copy <vault/item> FIELD` | Copy to clipboard (45s auto-clear) |
+| `secretmgr bootstrap` | Deploy all secrets + render templates |
+| `secretmgr ssh-add` | Load SSH keys from Proton Pass `SSH` vault |
 
-**Vault aliases** (short name → Proton Pass vault): `nas`, `api`, `ssh`, `gpg`,
-`home`, `services`, `subscriptions`, `identity`, `gaming`, `school`, `projects`,
-`apply`, `finance`, `aws`.
+Vault aliases: `nas`, `api`, `ssh`, `gpg`, `home`, `services`, `subscriptions`,
+`identity`, `gaming`, `school`, `projects`, `apply`, `finance`, `aws`.
 
-`secretmgr bootstrap` runs in `setup-secrets.sh` after the Proton Pass login.
-SSH keys load into the agent on login (`load_on_login = true` in config.toml).
+`secretmgr bootstrap` runs in `setup.sh`. SSH keys load into the agent
+on login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 
-Because secrets are stored in Proton Pass (cloud), a fresh OS install recovers
-them via `setup-secrets.sh` — no local secret files need backing up.
+## Scripts
 
-Examples:
+Migrations link their own scripts into `~/.local/bin/` and `~/.local/lib/`.
+Key ones:
 
-```bash
-secretmgr get nas/rsync password              # NAS rsync password
-secretmgr add API/OpenCode api_key=sk-xxx      # add a secret
-eval $(secretmgr env API)                      # load secrets as env vars
-```
-
-## Scripts in `.local/bin`
-
-Linked by the migration that owns each script (not a single grab-bag):
-
-| Script | Owner migration | Purpose |
-|--------|-----------------|---------|
-| `update` | personal-admin-scripts | Full system update (yay + flatpak + firmware) |
-| `update-firmware` | personal-admin-scripts | fwupd firmware refresh |
-| `gg` | personal-admin-scripts | AI-powered git commit helper |
-| `vpn` | proton-vpn | VPN management |
-| `secretmgr` | secretmgr | Proton Pass CLI wrapper |
-| `backup` | personal-admin-scripts | System backup driver |
-| `btrfs-snapshot` | personal-admin-scripts | Create BTRFS snapshots |
-| `clean-disk` | personal-admin-scripts | Remove orphans, caches, unused flatpaks |
-| `clean-memory` | personal-admin-scripts | Free up memory |
-| `cleanup-audit` | personal-admin-scripts | Trim audit logs |
-| `cleanup-system` | personal-admin-scripts | Broader system cleanup |
-| `package-cleanup` | personal-admin-scripts | pacman orphan cleanup |
-| `hot-procs` | personal-admin-scripts | Show CPU-heavy processes |
-| `calendar-tui` | personal-admin-scripts | calcure launcher |
-| `hypr-keybinds` | hyprland | List active Hyprland keybindings |
-| `hypr-kill-workspace` | hyprland | Close all windows on a workspace |
-| `hypr-lid-switch` | hyprland | Handle laptop lid events |
-| `hypr-toggle-display` | hyprland | Toggle internal/external display |
-| `theme-switch` | hyprland | Light/dark theme toggle |
-| `nightmode-toggle` | hyprland | Night light toggle |
-| `power-mode-menu` | power-management | Switch power profile |
-| `screencast` | hyprland | Screen recording |
-| `screenshot` | hyprland | Screenshot utility |
-| `recording-indicator` | hyprland | Recording status indicator |
-| `clipboard-manager` | hyprland | Cliphist wrapper |
-| `toggle-lock` | hyprland | Manual lock trigger |
-| `docker` / `docker-compose` | podman | Container helpers |
-| `sync-*` | nas-sync | NAS sync (documents / music / photos / audiobooks / books) |
-
-Shared helpers in `.local/lib/`:
-
-| Lib | Owner migration | Purpose |
-|-----|-----------------|---------|
-| `sync-to-nas` | nas-sync | Bidirectional rsync core used by all `sync-*` scripts |
-| `check-nas-connection` | nas-sync | Tailscale/host reachability probe |
-| `good-time-to-run` | nas-sync | Time-of-day gating for background jobs |
-| `power-profile-switch` | power-management | udev-triggered power profile change |
-| `battery-notify` | power-management | Low battery notifications |
+- `update` — yay + flatpak + firmware
+- `clean-disk` — orphans, caches, unused flatpaks
+- `secretmgr` — Proton Pass wrapper
+- `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
+- `vpn` — VPN management
 
 ## NAS Sync
 
-The `nas-sync` migration (`000525`) links the sync units, scripts, and timers
-and enables the timers. The rsync **password** and **initial clone** happen in
-`setup-secrets.sh` (need Proton Pass login + network).
-
-Set the password manually if needed:
+Timers run automatically after `setup.sh`. Manual sync:
 
 ```bash
-echo 'your_password' > ~/.config/nas-sync/rsync-password
-chmod 600 ~/.config/nas-sync/rsync-password
-```
-
-Manage timers:
-
-```bash
-systemctl --user list-timers 'nas-sync-*'                 # status
-systemctl --user start nas-sync-documents.service         # manual sync
-journalctl --user -u nas-sync-documents.service -f        # watch logs
+systemctl --user start nas-sync-documents.service
+journalctl --user -u nas-sync-documents.service -f
 ```
 
 Synced dirs: `Documents`, `Music`, `Photos`, `Audiobooks`, `Books`.
-Bidirectional with `--delete` — deletes propagate both ways.
+Bidirectional with `--delete`.
 
-## What dotfiles does NOT back up
+## Back up before wiping
 
-`.gitignore` deliberately excludes keys, credentials, caches, and
-machine-specific state. **Before wiping a drive**, back these up separately:
+These are NOT recoverable from dotfiles / NAS / Proton Pass:
 
-| Item | Path | Notes |
-|------|------|-------|
-| SSH private key | `~/.ssh/id_ed25519` | Canonical store is Proton Pass `SSH` vault — `secretmgr ssh-add` reloads after fresh install |
-| GPG secret key | `~/.gnupg/private-keys-v1.d/` | `gpg --export-secret-keys --armor > backup.asc`; store in Proton Pass `GPG` vault or NAS |
-| GPG ownertrust | `~/.gnupg/trustdb.gpg` | `gpg --export-ownertrust > ownertrust.txt` |
-| NAS rsync password | `~/.config/nas-sync/rsync-password` | Recoverable via `secretmgr get nas/rsync password` |
-| Browser profiles | `~/.librewolf`, `~/.mozilla` | Bookmarks, logins, history — use browser sync or manual copy |
-| Shell history DB | `~/.local/share/atuin/` | `atuin sync` if cloud sync configured |
-| pi agent sessions | `~/.pi/agent/sessions/` | Local-only conversation history |
+| Item | Backup command |
+|------|---------------|
+| GPG secret key | `gpg --export-secret-keys --armor > gpg.asc` |
+| GPG ownertrust | `gpg --export-ownertrust > ownertrust.txt` |
+| Browser profiles | Browser sync, or copy `~/.librewolf` / `~/.config/brave` |
+| Atuin history | `atuin sync` (cloud), or copy `~/.local/share/atuin` |
+| pi sessions | `~/.pi/agent/sessions/` |
 
-## Maintenance
+SSH keys are stored in Proton Pass `SSH` vault; `secretmgr ssh-add` reloads
+them after a fresh install.
 
-```bash
-update       # yay + flatpak + firmware
-clean-disk   # remove orphans, caches, unused flatpaks
-```
+## Known issues
+
+- **nvimpager** (AUR, flagged out-of-date) — installed from AUR after `extra/nvimpager`
+  was dropped. Replace with a maintained alternative at a future date.
+- **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
+  wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 
 ## License
 

@@ -1,0 +1,8 @@
+#
+# Wireless regulatory domain configuration
+# See crda(8) / iwd(8). Setting this avoids the boot warning
+#   cfg80211: Process '/usr/bin/set-wireless-regdom' failed with exit code 1
+# and the global regdom staying at 'country 00' (which restricts 5GHz channels
+# and tx power) until a driver self-manages it.
+#
+WIRELESS_REGDOM="US"

@@ -2,11 +2,12 @@
 # Installs: linux-hardened linux-hardened-headers linux-lts linux-lts-headers
 # Links:    —
 # Enables:  —
-# Note: The Limine boot config (/boot/limine/limine.conf) is NOT edited by
-#       migrations — boot configs are too critical for automated sed edits.
-#       To set the hardened kernel as the default boot entry, edit
-#       /boot/limine/limine.conf by hand and reorder the entries so
-#       linux-hardened is first.
+# Note: To set the hardened kernel as the default boot entry, ensure the
+#       `/Arch Linux (linux-hardened)` block is first in
+#       /boot/limine/limine.conf (Limine boots the first entry by default).
+#       This is a one-time manual setup step — migrations do not reorder boot
+#       entries. Migration 000051-apparmor-cmdline.sh appends the AppArmor LSM
+#       params to each existing entry but does not change their order.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

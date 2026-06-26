@@ -1,0 +1,20 @@
+[Match]
+Type=ether
+# Exclude virtual Ethernet interfaces
+Kind=!*
+
+[Link]
+RequiredForOnline=routable
+
+[Network]
+DHCP=yes
+MulticastDNS=yes
+
+# Explicit route metric: Ethernet preferred over Wi-Fi preferred over WWAN.
+# systemd-networkd does not set per-interface-type default route metrics.
+# Values from NetworkManager (nm_device_get_route_metric_default).
+[DHCPv4]
+RouteMetric=100
+
+[IPv6AcceptRA]
+RouteMetric=100

@@ -7,7 +7,7 @@
 #           ~/.local/lib/{check-nas-connection,sync-to-nas,good-time-to-run}
 # Enables:  nas-sync-{documents,music,photos,audiobooks,books}.timer
 # Note: The NAS rsync PASSWORD and initial clone are deferred to
-#       setup-secrets.sh (need proton-pass login + network). The timers are
+#       setup.sh (need proton-pass login + network). The timers are
 #       enabled here so they fire automatically once the password is in place.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
@@ -32,7 +32,7 @@ for _lib in check-nas-connection sync-to-nas good-time-to-run; do
   link_file "$DOTFILES_HOME/.local/lib/$_lib" "$HOME/.local/lib/$_lib"
 done
 
-# Create the nas-sync config dir (password file is written by setup-secrets.sh)
+# Create the nas-sync config dir (password file is written by setup.sh)
 mkdir -p "$HOME/.config/nas-sync"
 
 # Enable timers

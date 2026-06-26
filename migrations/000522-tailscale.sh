@@ -3,7 +3,7 @@
 # Links:    —
 # Enables:  tailscaled
 # Note: The interactive 'tailscale up' authentication is deferred to
-#       setup-secrets.sh (run after reboot into Hyprland). This migration only
+#       setup.sh (run after reboot into Hyprland). This migration only
 #       installs and enables the daemon.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"

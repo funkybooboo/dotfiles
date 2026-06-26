@@ -1,6 +1,6 @@
 # 000108-neovim.sh — Neovim + plugin tooling + config
-# Installs: neovim nvimpager tree-sitter-cli stylua luarocks lua51
-#           python-pynvim tectonic
+# Installs: neovim tree-sitter-cli stylua luarocks lua51 python-pynvim
+#           tectonic (AUR) nvimpager (AUR)
 # Links:    ~/.config/nvim/**, ~/.editorconfig
 # Enables:  —
 # Note: tectonic provides LaTeX for the nvim latex plugin. nvimpager is the
@@ -9,14 +9,21 @@
 #       The 99 plugin (lua/plugins/99.lua) is developed locally and loaded via
 #       dir = "~/sources/99"; it is cloned here from
 #       github.com/funkybooboo/99.git (idempotent).
+#       nvimpager was dropped from the pacman repos and is now installed from
+#       the AUR. The AUR package is also flagged out-of-date (2026-04-02); see
+#       README.md "Known issues" — replace it with a maintained alternative at
+#       a future date.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "neovim"
 
 install_pacman \
-  neovim nvimpager tree-sitter-cli stylua luarocks lua51 \
+  neovim tree-sitter-cli stylua luarocks lua51 \
   python-pynvim
+# nvimpager was dropped from the pacman repos — install from the AUR instead.
+# (AUR package is flagged out-of-date; see README.md "Known issues".)
+install_aur nvimpager
 install_aur tectonic
 ok "neovim + tooling"
 

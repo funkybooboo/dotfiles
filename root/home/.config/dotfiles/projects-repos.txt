@@ -1,0 +1,36 @@
+# Repos to clone into ~/Projects by setup.sh (post-reboot, after SSH is ready).
+# One repository URL per line. Blank lines and lines starting with '#' are
+# ignored. Repos are cloned idempotently (skipped if ~/Projects/<name>/.git
+# already exists). To add a repo, append its URL here and re-run the migration.
+#
+# NOTE: URLs are cloned as-is. These HTTPS URLs work for read access and for
+#       push via cached credentials. To push using your SSH key, switch each
+#       repo's remote after cloning:
+#         git -C ~/Projects/<name> remote set-url origin git@github.com:funkybooboo/<name>.git
+https://github.com/funkybooboo/99
+https://github.com/funkybooboo/migrate-github-to-codeberg
+https://github.com/funkybooboo/lazyrts
+https://github.com/funkybooboo/sunfarm
+https://github.com/funkybooboo/openhaven
+https://github.com/funkybooboo/template
+https://github.com/funkybooboo/lazycsv
+https://github.com/funkybooboo/ideas
+https://github.com/funkybooboo/lazymusic
+https://github.com/funkybooboo/alle
+https://github.com/funkybooboo/resume
+https://github.com/funkybooboo/funkybooboo
+https://github.com/funkybooboo/funkybooboo.github.io
+https://github.com/funkybooboo/artisan-commerce
+https://github.com/funkybooboo/problem_practice
+https://github.com/funkybooboo/lazytrack
+https://github.com/funkybooboo/homelab
+https://github.com/funkybooboo/insighthub
+https://github.com/funkybooboo/stdlib
+https://github.com/funkybooboo/shell_whisperer
+https://github.com/funkybooboo/adventure_creator
+https://github.com/funkybooboo/evacuation_simulation
+https://github.com/funkybooboo/nateos
+https://github.com/funkybooboo/wrestling_tournament
+https://github.com/funkybooboo/enigma
+https://github.com/funkybooboo/cupid_code
+https://github.com/funkybooboo/vim-be-good

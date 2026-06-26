@@ -1,0 +1,22 @@
+# greetd config — tuigreet greeter launching the uwsm-managed Hyprland session.
+#
+# tuigreet is a console greeter that auto-discovers Wayland/X sessions from
+# /usr/share/wayland-sessions and /usr/share/xsessions. --remember remembers
+# the last user, --remember-user-session remembers the last session chosen for
+# that user (so after the first login it boots straight into that session),
+# and --time shows a clock. On first login pick "Hyprland (uwsm-managed)"
+# (hyprland-uwsm.desktop), which starts Hyprland under a systemd user manager
+# so Hyprland's environment reaches user services.
+#
+# Note: --sessions takes directory PATHS, not session names, so we rely on
+# tuigreet's auto-discovery rather than restricting the list.
+#
+# vt = 1: greetd owns tty1 (matches the enabled greetd.service unit, which
+#         targets tty1). Do not change without also changing the unit.
+
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --remember --remember-user-session --time"
+user = "greeter"

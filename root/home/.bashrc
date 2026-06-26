@@ -102,3 +102,5 @@ if command -v fzf &>/dev/null; then
         source /usr/share/fzf/key-bindings.bash
     fi
 fi
+# Pi
+export PATH="/home/nate/.local/share/mise/installs/node/24.18.0/bin:$PATH"

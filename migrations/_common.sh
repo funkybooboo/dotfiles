@@ -93,13 +93,37 @@ run_cmd_retry() {
 
 # Install pacman packages idempotently (--needed skips already-installed).
 # Always returns 0 so a single pacman failure (package renamed, removed,
-# conflict) doesn't abort the migration run under 'set -e'. Failures are
-# recorded via _add_warning and surface in the final summary.
+# conflict, or moved to the AUR) doesn't abort the migration run under 'set -e'.
+#
+# Resilience: a single bad target in a multi-package `pacman -S` aborts the
+# ENTIRE transaction (none of the other packages install). To avoid that, we
+# pre-filter the requested packages against the sync repos with `pacman -Si`,
+# install the available ones in one transaction, and warn explicitly about any
+# that are not in a pacman repo (those are usually AUR packages or renamed
+# packages that belong in install_aur instead).
+#
+# Failures are recorded via _add_warning and surface in the final summary.
 # Usage: install_pacman pkg1 pkg2 ...
 install_pacman() {
-  if ! sudo pacman -S --needed --noconfirm "$@"; then
-    warn "pacman install failed for one or more packages: $*"
-    _add_warning "pacman install failed for: $*"
+  local pkg available=() missing=()
+  for pkg in "$@"; do
+    if pacman -Si "$pkg" >/dev/null 2>&1; then
+      available+=("$pkg")
+    else
+      missing+=("$pkg")
+    fi
+  done
+
+  if (( ${#missing[@]} > 0 )); then
+    warn "not in pacman repos (skipping — likely AUR or renamed): ${missing[*]}"
+    _add_warning "pacman packages not in repos (install via AUR or manually): ${missing[*]}"
+  fi
+
+  if (( ${#available[@]} > 0 )); then
+    if ! sudo pacman -S --needed --noconfirm "${available[@]}"; then
+      warn "pacman install failed for one or more packages: ${available[*]}"
+      _add_warning "pacman install failed for: ${available[*]}"
+    fi
   fi
 }
 
@@ -371,9 +395,63 @@ preflight() {
     fail "no internet connection — required for package installation"
     exit 1
   fi
+
+  # ---------------------------------------------------------------------------
+  # Disk encryption checks (enforced). Silent encryption-setup failure is
+  # otherwise undetectable: archinstall can pull in cryptsetup and write a
+  # crypttab template yet never actually create the LUKS container, leaving an
+  # unencrypted system that boots with no passphrase prompt. Three independent
+  # signals are checked — all must pass on a properly encrypted install. See
+  # the README "Fresh install (archinstall)" section for the setup that
+  # satisfies these.
+  #
+  # Override with DOTFILES_ALLOW_UNENCRYPTED=1 to skip (for intentionally
+  # unencrypted systems — discouraged for a laptop).
+  # ---------------------------------------------------------------------------
+  if [[ "${DOTFILES_ALLOW_UNENCRYPTED:-0}" == "1" ]]; then
+    warn "DOTFILES_ALLOW_UNENCRYPTED=1 — skipping disk encryption checks"
+    _add_warning "running without disk encryption (DOTFILES_ALLOW_UNENCRYPTED=1)"
+  else
+    _enc_fail=0
+
+    # 1. Kernel cmdline must reference cryptdevice= (tells the initramfs to
+    #    unlock a LUKS device for root). /proc/cmdline is world-readable.
+    if grep -q 'cryptdevice=' /proc/cmdline 2>/dev/null; then
+      ok "kernel cmdline has cryptdevice= (encrypted root)"
+    else
+      fail "no cryptdevice= in /proc/cmdline — root is not configured for LUKS"
+      _enc_fail=1
+    fi
+
+    # 2. A LUKS container must physically exist (lsblk reports crypto_LUKS).
+    if lsblk -o FSTYPE -n 2>/dev/null | grep -q 'crypto_LUKS'; then
+      ok "LUKS container detected by lsblk"
+    else
+      fail "no crypto_LUKS device found by lsblk — disk is not encrypted"
+      _enc_fail=1
+    fi
+
+    # 3. mkinitcpio must carry the encrypt hook (initramfs can prompt + unlock).
+    if grep -E '^HOOKS=' /etc/mkinitcpio.conf 2>/dev/null | grep -qw 'encrypt'; then
+      ok "mkinitcpio has encrypt hook"
+    else
+      fail "mkinitcpio.conf HOOKS lacks 'encrypt' — initramfs cannot unlock LUKS"
+      _enc_fail=1
+    fi
+
+    if (( _enc_fail != 0 )); then
+      echo ""
+      fail "disk encryption checks FAILED — the root filesystem is not encrypted."
+      fail "See the README 'Fresh install (archinstall)' section for the setup,"
+      fail "or, if you intentionally run without encryption, re-run with:"
+      fail "  DOTFILES_ALLOW_UNENCRYPTED=1 ./migrate.sh"
+      exit 1
+    fi
+  fi
 }
 
 print_summary() {
+  local mode="${1:-migrate}"
   echo ""
   echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
   echo -e "${BOLD}${CYAN}  Summary${NC}"
@@ -394,12 +472,20 @@ print_summary() {
       fail "$e"
     done
     echo ""
-    echo -e "  ${RED}Migrations completed with errors — see above.${NC}"
+    if [[ "$mode" == "secrets" ]]; then
+      echo -e "  ${RED}Secrets setup completed with errors — see above.${NC}"
+    else
+      echo -e "  ${RED}Migrations completed with errors — see above.${NC}"
+    fi
     exit 1
   fi
 
   echo ""
-  echo -e "  ${GREEN}✓ Migrations complete!${NC}"
-  echo -e "  ${DIM}Next: reboot into Hyprland, then run ./setup-secrets.sh${NC}"
+  if [[ "$mode" == "secrets" ]]; then
+    echo -e "  ${GREEN}✓ Secrets & sync setup complete!${NC}"
+  else
+    echo -e "  ${GREEN}✓ Migrations complete!${NC}"
+    echo -e "  ${DIM}Next: reboot into Hyprland, then run ./setup.sh${NC}"
+  fi
   echo ""
 }

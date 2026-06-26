@@ -2,7 +2,7 @@
 # Installs (AUR): proton-pass-cli-bin proton-pass-bin
 # Links:    — (completions generated at runtime below)
 # Enables:  —
-# Note: The interactive pass-cli LOGIN is deferred to setup-secrets.sh (needs a
+# Note: The interactive pass-cli LOGIN is deferred to setup.sh (needs a
 #       browser + desktop). This migration only installs + sets up completions.
 #       Requires yay (installed by 000001-system-update); if yay is missing it
 #       warns and skips rather than piping a remote script to a shell.

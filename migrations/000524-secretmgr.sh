@@ -3,7 +3,7 @@
 # Links:    ~/.local/bin/secretmgr, ~/.config/secretmgr/config.toml
 # Enables:  —
 # Note: 'secretmgr bootstrap' (injects secrets into templated configs) is
-#       deferred to setup-secrets.sh — it requires proton-pass login first.
+#       deferred to setup.sh — it requires proton-pass login first.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

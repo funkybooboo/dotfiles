@@ -14,7 +14,7 @@
 
 section "power management"
 
-install_pacman power-profiles-daemon brightnessctl
+install_pacman power-profiles-daemon brightnessctl upower
 
 # udev rule switches power profile on AC/battery
 deploy_etc_file "$DOTFILES_ROOT_ETC/udev/rules.d/99-power-profile.rules" \
@@ -39,5 +39,10 @@ link_file "$DOTFILES_HOME/.local/lib/battery-notify" \
   "$HOME/.local/lib/battery-notify"
 
 enable_system_service "power-profiles-daemon.service"
+# upower provides battery state over D-Bus (used by wireplumber for battery
+# percentage, waybar, and battery-notify). It can start via D-Bus activation,
+# but enabling it makes it reliably present at boot instead of depending on a
+# caller to activate it.
+enable_system_service "upower.service"
 enable_user_service   "power-profile-switch.service"
 enable_user_service   "battery-notify.timer"
