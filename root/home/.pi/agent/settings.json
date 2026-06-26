@@ -1,0 +1,20 @@
+{
+  "theme": "dark",
+  "defaultProvider": "opencode",
+  "defaultModel": "glm-5.2",
+  "enabledModels": [
+    "qwen2.5:7b",
+    "qwen2.5-coder:7b",
+    "deepseek-r1:8b",
+    "llama3.1:8b",
+    "phi3:mini",
+    "opencode/kimi-k2.6",
+    "opencode/glm-5.2",
+    "opencode/gpt-5.1-codex",
+    "opencode/claude-sonnet-4-5",
+    "opencode/claude-opus-4-7",
+    "opencode/deepseek-v4-pro"
+  ],
+  "lastChangelogVersion": "0.80.2",
+  "defaultThinkingLevel": "medium"
+}

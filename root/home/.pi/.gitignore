@@ -2,7 +2,6 @@
 agent/auth.json
 agent/trust.json
 agent/sessions/
-agent/settings.json
 
 # Memory data (personal, not for dotfiles)
 agent/memory.json
