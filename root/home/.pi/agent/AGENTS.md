@@ -56,7 +56,7 @@
 ## Best Practices
 
 - Measure before optimizing (premature optimization is evil)
-- Make it work → make it right → make it fast
+- Make it work -> make it right -> make it fast
 - Simple > complex > complicated
 - Consider edge cases and backwards compatibility
 - Use type safety when available
@@ -67,10 +67,10 @@
 
 **Rule: every system-level fix or setup must be reproducible.** This machine is
 managed declaratively from `~/dotfiles/` (see `~/dotfiles/README.md`). A change
-that only fixes *this* machine is a bug — it must be captured so every other
+that only fixes *this* machine is a bug -- it must be captured so every other
 machine converges to the same state.
 
-**When you change system state, write a migration — do not just run a live
+**When you change system state, write a migration -- do not just run a live
 command.** System state includes: installing/removing packages, deploying or
 editing configs under `~/.config/` or `/etc/`, setting env vars, enabling
 systemd services, installing npm/cargo/pip tools, building caches, linking
@@ -80,17 +80,17 @@ scripts into `~/.local/bin/`.
 
 - **Tracked config files** (under `~/dotfiles/root/home/` and `~/dotfiles/root/etc/`)
   replicate automatically via the `link_file`/`link_tree`/`link_dir`/`deploy_etc_file`
-  calls in existing migrations. Editing a tracked file is enough — no new
+  calls in existing migrations. Editing a tracked file is enough -- no new
   migration needed just to change config contents. Example: editing
   `root/home/.config/nvim/lua/plugins/zig.lua`.
 - **A new runtime step** (install a package, `npm install -g`, `bat cache --build`,
   enable a service, link a new script) MUST become a migration, because
-  `link_tree` only symlinks files — it does not run commands. If you had to run
+  `link_tree` only symlinks files -- it does not run commands. If you had to run
   a command to make a config take effect, that command belongs in a migration.
   Examples: `000208-neovim-node-host.sh` (npm install), `000105-bat.sh` (bat
   cache --build).
 - **New config file in an already-link_tree'd dir** (e.g. a new nvim plugin spec)
-  needs no migration — `link_tree` picks it up — but you must still symlink it
+  needs no migration -- `link_tree` picks it up -- but you must still symlink it
   into the live `~/.config/` tree (or note that `migrate.sh` will do so on the
   next run) and commit it.
 
@@ -101,12 +101,12 @@ scripts into `~/.local/bin/`.
    `000200`-`000210`, apps `000500`-`000542`). Re-run `./migrate.sh` to apply.
 2. Guard-source the helpers as the first line:
    `[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"`
-3. Use the `_common.sh` helpers — never call `pacman`/`sudo`/`ln` directly:
+3. Use the `_common.sh` helpers -- never call `pacman`/`sudo`/`ln` directly:
    `install_pacman`, `install_aur`, `link_file`, `link_tree`, `link_dir`,
    `deploy_etc_file`, `enable_user_service`, `enable_system_service`,
    `enable_system_service_no_start`.
 4. Be **idempotent**: re-running must be safe (check before installing, skip
-   when already done). Conflicts are backup-only (`<dest>.bak.N`) — no
+   when already done). Conflicts are backup-only (`<dest>.bak.N`) -- no
    `--force`/`--merge`/dry-run/restore.
 5. Be **non-fatal**: a single failure must not abort the run. Record problems
    with `_add_warning` / `_add_error` so they surface in the final summary.
@@ -114,7 +114,7 @@ scripts into `~/.local/bin/`.
 6. Mind **ordering**: migrations run in lexicographic order. If yours needs a
    runtime from an earlier migration (e.g. node/npm from `000202-mise.sh`),
    number it after that migration.
-7. Header comment: `# NNNNNN-name.sh — <one-line summary>` then `# Installs:`,
+7. Header comment: `# NNNNNN-name.sh -- <one-line summary>` then `# Installs:`,
    `# Links:`, `# Enables:`, `# Note:` lines, matching the existing style.
 
 **After writing a migration:** test it standalone (`bash
@@ -125,6 +125,6 @@ missing-dependency path; update the migration count in `~/dotfiles/README.md`;
 existing link helpers).
 
 **Never** leave a fix applied only to the live system. If you ran a one-off
-command to fix something, ask: "how does the next machine get this?" — if the
+command to fix something, ask: "how does the next machine get this?" -- if the
 answer isn't "an existing migration already does it" or "a tracked config
 file", write a migration before declaring the task done.
