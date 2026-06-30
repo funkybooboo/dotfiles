@@ -8,7 +8,7 @@ export PAGER=nvimpager
 export MANPAGER=nvimpager
 export BROWSER=librewolf
 export SUDO_EDITOR="$EDITOR"
-export BAT_THEME=ansi
+export BAT_THEME="Catppuccin Mocha"
 export MANROFFOPT="-c"
 export LESSHISTFILE=-
 export PYTHONSTARTUP="${XDG_CONFIG_HOME:-$HOME/.config}/python/pythonrc"
@@ -95,6 +95,17 @@ fi
 
 # fzf
 if command -v fzf &>/dev/null; then
+    # Catppuccin Mocha fzf colors
+    export FZF_DEFAULT_OPTS="\
+        --height 40% \
+        --layout=reverse \
+        --border \
+        --prompt='❯ ' \
+        --pointer='▶' \
+        --color=bg:#1e1e2e,bg+:#313244,fg:#cdd6f4,fg+:#cdd6f4 \
+        --color=hl:#f38ba8,hl+:#f38ba8,header:#f38ba8 \
+        --color=info:#cba6f7,prompt:#cba6f7,pointer:#f5e0dc \
+        --color=marker:#a6e3a1,spinner:#f5e0dc,border:#45475a"
     if [[ -f /usr/share/fzf/completion.bash ]]; then
         source /usr/share/fzf/completion.bash
     fi

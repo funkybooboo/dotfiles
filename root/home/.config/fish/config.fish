@@ -10,7 +10,7 @@ set -gx VISUAL nvim
 set -gx PAGER less
 set -gx MANPAGER less
 set -gx SUDO_EDITOR nvim
-set -gx BAT_THEME ansi
+set -gx BAT_THEME "Catppuccin Mocha"
 set -gx MANROFFOPT "-c"
 set -gx LESSHISTFILE -
 set -gx PYTHONSTARTUP $HOME/.config/python/pythonrc
@@ -139,7 +139,11 @@ if command -v fzf &>/dev/null
         --layout=reverse \
         --border \
         --prompt='❯ ' \
-        --pointer='▶'"
+        --pointer='▶' \
+        --color=bg:#1e1e2e,bg+:#313244,fg:#cdd6f4,fg+:#cdd6f4 \
+        --color=hl:#f38ba8,hl+:#f38ba8,header:#f38ba8 \
+        --color=info:#cba6f7,prompt:#cba6f7,pointer:#f5e0dc \
+        --color=marker:#a6e3a1,spinner:#f5e0dc,border:#45475a"
 
     if command -v fd &>/dev/null
         set -gx FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
