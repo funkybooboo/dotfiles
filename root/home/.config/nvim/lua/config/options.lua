@@ -22,6 +22,3 @@ vim.g.node_host_prog = vim.fn.expand("~/.local/bin/neovim-node-host")
 
 -- Ensure treesitter parser install dir is in runtimepath
 vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
-
--- Ported from omarchy-nvim: turn off relative line numbers (LazyVim defaults on)
-vim.opt.relativenumber = false
