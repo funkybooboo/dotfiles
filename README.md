@@ -84,7 +84,7 @@ and the initial NAS clone.
 
 ## Migrations
 
-71 migrations grouped by concern. `ls migrations/` for the full list.
+72 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
