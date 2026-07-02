@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# package-cleanup — review recently installed packages and optionally uninstall them
+# package-cleanup - review recently installed packages and optionally uninstall them
 #
 # Usage: package-cleanup [--days N] [--dry-run]
 #
@@ -46,11 +46,13 @@ if ! [[ "$DAYS" =~ ^[1-9][0-9]*$ ]]; then
   exit 1
 fi
 
-# pacman log is at /var/log/pacman.log
-PACMAN_LOG="/var/log/pacman.log"
-if [[ ! -f "$PACMAN_LOG" ]]; then
-  echo -e "${RED}Error:${NC} pacman log not found at $PACMAN_LOG"
-  exit 1
+# --- OS detection ---
+OS_FAMILY="unknown"
+if [ -r /etc/os-release ]; then . /etc/os-release
+    case " ${ID:-} ${ID_LIKE:-} " in
+        *" arch "*)                        OS_FAMILY="arch" ;;
+        *" debian "*|*" ubuntu "*)         OS_FAMILY="debian" ;;
+    esac
 fi
 
 echo -e "${BLUE}${BOLD}Package Cleanup${NC}"
@@ -60,25 +62,51 @@ echo ""
 # Calculate the cutoff date (YYYY-MM-DD format)
 CUTOFF=$(date -d "-${DAYS} days" '+%Y-%m-%d')
 
-# Parse pacman log for installed packages since cutoff
-# Log format: [YYYY-MM-DDTHH:MM:SS+ZZZZ] [ALPM] installed <pkg> (<version>)
-#         or: [YYYY-MM-DDTHH:MM:SS+ZZZZ] [ALPM] upgraded <pkg> (<old> -> <new>)
-mapfile -t INSTALLED < <(
-  grep '^\[' "$PACMAN_LOG" \
-    | awk -v cutoff="$CUTOFF" '
-        /\[ALPM\] installed / {
-          # Extract date: [2026-02-18T...] -> 2026-02-18
-          match($0, /\[([0-9]{4}-[0-9]{2}-[0-9]{2})/, arr)
-          if (arr[1] >= cutoff) {
-            # Extract package name (field after "installed")
-            for (i=1; i<=NF; i++) {
-              if ($i == "installed") { print $(i+1); break }
-            }
-          }
-        }
-      ' \
-    | sort -u
-)
+# Parse recently-installed packages based on OS
+case "$OS_FAMILY" in
+    arch)
+        PACMAN_LOG="/var/log/pacman.log"
+        if [[ ! -f "$PACMAN_LOG" ]]; then
+            echo -e "${RED}Error:${NC} pacman log not found at $PACMAN_LOG"
+            exit 1
+        fi
+        # Log format: [YYYY-MM-DDTHH:MM:SS+ZZZZ] [ALPM] installed <pkg> (<version>)
+        mapfile -t INSTALLED < <(
+            grep '^\[' "$PACMAN_LOG" \
+                | awk -v cutoff="$CUTOFF" '
+                    /\[ALPM\] installed / {
+                        match($0, /\[([0-9]{4}-[0-9]{2}-[0-9]{2})/, arr)
+                        if (arr[1] >= cutoff) {
+                            for (i=1; i<=NF; i++) {
+                                if ($i == "installed") { print $(i+1); break }
+                            }
+                        }
+                    }
+                  ' \
+                | sort -u
+        )
+        ;;
+    debian)
+        DPKG_LOG="/var/log/dpkg.log"
+        if [[ ! -f "$DPKG_LOG" ]]; then
+            echo -e "${RED}Error:${NC} dpkg log not found at $DPKG_LOG"
+            exit 1
+        fi
+        # Log format: YYYY-MM-DD HH:MM:SS install pkg:arch <none> version
+        mapfile -t INSTALLED < <(
+            awk -v cutoff="$CUTOFF" '
+                $3 == "install" && $1 >= cutoff {
+                    split($4, a, ":")
+                    print a[1]
+                }
+            ' "$DPKG_LOG" | sort -u
+        )
+        ;;
+    *)
+        echo -e "${RED}Error:${NC} Unsupported OS family: $OS_FAMILY"
+        exit 1
+        ;;
+esac
 
 if [[ ${#INSTALLED[@]} -eq 0 ]]; then
   echo -e "${GREEN}No packages installed in the last ${DAYS} day(s).${NC}"
@@ -88,9 +116,14 @@ fi
 # Filter to only packages that are currently installed
 CURRENT=()
 for pkg in "${INSTALLED[@]}"; do
-  if pacman -Qi "$pkg" &>/dev/null; then
-    CURRENT+=("$pkg")
-  fi
+    case "$OS_FAMILY" in
+        arch)
+            pacman -Qi "$pkg" &>/dev/null && CURRENT+=("$pkg") || true
+            ;;
+        debian)
+            dpkg -s "$pkg" 2>/dev/null | grep -q "^Status: install ok installed" && CURRENT+=("$pkg") || true
+            ;;
+    esac
 done
 
 if [[ ${#CURRENT[@]} -eq 0 ]]; then
@@ -104,52 +137,68 @@ echo ""
 TO_REMOVE=()
 
 for pkg in "${CURRENT[@]}"; do
-  # Get package info
-  info=$(pacman -Qi "$pkg" 2>/dev/null)
-  version=$(echo "$info" | awk -F': ' '/^Version/{print $2; exit}')
-  install_date=$(echo "$info" | awk -F': ' '/^Install Date/{print $2; exit}')
-  install_reason=$(echo "$info" | awk -F': ' '/^Install Reason/{print $2; exit}')
-  description=$(echo "$info" | awk -F': ' '/^Description/{print $2; exit}')
-  installed_size=$(echo "$info" | awk -F': ' '/^Installed Size/{print $2; exit}')
-
-  # Color reason: explicit = yellow, dependency = dim
-  if [[ "$install_reason" == *"Explicitly"* ]]; then
-    reason_color="${YELLOW}"
-    reason_label="explicit"
-  else
-    reason_color="${CYAN}"
-    reason_label="dependency"
-  fi
-
-  echo -e "  ${BOLD}${pkg}${NC} ${version}"
-  echo -e "    ${description}"
-  echo -e "    Installed: ${install_date}  |  Size: ${installed_size}  |  Reason: ${reason_color}${reason_label}${NC}"
-  echo ""
-
-  # Ask user
-  while true; do
-    read -r -p "    Remove ${pkg}? [y/N/q] " answer
-    case "${answer,,}" in
-      y|yes)
-        TO_REMOVE+=("$pkg")
-        echo -e "    ${RED}→ Queued for removal${NC}"
-        break
-        ;;
-      n|no|"")
-        echo -e "    ${GREEN}→ Keeping${NC}"
-        break
-        ;;
-      q|quit)
-        echo ""
-        echo -e "${YELLOW}Quit early.${NC}"
-        break 2
-        ;;
-      *)
-        echo "    Please answer y, n, or q (quit)"
-        ;;
+    # Get package info
+    case "$OS_FAMILY" in
+        arch)
+            info=$(pacman -Qi "$pkg" 2>/dev/null)
+            version=$(echo "$info" | awk -F': ' '/^Version/{print $2; exit}')
+            install_date=$(echo "$info" | awk -F': ' '/^Install Date/{print $2; exit}')
+            install_reason=$(echo "$info" | awk -F': ' '/^Install Reason/{print $2; exit}')
+            description=$(echo "$info" | awk -F': ' '/^Description/{print $2; exit}')
+            installed_size=$(echo "$info" | awk -F': ' '/^Installed Size/{print $2; exit}')
+            ;;
+        debian)
+            version=$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null || echo "unknown")
+            description=$(dpkg-query -W -f='${Description}' "$pkg" 2>/dev/null | head -1)
+            install_date=$(stat -c %y "/var/lib/dpkg/info/${pkg}.list" 2>/dev/null | cut -d. -f1 || echo "unknown")
+            install_size_kb=$(dpkg-query -W -f='${Installed-Size}' "$pkg" 2>/dev/null || echo "0")
+            installed_size="${install_size_kb} kB"
+            if apt-mark showmanual 2>/dev/null | grep -qxF "$pkg"; then
+                install_reason="Explicitly installed"
+            else
+                install_reason="Installed as dependency"
+            fi
+            ;;
     esac
-  done
-  echo ""
+
+    # Color reason: explicit = yellow, dependency = dim
+    if [[ "$install_reason" == *"Explicitly"* ]]; then
+        reason_color="${YELLOW}"
+        reason_label="explicit"
+    else
+        reason_color="${CYAN}"
+        reason_label="dependency"
+    fi
+
+    echo -e "  ${BOLD}${pkg}${NC} ${version}"
+    echo -e "    ${description}"
+    echo -e "    Installed: ${install_date}  |  Size: ${installed_size}  |  Reason: ${reason_color}${reason_label}${NC}"
+    echo ""
+
+    # Ask user
+    while true; do
+        read -r -p "    Remove ${pkg}? [y/N/q] " answer
+        case "${answer,,}" in
+            y|yes)
+                TO_REMOVE+=("$pkg")
+                echo -e "    ${RED}-> Queued for removal${NC}"
+                break
+                ;;
+            n|no|"")
+                echo -e "    ${GREEN}-> Keeping${NC}"
+                break
+                ;;
+            q|quit)
+                echo ""
+                echo -e "${YELLOW}Quit early.${NC}"
+                break 2
+                ;;
+            *)
+                echo "    Please answer y, n, or q (quit)"
+                ;;
+        esac
+    done
+    echo ""
 done
 
 # Summary and removal
@@ -160,13 +209,16 @@ fi
 
 echo -e "${BOLD}Packages to remove (${#TO_REMOVE[@]}):${NC}"
 for pkg in "${TO_REMOVE[@]}"; do
-  echo -e "  ${RED}✗${NC} ${pkg}"
+  echo -e "  ${RED}X${NC} ${pkg}"
 done
 echo ""
 
 if [[ $DRY_RUN -eq 1 ]]; then
-  echo -e "${YELLOW}[dry-run]${NC} Would run: sudo pacman -Rns ${TO_REMOVE[*]}"
-  exit 0
+    case "$OS_FAMILY" in
+        arch)   echo -e "${YELLOW}[dry-run]${NC} Would run: sudo pacman -Rns ${TO_REMOVE[*]}" ;;
+        debian) echo -e "${YELLOW}[dry-run]${NC} Would run: sudo apt-get remove --purge ${TO_REMOVE[*]}" ;;
+    esac
+    exit 0
 fi
 
 read -r -p "Proceed with removal? [y/N] " confirm
@@ -177,7 +229,10 @@ fi
 
 echo ""
 echo -e "${BLUE}Removing packages...${NC}"
-sudo pacman -Rns "${TO_REMOVE[@]}"
+case "$OS_FAMILY" in
+    arch)   sudo pacman -Rns "${TO_REMOVE[@]}" ;;
+    debian) sudo apt-get remove --purge "${TO_REMOVE[@]}" ;;
+esac
 
 echo ""
 echo -e "${GREEN}Done.${NC}"

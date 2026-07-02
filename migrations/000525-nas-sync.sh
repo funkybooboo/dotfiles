@@ -1,5 +1,5 @@
-# 000525-nas-sync.sh — NAS rsync sync units + helper scripts + timers
-# Installs: — (rsync installed by 000221-rsync)
+# 000525-nas-sync.sh -- NAS rsync sync units + helper scripts + timers
+# Installs: -- (rsync installed by 000221-rsync)
 # Links:    ~/.config/systemd/user/nas-sync-{documents,music,photos,
 #             audiobooks,books}.{service,timer},
 #           ~/.local/bin/{sync-documents,sync-music,sync-photos,
@@ -10,7 +10,7 @@
 #       setup.sh (need proton-pass login + network). The timers are
 #       enabled here so they fire automatically once the password is in place.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "nas sync"
 

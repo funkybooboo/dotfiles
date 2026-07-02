@@ -1,6 +1,6 @@
-# 000405-firewall.sh — UFW firewall + ufw-docker
+# 000405-firewall.sh -- UFW firewall + ufw-docker
 # Installs: ufw ufw-docker
-# Links:    —
+# Links:    --
 # Enables:  ufw.service (started)
 # Note: This is a laptop with no inbound SSH requirement, so we apply a basic
 #       default-deny-incoming / default-allow-outgoing policy and activate UFW
@@ -10,14 +10,19 @@
 #
 #         sudo ufw allow ssh   # or: sudo ufw allow 22/tcp
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
+
+# Ubuntu ships ufw but the corp box already has a managed firewall policy;
+# a default-deny-incoming rule applied here could strand the managed laptop.
+# Skip entirely on non-Arch.
+require_os arch || return 0
 
 section "firewall"
 
 install_pacman ufw
 install_aur ufw-docker
 
-# Base policy: deny inbound, allow outbound. Idempotent — ufw no-ops if the
+# Base policy: deny inbound, allow outbound. Idempotent -- ufw no-ops if the
 # policy is already set. Applied before `ufw enable` so the first activation
 # has a safe policy in place.
 sudo ufw default deny incoming
@@ -32,7 +37,7 @@ else
   if sudo ufw --force enable; then
     ok "ufw activated (default deny incoming / allow outgoing)"
   else
-    warn "failed to activate ufw — run 'sudo ufw enable' manually"
+    warn "failed to activate ufw -- run 'sudo ufw enable' manually"
     _add_warning "ufw --force enable failed; run 'sudo ufw enable' manually"
   fi
 fi

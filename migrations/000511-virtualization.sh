@@ -1,34 +1,59 @@
-# 000511-virtualization.sh — libvirt + virt-manager + QEMU + network config
-# Installs: libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
+# 000511-virtualization.sh -- libvirt + virt-manager + QEMU + network config
+# Installs: libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm  (Arch)
+#           libvirt-daemon-system virt-manager qemu-system-x86 ovmf
+#           swtpm dnsmasq-base                                       (Debian)
 # Deploys: /etc/libvirt/networks/default.xml, /etc/profile.d/libvirt.sh
-# Links:    —
+# Links:    --
 # Enables:  libvirtd.service, virtlogd.service
 # Note: Adds $USER to the libvirt group (requires logout/login to take effect),
 #       configures the default NAT network with DNS forwarders, and adds UFW
 #       rules for the virbr0 bridge (only if UFW is enabled).
+#
+# DEBIAN/UBUNTU GATE: This migration modifies system groups and starts libvirtd,
+# which is MDM-compliance-sensitive on a managed laptop. It will SKIP unless
+# DOTFILES_ENABLE_VIRT=1 is exported before running migrate.sh.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "virtualization"
 
-install_pacman \
-  libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
+# Safety gate: skip on Debian unless explicitly opted in.
+if is_debian && [[ "${DOTFILES_ENABLE_VIRT:-}" != "1" ]]; then
+  skip "virtualization (set DOTFILES_ENABLE_VIRT=1 to enable on Debian/Ubuntu)"
+  return 0
+fi
+
+if is_debian; then
+  install_apt \
+    libvirt-daemon-system virt-manager qemu-system-x86 ovmf swtpm dnsmasq-base
+else
+  install_pacman \
+    libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
+fi
 
 enable_system_service "libvirtd.service"
 enable_system_service "virtlogd.service"
 
-# Add user to libvirt group
-if groups "$USER" | grep -qw libvirt; then
-  skip "libvirt group (already a member)"
+# Add user to libvirt (and kvm on Debian) groups
+if is_debian; then
+  _virt_groups=(libvirt kvm)
 else
-  if sudo usermod -aG libvirt "$USER"; then
-    warn "added $USER to libvirt group — log out and back in for this to take effect"
-    _add_warning "log out and back in for libvirt group membership to take effect"
-  else
-    warn "failed to add $USER to libvirt group"
-    _add_warning "usermod -aG libvirt failed; add manually: sudo usermod -aG libvirt $USER"
-  fi
+  _virt_groups=(libvirt)
 fi
+
+for _grp in "${_virt_groups[@]}"; do
+  if groups "$USER" | grep -qw "$_grp"; then
+    skip "$_grp group (already a member)"
+  else
+    if sudo usermod -aG "$_grp" "$USER"; then
+      warn "added $USER to $_grp group -- log out and back in for this to take effect"
+      _add_warning "log out and back in for $_grp group membership to take effect"
+    else
+      warn "failed to add $USER to $_grp group"
+      _add_warning "usermod -aG $_grp failed; add manually: sudo usermod -aG $_grp $USER"
+    fi
+  fi
+done
 
 # libvirt default network XML + profile.d env var
 deploy_etc_file "$DOTFILES_ROOT_ETC/libvirt/networks/default.xml" \
@@ -46,14 +71,14 @@ if [[ -f "$LIBVIRT_NETWORK_XML" ]] && systemctl is-active --quiet libvirtd.servi
       virsh -c qemu:///system net-start default &>/dev/null || true
       ok "libvirt default network configured"
     else
-      warn "failed to configure libvirt network — check libvirt group membership"
-      _add_warning "libvirt network configuration failed — may need logout/login for group membership"
+      warn "failed to configure libvirt network -- check libvirt group membership"
+      _add_warning "libvirt network configuration failed -- may need logout/login for group membership"
     fi
   else
     skip "libvirt default network (already defined)"
   fi
 else
-  skip "libvirt default network (libvirtd not running — will apply on first start)"
+  skip "libvirt default network (libvirtd not running -- will apply on first start)"
 fi
 
 # UFW rules for the virbr0 bridge (only if UFW is installed). ufw is NOT
@@ -72,9 +97,9 @@ if command -v ufw &>/dev/null; then
       comment 'libvirt NAT' 2>/dev/null || true
     ok "UFW: libvirt virbr0 rules added (apply on next boot)"
   else
-    warn "could not detect primary interface — add the UFW route rule manually"
-    _add_warning "UFW libvirt NAT route rule skipped — primary interface not detected"
+    warn "could not detect primary interface -- add the UFW route rule manually"
+    _add_warning "UFW libvirt NAT route rule skipped -- primary interface not detected"
   fi
 else
-  skip "ufw not installed — libvirt firewall rules skipped"
+  skip "ufw not installed -- libvirt firewall rules skipped"
 fi

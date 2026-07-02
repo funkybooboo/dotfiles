@@ -14,7 +14,7 @@ Install with these options so `./migrate.sh` applies cleanly:
 | `/boot` | 1 GiB | FAT32 | **none** |
 | `/` | rest | btrfs | **LUKS** |
 
-Btrfs subvolumes: `@` → `/`, `@home` → `/home`, `@log` → `/var/log`, `@pkg` → `/var/cache/pacman/pkg`.
+Btrfs subvolumes: `@` -> `/`, `@home` -> `/home`, `@log` -> `/var/log`, `@pkg` -> `/var/cache/pacman/pkg`.
 
 ### archinstall options
 
@@ -24,7 +24,7 @@ Btrfs subvolumes: `@` → `/`, `@home` → `/home`, `@log` → `/var/log`, `@pkg
 - **Kernels:** `linux-lts` + `linux-hardened` (or just `linux-lts`, migration adds hardened)
 - **Swap:** zram
 - **User:** `nate`, sudo, **shell = bash** (migration sets fish later)
-- **Profile:** minimal (not Hyprland — migration owns it)
+- **Profile:** minimal (not Hyprland -- migration owns it)
 - **Network:** iwd + systemd-networkd (not NetworkManager)
 - **Audio:** pipewire (migration installs it anyway)
 - **Locale:** `en_US.UTF-8`
@@ -37,7 +37,7 @@ grep '^HOOKS' /etc/mkinitcpio.conf        # must contain 'encrypt'
 grep cryptdevice /boot/limine/limine.conf  # must have cryptdevice=...:root
 ```
 
-`/etc/crypttab` is **not** required for root encryption — the initramfs `encrypt`
+`/etc/crypttab` is **not** required for root encryption -- the initramfs `encrypt`
 hook unlocks root via `cryptdevice=` in the kernel cmdline. `migrate.sh` enforces
 these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
 
@@ -59,15 +59,15 @@ Then **reboot into Hyprland** and run:
 
 ```
 dotfiles/
-├── migrate.sh        # preflight → run migrations in order → summary
-├── setup.sh          # post-reboot: Proton Pass, Tailscale, SSH, NAS sync, projects
-├── migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
-└── root/
-    ├── home/         # → $HOME (symlinked)
-    └── etc/          # → /etc (copied with sudo)
++-- migrate.sh        # preflight -> run migrations in order -> summary
++-- setup.sh          # post-reboot: Proton Pass, Tailscale, SSH, NAS sync, projects
++-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
+`-- root/
+    +-- home/         # -> $HOME (symlinked)
+    `-- etc/          # -> /etc (copied with sudo)
 ```
 
-- `migrations/_common.sh` provides helpers: `install_pacman`, `install_aur`,
+- `_common.sh` provides helpers: `install_pacman`, `install_aur`,
   `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`, `enable_*_service`.
 - Each migration guard-sources `_common.sh` so it can run standalone.
 - No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
@@ -88,14 +88,14 @@ and the initial NAS clone.
 
 | Range | Concern |
 |-------|---------|
-| `000001`–`000082` | System, bootloader, kernels, AppArmor, security |
-| `000100`–`000109` | Shell & editors |
-| `000200`–`000210` | Dev tools |
-| `000300`–`000320` | Desktop, Hyprland, browsers, audio |
-| `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000543` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula |
+| `000001`-`000082` | System, bootloader, kernels, AppArmor, security |
+| `000100`-`000109` | Shell & editors |
+| `000200`-`000210` | Dev tools |
+| `000300`-`000320` | Desktop, Hyprland, browsers, audio |
+| `000400`-`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
+| `000500`-`000543` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula |
 
-`sudo` is asserted as a preflight prerequisite — not installed by a migration.
+`sudo` is asserted as a preflight prerequisite -- not installed by a migration.
 
 **Not deployed by migrations** (too machine-specific): `/etc/fstab`,
 `/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`. On an existing install,
@@ -105,8 +105,8 @@ these are already correct.
 
 ### Reboot checklist
 
-- [ ] `systemctl is-enabled ufw greetd apparmor` — all `enabled`
-- [ ] `sudo grep apparmor=1 /boot/limine/limine.conf` — both kernels
+- [ ] `systemctl is-enabled ufw greetd apparmor` -- all `enabled`
+- [ ] `sudo grep apparmor=1 /boot/limine/limine.conf` -- both kernels
 - [ ] `./setup.sh` (after reboot)
 
 After reboot:
@@ -140,11 +140,11 @@ on login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 Migrations link their own scripts into `~/.local/bin/` and `~/.local/lib/`.
 Key ones:
 
-- `update` — yay + flatpak + firmware
-- `clean-disk` — orphans, caches, unused flatpaks
-- `secretmgr` — Proton Pass wrapper
-- `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
-- `vpn` — VPN management
+- `update` -- yay + flatpak + firmware
+- `clean-disk` -- orphans, caches, unused flatpaks
+- `secretmgr` -- Proton Pass wrapper
+- `sync-*` -- NAS sync (documents, music, photos, audiobooks, books)
+- `vpn` -- VPN management
 
 ## NAS Sync
 
@@ -175,11 +175,11 @@ them after a fresh install.
 
 ## Known issues
 
-- **nvimpager** (AUR, flagged out-of-date) — installed from AUR after `extra/nvimpager`
+- **nvimpager** (AUR, flagged out-of-date) -- installed from AUR after `extra/nvimpager`
   was dropped. Replace with a maintained alternative at a future date.
-- **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
+- **rkhunter egrep spam** -- cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 
 ## License
 
-GPL — see [LICENSE](LICENSE)
+GPL -- see [LICENSE](LICENSE)

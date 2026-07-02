@@ -1,20 +1,20 @@
-# 000540-lazycsv.sh — lazycsv CSV viewer/editor (Rust TUI)
-# Installs: — (rust/cargo provided by mise, migration 000202)
-# Links:    —
-# Enables:  —
+# 000540-lazycsv.sh -- lazycsv CSV viewer/editor (Rust TUI)
+# Installs: -- (rust/cargo provided by mise, migration 000202)
+# Links:    --
+# Enables:  --
 # Note: lazycsv is a Rust TUI for CSV files (github.com/funkybooboo/lazycsv).
 #       It is cloned into ~/sources/lazycsv (idempotent), built in release mode
 #       with cargo, and installed to ~/.local/bin so it is on PATH alongside
 #       the other user-local binaries. The build uses the mise-managed Rust
 #       toolchain; duckdb is built bundled (no system duckdb required).
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "lazycsv"
 
 # Cargo must be available (provisioned by the mise migration, 000202).
 if ! command -v cargo &>/dev/null; then
-  fail "cargo not found — run the mise migration (000202) first"
+  fail "cargo not found -- run the mise migration (000202) first"
   _add_error "cargo not installed; cannot build lazycsv"
   exit 1
 fi
@@ -25,7 +25,7 @@ LAZYCSV_DIR="$HOME/sources/lazycsv"
 if [[ -d "$LAZYCSV_DIR/.git" ]]; then
   skip "lazycsv repo (already cloned)"
 else
-  info "cloning lazycsv → ~/sources/lazycsv..."
+  info "cloning lazycsv -> ~/sources/lazycsv..."
   mkdir -p "$HOME/sources"
   if git clone --quiet https://github.com/funkybooboo/lazycsv.git "$LAZYCSV_DIR"; then
     ok "lazycsv cloned"
@@ -46,7 +46,7 @@ else
   exit 1
 fi
 
-info "installing lazycsv → ~/.local/bin..."
+info "installing lazycsv -> ~/.local/bin..."
 if (cd "$LAZYCSV_DIR" && cargo install --path . --root "$HOME/.local" --force); then
   ok "lazycsv installed to ~/.local/bin/lazycsv"
 else

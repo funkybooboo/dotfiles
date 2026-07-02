@@ -1,9 +1,9 @@
-# 000206-pi-agent.sh — pi coding agent config (pi installed out-of-band via curl)
-# Installs: — (pi is installed separately via the official curl installer)
+# 000206-pi-agent.sh -- pi coding agent config (pi installed out-of-band via curl)
+# Installs: -- (pi is installed separately via the official curl installer)
 # Links:    ~/.pi/**
-# Enables:  —
+# Enables:  --
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "pi agent"
 

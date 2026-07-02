@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# clean-disk — clean system on Arch Linux (supports Flatpak, Docker, Brew, pip, npm, pnpm, bun, Rust, Go)
+# clean-disk - clean system (supports Flatpak, Docker, Brew, pip, npm, pnpm, bun, Rust, Go)
 #
 set -euo pipefail
 
@@ -8,23 +8,16 @@ TS() { date '+%F %T'; }
 echo "[$(TS)] === Starting system cleanup ==="
 echo ""
 
-# --- Detect distro ---
-DISTRO=""
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    case "$ID" in
-        arch|manjaro|endeavouros)
-            DISTRO="Arch Linux"
-            ;;
+# --- OS detection ---
+OS_FAMILY="unknown"
+if [ -r /etc/os-release ]; then . /etc/os-release
+    case " ${ID:-} ${ID_LIKE:-} " in
+        *" arch "*)                        OS_FAMILY="arch" ;;
+        *" debian "*|*" ubuntu "*)         OS_FAMILY="debian" ;;
     esac
 fi
 
-if [ -z "$DISTRO" ]; then
-    echo "[$(TS)] ERROR: Unsupported distribution. This script only supports Arch Linux."
-    exit 1
-fi
-
-echo "[$(TS)] Detected distro: $DISTRO"
+echo "[$(TS)] Detected OS family: $OS_FAMILY"
 echo ""
 
 # --- Common cleanup steps ---
@@ -68,13 +61,24 @@ if command -v multipass >/dev/null 2>&1; then
 fi
 echo ""
 
-# 6) Arch package cleanup
-echo "[$(TS)] Cleaning Arch package caches..."
-if command -v yay >/dev/null 2>&1; then
-    yay -Sc --noconfirm
-else
-    sudo pacman -Sc --noconfirm
-fi
+# 6) Package manager cache cleanup
+echo "[$(TS)] Cleaning package manager caches..."
+case "$OS_FAMILY" in
+    arch)
+        if command -v yay >/dev/null 2>&1; then
+            yay -Sc --noconfirm
+        else
+            sudo pacman -Sc --noconfirm
+        fi
+        ;;
+    debian)
+        sudo apt-get clean
+        sudo apt-get -y autoremove --purge
+        ;;
+    *)
+        echo "-> Unrecognized OS family '$OS_FAMILY'; skipping package cache cleanup."
+        ;;
+esac
 echo "-> Package cache cleaned."
 echo ""
 
@@ -88,7 +92,7 @@ fi
 # pip
 if command -v pyenv >/dev/null 2>&1; then
     PYENV_PYTHON=$(pyenv prefix)/bin/python
-    
+
     if [ -n "$PYENV_PYTHON" ]; then
         echo "[$(TS)] Cleaning pip cache via pyenv..."
         "$PYENV_PYTHON" -m pip cache purge || true

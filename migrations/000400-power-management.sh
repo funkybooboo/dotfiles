@@ -1,4 +1,4 @@
-# 000400-power-management.sh — power-profiles-daemon + udev rule + battery notify
+# 000400-power-management.sh -- power-profiles-daemon + udev rule + battery notify
 # Installs: power-profiles-daemon brightnessctl
 # Links:    ~/.config/systemd/user/power-profile-switch.service,
 #           ~/.config/systemd/user/battery-notify.service,
@@ -10,11 +10,15 @@
 # Enables:  power-profiles-daemon.service, power-profile-switch.service,
 #           battery-notify.timer
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "power management"
 
-install_pacman power-profiles-daemon brightnessctl upower
+if is_debian; then
+  install_apt power-profiles-daemon brightnessctl upower
+else
+  install_pacman power-profiles-daemon brightnessctl upower
+fi
 
 # udev rule switches power profile on AC/battery
 deploy_etc_file "$DOTFILES_ROOT_ETC/udev/rules.d/99-power-profile.rules" \

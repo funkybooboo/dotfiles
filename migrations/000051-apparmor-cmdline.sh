@@ -1,7 +1,7 @@
-# 000051-apparmor-cmdline.sh — add AppArmor LSM params to Limine cmdline
-# Installs: —
-# Links:    —
-# Enables:  —
+# 000051-apparmor-cmdline.sh -- add AppArmor LSM params to Limine cmdline
+# Installs: --
+# Links:    --
+# Enables:  --
 # Edits:    /boot/limine/limine.conf (appends to each `cmdline:` line)
 #
 # AppArmor is enabled as a service by 000050-apparmor.sh, but the LSM is not
@@ -15,7 +15,7 @@
 # hand-edited entries are never duplicated or clobbered. A reboot is required
 # for the new cmdline to take effect.
 #
-# Safety design (boot config is high-value — a broken limine.conf = no boot):
+# Safety design (boot config is high-value -- a broken limine.conf = no boot):
 #   * Refuse unless /boot is a mounted, writable filesystem (findmnt).
 #   * Refuse if limine.conf is not a regular file (e.g. a symlink we'd break).
 #   * Timestamped backup via `cp -a` before any change.
@@ -30,7 +30,9 @@
 #     backup is restored and the migration reports failure.
 #   * An EXIT trap removes all temp files even on abort/crash.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
+
+require_os arch || return 0
 
 section "AppArmor cmdline (Limine)"
 
@@ -53,7 +55,7 @@ trap '_cleanup' EXIT
 # ---------------------------------------------------------------------------
 
 if ! findmnt --noheadings --output TARGET /boot >/dev/null 2>&1; then
-  warn "/boot is not mounted — refusing to edit a possibly-stale mountpoint"
+  warn "/boot is not mounted -- refusing to edit a possibly-stale mountpoint"
   _add_warning "/boot not mounted; AppArmor cmdline params not applied"
   # Non-fatal: nothing was changed. Other migrations continue.
   ok "nothing to do (/boot not mounted)"
@@ -61,35 +63,35 @@ if ! findmnt --noheadings --output TARGET /boot >/dev/null 2>&1; then
 fi
 
 if ! findmnt --noheadings --options rw /boot >/dev/null 2>&1; then
-  warn "/boot is mounted read-only — cannot edit limine.conf"
+  warn "/boot is mounted read-only -- cannot edit limine.conf"
   _add_warning "/boot mounted read-only; AppArmor cmdline params not applied"
   exit 0
 fi
 
 if [[ ! -e "$LIMINE_CONF" ]]; then
-  warn "$LIMINE_CONF not found — skipping (no Limine config to edit)"
+  warn "$LIMINE_CONF not found -- skipping (no Limine config to edit)"
   _add_warning "$LIMINE_CONF not found; AppArmor cmdline params not applied"
   exit 0
 fi
 
 if [[ -L "$LIMINE_CONF" || ! -f "$LIMINE_CONF" ]]; then
-  warn "$LIMINE_CONF is not a regular file (symlink or special) — refusing to overwrite"
+  warn "$LIMINE_CONF is not a regular file (symlink or special) -- refusing to overwrite"
   _add_error "$LIMINE_CONF is not a regular file; AppArmor cmdline params not applied"
-  fail "$LIMINE_CONF is not a regular file — skipping to avoid corrupting it"
+  fail "$LIMINE_CONF is not a regular file -- skipping to avoid corrupting it"
   exit 1
 fi
 
 # ---------------------------------------------------------------------------
 # Idempotency: count cmdline entries and how many already have apparmor=1.
 # `grep -c` exits 1 on zero matches, which under `set -e` would abort the
-# subshell — guard every count with `|| true`.
+# subshell -- guard every count with `|| true`.
 # ---------------------------------------------------------------------------
 
 need_count=$(grep -cE '^[[:space:]]+cmdline:' "$LIMINE_CONF" 2>/dev/null || true)
 have_count=$(grep -cE '^[[:space:]]+cmdline:.*apparmor=1' "$LIMINE_CONF" 2>/dev/null || true)
 
 if (( need_count == 0 )); then
-  warn "no 'cmdline:' entries found in $LIMINE_CONF — skipping"
+  warn "no 'cmdline:' entries found in $LIMINE_CONF -- skipping"
   _add_warning "no cmdline entries in $LIMINE_CONF; AppArmor params not applied"
   exit 0
 fi
@@ -112,7 +114,7 @@ done
 info "backing up $LIMINE_CONF -> $bak"
 sudo cp -a "$LIMINE_CONF" "$bak"
 if ! sudo cmp -s "$LIMINE_CONF" "$bak" 2>/dev/null; then
-  fail "backup verification failed — aborting before any edit"
+  fail "backup verification failed -- aborting before any edit"
   _add_error "limine.conf backup did not verify; no changes made"
   exit 1
 fi
@@ -219,7 +221,7 @@ sudo chmod --reference="$LIMINE_CONF" "$_TMP_DEPLOY"
 
 # Pre-rename integrity check on the deploy temp.
 if ! sudo cmp -s "$_TMP_DEPLOY" "$_TMP_TRANSFORM" 2>/dev/null; then
-  fail "deploy temp does not match transform — aborting"
+  fail "deploy temp does not match transform -- aborting"
   _add_error "deploy temp verification failed; no changes made"
   exit 1
 fi
@@ -253,12 +255,12 @@ if ! diff <(grep -vE '^[[:space:]]+cmdline:' "$bak") \
 fi
 
 if (( post_ok != 1 )); then
-  fail "post-deploy verification failed — restoring $LIMINE_CONF from $bak"
+  fail "post-deploy verification failed -- restoring $LIMINE_CONF from $bak"
   sudo cp -a "$bak" "$LIMINE_CONF"
   if sudo cmp -s "$bak" "$LIMINE_CONF" 2>/dev/null; then
     warn "restored $LIMINE_CONF from backup"
   else
-    fail "RESTORE FAILED — $LIMINE_CONF may be corrupt; backup at $bak"
+    fail "RESTORE FAILED -- $LIMINE_CONF may be corrupt; backup at $bak"
   fi
   _add_error "limine.conf deploy failed; restored from backup ($bak)"
   exit 1
@@ -267,4 +269,4 @@ fi
 ok "appended '$APPARMOR_PARAMS' to $((post_have - have_count)) cmdline entry/entries"
 info "backup at $bak"
 warn "reboot required for AppArmor LSM to become active"
-_add_warning "AppArmor cmdline params added to limine.conf — reboot to activate"
+_add_warning "AppArmor cmdline params added to limine.conf -- reboot to activate"

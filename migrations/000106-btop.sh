@@ -1,11 +1,13 @@
-# 000106-btop.sh — btop system monitor
+# 000106-btop.sh -- btop system monitor
 # Installs: btop
 # Links:    ~/.config/btop/**
-# Enables:  —
+# Enables:  --
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "btop"
 
-install_pacman btop
+if is_debian; then install_apt btop
+else install_pacman btop
+fi
 link_tree "$DOTFILES_HOME/.config/btop" "$HOME/.config/btop"

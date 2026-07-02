@@ -1,11 +1,11 @@
-# 000023-greetd-config.sh — deploy greetd config (tuigreet -> uwsm Hyprland) + PAM
-# Installs: —
-# Links:    —
+# 000023-greetd-config.sh -- deploy greetd config (tuigreet -> uwsm Hyprland) + PAM
+# Installs: --
+# Links:    --
 # Deploys:  /etc/greetd/config.toml, /etc/pam.d/greetd
-# Enables:  —
+# Enables:  --
 #
 # 000022-greetd.sh installs greetd + greetd-tuigreet and enables the service,
-# but ships no config — without this migration /etc/greetd/config.toml stays
+# but ships no config -- without this migration /etc/greetd/config.toml stays
 # the stock `agreety --cmd /bin/sh` default, so on reboot greetd launches a
 # plain shell prompt instead of a graphical greeter, and Hyprland never
 # starts. This deploys a config pointing tuigreet at the uwsm-managed
@@ -22,18 +22,31 @@
 # deploy_etc_file backs up existing files to <dest>.bak.<ts> before
 # overwriting, so stock or hand-edited configs are never lost.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "greetd config"
 
-deploy_etc_file \
-  "$DOTFILES_ROOT_ETC/greetd/config.toml" \
-  "/etc/greetd/config.toml" \
-  644
+if is_debian; then
+  if [[ "${DOTFILES_ENABLE_GREETD:-0}" != "1" ]]; then
+    skip "greetd config (set DOTFILES_ENABLE_GREETD=1 to enable on Debian)"
+    return 0
+  fi
+  deploy_etc_file \
+    "$DOTFILES_ROOT_ETC/greetd/config.toml" \
+    "/etc/greetd/config.toml" \
+    644
+  _add_warning "greetd PAM on Debian must be built from Ubuntu stock; not deployed"
+  ok "greetd configured: tuigreet -> Hyprland (uwsm)"
+else
+  deploy_etc_file \
+    "$DOTFILES_ROOT_ETC/greetd/config.toml" \
+    "/etc/greetd/config.toml" \
+    644
 
-deploy_etc_file \
-  "$DOTFILES_ROOT_ETC/pam.d/greetd" \
-  "/etc/pam.d/greetd" \
-  644
+  deploy_etc_file \
+    "$DOTFILES_ROOT_ETC/pam.d/greetd" \
+    "/etc/pam.d/greetd" \
+    644
 
-ok "greetd configured: tuigreet -> Hyprland (uwsm) + PAM fixed for tuigreet"
+  ok "greetd configured: tuigreet -> Hyprland (uwsm) + PAM fixed for tuigreet"
+fi

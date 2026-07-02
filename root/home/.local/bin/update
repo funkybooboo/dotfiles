@@ -1,42 +1,71 @@
 #!/usr/bin/env bash
-# System update script for Arch Linux
+# System update script
 
 set -euo pipefail
 
-echo "=== System Update (Arch Linux) ==="
+# --- OS detection ---
+OS_FAMILY="unknown"
+if [ -r /etc/os-release ]; then . /etc/os-release
+    case " ${ID:-} ${ID_LIKE:-} " in
+        *" arch "*)                        OS_FAMILY="arch" ;;
+        *" debian "*|*" ubuntu "*)         OS_FAMILY="debian" ;;
+    esac
+fi
+
+echo "=== System Update ==="
 echo ""
 
-# Step 1: Refresh Pacman mirrors and update Arch packages
-if command -v reflector >/dev/null 2>&1; then
-    echo "→ Refreshing Pacman mirrorlist..."
-    sudo reflector --latest 20 --sort rate --save /etc/pacman.d/mirrorlist 2>/dev/null || true
-    echo ""
-fi
-if command -v yay >/dev/null 2>&1; then
-    echo "→ Updating Arch/AUR packages (yay)..."
-    yay -Syu --noconfirm
-    echo ""
-else
-    echo "→ yay not found, using pacman..."
-    sudo pacman -Syu --noconfirm
-    echo ""
-fi
+# Step 1: Update system packages
+case "$OS_FAMILY" in
+    arch)
+        if command -v reflector >/dev/null 2>&1; then
+            echo "-> Refreshing Pacman mirrorlist..."
+            sudo reflector --latest 20 --sort rate --save /etc/pacman.d/mirrorlist 2>/dev/null || true
+            echo ""
+        fi
+        if command -v yay >/dev/null 2>&1; then
+            echo "-> Updating Arch/AUR packages (yay)..."
+            yay -Syu --noconfirm
+            echo ""
+        else
+            echo "-> yay not found, using pacman..."
+            sudo pacman -Syu --noconfirm
+            echo ""
+        fi
+        ;;
+    debian)
+        echo "-> Updating apt packages..."
+        sudo apt-get update
+        sudo apt-get -y upgrade
+        sudo apt-get -y autoremove
+        echo ""
+        if command -v snap >/dev/null 2>&1; then
+            echo "-> Refreshing snap packages..."
+            sudo snap refresh
+            echo ""
+        fi
+        ;;
+    *)
+        echo "WARNING: Unrecognized OS family '$OS_FAMILY'; skipping native package update."
+        echo ""
+        ;;
+esac
 sudo systemctl daemon-reload 2>/dev/null || true
 
 # Step 2: Update Flatpak applications
 if command -v flatpak >/dev/null 2>&1; then
-    echo "→ Updating Flatpak applications..."
+    echo "-> Updating Flatpak applications..."
     flatpak update -y
     echo ""
 fi
 
 # Step 3: Update firmware (delegate to dedicated update-firmware script)
 if command -v update-firmware >/dev/null 2>&1; then
-    echo "→ Running firmware update..."
+    echo "-> Running firmware update..."
     update-firmware
     echo ""
 elif command -v fwupdmgr >/dev/null 2>&1; then
-    echo "→ Checking for firmware updates..."
+    echo "-> Checking for firmware updates..."
     fwupdmgr refresh || true
     fwupdmgr update || echo "No firmware updates available"
     echo ""
@@ -44,12 +73,12 @@ fi
 
 # Step 4: Update Rust toolchain and packages
 if command -v rustup >/dev/null 2>&1; then
-    echo "→ Updating Rust toolchain..."
+    echo "-> Updating Rust toolchain..."
     rustup update 2>/dev/null || true
     echo ""
 fi
 if command -v cargo >/dev/null 2>&1; then
-    echo "→ Updating Rust packages..."
+    echo "-> Updating Rust packages..."
     cargo install cargo-update 2>/dev/null || true
     cargo install-update -a 2>/dev/null || echo "warning: cargo package update failed"
     echo ""
@@ -57,12 +86,12 @@ fi
 
 # Step 5: Update Go packages (extract module paths via go version -m)
 if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1; then
-    echo "→ Updating Go packages..."
+    echo "-> Updating Go packages..."
     for bin in "$HOME/go/bin/"*; do
         [ -f "$bin" ] || continue
         mod_path=$(go version -m "$bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
         if [[ -n "$mod_path" ]]; then
-            echo "  → Updating $mod_path..."
+            echo "  -> Updating $mod_path..."
             go install "${mod_path}@latest" 2>/dev/null || echo "    warning: could not update $mod_path"
         fi
     done
@@ -71,107 +100,107 @@ fi
 
 # Step 6: Update mise-managed tools (mise itself is updated by pacman in Step 1)
 if command -v mise >/dev/null 2>&1; then
-    echo "→ Upgrading mise-managed tools..."
+    echo "-> Upgrading mise-managed tools..."
     mise upgrade --yes 2>/dev/null || true
     echo ""
 fi
 
 # Step 7: Update npm global packages
 if command -v npm >/dev/null 2>&1; then
-    echo "→ Updating npm global packages..."
+    echo "-> Updating npm global packages..."
     npm update -g 2>/dev/null || true
     echo ""
 fi
 
 # Step 8: Update uv (Python package manager) and uv-managed tools
 if command -v uv >/dev/null 2>&1; then
-    echo "→ Updating uv..."
+    echo "-> Updating uv..."
     uv self update 2>/dev/null || true
-    echo "  → Upgrading uv-managed tools..."
+    echo "  -> Upgrading uv-managed tools..."
     uv tool upgrade --all 2>/dev/null || true
     echo ""
 fi
 
 # Step 9: Update ghcup and Haskell (the ghcup binary itself) and Stack
 if command -v ghcup >/dev/null 2>&1; then
-    echo "→ Updating ghcup..."
+    echo "-> Updating ghcup..."
     ghcup upgrade 2>/dev/null || true
     echo ""
 fi
 if command -v stack >/dev/null 2>&1; then
-    echo "→ Upgrading Stack..."
+    echo "-> Upgrading Stack..."
     stack upgrade 2>/dev/null || true
     echo ""
 fi
 if command -v cabal >/dev/null 2>&1; then
-    echo "→ Refreshing Hackage package index (cabal)..."
+    echo "-> Refreshing Hackage package index (cabal)..."
     cabal update 2>/dev/null || true
     echo ""
 fi
 
 # Step 10: Update pipx global tools
 if command -v pipx >/dev/null 2>&1; then
-    echo "→ Upgrading pipx-installed tools..."
+    echo "-> Upgrading pipx-installed tools..."
     pipx upgrade-all 2>/dev/null || true
     echo ""
 fi
 
 # Step 11: Update Ruby gems
 if command -v gem >/dev/null 2>&1; then
-    echo "→ Updating Ruby gems..."
+    echo "-> Updating Ruby gems..."
     gem update --user-install 2>/dev/null || true
     echo ""
 fi
 
 # Step 12: Update pip (system Python packages)
 if command -v pip >/dev/null 2>&1; then
-    echo "→ Updating pip..."
+    echo "-> Updating pip..."
     pip install --user --upgrade pip 2>/dev/null || true
     echo ""
 fi
 
 # Step 13: Update pnpm global packages
 if command -v pnpm >/dev/null 2>&1; then
-    echo "→ Updating pnpm global packages..."
+    echo "-> Updating pnpm global packages..."
     pnpm add -g pnpm 2>/dev/null || true
     echo ""
 fi
 
 # Step 14: Update bun
 if command -v bun >/dev/null 2>&1; then
-    echo "→ Updating bun..."
+    echo "-> Updating bun..."
     bun upgrade 2>/dev/null || true
     echo ""
 fi
 
 # Step 15: Update Pi coding agent
 if command -v pi >/dev/null 2>&1; then
-    echo "→ Updating Pi coding agent..."
+    echo "-> Updating Pi coding agent..."
     pi update 2>/dev/null || true
     echo ""
 fi
 
 # Step 16: Update Composer (PHP)
 if command -v composer >/dev/null 2>&1; then
-    echo "→ Updating Composer..."
+    echo "-> Updating Composer..."
     composer self-update 2>/dev/null || true
-    echo "  → Updating Composer global packages..."
+    echo "  -> Updating Composer global packages..."
     composer global update 2>/dev/null || true
     echo ""
 fi
 
 # Step 17: Update tldr cache
 if command -v tldr >/dev/null 2>&1; then
-    echo "→ Updating tldr cache..."
+    echo "-> Updating tldr cache..."
     tldr --update 2>/dev/null || true
     echo ""
 fi
 
 # Step 18: Sync GitHub forks with upstream
 if command -v gh >/dev/null 2>&1; then
-    echo "→ Syncing GitHub forks with upstream..."
+    echo "-> Syncing GitHub forks with upstream..."
     for repo in $(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner'); do
-        echo "  → Syncing $repo..."
+        echo "  -> Syncing $repo..."
         if gh repo sync "$repo" 2>/dev/null; then
             echo "    synced"
         else
@@ -183,14 +212,14 @@ fi
 
 # Step 19: Update git repos in ~/sources
 if [[ -d "$HOME/sources" ]]; then
-    echo "→ Updating git repos in ~/sources..."
+    echo "-> Updating git repos in ~/sources..."
     for repo in "$HOME/sources"/*/; do
         [[ -d "$repo/.git" ]] || continue
         repo_name=$(basename "$repo")
         if git -C "$repo" pull --ff-only 2>/dev/null; then
-            echo "  ✓ $repo_name"
+            echo "  [OK] $repo_name"
         else
-            echo "  ✗ $repo_name (diverged or error)"
+            echo "  [FAIL] $repo_name (diverged or error)"
         fi
     done
     echo ""
@@ -208,11 +237,11 @@ _build_repo() {
         if [[ -f "$d/build.ninja" ]]; then ninja_dir="$d"; break; fi
     done
     if [[ -n "$ninja_dir" ]]; then
-        echo "  → $name (ninja)"
+        echo "  -> $name (ninja)"
         if ninja -C "$ninja_dir" 2>/dev/null; then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
@@ -222,31 +251,31 @@ _build_repo() {
         if [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]]; then cmake_make_dir="$d"; break; fi
     done
     if [[ -n "$cmake_make_dir" ]]; then
-        echo "  → $name (cmake+make)"
+        echo "  -> $name (cmake+make)"
         if make -C "$cmake_make_dir" 2>/dev/null; then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
     # Go module
     if [[ -f "$repo/go.mod" ]]; then
-        echo "  → $name (go install)"
+        echo "  -> $name (go install)"
         if (cd "$repo" && go install ./... 2>/dev/null); then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
     # Cargo (Rust)
     if [[ -f "$repo/Cargo.toml" ]]; then
-        echo "  → $name (cargo build)"
+        echo "  -> $name (cargo build)"
         if (cd "$repo" && cargo build --release 2>/dev/null); then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
@@ -254,43 +283,43 @@ _build_repo() {
     if [[ -f "$repo/meson.build" ]]; then
         local builddir="$repo/builddir"
         if [[ -f "$builddir/build.ninja" ]]; then
-            echo "  → $name (meson+ninja)"
+            echo "  -> $name (meson+ninja)"
             if ninja -C "$builddir" 2>/dev/null; then
-                echo "    ✓ $name"; return 0
+                echo "    [OK] $name"; return 0
             else
-                echo "    ✗ $name failed"; return 1
+                echo "    [FAIL] $name failed"; return 1
             fi
         fi
     fi
 
     # Makefile (standalone, not cmake-generated; handles both Makefile and makefile)
     if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-        echo "  → $name (make)"
+        echo "  -> $name (make)"
         # WARNING: sudo make install runs arbitrary install targets from source repos
         if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
     # Gemfile (Ruby deps only)
     if [[ -f "$repo/Gemfile" ]]; then
-        echo "  → $name (bundle install)"
+        echo "  -> $name (bundle install)"
         if (cd "$repo" && bundle install 2>/dev/null); then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
     # package.json (Node deps + build)
     if [[ -f "$repo/package.json" ]]; then
-        echo "  → $name (npm)"
+        echo "  -> $name (npm)"
         if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then
-            echo "    ✓ $name"; return 0
+            echo "    [OK] $name"; return 0
         else
-            echo "    ✗ $name failed"; return 1
+            echo "    [FAIL] $name failed"; return 1
         fi
     fi
 
@@ -298,13 +327,13 @@ _build_repo() {
 }
 
 if [[ -d "$HOME/sources" ]]; then
-    echo "→ Rebuilding ~/sources repos..."
+    echo "-> Rebuilding ~/sources repos..."
     for repo in "$HOME/sources"/*/; do
         [[ -d "$repo/.git" ]] || continue
         _rc=0
         _build_repo "$repo" || _rc=$?
         if [[ $_rc -eq 2 ]]; then
-            echo "  ⊘ $(basename "$repo") (no recognized build system)"
+            echo "  [skip] $(basename "$repo") (no recognized build system)"
         fi
     done
     echo ""
@@ -312,12 +341,12 @@ fi
 
 # Step 21: Update Docker container images
 if command -v docker >/dev/null 2>&1; then
-    echo "→ Updating Docker container images..."
+    echo "-> Updating Docker container images..."
     if sudo docker ps -q >/dev/null 2>&1; then
         for container in $(sudo docker ps --format '{{.Names}}'); do
             image=$(sudo docker inspect --format='{{.Config.Image}}' "$container" 2>/dev/null || true)
             if [[ -n "$image" ]]; then
-                echo "  → Pulling $image for $container..."
+                echo "  -> Pulling $image for $container..."
                 sudo docker pull "$image" 2>/dev/null || echo "    warning: could not pull $image"
             fi
         done
@@ -327,12 +356,12 @@ fi
 
 # Step 22: Update Podman container images
 if command -v podman >/dev/null 2>&1; then
-    echo "→ Updating Podman container images..."
+    echo "-> Updating Podman container images..."
     if podman ps -q >/dev/null 2>&1; then
         for container in $(podman ps --format '{{.Names}}'); do
             image=$(podman inspect --format='{{.Config.Image}}' "$container" 2>/dev/null || true)
             if [[ -n "$image" ]]; then
-                echo "  → Pulling $image for $container..."
+                echo "  -> Pulling $image for $container..."
                 podman pull "$image" 2>/dev/null || echo "    warning: could not pull $image"
             fi
         done

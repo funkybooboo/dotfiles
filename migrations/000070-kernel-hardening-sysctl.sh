@@ -1,9 +1,9 @@
-# 000070-kernel-hardening-sysctl.sh — kernel hardening sysctl parameters
-# Installs: —
+# 000070-kernel-hardening-sysctl.sh -- kernel hardening sysctl parameters
+# Installs: --
 # Deploys: /etc/sysctl.d/99-hardening.conf
-# Enables:  —
+# Enables:  --
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "Kernel Hardening (sysctl)"
 

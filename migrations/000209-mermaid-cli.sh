@@ -1,11 +1,11 @@
-# 000209-mermaid-cli.sh — Mermaid CLI (mmdc) for Snacks.image diagram rendering
+# 000209-mermaid-cli.sh -- Mermaid CLI (mmdc) for Snacks.image diagram rendering
 # Installs: the "@mermaid-js/mermaid-cli" npm package (provides mmdc)
-# Links:    — (env vars live in ~/.config/environment.d/apps.conf, deployed by
+# Links:    -- (env vars live in ~/.config/environment.d/apps.conf, deployed by
 #            000319-xdg.sh)
-# Enables:  —
+# Enables:  --
 # Note: Snacks.image renders Mermaid code blocks in docs/markdown by shelling
 #       out to `mmdc`. Without it, :checkhealth snacks reports
-#       "❌ ERROR Tool not found: 'mmdc'".
+#       "[X] ERROR Tool not found: 'mmdc'".
 #
 #       mmdc drives puppeteer, which by default downloads its own ~150MB
 #       Chromium at install time. We skip that (PUPPETEER_SKIP_DOWNLOAD=1,
@@ -19,7 +19,7 @@
 #       node-host. npm/node are resolved via PATH then mise shims, matching
 #       000208. Idempotent: skips when mmdc already runs.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "mermaid cli"
 
@@ -57,19 +57,34 @@ if [[ -x "$MMDC_BIN" ]] && _ver="$(mmdc_version)"; then
   skip "mmdc (already installed: $_ver)"
 else
   if ! NPM="$(resolve_cmd npm)"; then
-    warn "npm not found — cannot install mmdc"
+    warn "npm not found -- cannot install mmdc"
     warn "install node via mise ('mise install') then re-run, or run:"
     warn "  PUPPETEER_SKIP_DOWNLOAD=1 npm install -g --prefix ~/.local @mermaid-js/mermaid-cli"
     _add_warning "npm not available; mermaid-cli (mmdc) not installed"
   else
-    info "installing mermaid-cli (provides mmdc) → ~/.local"
-    # Skip puppeteer's bundled Chromium download; we use the system chromium
-    # via PUPPETEER_EXECUTABLE_PATH (set in apps.conf by 000319-xdg.sh).
-    if PUPPETEER_SKIP_DOWNLOAD=1 "$NPM" install -g --prefix "$HOME/.local" "$PKG"; then
+    info "installing mermaid-cli (provides mmdc) -> ~/.local"
+    # Choose the browser for puppeteer at install time.
+    # On Arch, system chromium lives at /usr/bin/chromium (installed by 000303).
+    # On Debian/Ubuntu, chromium is a snap stub (/usr/bin/chromium absent); use
+    # brave-browser if present, else let puppeteer download its own Chromium (~150MB).
+    _npm_cmd=("$NPM" install -g --prefix "$HOME/.local" "$PKG")
+    if is_debian; then
+      if [[ -x /usr/bin/brave-browser ]]; then
+        info "puppeteer will use /usr/bin/brave-browser (Debian system browser)"
+        _npm_cmd=(env PUPPETEER_SKIP_DOWNLOAD=1 PUPPETEER_EXECUTABLE_PATH=/usr/bin/brave-browser "${_npm_cmd[@]}")
+      else
+        info "brave-browser not found; puppeteer will download its own Chromium (~150MB)"
+        _add_warning "mermaid-cli: no system browser found; puppeteer fetched its own Chromium"
+        # _npm_cmd stays as plain npm install; puppeteer fetches its own Chromium
+      fi
+    else
+      _npm_cmd=(env PUPPETEER_SKIP_DOWNLOAD=1 "${_npm_cmd[@]}")
+    fi
+    if "${_npm_cmd[@]}"; then
       if [[ -x "$MMDC_BIN" ]] && _ver="$(mmdc_version)"; then
         ok "mmdc installed: $_ver"
       elif [[ -x "$MMDC_BIN" ]]; then
-        ok "mmdc installed at $MMDC_BIN (could not verify version — node not on PATH)"
+        ok "mmdc installed at $MMDC_BIN (could not verify version -- node not on PATH)"
       else
         warn "install reported success but mmdc bin missing: $MMDC_BIN"
         _add_warning "mmdc install reported success but bin missing; check node/npm"

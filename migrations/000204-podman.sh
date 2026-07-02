@@ -1,15 +1,17 @@
-# 000204-podman.sh — Podman container runtime + docker wrappers
+# 000204-podman.sh -- Podman container runtime + docker wrappers
 # Installs: podman
 # Links:    ~/.config/containers/storage.conf, ~/.local/bin/docker,
 #           ~/.local/bin/docker-compose
 # Deploys: /etc/sysctl.d/00-userns.conf
 # Enables:  podman.socket
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "podman"
 
-install_pacman podman
+if is_debian; then install_apt podman
+else install_pacman podman
+fi
 
 link_file "$DOTFILES_HOME/.config/containers/storage.conf" \
   "$HOME/.config/containers/storage.conf"

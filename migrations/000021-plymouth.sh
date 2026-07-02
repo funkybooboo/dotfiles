@@ -1,9 +1,11 @@
-# 000021-plymouth.sh — Plymouth boot splash
+# 000021-plymouth.sh -- Plymouth boot splash
 # Installs: plymouth
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
+
+require_os arch || return 0
 
 section "Plymouth"
 

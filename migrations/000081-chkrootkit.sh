@@ -1,13 +1,17 @@
-# 000081-chkrootkit.sh — chkrootkit rootkit scanner + timers
+# 000081-chkrootkit.sh -- chkrootkit rootkit scanner + timers
 # Installs: chkrootkit
 # Deploys: /etc/systemd/system/chkrootkit-scan.{service,timer}
 # Enables:  chkrootkit-scan.timer
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "chkrootkit"
 
-install_aur chkrootkit
+if is_debian; then
+  install_apt chkrootkit
+else
+  install_aur chkrootkit
+fi
 
 deploy_etc_file "$DOTFILES_ROOT_ETC/systemd/system/chkrootkit-scan.service" \
   "/etc/systemd/system/chkrootkit-scan.service" 644

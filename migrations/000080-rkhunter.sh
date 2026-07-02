@@ -1,18 +1,24 @@
-# 000080-rkhunter.sh — rkhunter rootkit scanner + config + timers
+# 000080-rkhunter.sh -- rkhunter rootkit scanner + config + timers
 # Installs: rkhunter
 # Deploys: /etc/rkhunter.conf, /etc/pacman.d/hooks/rkhunter-propupd.hook,
 #          /etc/systemd/system/rkhunter-scan.{service,timer}
 # Enables:  rkhunter-scan.timer
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "rkhunter"
 
-install_pacman rkhunter
+if is_debian; then
+  install_apt rkhunter
+else
+  install_pacman rkhunter
+fi
 
 deploy_etc_file "$DOTFILES_ROOT_ETC/rkhunter.conf" "/etc/rkhunter.conf" 640
-deploy_etc_file "$DOTFILES_ROOT_ETC/pacman.d/hooks/rkhunter-propupd.hook" \
-  "/etc/pacman.d/hooks/rkhunter-propupd.hook" 644
+if is_arch; then
+  deploy_etc_file "$DOTFILES_ROOT_ETC/pacman.d/hooks/rkhunter-propupd.hook" \
+    "/etc/pacman.d/hooks/rkhunter-propupd.hook" 644
+fi
 deploy_etc_file "$DOTFILES_ROOT_ETC/systemd/system/rkhunter-scan.service" \
   "/etc/systemd/system/rkhunter-scan.service" 644
 deploy_etc_file "$DOTFILES_ROOT_ETC/systemd/system/rkhunter-scan.timer" \

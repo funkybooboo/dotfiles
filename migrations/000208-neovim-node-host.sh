@@ -1,7 +1,7 @@
-# 000208-neovim-node-host.sh — Neovim Node.js provider host
+# 000208-neovim-node-host.sh -- Neovim Node.js provider host
 # Installs: the "neovim" npm package (provides neovim-node-host)
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 # Note: ~/.config/nvim/lua/config/options.lua sets
 #         g:node_host_prog = ~/.local/bin/neovim-node-host
 #         NODE_PATH        = ~/.local/lib/node_modules
@@ -9,7 +9,7 @@
 #       errored with "Failed to run: node .../neovim-node-host --version".
 #       This migration provisions it: a global-prefix npm install into ~/.local
 #       puts the host bin at ~/.local/bin/neovim-node-host (a symlink into
-#       ~/.local/lib/node_modules/neovim) — matching both settings above.
+#       ~/.local/lib/node_modules/neovim) -- matching both settings above.
 #
 #       Runs AFTER 000202-mise (which provisions node/npm via mise) so that npm
 #       is available. npm is discovered from PATH first (the user's shell
@@ -19,7 +19,7 @@
 #       Idempotent: skips when the host already exists and runs. Re-running
 #       `npm install -g` is safe anyway, but we avoid the network hit.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "neovim node host"
 
@@ -58,21 +58,21 @@ if [[ -x "$HOST_BIN" ]] && _ver="$(host_version)"; then
   skip "neovim-node-host (already installed: $_ver)"
 else
   if ! NPM="$(resolve_cmd npm)"; then
-    warn "npm not found — cannot install neovim-node-host"
+    warn "npm not found -- cannot install neovim-node-host"
     warn "install node via mise ('mise install') then re-run, or run:"
     warn "  npm install -g --prefix ~/.local neovim"
     _add_warning "npm not available; neovim Node.js provider not installed"
   else
-    info "installing neovim npm package (provides neovim-node-host) → ~/.local"
-    # Global-prefix install into ~/.local: bin → ~/.local/bin, module →
-    # ~/.local/lib/node_modules — exactly what options.lua expects.
+    info "installing neovim npm package (provides neovim-node-host) -> ~/.local"
+    # Global-prefix install into ~/.local: bin -> ~/.local/bin, module ->
+    # ~/.local/lib/node_modules -- exactly what options.lua expects.
     if "$NPM" install -g --prefix "$HOME/.local" neovim; then
       if [[ -x "$HOST_BIN" ]] && _ver="$(host_version)"; then
         ok "neovim-node-host installed: $_ver"
       elif [[ -x "$HOST_BIN" ]]; then
         # Bin exists but node could not be resolved to verify (e.g. node
         # shim missing). Treat as success-with-caveat rather than failure.
-        ok "neovim-node-host installed at $HOST_BIN (could not verify version — node not on PATH)"
+        ok "neovim-node-host installed at $HOST_BIN (could not verify version -- node not on PATH)"
       else
         warn "install reported success but host bin missing: $HOST_BIN"
         _add_warning "neovim-node-host install reported success but bin missing; check node/npm"

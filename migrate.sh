@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# migrate.sh — run all migrations in order
+# migrate.sh -- run all migrations in order
 #
 # Migrations live in migrations/NNNNNN-*.sh and are sourced in lexicographic
 # order. Each migration is idempotent and safe to re-run. Shared helpers live
-# in migrations/_common.sh. There are no command-line arguments: conflicts are
+# in _common.sh. There are no command-line arguments: conflicts are
 # resolved by backing up the existing file (<dest>.bak.N) and symlinking.
 #
 # After migrations finish and you reboot into Hyprland, run:
@@ -15,7 +15,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_ROOT="$PWD"
 
 # ---------------------------------------------------------------------------
-# Logging — capture all output (stdout + stderr) to a timestamped log file
+# Logging -- capture all output (stdout + stderr) to a timestamped log file
 # while still printing to the terminal.
 # ---------------------------------------------------------------------------
 mkdir -p "$REPO_ROOT/logs"
@@ -49,8 +49,8 @@ trap 'exec 1>&3 2>&4 3>&- 4>&-; wait "$LOG_STRIP_PID"; rm -f "$LOG_FIFO"' EXIT
 echo "=== Migration started at $(date) ==="
 echo "=== Log file: $LOG_FILE ==="
 
-# shellcheck source=migrations/_common.sh
-source "$REPO_ROOT/migrations/_common.sh"
+# shellcheck source=_common.sh
+source "$REPO_ROOT/_common.sh"
 
 preflight
 
@@ -65,7 +65,7 @@ for _migration in "$REPO_ROOT"/migrations/[0-9][0-9][0-9][0-9][0-9][0-9]-*.sh; d
   _results="$(mktemp "$REPO_ROOT/logs/.results-XXXXXX")"
 
   # Run each migration in an isolated subshell with its own errexit so that a
-  # failure in ONE migration can never abort the whole run — the previous
+  # failure in ONE migration can never abort the whole run -- the previous
   # behaviour cascaded a single unguarded failure into every later migration
   # being skipped. Warnings/errors emitted inside the subshell are funnelled to
   # a results file (subshells cannot mutate the parent's arrays) and replayed
@@ -94,7 +94,7 @@ for _migration in "$REPO_ROOT"/migrations/[0-9][0-9][0-9][0-9][0-9][0-9]-*.sh; d
 
   if (( _rc != 0 )); then
     _failed=$((_failed + 1))
-    fail "migration exited $_rc — continuing to next migration: $_name"
+    fail "migration exited $_rc -- continuing to next migration: $_name"
     _add_error "migration failed: $_name (exit $_rc)"
   fi
 done

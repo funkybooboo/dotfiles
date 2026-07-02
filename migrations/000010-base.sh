@@ -1,13 +1,19 @@
-# 000010-base.sh — Arch base system packages
+# 000010-base.sh -- Arch base system packages
 # Installs: base base-devel curl wget lvm2 dmidecode linux-headers linux-firmware intel-ucode
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "Base System"
 
-install_pacman \
-  base base-devel curl wget lvm2 dmidecode \
-  linux-headers linux-firmware intel-ucode
+if is_debian; then
+  install_apt \
+    build-essential curl wget lvm2 dmidecode \
+    linux-headers-generic linux-firmware intel-microcode
+else
+  install_pacman \
+    base base-devel curl wget lvm2 dmidecode \
+    linux-headers linux-firmware intel-ucode
+fi
 ok "base system"

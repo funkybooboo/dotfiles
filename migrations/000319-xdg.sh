@@ -1,25 +1,29 @@
-# 000319-xdg.sh — XDG user dirs + environment variables + mime apps
+# 000319-xdg.sh -- XDG user dirs + environment variables + mime apps
 # Installs: xdg-user-dirs
 # Links:    ~/.config/environment.d/apps.conf, ~/.config/user-dirs.dirs,
 #           ~/.config/mimeapps.list
 # Creates: The XDG user directories declared in user-dirs.dirs
-# Enables:  —
+# Enables:  --
 #
 # xdg-user-dirs ships xdg-user-dirs-update, but we do NOT run it: it rewrites
 # user-dirs.dirs to match its locale-based defaults, which would clobber the
 # symlinked config (and the custom Projects dir). Instead we create the
-# directories directly from the config — idempotent, respects the user's
+# directories directly from the config -- idempotent, respects the user's
 # declared paths, and never touches the config file.
 #
 # The NAS sync dirs (Photos, Audiobooks, Books) are NOT XDG dirs and are not
 # declared in user-dirs.dirs; setup.sh creates those during the
 # initial NAS clone.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "xdg"
 
-install_pacman xdg-user-dirs
+if is_debian; then
+  install_apt xdg-user-dirs
+else
+  install_pacman xdg-user-dirs
+fi
 link_file "$DOTFILES_HOME/.config/environment.d/apps.conf" "$HOME/.config/environment.d/apps.conf"
 link_file "$DOTFILES_HOME/.config/user-dirs.dirs"          "$HOME/.config/user-dirs.dirs"
 link_file "$DOTFILES_HOME/.config/mimeapps.list"           "$HOME/.config/mimeapps.list"
@@ -49,6 +53,6 @@ if [[ -f "$_user_dirs_conf" ]]; then
     skip "XDG user directories already present"
   fi
 else
-  warn "$_user_dirs_conf not found — cannot create XDG dirs"
+  warn "$_user_dirs_conf not found -- cannot create XDG dirs"
   _add_warning "user-dirs.dirs missing; XDG directories not created"
 fi

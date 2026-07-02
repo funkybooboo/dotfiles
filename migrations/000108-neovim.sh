@@ -1,8 +1,8 @@
-# 000108-neovim.sh — Neovim + plugin tooling + config
+# 000108-neovim.sh -- Neovim + plugin tooling + config
 # Installs: neovim tree-sitter-cli stylua luarocks lua51 python-pynvim
 #           tectonic (AUR) nvimpager (AUR)
 # Links:    ~/.config/nvim/**, ~/.editorconfig
-# Enables:  —
+# Enables:  --
 # Note: tectonic provides LaTeX for the nvim latex plugin. nvimpager is the
 #       PAGER/MANPAGER set in environment-variables. lua51 + luarocks +
 #       stylua + tree-sitter-cli support nvim plugins.
@@ -11,20 +11,29 @@
 #       github.com/funkybooboo/99.git (idempotent).
 #       nvimpager was dropped from the pacman repos and is now installed from
 #       the AUR. The AUR package is also flagged out-of-date (2026-04-02); see
-#       README.md "Known issues" — replace it with a maintained alternative at
+#       README.md "Known issues" -- replace it with a maintained alternative at
 #       a future date.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "neovim"
 
-install_pacman \
-  neovim tree-sitter-cli stylua luarocks lua51 \
-  python-pynvim
-# nvimpager was dropped from the pacman repos — install from the AUR instead.
-# (AUR package is flagged out-of-date; see README.md "Known issues".)
-install_aur nvimpager
-install_aur tectonic
+if is_debian; then
+  install_apt neovim tree-sitter-cli luarocks lua5.1 python3-pynvim
+  install_gh_release JohnnyMorganz/StyLua "linux-x86_64" stylua
+  install_gh_release tectonic-typesetting/tectonic "x86_64-unknown-linux-gnu" tectonic
+  # nvimpager is not packaged on Debian; PAGER falls back to less.
+  _add_warning "nvimpager not packaged on Debian; PAGER falls back to less"
+  info "nvimpager: unavailable on Debian -- PAGER falls back to less"
+else
+  install_pacman \
+    neovim tree-sitter-cli stylua luarocks lua51 \
+    python-pynvim
+  # nvimpager was dropped from the pacman repos -- install from the AUR instead.
+  # (AUR package is flagged out-of-date; see README.md "Known issues".)
+  install_aur nvimpager
+  install_aur tectonic
+fi
 ok "neovim + tooling"
 
 link_tree "$DOTFILES_HOME/.config/nvim" "$HOME/.config/nvim"
@@ -35,12 +44,12 @@ NINES_DIR="$HOME/sources/99"
 if [[ -d "$NINES_DIR/.git" ]]; then
   skip "99 plugin repo (already cloned)"
 else
-  info "cloning 99 plugin → ~/sources/99..."
+  info "cloning 99 plugin -> ~/sources/99..."
   mkdir -p "$HOME/sources"
   if git clone --quiet https://github.com/funkybooboo/99.git "$NINES_DIR"; then
     ok "99 plugin cloned"
   else
-    warn "failed to clone 99 plugin — nvim will error on :lazy load until cloned"
+    warn "failed to clone 99 plugin -- nvim will error on :lazy load until cloned"
     _add_warning "99 plugin clone failed; run 'git clone https://github.com/funkybooboo/99.git ~/sources/99'"
   fi
 fi
