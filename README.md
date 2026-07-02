@@ -84,7 +84,7 @@ and the initial NAS clone.
 
 ## Migrations
 
-73 migrations grouped by concern. `ls migrations/` for the full list.
+74 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -93,7 +93,7 @@ and the initial NAS clone.
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000542` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama |
+| `000500`–`000543` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
