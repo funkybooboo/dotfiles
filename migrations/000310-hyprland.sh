@@ -1,6 +1,6 @@
 # 000310-hyprland.sh — Hyprland compositor + Wayland ecosystem + config + scripts
 # Installs: hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper
-#           hyprpolkitagent hyprlauncher cliphist wayfreeze-git (AUR) uwsm (AUR)
+#           hyprpolkitagent hyprlauncher cliphist wayfreeze (local build) uwsm (AUR)
 #           xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 #           xdg-desktop-portal-wlr qt5-wayland qt6-wayland resvg
 # Links:    ~/.config/hypr/**, ~/.config/systemd/user/hypr-wallpaper.service,
@@ -19,8 +19,10 @@ install_pacman \
   hyprpolkitagent hyprlauncher cliphist \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
   qt5-wayland qt6-wayland resvg
-# wayfreeze is only in the AUR (wayfreeze-git); the pacman target was removed.
-install_aur uwsm wayfreeze-git
+# wayfreeze: build from the upstream 0.2.0 release tag (local PKGBUILD) —
+# replaces the former AUR wayfreeze-git. uwsm remains AUR-only (not in scope).
+install_aur uwsm
+install_local_pkgbuild wayfreeze
 ok "Hyprland ecosystem"
 
 link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"

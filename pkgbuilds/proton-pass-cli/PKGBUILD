@@ -1,0 +1,21 @@
+# Maintainer: nate (local package wrapping Proton's OFFICIAL release binary)
+# No AUR/yay at runtime: downloads the checksummed official binary from
+# github.com/protonpass/pass-cli releases (built and signed by Proton).
+pkgname=proton-pass-cli
+pkgver=2.2.2
+pkgrel=1
+pkgdesc='Command-line interface for managing your Proton Pass vaults, items, and secrets'
+arch=('x86_64')
+url='https://protonpass.github.io/pass-cli/'
+license=('GPL-3.0-or-later')
+depends=('glibc' 'libgcc')
+# Supersedes the former AUR proton-pass-cli-bin (same /usr/bin/pass-cli binary).
+replaces=(proton-pass-cli-bin)
+conflicts=(proton-pass-cli-bin)
+_dl="https://github.com/protonpass/pass-cli/releases/download/${pkgver}"
+source=("pass-cli-linux-x86_64-${pkgver}::${_dl}/pass-cli-linux-x86_64")
+sha256sums=('65bf75195bfd0fe8d9660144c837466b7ee9195d38e56e3557d5ee6439c5f751')
+
+package() {
+  install -Dm755 "pass-cli-linux-x86_64-${pkgver}" "$pkgdir/usr/bin/pass-cli"
+}

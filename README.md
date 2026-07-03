@@ -84,7 +84,7 @@ and the initial NAS clone.
 
 ## Migrations
 
-74 migrations grouped by concern. `ls migrations/` for the full list.
+75 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -93,7 +93,7 @@ and the initial NAS clone.
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000543` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula |
+| `000500`–`000550` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula, AUR-debug cleanup |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
@@ -175,8 +175,18 @@ them after a fresh install.
 
 ## Known issues
 
-- **nvimpager** (AUR, flagged out-of-date) — installed from AUR after `extra/nvimpager`
-  was dropped. Replace with a maintained alternative at a future date.
+- **Remaining `install_aur` calls** — a handful of migrations still call
+  `install_aur` for packages NOT in the off-AUR scope (because they are not
+  currently installed): `greetd-tuigreet`, `tectonic`, `lazygit`, `mise`,
+  `ghostty`, `wiremix`, `uwsm`, `nwg-displays`, `zram-generator`,
+  `television`, `proton-vpn-cli`/`proton-vpn-gtk-app`, `lazydocker`, `act`,
+  `gum`, `signal-desktop`. Re-running `migrate.sh` may install these via yay.
+  Address each (official repo / flatpak / local PKGBUILD / drop) when ready.
+- **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
+  `000210` migration runs `rustup toolchain install nightly` (rustup is the
+  official Rust toolchain manager, rust-lang.org — not a registry).
+- **calcure + mermaid-cli intentionally kept** on AUR/npm per user decision
+  (the only PyPI-only / npm-only holdouts).
 - **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 

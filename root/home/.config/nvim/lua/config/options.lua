@@ -14,11 +14,5 @@ vim.g.loaded_ruby_provider = 0
 -- hidden files, `I` toggles git-ignored files.
 vim.g.lazyvim_explorer = "neo-tree"
 
--- Make locally-installed npm packages discoverable by Node.js provider
-vim.env.NODE_PATH = (vim.env.NODE_PATH or "") .. ":" .. vim.fn.expand("~/.local/lib/node_modules")
-
--- Point node provider to our local neovim-node-host
-vim.g.node_host_prog = vim.fn.expand("~/.local/bin/neovim-node-host")
-
 -- Ensure treesitter parser install dir is in runtimepath
 vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")

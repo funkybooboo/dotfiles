@@ -1,13 +1,15 @@
 # 000081-chkrootkit.sh — chkrootkit rootkit scanner + timers
-# Installs: chkrootkit
+# Installs: chkrootkit (local PKGBUILD, upstream source tarball)
 # Deploys: /etc/systemd/system/chkrootkit-scan.{service,timer}
 # Enables:  chkrootkit-scan.timer
+# Note: chkrootkit is built from the upstream source tarball
+#       (ftp.chkrootkit.org) via a local PKGBUILD — no yay/AUR at runtime.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "chkrootkit"
 
-install_aur chkrootkit
+install_local_pkgbuild chkrootkit
 
 deploy_etc_file "$DOTFILES_ROOT_ETC/systemd/system/chkrootkit-scan.service" \
   "/etc/systemd/system/chkrootkit-scan.service" 644

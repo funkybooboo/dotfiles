@@ -1,34 +1,28 @@
 # 000523-proton-pass.sh — Proton Pass CLI + GUI + bash completions
-# Installs (AUR): proton-pass-cli-bin proton-pass-bin
+# Installs: proton-pass-cli (local PKGBUILD — Proton's official release binary)
+# Flatpak:  me.proton.Pass (GUI, officially maintained by Proton)
 # Links:    — (completions generated at runtime below)
 # Enables:  —
-# Note: The interactive pass-cli LOGIN is deferred to setup.sh (needs a
-#       browser + desktop). This migration only installs + sets up completions.
-#       Requires yay (installed by 000001-system-update); if yay is missing it
-#       warns and skips rather than piping a remote script to a shell.
+# Note: The CLI is packaged locally from Proton's checksummed official release
+#       binary (github.com/protonpass/pass-cli) — the local PKGBUILD's
+#       replaces=proton-pass-cli-bin auto-removes the former AUR -bin on
+#       install (same /usr/bin/pass-cli binary). The GUI comes from Flathub
+#       (me.proton.Pass), replacing the former AUR proton-pass-bin.
+#       The interactive pass-cli LOGIN is deferred to setup.sh (needs a
+#       browser + desktop). This migration only installs + sets up
+#       completions. Debug symbol packages are swept by 000550.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "proton pass"
 
-if ! command -v yay &>/dev/null; then
-  warn "yay not available — cannot install Proton Pass packages"
-  _add_warning "yay missing; install proton-pass-cli-bin and proton-pass-bin manually via yay"
-else
-  # Proton Pass CLI
-  if command -v pass-cli &>/dev/null; then
-    skip "pass-cli (already installed)"
-  else
-    install_aur proton-pass-cli-bin
-  fi
+# Proton Pass CLI — local PKGBUILD wrapping Proton's official release binary
+# (replaces=proton-pass-cli-bin auto-removes the former AUR -bin on install).
+install_local_pkgbuild proton-pass-cli
 
-  # Proton Pass GUI
-  if command -v proton-pass &>/dev/null; then
-    skip "proton-pass GUI (already installed)"
-  else
-    install_aur proton-pass-bin
-  fi
-fi
+# Proton Pass GUI — official Flathub build, replacing the former AUR -bin.
+install_flatpak me.proton.Pass
+remove_pkg proton-pass-bin
 
 # Bash completions for pass-cli (the active login shell during migration).
 # fish completions are handled by fish's own config tree (000101-fish).

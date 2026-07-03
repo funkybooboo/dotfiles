@@ -151,6 +151,132 @@ install_aur() {
   return 0
 }
 
+# -----------------------------------------------------------------------------
+# Build + install a package from a locally-tracked PKGBUILD (NO yay, NO AUR
+# network at runtime). The PKGBUILD lives at $REPO_ROOT/pkgbuilds/<pkg>/PKGBUILD
+# and its source=() entries point at upstream release tarballs / official
+# binaries, so this is "build from source myself" using an audited recipe.
+#
+# Behaviour:
+#   - Skips if the package is already installed at a version >= the PKGBUILD's
+#     (compared with `vercmp`), so re-runs are cheap.
+#   - Builds in $HOME/.cache/dotfiles-pkgbuilds/<pkg> (keeps the repo tree clean
+#     of build artifacts). Co-located files (.install, patches) are copied in.
+#   - `makepkg -sCf` auto-installs official makedepends via sudo (migrate.sh is
+#     interactive, so sudo is available).
+#   - Installs the built artifact with `sudo pacman -U --noconfirm`.
+#   - Non-fatal: a build/install failure is recorded via _add_warning.
+#   - For split packages (e.g. apparmor.d), installs only the <pkg> base
+#     artifact (the glob `<pkg>-*.pkg.tar.zst` excludes `<pkg>.enforced-...`).
+# Usage: install_local_pkgbuild <pkgname>
+install_local_pkgbuild() {
+  local pkg="$1"
+  local srcdir="$REPO_ROOT/pkgbuilds/$pkg"
+  local src="$srcdir/PKGBUILD"
+
+  if [[ ! -f "$src" ]]; then
+    warn "no tracked PKGBUILD for $pkg at $src"
+    _add_warning "missing local PKGBUILD: $pkg"
+    return 0
+  fi
+
+  # Read pkgver-pkgrel from the (trusted, in-repo) PKGBUILD in an isolated shell.
+  local pvr
+  pvr=$(cd "$srcdir" && bash -c 'source ./PKGBUILD; printf "%s-%s" "$pkgver" "$pkgrel"' 2>/dev/null || true)
+  if [[ -z "$pvr" ]]; then
+    warn "could not read pkgver-pkgrel from $src"
+    _add_warning "malformed PKGBUILD (no pkgver-pkgrel): $pkg"
+    return 0
+  fi
+
+  # Skip if already installed at >= version.
+  local inst=""
+  if pacman -Q "$pkg" &>/dev/null; then
+    inst=$(pacman -Q "$pkg" | awk '{print $2}')
+    if [[ "$(vercmp "$inst" "$pvr")" -ge 0 ]]; then
+      skip "$pkg ($inst, already installed >= $pvr)"
+      return 0
+    fi
+  fi
+
+  local bld="$HOME/.cache/dotfiles-pkgbuilds/$pkg"
+  mkdir -p "$bld"
+  # Copy PKGBUILD + any co-located files (.install, patches, etc.).
+  cp -a "$srcdir/." "$bld/"
+
+  info "building $pkg $pvr from source (local PKGBUILD) → $bld"
+  local log="$bld/build.log"
+  if ( cd "$bld" && makepkg -sfC --noconfirm ) >"$log" 2>&1; then
+    ok "$pkg built"
+  else
+    warn "makepkg build failed for $pkg (log: $log)"
+    tail -n 25 "$log" 2>/dev/null | sed 's/^/      /' || true
+    _add_warning "local PKGBUILD build failed: $pkg"
+    return 0
+  fi
+
+  # Pick the base artifact (excludes split siblings like <pkg>.enforced-...
+  # and makepkg's auto-generated <pkg>-debug-... packages).
+  local artifact
+  artifact=$(cd "$bld" && ls -t "$pkg"-*.pkg.tar.zst 2>/dev/null | grep -vE -- '-debug-|\.enforced-' | head -1)
+  if [[ -z "$artifact" ]]; then
+    warn "no built package artifact for $pkg in $bld"
+    _add_warning "no build artifact produced: $pkg"
+    return 0
+  fi
+
+  if sudo pacman -U --noconfirm "$bld/$artifact"; then
+    ok "$pkg $pvr installed (built from source)"
+  else
+    warn "pacman -U failed for $pkg"
+    _add_warning "pacman -U failed for: $pkg"
+    return 0
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Install a Flatpak app from the flathub remote. Idempotent + non-fatal.
+# Requires the flathub remote (provisioned by 000301-flatpak.sh).
+# Usage: install_flatpak <app-id>
+install_flatpak() {
+  local app="$1"
+  if flatpak list --columns=application 2>/dev/null | grep -qx "$app"; then
+    skip "flatpak $app (installed)"
+    return 0
+  fi
+  if flatpak install -y --noninteractive flathub "$app"; then
+    ok "flatpak: $app"
+  else
+    warn "flatpak install failed: $app"
+    _add_warning "flatpak install failed: $app"
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Remove one or more packages idempotently (non-fatal). Used to drop superseded
+# AUR -bin/-git packages after their flatpak/official/local-built replacement is
+# in place. Uses plain -R (leaves shared deps as orphans; a later `pacman -Qdt`
+# cleanup can sweep them) and falls back to -Rdd if a dep check blocks removal.
+# Usage: remove_pkg <pkg1> [pkg2 ...]
+remove_pkg() {
+  local pkg
+  for pkg in "$@"; do
+    if ! pacman -Q "$pkg" &>/dev/null; then
+      skip "$pkg (not installed)"
+      continue
+    fi
+    info "removing superseded package: $pkg"
+    if sudo pacman -R --noconfirm "$pkg" 2>/dev/null; then
+      ok "removed: $pkg"
+    elif sudo pacman -Rdd --noconfirm "$pkg" 2>/dev/null; then
+      ok "removed (--nodeps): $pkg"
+    else
+      warn "failed to remove $pkg"
+      _add_warning "failed to remove: $pkg"
+    fi
+  done
+}
+
 # =============================================================================
 # SYSTEMD HELPERS
 # =============================================================================

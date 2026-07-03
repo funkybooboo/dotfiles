@@ -2,12 +2,15 @@
 # Installs (pacman): fzf fd eza dust fastfetch jq wl-clipboard zoxide tree
 #                    tealdeer unzip rsync ncdu inotify-tools ast-grep 7zip socat
 #                    pandoc-cli (build dep for timg's manpage)
-# Installs (AUR):    gum tdf timg lazydocker act
+# Installs (AUR):    gum lazydocker act
+# Builds (local):    tdf (cargo, needs nightly), timg (cmake)
 # Links:    —
 # Enables:  —
-# Note: pandoc-cli is installed BEFORE the AUR batch so that timg's PKGBUILD
-#       can regenerate its manpage at build time. It is a somewhat heavy
-#       (Haskell) dependency pulled in solely for that manpage.
+# Note: tdf and timg are built from upstream source via local PKGBUILDs
+#       (pkgbuilds/) — no yay/AUR at runtime. tdf requires nightly Rust
+#       (upstream rust-toolchain.toml); the nightly toolchain is provisioned
+#       via rustup (official Rust toolchain manager) just-in-time. pandoc-cli
+#       is installed first so timg's PKGBUILD can regenerate its manpage.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -18,7 +21,26 @@ install_pacman \
   tealdeer unzip rsync ncdu inotify-tools ast-grep 7zip socat \
   pandoc-cli
 
+# tdf requires nightly Rust (upstream pins it via rust-toolchain.toml).
+# Provision the nightly toolchain via rustup (rust-lang.org, not a registry).
+# Prepend ~/.cargo/bin so the rustup cargo proxy is used by makepkg (a
+# system/pacman cargo would ignore the nightly toolchain override). migrate.sh
+# may run non-interactively without the user's shell having activated it.
+export PATH="$HOME/.cargo/bin:$PATH"
+if command -v rustup &>/dev/null; then
+  rustup toolchain install nightly 2>/dev/null || \
+    warn "rustup nightly install failed — tdf build may fail"
+else
+  warn "rustup not found — tdf needs nightly Rust; install rustup first"
+  _add_warning "rustup missing; tdf build needs nightly Rust"
+fi
+
+# tdf + timg: build from upstream source via local PKGBUILDs (no AUR).
+install_local_pkgbuild tdf
+install_local_pkgbuild timg
+
+# gum, lazydocker, act remain AUR-only (not currently installed).
 install_aur \
-  gum tdf timg lazydocker act
+  gum lazydocker act
 
 ok "CLI utilities"
