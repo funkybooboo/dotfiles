@@ -58,9 +58,10 @@ CLAUDE.md
 .claude.json
 .claude.json.backup
 
-# SSH - only track config, never keys
+# SSH - only track config + public key, never private keys
 root/home/.ssh/*
 !root/home/.ssh/config
+!root/home/.ssh/id_ed25519.pub
 
 # GPG - only track config files, never keys/keyrings
 root/home/.gnupg/*
