@@ -20,6 +20,21 @@ NAS_RSYNC_BASE="rsync://$USERNAME@$NAS_HOST:$NAS_PORT/public/funkybooboo"
 # Password file location (will be created separately)
 PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
 
+# Per-subdir lock so concurrent invocations (manual run + systemd timer, or two
+# timer fires) don't race: rsync --delete treats another session's temp file
+# (.name.XXXXXX) as a stale file not in the source list and deletes it mid-
+# transfer, causing "stat temp file failed: No such file" / rename ENOENT errors.
+# Different subdirs are independent (--delete stays within its own subtree) so
+# they may still run in parallel; only same-subdir runs serialize.
+LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}/nas-sync"
+mkdir -p "$LOCK_DIR"
+LOCK_FILE="$LOCK_DIR/${NAS_SUBDIR//\//_}.lock"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    echo "A sync of NAS:$NAS_SUBDIR is already in progress. Skipping this run."
+    exit 0
+fi
+
 # Check if NAS is reachable
 if ! "$HOME/.local/lib/check-nas-connection"; then
     echo "NAS not reachable. Skipping sync."
