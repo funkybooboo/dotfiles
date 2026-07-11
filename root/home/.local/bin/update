@@ -340,7 +340,69 @@ if command -v podman >/dev/null 2>&1; then
     echo ""
 fi
 
-# Step 23: Refresh shell caches
+# Step 23: Update Proton Drive CLI (scrape Proton's release manifest for
+# the current version + platform URL + published SHA-512)
+#
+# Proton Drive has no package-manager distribution (no Arch/AUR/Flatpak, no
+# GitHub releases) -- the only channel is a per-release prebuilt ELF at a
+# versioned path. There is no "latest" redirect. Proton DOES publish a stable
+# manifest at https://proton.me/download/drive/cli/index.html whose <title>
+# holds the version and whose table lists per-platform URLs with SHA-512
+# checksums. We parse the linux/x64 row, compare to the installed version, and
+# if newer (or absent) download and verify the binary against the upstream-
+# published SHA-512 before installing. Non-fatal on any failure.
+#
+# The migration (000551) installs a pinned 0.4.6 as the initial, reproducible
+# install; this step rolls forward to whatever Proton currently publishes.
+if command -v proton-drive >/dev/null 2>&1 || [[ -d "$HOME/.local/bin" ]]; then
+    echo "→ Checking Proton Drive CLI..."
+    pd_manifest_url="https://proton.me/download/drive/cli/index.html"
+    pd_tmp="$(mktemp -d)"
+    if curl -fsSL --connect-timeout 15 "$pd_manifest_url" -o "$pd_tmp/index.html" 2>/dev/null; then
+        # URL is unique to the linux-x64 row (no other platform contains "linux-x64").
+        pd_url="$(grep -oE 'https://proton\.me/download/drive/cli/[0-9]+\.[0-9]+\.[0-9]+/linux-x64/proton-drive' "$pd_tmp/index.html" | head -1)"
+        # The SHA-512 is the next 128-hex <code> blob AFTER the linux-x64 URL line.
+        pd_sha512=""
+        if [[ -n "$pd_url" ]]; then
+            pd_url_line="$(grep -n 'linux-x64/proton-drive"' "$pd_tmp/index.html" | head -1 | cut -d: -f1)"
+            [[ -n "$pd_url_line" ]] && pd_sha512="$(awk "NR>$pd_url_line" "$pd_tmp/index.html" | grep -oE '[0-9a-f]{128}' | head -1)"
+        fi
+        pd_version="${pd_url##*/cli/}"; pd_version="${pd_version%%/*}"
+        if [[ -z "$pd_url" || -z "$pd_sha512" || -z "$pd_version" ]]; then
+            echo "  warning: could not parse Proton Drive CLI manifest (page format changed?)"
+        else
+            pd_installed=""
+            if command -v proton-drive >/dev/null 2>&1; then
+                # e.g. "Proton Drive CLI cli-drive@0.4.6+21156f23" -> 0.4.6
+                pd_installed="$(proton-drive --version 2>/dev/null | head -1)"
+                pd_installed="${pd_installed#*@}"; pd_installed="${pd_installed%%+*}"
+            fi
+            if [[ "$pd_installed" == "$pd_version" ]]; then
+                echo "  ✓ proton-drive $pd_version (up to date)"
+            else
+                echo "  → proton-drive ${pd_installed:-<absent>} -> $pd_version"
+                if curl -fL --connect-timeout 30 -o "$pd_tmp/proton-drive" "$pd_url" 2>/dev/null; then
+                    pd_actual="$(sha512sum "$pd_tmp/proton-drive" | awk '{print $1}')"
+                    if [[ "$pd_actual" != "$pd_sha512" ]]; then
+                        echo "  warning: sha512 mismatch (not installing)"
+                    elif install -m755 "$pd_tmp/proton-drive" "$HOME/.local/bin/proton-drive" 2>/dev/null; then
+                        echo "  ✓ proton-drive updated to $pd_version"
+                    else
+                        echo "  warning: failed to install proton-drive binary"
+                    fi
+                else
+                    echo "  warning: download failed for $pd_url"
+                fi
+            fi
+        fi
+    else
+        echo "  warning: could not fetch Proton Drive CLI manifest"
+    fi
+    rm -rf "$pd_tmp"
+    echo ""
+fi
+
+# Step 24: Refresh shell caches
 rm -f ~/.cache/fzf_fish_init.fish
 
 echo "=== Update Complete ==="
