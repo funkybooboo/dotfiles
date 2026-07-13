@@ -84,7 +84,7 @@ and the initial NAS clone.
 
 ## Migrations
 
-80 migrations grouped by concern. `ls migrations/` for the full list.
+81 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -93,7 +93,7 @@ and the initial NAS clone.
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000551` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord |
+| `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (built from upstream source) |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 

@@ -230,6 +230,28 @@ _build_repo() {
         fi
     fi
 
+    # Autoconf/HandBrake-style configure harness: a ./configure at the repo
+    # root (no CMakeLists.txt) generates build/Makefile, driven via
+    # `make --directory=build` + `sudo make --directory=build install`. If the
+    # build dir was removed (or configure changed after a git pull), re-run
+    # ./configure to bootstrap it first. Matches HandBrake (migration 000552).
+    if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+        if [[ ! -f "$repo/build/Makefile" ]]; then
+            echo "  → $name (configure: bootstrapping build/Makefile)"
+            ( cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch ) >/dev/null 2>&1 || true
+        fi
+        if [[ -f "$repo/build/Makefile" ]]; then
+            echo "  → $name (make -C build)"
+            # WARNING: sudo make install runs arbitrary install targets from
+            # source repos
+            if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
+                echo "    ✓ $name"; return 0
+            else
+                echo "    ✗ $name failed"; return 1
+            fi
+        fi
+    fi
+
     # Go module
     if [[ -f "$repo/go.mod" ]]; then
         echo "  → $name (go install)"
