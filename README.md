@@ -84,7 +84,7 @@ and the initial NAS clone.
 
 ## Migrations
 
-81 migrations grouped by concern. `ls migrations/` for the full list.
+82 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -94,6 +94,7 @@ and the initial NAS clone.
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
 | `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (built from upstream source) |
+| `000600` | Runtime roll-forward / update: rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr, GitHub fork sync, ~/sources rebuild, Docker/Podman image pulls. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design) |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
@@ -140,7 +141,7 @@ on login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 Migrations link their own scripts into `~/.local/bin/` and `~/.local/lib/`.
 Key ones:
 
-- `update` — yay + flatpak + firmware
+- `update` — thin shim over `./migrate.sh` (system upgrade + AUR + Flatpak + Proton Drive roll-forward + runtime tool roll-forward); firmware is a separate manual `update-firmware` (reboot-gated)
 - `clean-disk` — orphans, caches, unused flatpaks
 - `secretmgr` — Proton Pass wrapper
 - `sync-*` — NAS sync (documents, music, photos, audiobooks, books)

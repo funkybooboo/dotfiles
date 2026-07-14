@@ -81,4 +81,57 @@ if [[ "$already" == "false" ]]; then
   rm -f "$DL_FILE"
 fi
 
+# --- roll forward to Proton's current stable release ---------------------------
+# The block above installs a PINNED 0.4.6 for reproducible first-time deploys.
+# This block (ported from the retired standalone `update` script) is the
+# rolling-forward mechanism: scrape Proton's stable manifest for the current
+# version + linux-x64 URL + upstream-published SHA-512, and if newer than what
+# is installed, download, verify against that SHA-512, and install. Non-fatal
+# on any failure (network, parse, checksum) — the pinned binary stays put.
+# This makes the migration a true "install-pinned-if-absent, else roll-to-
+# upstream-latest" (idempotent on every migrate run).
+if [[ -x "$PD_BIN" ]]; then
+  pd_manifest_url="https://proton.me/download/drive/cli/index.html"
+  pd_tmp="$(mktemp -d)"
+  if curl -fsSL --connect-timeout 15 "$pd_manifest_url" -o "$pd_tmp/index.html" 2>/dev/null; then
+    pd_url="$(grep -oE 'https://proton\.me/download/drive/cli/[0-9]+\.[0-9]+\.[0-9]+/linux-x64/proton-drive' "$pd_tmp/index.html" | head -1)"
+    pd_sha512=""
+    if [[ -n "$pd_url" ]]; then
+      pd_url_line="$(grep -n 'linux-x64/proton-drive"' "$pd_tmp/index.html" | head -1 | cut -d: -f1)"
+      [[ -n "$pd_url_line" ]] && pd_sha512="$(awk "NR>$pd_url_line" "$pd_tmp/index.html" | grep -oE '[0-9a-f]{128}' | head -1)"
+    fi
+    pd_upver="${pd_url##*/cli/}"; pd_upver="${pd_upver%%/*}"
+    pd_inst="$(cd / && "$PD_BIN" --version 2>/dev/null | head -1)"
+    pd_inst="${pd_inst#*@}"; pd_inst="${pd_inst%%+*}"
+    if [[ -z "$pd_url" || -z "$pd_sha512" || -z "$pd_upver" ]]; then
+      warn "could not parse Proton Drive manifest (page format changed?) — keeping $pd_inst"
+      _add_warning "proton-drive: manifest parse failed (kept $pd_inst)"
+    elif [[ -z "$pd_inst" || "$(vercmp "$pd_upver" "$pd_inst")" -gt 0 ]]; then
+      info "proton-drive ${pd_inst:-<unknown>} -> $pd_upver"
+      if curl -fL --connect-timeout 30 -o "$pd_tmp/proton-drive" "$pd_url" 2>/dev/null; then
+        if [[ "$(sha512sum "$pd_tmp/proton-drive" | awk '{print $1}')" == "$pd_sha512" ]]; then
+          if install -m755 "$pd_tmp/proton-drive" "$PD_BIN" 2>/dev/null; then
+            ok "proton-drive rolled forward to $pd_upver"
+          else
+            warn "failed to install proton-drive $pd_upver (kept $pd_inst)"
+            _add_warning "proton-drive: roll-forward install failed (kept $pd_inst)"
+          fi
+        else
+          warn "proton-drive $pd_upver sha512 mismatch — not installing (kept $pd_inst)"
+          _add_warning "proton-drive: sha512 mismatch for $pd_upver (kept $pd_inst)"
+        fi
+      else
+        warn "proton-drive $pd_upver download failed — keeping $pd_inst"
+        _add_warning "proton-drive: roll-forward download failed (kept $pd_inst)"
+      fi
+    else
+      skip "proton-drive $pd_inst (upstream latest $pd_upver)"
+    fi
+  else
+    warn "could not fetch Proton Drive manifest — keeping installed version"
+    _add_warning "proton-drive: manifest fetch failed (offline?) — kept installed version"
+  fi
+  rm -rf "$pd_tmp"
+fi
+
 ok "proton drive cli"

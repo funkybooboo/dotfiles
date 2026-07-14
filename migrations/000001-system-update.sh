@@ -8,12 +8,26 @@
 section "System Update"
 
 info "updating system packages..."
-if sudo pacman -Syu --noconfirm; then
-  ok "system updated"
+# Prefer `yay -Syu` when the AUR helper is present (covers Arch + AUR packages
+# in one pass — this replaces the separate `yay -Syu` the old `update` script
+# used to run). On a fresh machine yay is installed further down, so the first
+# run falls back to `pacman -Syu`; every subsequent run uses yay.
+if command -v yay >/dev/null 2>&1; then
+  if yay -Syu --noconfirm; then
+    ok "system updated (pacman + AUR via yay)"
+  else
+    warn "system update failed — continuing, but subsequent installs may be affected"
+    _add_warning "yay -Syu failed; some packages may not install correctly"
+  fi
 else
-  warn "system update failed — continuing, but subsequent installs may be affected"
-  _add_warning "pacman -Syu failed; some packages may not install correctly"
+  if sudo pacman -Syu --noconfirm; then
+    ok "system updated (pacman; yay not yet installed)"
+  else
+    warn "system update failed — continuing, but subsequent installs may be affected"
+    _add_warning "pacman -Syu failed; some packages may not install correctly"
+  fi
 fi
+sudo systemctl daemon-reload 2>/dev/null || true
 
 if command -v yay &>/dev/null; then
   skip "yay already installed"
