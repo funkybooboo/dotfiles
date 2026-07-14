@@ -189,9 +189,15 @@ install_local_pkgbuild() {
     return 0
   fi
 
-  # Skip if already installed at >= version.
+  # Skip if the EXACT audited package is already installed at >= version.
+  # `pacman -Q <name>` resolves provides/​replaces, so an AUR -bin package
+  # that `provides=($pkg)` would match here even though the audited local
+  # build was never installed — silently defeating the off-AUR swap. Require
+  # the installed package's NAME to equal $pkg before considering a skip.
   local inst=""
-  if pacman -Q "$pkg" &>/dev/null; then
+  local inst_name
+  inst_name=$(pacman -Q "$pkg" 2>/dev/null | awk '{print $1}')
+  if [[ "$inst_name" == "$pkg" ]]; then
     inst=$(pacman -Q "$pkg" | awk '{print $2}')
     if [[ "$(vercmp "$inst" "$pvr")" -ge 0 ]]; then
       skip "$pkg ($inst, already installed >= $pvr)"
