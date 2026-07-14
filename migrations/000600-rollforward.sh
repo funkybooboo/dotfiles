@@ -1,23 +1,27 @@
-# 000600-rollforward.sh -- Runtime roll-forward / update
+# 000600-rollforward.sh -- Generic runtime roll-forward (software upgrades only)
 # Installs:  none (this migration only UPGRADES tools already installed by
-#            earlier migrations; every step is guarded by `command -v` or a
-#            directory check, so on a machine without a given tool the step is
-#            a silent no-op).
+#            earlier migrations; every step is guarded by `command -v`, so on
+#            a machine without a given tool the step is a silent no-op).
 # Links:     --
 # Enables:   --
-# Note:      This migration consolidates the retired standalone `update` script
-#            into the idempotent migrate pass. Unlike the audited, PINNED local
-#            PKGBUILDs (which intentionally do NOT roll forward -- you bump the
-#            tracked PKGBUILD to update them), the tools here are managed by
-#            their own upstream channels (cargo, go, npm, uv, mise, pipx, gem,
-#            pnpm, bun, pi, composer, ghcup, stack, cabal) under a deliberate
+# Scope:     This migration is GENERIC: it upgrades installed package-managed
+#            software (rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun,
+#            pi, composer, ghcup/stack/cabal, tldr) under the deliberate
 #            "trust upstream latest" policy (same principle as the Proton Drive
-#            roll-forward in 000551). Re-running ./migrate.sh therefore keeps
-#            everything current. Dropped vs. the old script: `pip install
-#            --user --upgrade pip` (PEP 668 blocks it on Arch -- it was a silent
-#            no-op fighting the system Python). Firmware updates stay a separate
-#            manual `update-firmware` command (reboot-gated, potentially
-#            disruptive). Flatpak + Proton Drive updates are owned by 000301
+#            roll-forward in 000551). It knows NOTHING about the user's repos,
+#            secrets, GitHub forks, ~/sources tree, or running containers --
+#            those are personal/environment management and live in setup.sh,
+#            not in migrate.sh.
+# Note:      Unlike the audited, PINNED local PKGBUILDs (which intentionally do
+#            NOT roll forward -- you bump the tracked PKGBUILD to update them),
+#            the tools here are managed by their own upstream channels.
+#            Re-running ./migrate.sh keeps installed runtimes current.
+#            Dropped vs. the old `update` script: `pip install --user --upgrade
+#            pip` (PEP 668 blocks it on Arch -- a silent no-op fighting the
+#            system Python); GitHub fork sync + ~/sources rebuild + container
+#            image pulls (moved to setup.sh as personal repo/environment
+#            management). Firmware stays a separate manual `update-firmware`
+#            (reboot-gated). Flatpak + Proton Drive updates are owned by 000301
 #            and 000551 respectively.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
@@ -127,123 +131,6 @@ fi
 if command -v tldr >/dev/null 2>&1; then
   info "tldr cache"
   tldr --update 2>/dev/null || true
-fi
-
-# --- Sync GitHub forks with upstream --------------------------------------------
-if command -v gh >/dev/null 2>&1; then
-  _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
-  if [[ -n "$_forks" ]]; then
-    info "syncing GitHub forks with upstream"
-    while IFS= read -r _repo; do
-      if gh repo sync "$_repo" 2>/dev/null; then
-        ok "fork synced: $_repo"
-      else
-        warn "could not sync fork: $_repo (non-fatal)"
-      fi
-    done <<< "$_forks"
-  fi
-fi
-
-# --- ~/sources: git pull + incremental rebuild ---------------------------------
-# Reusable build helper for the source-tree rebuild loop below. Ported verbatim
-# in spirit from the retired `update` script. Each branch tries an incremental
-# build in an existing build dir; `sudo make install` re-runs (idempotent for
-# the autotools/make branches). Returns 0 on success, 1 on build failure,
-# 2 if no recognized build system was found.
-_rollforward_build_repo() {
-  local repo="$1" name
-  name=$(basename "$repo")
-
-  local ninja_dir=""
-  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-    [[ -f "$d/build.ninja" ]] && { ninja_dir="$d"; break; }
-  done
-  if [[ -n "$ninja_dir" ]]; then
-    if ninja -C "$ninja_dir" 2>/dev/null; then ok "$name (ninja)"; return 0; else warn "$name (ninja) failed"; return 1; fi
-  fi
-
-  local cmake_make_dir=""
-  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-    [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && { cmake_make_dir="$d"; break; }
-  done
-  if [[ -n "$cmake_make_dir" ]]; then
-    if make -C "$cmake_make_dir" 2>/dev/null; then ok "$name (cmake+make)"; return 0; else warn "$name (cmake+make) failed"; return 1; fi
-  fi
-
-  if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-    if [[ ! -f "$repo/build/Makefile" ]]; then
-      info "$name (configure: bootstrapping build/Makefile)"
-      ( cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch ) >/dev/null 2>&1 || true
-    fi
-    if [[ -f "$repo/build/Makefile" ]]; then
-      # WARNING: sudo make install runs arbitrary install targets from source repos.
-      if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
-        ok "$name (make -C build)"; return 0
-      else
-        warn "$name (make -C build) failed"; return 1
-      fi
-    fi
-  fi
-
-  if [[ -f "$repo/go.mod" ]]; then
-    if (cd "$repo" && go install ./... 2>/dev/null); then ok "$name (go install)"; return 0; else warn "$name (go install) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Cargo.toml" ]]; then
-    if (cd "$repo" && cargo build --release 2>/dev/null); then ok "$name (cargo build)"; return 0; else warn "$name (cargo build) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/meson.build" ]]; then
-    if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then ok "$name (meson+ninja)"; return 0; else warn "$name (meson+ninja) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-    if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then ok "$name (make)"; return 0; else warn "$name (make) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Gemfile" ]]; then
-    if (cd "$repo" && bundle install 2>/dev/null); then ok "$name (bundle)"; return 0; else warn "$name (bundle) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/package.json" ]]; then
-    if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then ok "$name (npm)"; return 0; else warn "$name (npm) failed"; return 1; fi
-  fi
-
-  return 2
-}
-
-if [[ -d "$HOME/sources" ]]; then
-  info "Updating git repos in ~/sources"
-  for _repo in "$HOME/sources"/*/; do
-    [[ -d "$_repo/.git" ]] || continue
-    _rname=$(basename "$_repo")
-    if git -C "$_repo" pull --ff-only 2>/dev/null; then
-      ok "$_rname (pulled)"
-    else
-      warn "$_rname (diverged or error -- non-fatal)"
-    fi
-  done
-
-  info "Rebuilding ~/sources repos"
-  for _repo in "$HOME/sources"/*/; do
-    [[ -d "$_repo/.git" ]] || continue
-    _rc=0
-    _rollforward_build_repo "$_repo" || _rc=$?
-    (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"
-  done
-fi
-
-# --- Docker / Podman container images (running containers only) -----------------
-if command -v docker >/dev/null 2>&1 && sudo docker ps -q >/dev/null 2>&1; then
-  info "Docker container images"
-  for _ctr in $(sudo docker ps --format '{{.Names}}'); do
-    _img=$(sudo docker inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
-    [[ -n "$_img" ]] || continue
-    if sudo docker pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
-  done
-fi
-if command -v podman >/dev/null 2>&1 && podman ps -q >/dev/null 2>&1; then
-  info "Podman container images"
-  for _ctr in $(podman ps --format '{{.Names}}'); do
-    _img=$(podman inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
-    [[ -n "$_img" ]] || continue
-    if podman pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
-  done
 fi
 
 # --- Refresh shell caches (fzf fish init) --------------------------------------

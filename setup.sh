@@ -344,7 +344,14 @@ else
 
       _dest="$PROJECTS_DIR/$_name"
       if [[ -d "$_dest/.git" ]]; then
-        skip "$_name (already cloned)"
+        # Second (and later) runs: refresh the cloned repo instead of skipping,
+        # so re-running setup.sh keeps ~/Projects current (--ff-only is safe and
+        # non-destructive; repos needing rebase are left alone and reported).
+        if git -C "$_dest" pull --ff-only --quiet 2>/dev/null; then
+          ok "$_name (updated)"
+        else
+          skip "$_name (diverged or up-to-date; left as-is)"
+        fi
       else
         if [[ "$GITHUB_SSH_OK" == "true" ]]; then
           _clone_url=$(_to_ssh_url "$_url")
@@ -415,5 +422,140 @@ for entry in "${NAS_MODULES[@]}"; do
   module="${entry%%:*}"
   enable_user_service "nas-sync-${module}.timer"
 done
+
+# =============================================================================
+# 10. Personal repo & environment refresh
+# =============================================================================
+# This is the home for everything that is PERSONAL/environment-specific and
+# therefore must NOT live in migrate.sh (migrate is a generic install/upgrade
+# of configs and software and knows nothing about your repos, secrets, or
+# containers). Re-running setup.sh keeps these current. These steps used to
+# live in the retired standalone `update` script; they were moved here when
+# `update` became a shim over migrate.sh. Three concerns:
+#   10a. Sync GitHub forks with upstream (needs `gh` auth from step 1+).
+#   10b. Update + rebuild ~/sources (personal built-from-source repos).
+#   10c. Refresh running-container images (Docker/Podman).
+# All idempotent and best-effort.
+
+# ── 10a. Sync GitHub forks with upstream ─────────────────────────────────────
+if command -v gh >/dev/null 2>&1; then
+  _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
+  if [[ -z "$_forks" ]]; then
+    skip "GitHub fork sync (no forks found)"
+  else
+    info "syncing ${#_forks[@]} GitHub fork(s) with upstream"
+    while IFS= read -r _repo; do
+      if gh repo sync "$_repo" 2>/dev/null; then
+        ok "fork synced: $_repo"
+      else
+        warn "could not sync fork: $_repo (non-fatal)"
+      fi
+    done <<< "$_forks"
+  fi
+else
+  skip "GitHub fork sync (gh not installed)"
+fi
+
+# ── 10b. Update + rebuild ~/sources ──────────────────────────────────────────
+# git pull --ff-only each source repo, then run an incremental build in its
+# existing build dir (ninja/cmake/go/cargo/meson/make/autotools). `sudo make
+# install` re-runs for the install-target branches (idempotent for those).
+_setup_build_repo() {
+  local repo="$1" name
+  name=$(basename "$repo")
+
+  local ninja_dir=""
+  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+    [[ -f "$d/build.ninja" ]] && { ninja_dir="$d"; break; }
+  done
+  if [[ -n "$ninja_dir" ]]; then
+    if ninja -C "$ninja_dir" 2>/dev/null; then ok "$name (ninja)"; return 0; else warn "$name (ninja) failed"; return 1; fi
+  fi
+
+  local cmake_make_dir=""
+  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+    [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && { cmake_make_dir="$d"; break; }
+  done
+  if [[ -n "$cmake_make_dir" ]]; then
+    if make -C "$cmake_make_dir" 2>/dev/null; then ok "$name (cmake+make)"; return 0; else warn "$name (cmake+make) failed"; return 1; fi
+  fi
+
+  if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+    if [[ ! -f "$repo/build/Makefile" ]]; then
+      info "$name (configure: bootstrapping build/Makefile)"
+      ( cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch ) >/dev/null 2>&1 || true
+    fi
+    if [[ -f "$repo/build/Makefile" ]]; then
+      # WARNING: sudo make install runs arbitrary install targets from source repos.
+      if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
+        ok "$name (make -C build)"; return 0
+      else
+        warn "$name (make -C build) failed"; return 1
+      fi
+    fi
+  fi
+
+  if [[ -f "$repo/go.mod" ]]; then
+    if (cd "$repo" && go install ./... 2>/dev/null); then ok "$name (go install)"; return 0; else warn "$name (go install) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Cargo.toml" ]]; then
+    if (cd "$repo" && cargo build --release 2>/dev/null); then ok "$name (cargo build)"; return 0; else warn "$name (cargo build) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/meson.build" ]]; then
+    if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then ok "$name (meson+ninja)"; return 0; else warn "$name (meson+ninja) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+    if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then ok "$name (make)"; return 0; else warn "$name (make) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Gemfile" ]]; then
+    if (cd "$repo" && bundle install 2>/dev/null); then ok "$name (bundle)"; return 0; else warn "$name (bundle) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/package.json" ]]; then
+    if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then ok "$name (npm)"; return 0; else warn "$name (npm) failed"; return 1; fi
+  fi
+
+  return 2
+}
+
+if [[ -d "$HOME/sources" ]]; then
+  info "Updating git repos in ~/sources"
+  for _repo in "$HOME/sources"/*/; do
+    [[ -d "$_repo/.git" ]] || continue
+    _rname=$(basename "$_repo")
+    if git -C "$_repo" pull --ff-only 2>/dev/null; then
+      ok "$_rname (pulled)"
+    else
+      warn "$_rname (diverged or error -- non-fatal)"
+    fi
+  done
+
+  info "Rebuilding ~/sources repos"
+  for _repo in "$HOME/sources"/*/; do
+    [[ -d "$_repo/.git" ]] || continue
+    _rc=0
+    _setup_build_repo "$_repo" || _rc=$?
+    (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"
+  done
+else
+  skip "~/sources update (directory absent)"
+fi
+
+# ── 10c. Refresh running-container images (Docker/Podman) ────────────────────
+if command -v docker >/dev/null 2>&1 && sudo docker ps -q >/dev/null 2>&1; then
+  info "Docker: pulling fresh images for running containers"
+  for _ctr in $(sudo docker ps --format '{{.Names}}'); do
+    _img=$(sudo docker inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+    [[ -n "$_img" ]] || continue
+    if sudo docker pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+  done
+fi
+if command -v podman >/dev/null 2>&1 && podman ps -q >/dev/null 2>&1; then
+  info "Podman: pulling fresh images for running containers"
+  for _ctr in $(podman ps --format '{{.Names}}'); do
+    _img=$(podman inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+    [[ -n "$_img" ]] || continue
+    if podman pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+  done
+fi
 
 print_summary "secrets"
