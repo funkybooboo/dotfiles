@@ -60,7 +60,7 @@ Then **reboot into Hyprland** and run:
 ```
 dotfiles/
 ├── migrate.sh        # preflight → run migrations in order → summary
-├── setup.sh          # post-reboot: Proton Pass, Tailscale, SSH, NAS sync, projects
+├── setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
 ├── migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
 └── root/
     ├── home/         # → $HOME (symlinked)
@@ -72,15 +72,30 @@ dotfiles/
 - Each migration guard-sources `_common.sh` so it can run standalone.
 - No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
 
-### `setup.sh`
+### `migrate.sh` — generic install + upgrade
 
-Run after reboot. Handles Proton Pass login, Tailscale auth, NAS rsync
-password, `secretmgr bootstrap`, agent setup (loading the SSH key into
-ssh-agent with a terminal passphrase prompt, and priming the GPG agent's
-passphrase cache via pinentry-qt so git signed commits don't prompt for 8h),
-GitHub SSH verification, switching the dotfiles remote to SSH, cloning
-personal repos into `~/Projects` (from `~/.config/dotfiles/projects-repos.txt`),
-and the initial NAS clone.
+**Generic only.** Installs/configures software and upgrades it; it knows
+nothing about your repos, secrets, GitHub forks, `~/sources`, or containers.
+First run installs everything; re-running it upgrades installed software to
+upstream-latest (the system upgrade prefers `yay -Syu` so AUR packages stay
+current too, plus Flatpak update, the Proton Drive manifest roll-forward, and
+the `000600` runtime roll-forward: rustup, cargo, go, mise, npm, uv, pipx,
+gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr). Pinned local PKGBUILDs
+do NOT roll forward — bump the tracked PKGBUILD to update them.
+
+### `setup.sh` — secrets + repos (personal/environment management)
+
+Run after reboot (needs a browser + network). Handles Proton Pass login,
+Tailscale auth, NAS rsync password, `secretmgr bootstrap`, agent setup
+(loading the SSH key into ssh-agent with a terminal passphrase prompt, and
+priming the GPG agent's passphrase cache via pinentry-qt so git signed
+commits don't prompt for 8h), GitHub SSH verification, switching the dotfiles
+remote to SSH, and cloning personal repos into `~/Projects` (from
+`~/.config/dotfiles/projects-repos.txt`). First run does the initial clone;
+**re-running it updates everything in your personal/environment domain** —
+`~/Projects` repos via `git pull --ff-only`, syncing GitHub forks with upstream,
+`git pull` + incremental rebuild of `~/sources`, and refreshing running
+Docker/Podman container images.
 
 ## Migrations
 
@@ -94,7 +109,7 @@ and the initial NAS clone.
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
 | `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (built from upstream source) |
-| `000600` | Runtime roll-forward / update: rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr, GitHub fork sync, ~/sources rebuild, Docker/Podman image pulls. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design) |
+| `000600` | Runtime roll-forward (generic software upgrades only): rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design). Repo/container refresh lives in `setup.sh`, not here |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
@@ -141,7 +156,7 @@ on login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 Migrations link their own scripts into `~/.local/bin/` and `~/.local/lib/`.
 Key ones:
 
-- `update` — thin shim over `./migrate.sh` (system upgrade + AUR + Flatpak + Proton Drive roll-forward + runtime tool roll-forward); firmware is a separate manual `update-firmware` (reboot-gated)
+- `update` — thin shim over `./migrate.sh` (generic software upgrade; the retired standalone script's logic now lives in the `000600` migration + `000001`/`000301`/`000551`). Firmware is a separate manual `update-firmware` (reboot-gated) — that intentionally stays out of `migrate.sh`/`setup.sh`
 - `clean-disk` — orphans, caches, unused flatpaks
 - `secretmgr` — Proton Pass wrapper
 - `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
