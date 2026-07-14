@@ -3,11 +3,11 @@
 # Links:    ~/.config/mpv/input.conf,
 #           ~/.local/share/applications/lazymusic.desktop
 # Enables:  —
-# Note: lazymusic.desktop launches the lazymusic mpv-based player, cloned from
-#       github.com/funkybooboo/lazymusic.git into ~/sources/lazymusic. The clone
-#       happens here (idempotent) so the .desktop Exec path resolves. If the
-#       clone is incomplete the .desktop is still linked and will work once the
-#       repo is built.
+# Note: lazymusic.desktop launches the lazymusic mpv-based player, whose source
+#       lives in the dotfiles git submodule sources/lazymusic (initialized in
+#       preflight). The .desktop Exec path points at that submodule checkout.
+#       If the submodule is not populated the .desktop is still linked and will
+#       work once it is built.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -18,19 +18,12 @@ link_file "$DOTFILES_HOME/.config/mpv/input.conf" "$HOME/.config/mpv/input.conf"
 link_file "$DOTFILES_HOME/.local/share/applications/lazymusic.desktop" \
   "$HOME/.local/share/applications/lazymusic.desktop"
 
-# Clone lazymusic player into ~/sources (idempotent)
-LAZYMUSIC_DIR="$HOME/sources/lazymusic"
+# lazymusic source lives in the dotfiles git submodule sources/lazymusic
+# (initialized in preflight). Verify it is populated; warn if not.
+LAZYMUSIC_DIR="$REPO_ROOT/sources/lazymusic"
 if [[ -d "$LAZYMUSIC_DIR/.git" ]]; then
-  skip "lazymusic repo (already cloned)"
+  ok "lazymusic source (submodule sources/lazymusic)"
 else
-  info "cloning lazymusic → ~/sources/lazymusic..."
-  mkdir -p "$HOME/sources"
-  if git clone --quiet https://github.com/funkybooboo/lazymusic.git "$LAZYMUSIC_DIR"; then
-    ok "lazymusic cloned"
-    warn "build lazymusic in ~/sources/lazymusic before launching the .desktop"
-    _add_warning "build lazymusic in ~/sources/lazymusic before it will launch"
-  else
-    warn "failed to clone lazymusic — .desktop will not launch until cloned"
-    _add_warning "lazymusic clone failed; run 'git clone https://github.com/funkybooboo/lazymusic.git ~/sources/lazymusic'"
-  fi
+  warn "sources/lazymusic submodule not populated — .desktop will not launch"
+  _add_warning "sources/lazymusic submodule missing; run 'git -C ~/dotfiles submodule update --init sources/lazymusic'"
 fi

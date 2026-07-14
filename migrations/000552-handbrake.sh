@@ -10,16 +10,16 @@
 #       upstream-recommended build (third-party distro/AUR builds are explicitly
 #       flagged as broken by upstream -- see the "Warning about broken
 #       third-party builds" note in the HandBrake docs). The supported path is
-#       to build from source: clone github.com/HandBrake/HandBrake.git into
-#       ~/sources/HandBrake, configure, build, and `sudo make --directory=build
-#       install` (installs ghb + HandBrakeCLI to the default prefix /usr/local,
-#       plus the .desktop and hicolor icon entries). The update script's Step 20
-#       rebuild harness recognises the configure-generated build/Makefile and
-#       re-runs `make -C build && sudo make -C build install` after each git
-#       pull, so a `update` keeps HandBrake current without re-cloning.
-#       This migration is a one-shot bootstrap: once ghb is installed at
-#       /usr/local/bin/ghb it skips the long configure/build paso through the
-#       cheaper update-script path.
+#       to build from source: the upstream repo lives in the dotfiles git
+#       submodule sources/HandBrake (initialized in preflight), configure, build,
+#       and `sudo make --directory=build install` (installs ghb + HandBrakeCLI to
+#       the default prefix /usr/local, plus the .desktop and hicolor icon
+#       entries). setup.sh step 10b recognises the configure-generated
+#       build/Makefile and re-runs `make -C build && sudo make -C build install`
+#       after each submodule roll-forward, so re-running setup.sh keeps HandBrake
+#       current without re-cloning. This migration is a one-shot bootstrap: once
+#       ghb is installed at /usr/local/bin/ghb it skips the long configure/build
+#       paso through the cheaper setup.sh roll-forward path.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -43,23 +43,17 @@ install_pacman libva libdrm
 install_pacman desktop-file-utils gst-libav gst-plugins-good gtk4
 
 # -----------------------------------------------------------------------------
-# Clone the upstream repo into ~/sources/HandBrake (idempotent).
+# HandBrake source lives in the dotfiles git submodule sources/HandBrake
+# (initialized in preflight). Verify it is populated.
 # -----------------------------------------------------------------------------
-HB_DIR="$HOME/sources/HandBrake"
+HB_DIR="$REPO_ROOT/sources/HandBrake"
 
-if [[ -d "$HB_DIR/.git" ]]; then
-  skip "HandBrake repo (already cloned)"
-else
-  info "cloning HandBrake -> ~/sources/HandBrake..."
-  mkdir -p "$HOME/sources"
-  if git clone --quiet https://github.com/HandBrake/HandBrake.git "$HB_DIR"; then
-    ok "HandBrake cloned"
-  else
-    fail "failed to clone HandBrake"
-    _add_error "HandBrake clone failed; run 'git clone https://github.com/HandBrake/HandBrake.git ~/sources/HandBrake'"
-    return 0
-  fi
+if [[ ! -d "$HB_DIR/.git" ]]; then
+  fail "sources/HandBrake submodule not populated"
+  _add_error "sources/HandBrake submodule missing; run 'git -C ~/dotfiles submodule update --init sources/HandBrake'"
+  return 0
 fi
+ok "HandBrake source (submodule sources/HandBrake)"
 
 # -----------------------------------------------------------------------------
 # Bootstrap build + install. Idempotent: once ghb is installed at the default
@@ -68,7 +62,7 @@ fi
 # Default prefix is /usr/local (HandBrake make/configure.py: cfg.prefix_dir).
 # -----------------------------------------------------------------------------
 if [[ -x /usr/local/bin/ghb ]]; then
-  skip "HandBrake already installed (/usr/local/bin/ghb) -- use 'update' to rebuild"
+  skip "HandBrake already installed (/usr/local/bin/ghb) -- use setup.sh to rebuild"
   return 0
 fi
 

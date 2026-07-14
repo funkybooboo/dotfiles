@@ -9,7 +9,7 @@
 #            pi, composer, ghcup/stack/cabal, tldr) under the deliberate
 #            "trust upstream latest" policy (same principle as the Proton Drive
 #            roll-forward in 000551). It knows NOTHING about the user's repos,
-#            secrets, GitHub forks, ~/sources tree, or running containers --
+#            secrets, GitHub forks, submodule sources, or running containers --
 #            those are personal/environment management and live in setup.sh,
 #            not in migrate.sh.
 # Note:      Unlike the audited, PINNED local PKGBUILDs (which intentionally do

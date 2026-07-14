@@ -7,8 +7,8 @@
 #       PAGER/MANPAGER set in environment-variables. lua51 + luarocks +
 #       stylua + tree-sitter-cli support nvim plugins.
 #       The 99 plugin (lua/plugins/99.lua) is developed locally and loaded via
-#       dir = "~/sources/99"; it is cloned here from
-#       github.com/funkybooboo/99.git (idempotent).
+#       its submodule checkout at sources/99 (git submodule, cloned in
+#       preflight). The nvim config points dir at that checkout.
 #       nvimpager is built from the upstream release tarball
 #       (github.com/lucc/nvimpager) via a local PKGBUILD in pkgbuilds/ — no
 #       yay/AUR at runtime. (Previously the AUR package, which was flagged
@@ -31,17 +31,13 @@ ok "neovim + tooling"
 link_tree "$DOTFILES_HOME/.config/nvim" "$HOME/.config/nvim"
 link_file "$DOTFILES_HOME/.editorconfig" "$HOME/.editorconfig"
 
-# Clone the local 99 plugin into ~/sources/99 (idempotent)
-NINES_DIR="$HOME/sources/99"
+# The 99 plugin lives in the dotfiles git submodule sources/99 (initialized in
+# preflight via `git submodule update --init --recursive`). Verify it is
+# populated; if not, warn and let the user run migrate again / submodule init.
+NINES_DIR="$REPO_ROOT/sources/99"
 if [[ -d "$NINES_DIR/.git" ]]; then
-  skip "99 plugin repo (already cloned)"
+  ok "99 plugin source (submodule sources/99)"
 else
-  info "cloning 99 plugin → ~/sources/99..."
-  mkdir -p "$HOME/sources"
-  if git clone --quiet https://github.com/funkybooboo/99.git "$NINES_DIR"; then
-    ok "99 plugin cloned"
-  else
-    warn "failed to clone 99 plugin — nvim will error on :lazy load until cloned"
-    _add_warning "99 plugin clone failed; run 'git clone https://github.com/funkybooboo/99.git ~/sources/99'"
-  fi
+  warn "sources/99 submodule not populated — nvim will error on :lazy load"
+  _add_warning "sources/99 submodule missing; run 'git -C ~/dotfiles submodule update --init sources/99'"
 fi

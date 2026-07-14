@@ -548,6 +548,28 @@ preflight() {
   fi
 
   # ---------------------------------------------------------------------------
+  # Initialize git submodules (sources/*). A plain `git clone` of the dotfiles
+  # repo does NOT populate submodule working trees, so several migrations that
+  # build from source (000108 99-plugin, 000305 lazymusic, 000540 lazycsv,
+  # 000552 HandBrake) would find empty directories. This --init --recursive
+  # is a fast no-op when submodules are already checked out at the recorded
+  # SHA; --depth 1 limits the cost for the large HandBrake history. Non-fatal:
+  # a failure is recorded as a warning so the rest of the run continues and
+  # the affected migration reports its own missing-source warning.
+  # ---------------------------------------------------------------------------
+  if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
+    if git -C "$REPO_ROOT" submodule update --init --recursive --depth 1 2>/dev/null; then
+      _submods=$(git -C "$REPO_ROOT" config -f "$REPO_ROOT/.gitmodules" --name-only --get-regexp 'path' 2>/dev/null | wc -l)
+      ok "git submodules initialized (${_submods} source tree(s): sources/*)"
+    else
+      warn "git submodule init failed — building from source may be skipped"
+      _add_warning "git submodule init failed; some sources/* migrations may skip their build"
+    fi
+  else
+    skip "git submodules (no .gitmodules present)"
+  fi
+
+  # ---------------------------------------------------------------------------
   # Disk encryption checks (enforced). Silent encryption-setup failure is
   # otherwise undetectable: archinstall can pull in cryptsetup and write a
   # crypttab template yet never actually create the LUKS container, leaving an

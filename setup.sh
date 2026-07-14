@@ -456,10 +456,17 @@ else
   skip "GitHub fork sync (gh not installed)"
 fi
 
-# ── 10b. Update + rebuild ~/sources ──────────────────────────────────────────
-# git pull --ff-only each source repo, then run an incremental build in its
-# existing build dir (ninja/cmake/go/cargo/meson/make/autotools). `sudo make
-# install` re-runs for the install-target branches (idempotent for those).
+# ── 10b. Update + rebuild git submodule sources (sources/*) ───────────────
+# The built-from-source repos live as git submodules of the dotfiles repo
+# (sources/<name>), initialized by migrate.sh preflight. Roll them forward to
+# upstream-latest with `git submodule update --init --remote --merge`, then run
+# an incremental build in each working tree (ninja/cmake/go/cargo/meson/
+# make/autotools). `sudo make install` re-runs for the install-target branches.
+# NOTE: --remote advances each submodule to its remote-tracking branch tip and
+# merges into the local branch, which updates the submodule pointer recorded in
+# the dotfiles repo (so `git status` in ~/dotfiles will show updated submodule
+# SHAs as an uncommitted change). Commit those pointer bumps in ~/dotfiles to
+# pin the new versions across machines.
 _setup_build_repo() {
   local repo="$1" name
   name=$(basename "$repo")
@@ -517,27 +524,24 @@ _setup_build_repo() {
   return 2
 }
 
-if [[ -d "$HOME/sources" ]]; then
-  info "Updating git repos in ~/sources"
-  for _repo in "$HOME/sources"/*/; do
-    [[ -d "$_repo/.git" ]] || continue
-    _rname=$(basename "$_repo")
-    if git -C "$_repo" pull --ff-only 2>/dev/null; then
-      ok "$_rname (pulled)"
-    else
-      warn "$_rname (diverged or error -- non-fatal)"
-    fi
-  done
+if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
+  info "Updating git submodule sources (sources/*) to upstream-latest"
+  if git -C "$REPO_ROOT" submodule update --init --remote --merge 2>/dev/null; then
+    ok "submodule sources rolled forward"
+  else
+    warn "submodule update reported an error (non-fatal; some sources may be stale)"
+    _add_warning "git submodule update --remote failed; one or more sources/* not rolled forward"
+  fi
 
-  info "Rebuilding ~/sources repos"
-  for _repo in "$HOME/sources"/*/; do
+  info "Rebuilding source submodule trees"
+  for _repo in "$REPO_ROOT"/sources/*/; do
     [[ -d "$_repo/.git" ]] || continue
     _rc=0
     _setup_build_repo "$_repo" || _rc=$?
     (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"
   done
 else
-  skip "~/sources update (directory absent)"
+  skip "source submodule update (no .gitmodules present)"
 fi
 
 # ── 10c. Refresh running-container images (Docker/Podman) ────────────────────

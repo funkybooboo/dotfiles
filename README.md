@@ -44,7 +44,7 @@ these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
 ### After archinstall
 
 ```bash
-git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
+git clone --recurse-submodules git@github.com:funkybooboo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./migrate.sh
 ```
@@ -75,7 +75,7 @@ dotfiles/
 ### `migrate.sh` — generic install + upgrade
 
 **Generic only.** Installs/configures software and upgrades it; it knows
-nothing about your repos, secrets, GitHub forks, `~/sources`, or containers.
+nothing about your repos, secrets, GitHub forks, or containers.
 First run installs everything; re-running it upgrades installed software to
 upstream-latest (the system upgrade prefers `yay -Syu` so AUR packages stay
 current too, plus Flatpak update, the Proton Drive manifest roll-forward, and
@@ -94,7 +94,7 @@ remote to SSH, and cloning personal repos into `~/Projects` (from
 `~/.config/dotfiles/projects-repos.txt`). First run does the initial clone;
 **re-running it updates everything in your personal/environment domain** —
 `~/Projects` repos via `git pull --ff-only`, syncing GitHub forks with upstream,
-`git pull` + incremental rebuild of `~/sources`, and refreshing running
+rolling forward the `sources/*` **git submodules** to upstream-latest and rebuilding them, and refreshing running
 Docker/Podman container images.
 
 ## Migrations
@@ -112,6 +112,19 @@ Docker/Podman container images.
 | `000600` | Runtime roll-forward (generic software upgrades only): rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design). Repo/container refresh lives in `setup.sh`, not here |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
+
+### Sources as git submodules
+
+Repos built from source (HandBrake, `lazycsv`, `lazymusic`, the `99` nvim
+plugin) live as **git submodules under `sources/`** in the dotfiles repo, not
+in `~/sources`. A plain `git clone` won't populate them; either clone with
+`--recurse-submodules` (above) or rely on `migrate.sh` preflight, which runs
+`git submodule update --init --recursive --depth 1`. Each migration that builds
+from source verifies its submodule is populated and builds from
+`$REPO_ROOT/sources/<name>`. Re-running `setup.sh` rolls the submodules forward
+to upstream-latest (`git submodule update --init --remote --merge`) and rebuilds
+them — the resulting pointer bumps show as uncommitted changes in the dotfiles
+repo; commit them to pin new versions across machines.
 
 **Not deployed by migrations** (too machine-specific): `/etc/fstab`,
 `/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`. On an existing install,

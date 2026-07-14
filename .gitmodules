@@ -1,0 +1,12 @@
+[submodule "sources/99"]
+	path = sources/99
+	url = https://github.com/funkybooboo/99.git
+[submodule "sources/lazymusic"]
+	path = sources/lazymusic
+	url = https://github.com/funkybooboo/lazymusic.git
+[submodule "sources/lazycsv"]
+	path = sources/lazycsv
+	url = https://github.com/funkybooboo/lazycsv.git
+[submodule "sources/HandBrake"]
+	path = sources/HandBrake
+	url = https://github.com/HandBrake/HandBrake.git

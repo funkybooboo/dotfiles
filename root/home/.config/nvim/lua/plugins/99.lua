@@ -1,6 +1,6 @@
 return {
   "funkybooboo/99",
-  dir = "/home/nate/sources/99", -- Use local development version
+  dir = "/home/nate/dotfiles/sources/99", -- git submodule checkout of github.com/funkybooboo/99
   dependencies = {
     "nvim-lua/plenary.nvim",
   },

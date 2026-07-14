@@ -4,7 +4,7 @@
 # This is now a thin shim over migrate.sh. The rolling-forward logic that used
 # to live here (flatpak update, rustup, cargo, go, mise, npm, uv, pipx, gem,
 # pnpm, bun, pi, composer, ghcup/stack/cabal, tldr, GitHub fork sync,
-# ~/sources rebuild, Docker/Podman image pulls, Proton Drive manifest) has been
+# sources/* submodule rebuild, Docker/Podman image pulls, Proton Drive manifest) has been
 # folded into idempotent migrations:
 #   000001   system upgrade (now `yay -Syu` -- covers pacman + AUR)
 #   000301   flatpak update

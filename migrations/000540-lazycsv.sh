@@ -3,10 +3,11 @@
 # Links:    —
 # Enables:  —
 # Note: lazycsv is a Rust TUI for CSV files (github.com/funkybooboo/lazycsv).
-#       It is cloned into ~/sources/lazycsv (idempotent), built in release mode
-#       with cargo, and installed to ~/.local/bin so it is on PATH alongside
-#       the other user-local binaries. The build uses the mise-managed Rust
-#       toolchain; duckdb is built bundled (no system duckdb required).
+#       Its source lives in the dotfiles git submodule sources/lazycsv
+#       (initialized in preflight); it is built in release mode with cargo and
+#       installed to ~/.local/bin so it is on PATH alongside the other
+#       user-local binaries. The build uses the mise-managed Rust toolchain;
+#       duckdb is built bundled (no system duckdb required).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -19,22 +20,15 @@ if ! command -v cargo &>/dev/null; then
   exit 1
 fi
 
-LAZYCSV_DIR="$HOME/sources/lazycsv"
+LAZYCSV_DIR="$REPO_ROOT/sources/lazycsv"
 
-# Clone idempotently.
-if [[ -d "$LAZYCSV_DIR/.git" ]]; then
-  skip "lazycsv repo (already cloned)"
-else
-  info "cloning lazycsv → ~/sources/lazycsv..."
-  mkdir -p "$HOME/sources"
-  if git clone --quiet https://github.com/funkybooboo/lazycsv.git "$LAZYCSV_DIR"; then
-    ok "lazycsv cloned"
-  else
-    fail "failed to clone lazycsv"
-    _add_error "lazycsv clone failed; run 'git clone https://github.com/funkybooboo/lazycsv.git ~/sources/lazycsv'"
-    exit 1
-  fi
+# Verify the submodule is populated.
+if [[ ! -d "$LAZYCSV_DIR/.git" ]]; then
+  fail "sources/lazycsv submodule not populated"
+  _add_error "sources/lazycsv submodule missing; run 'git -C ~/dotfiles submodule update --init sources/lazycsv'"
+  exit 1
 fi
+ok "lazycsv source (submodule sources/lazycsv)"
 
 # Build in release mode and install to ~/.local/bin.
 info "building lazycsv (cargo build --release)..."
