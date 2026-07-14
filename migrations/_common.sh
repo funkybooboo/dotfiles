@@ -225,6 +225,25 @@ install_local_pkgbuild() {
     return 0
   fi
 
+  # `pacman -U <file>` does NOT honour the package's conflicts=/replaces=
+  # against already-installed packages (those only fire during repo -Syu
+  # transactions). It instead prompts "Remove <conflict>? [y/N]" — and
+  # --noconfirm takes the default N, so the install aborts with
+  # "unresolvable package conflicts". Pre-empt by reading the built
+  # artifact's .PKGINFO (authoritative: makepkg writes it from the PKGBUILD
+  # arrays) for conflict=/replaces= entries, removing any that are currently
+  # installed before we hand off to pacman -U.
+  local conflict_pkg
+  while IFS= read -r conflict_pkg; do
+    [[ -n "$conflict_pkg" ]] || continue
+    if pacman -Q "$conflict_pkg" &>/dev/null; then
+      info "removing conflicting/replaced package before install: $conflict_pkg"
+      remove_pkg "$conflict_pkg"
+    fi
+  done < <(bsdtar -xOf "$bld/$artifact" .PKGINFO 2>/dev/null | \
+           awk '/^(conflict|replaces)[[:space:]]*=/ {sub(/^[^=]*=[[:space:]]*/, ""); print}' | \
+           sort -u)
+
   if sudo pacman -U --noconfirm "$bld/$artifact"; then
     ok "$pkg $pvr installed (built from source)"
   else
