@@ -22,8 +22,8 @@ fi
 
 LAZYCSV_DIR="$REPO_ROOT/sources/lazycsv"
 
-# Verify the submodule is populated.
-if [[ ! -d "$LAZYCSV_DIR/.git" ]]; then
+# Verify the submodule is populated (a submodule's `.git` is a FILE, not a dir).
+if [[ ! -e "$LAZYCSV_DIR/.git" ]]; then
   fail "sources/lazycsv submodule not populated"
   _add_error "sources/lazycsv submodule missing; run 'git -C ~/dotfiles submodule update --init sources/lazycsv'"
   exit 1

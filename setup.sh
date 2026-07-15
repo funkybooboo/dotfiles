@@ -535,7 +535,8 @@ if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
 
   info "Rebuilding source submodule trees"
   for _repo in "$REPO_ROOT"/sources/*/; do
-    [[ -d "$_repo/.git" ]] || continue
+    # Submodule checkouts have a `.git` FILE (gitlink), not a dir -- use -e.
+    [[ -e "$_repo/.git" ]] || continue
     _rc=0
     _setup_build_repo "$_repo" || _rc=$?
     (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"

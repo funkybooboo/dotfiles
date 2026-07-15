@@ -48,7 +48,8 @@ install_pacman desktop-file-utils gst-libav gst-plugins-good gtk4
 # -----------------------------------------------------------------------------
 HB_DIR="$REPO_ROOT/sources/HandBrake"
 
-if [[ ! -d "$HB_DIR/.git" ]]; then
+# A submodule checkout has a `.git` FILE (gitlink), not a dir -- use -e.
+if [[ ! -e "$HB_DIR/.git" ]]; then
   fail "sources/HandBrake submodule not populated"
   _add_error "sources/HandBrake submodule missing; run 'git -C ~/dotfiles submodule update --init sources/HandBrake'"
   return 0

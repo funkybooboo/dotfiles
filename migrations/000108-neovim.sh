@@ -35,7 +35,8 @@ link_file "$DOTFILES_HOME/.editorconfig" "$HOME/.editorconfig"
 # preflight via `git submodule update --init --recursive`). Verify it is
 # populated; if not, warn and let the user run migrate again / submodule init.
 NINES_DIR="$REPO_ROOT/sources/99"
-if [[ -d "$NINES_DIR/.git" ]]; then
+# A submodule checkout has a `.git` FILE (gitlink), not a dir -- use -e.
+if [[ -e "$NINES_DIR/.git" ]]; then
   ok "99 plugin source (submodule sources/99)"
 else
   warn "sources/99 submodule not populated — nvim will error on :lazy load"

@@ -7,7 +7,11 @@ arch=('x86_64')
 url='https://github.com/jappie3/wayfreeze'
 license=('AGPL-3.0-or-later')
 depends=('wayland' 'libxkbcommon')
-makedepends=('cargo')
+# cargo is provided by the mise/rustup-managed toolchain (migration 000202),
+# NOT by a pacman package. Do NOT list it in makedepends -- `makepkg -s` would
+# otherwise try `sudo pacman -S cargo` to satisfy it, which both duplicates the
+# rustup install and prompts for sudo mid-migration. The build() runs cargo
+# from PATH. (Mirrors the tdf local PKGBUILD's treatment of rustup.)
 # Supersedes the former AUR wayfreeze-git (pinned to the 0.2.0 release tag).
 replaces=(wayfreeze-git)
 conflicts=(wayfreeze-git)

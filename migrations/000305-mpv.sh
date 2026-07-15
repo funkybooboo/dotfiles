@@ -21,7 +21,8 @@ link_file "$DOTFILES_HOME/.local/share/applications/lazymusic.desktop" \
 # lazymusic source lives in the dotfiles git submodule sources/lazymusic
 # (initialized in preflight). Verify it is populated; warn if not.
 LAZYMUSIC_DIR="$REPO_ROOT/sources/lazymusic"
-if [[ -d "$LAZYMUSIC_DIR/.git" ]]; then
+# A submodule checkout has a `.git` FILE (gitlink), not a dir -- use -e.
+if [[ -e "$LAZYMUSIC_DIR/.git" ]]; then
   ok "lazymusic source (submodule sources/lazymusic)"
 else
   warn "sources/lazymusic submodule not populated — .desktop will not launch"

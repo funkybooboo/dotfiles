@@ -196,7 +196,13 @@ install_local_pkgbuild() {
   # the installed package's NAME to equal $pkg before considering a skip.
   local inst=""
   local inst_name
-  inst_name=$(pacman -Q "$pkg" 2>/dev/null | awk '{print $1}')
+  # `pacman -Q <name>` exits 1 (with stderr silenced) when the EXACT audited
+  # package name is not installed -- e.g. the AUR -bin that provides nothing
+  # under this name. Under `set -euo pipefail` that pipeline failure would
+  # otherwise abort the whole migration, so neutralize the exit status here;
+  # inst_name stays empty, the exact-name check below fails, and we proceed to
+  # build (the intended path for an off-AUR swap).
+  inst_name=$(pacman -Q "$pkg" 2>/dev/null | awk '{print $1}' || true)
   if [[ "$inst_name" == "$pkg" ]]; then
     inst=$(pacman -Q "$pkg" | awk '{print $2}')
     if [[ "$(vercmp "$inst" "$pvr")" -ge 0 ]]; then
