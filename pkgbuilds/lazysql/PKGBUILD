@@ -1,7 +1,7 @@
 # Maintainer: nate (local build, off-AUR)
 # Built from the upstream source tarball — no yay/AUR at runtime.
 pkgname=lazysql
-pkgver=0.5.4
+pkgver=0.5.5
 pkgrel=1
 pkgdesc='A cross-platform TUI database management tool written in Go'
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('go')
 replaces=(lazysql-bin)
 conflicts=(lazysql-bin)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('f2ee82ca2bb4063eae8cb12c63cedaba39b1665dbe65492695105f4262c1c865')
+sha256sums=('e979b86b7b40e03987d5855cece649791cf6307fc5785e1c6aac96ce6ee5135a')
 
 build() {
   cd "$pkgname-$pkgver"

@@ -2,7 +2,7 @@
 # No AUR/yay at runtime: downloads the checksummed official binary from
 # github.com/protonpass/pass-cli releases (built and signed by Proton).
 pkgname=proton-pass-cli
-pkgver=2.2.2
+pkgver=2.2.3
 pkgrel=1
 pkgdesc='Command-line interface for managing your Proton Pass vaults, items, and secrets'
 arch=('x86_64')
@@ -14,7 +14,7 @@ replaces=(proton-pass-cli-bin)
 conflicts=(proton-pass-cli-bin)
 _dl="https://github.com/protonpass/pass-cli/releases/download/${pkgver}"
 source=("pass-cli-linux-x86_64-${pkgver}::${_dl}/pass-cli-linux-x86_64")
-sha256sums=('65bf75195bfd0fe8d9660144c837466b7ee9195d38e56e3557d5ee6439c5f751')
+sha256sums=('7188f02a7c1e79a860f7166ad2c34f7a2e6c961265b70677e2704f216dd176d9')
 
 package() {
   install -Dm755 "pass-cli-linux-x86_64-${pkgver}" "$pkgdir/usr/bin/pass-cli"
