@@ -24,22 +24,10 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_ROOT="$PWD"
 
-# ---------------------------------------------------------------------------
-# Logging — mirror all output to a timestamped log in logs/ (same FIFO+sed
-# design as migrate.sh). Color goes to the terminal; ANSI escapes are stripped
-# for a clean, grep-friendly text file.
-# ---------------------------------------------------------------------------
-mkdir -p "$REPO_ROOT/logs"
-LOG_FILE="$REPO_ROOT/logs/setup-$(date +%Y%m%d-%H%M%S)-$$.log"
-LOG_FIFO="$(mktemp -u "$REPO_ROOT/logs/.log-fifo-XXXXXX")"
-mkfifo "$LOG_FIFO"
-sed -E $'s/\x1b\[[0-9;]*m//g' < "$LOG_FIFO" >> "$LOG_FILE" &
-LOG_STRIP_PID=$!
-exec 3>&1 4>&2
-exec > >(tee "$LOG_FIFO") 2>&1
-trap 'exec 1>&3 2>&4 3>&- 4>&-; wait "$LOG_STRIP_PID"; rm -f "$LOG_FIFO"' EXIT
+# Output goes straight to stdout/stderr -- no log-file mirroring. To capture
+# a run, redirect yourself (./setup.sh 2>&1 | tee my.log).
+
 echo "=== Setup started at $(date) ==="
-echo "=== Log file: $LOG_FILE ==="
 
 # shellcheck source=migrations/_common.sh
 source "$REPO_ROOT/migrations/_common.sh"
