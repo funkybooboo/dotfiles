@@ -283,6 +283,26 @@ install_flatpak() {
   fi
 }
 
+# Remove a Flatpak app idempotently (non-fatal). Skips if not installed.
+# Used when an app moves OFF flatpak to a pacman/AUR/local-built package so the
+# flatpak copy doesn't ghost the AUR .desktop / binary. `--delete-data` drops
+# the app's per-user data too (the new AUR build keeps none of it by design).
+# Usage: remove_flatpak <app-id>
+remove_flatpak() {
+  local app="$1"
+  if ! flatpak list --columns=application 2>/dev/null | grep -qx "$app"; then
+    skip "flatpak $app (not installed)"
+    return 0
+  fi
+  info "removing flatpak: $app"
+  if flatpak uninstall -y --noninteractive --delete-data "$app" 2>/dev/null; then
+    ok "removed flatpak: $app"
+  else
+    warn "failed to remove flatpak $app"
+    _add_warning "failed to remove flatpak: $app"
+  fi
+}
+
 # -----------------------------------------------------------------------------
 # Remove one or more packages idempotently (non-fatal). Used to drop superseded
 # AUR -bin/-git packages after their flatpak/official/local-built replacement is

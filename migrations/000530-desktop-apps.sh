@@ -2,16 +2,18 @@
 # Installs (pacman): thunar evince gnome-calculator gnome-disk-utility
 #                    gnome-keyring imagemagick libreoffice-fresh ghostscript
 #                    impala blanket bluetui
-# Flatpak:           no.mifi.losslesscut (officially maintained by upstream dev)
+# Installs (AUR):     signal-desktop, losslesscut-bin
 # Builds (local):    cliamp (go), lazyjournal (go), lazysql (go)
-# Installs (AUR):    signal-desktop (not in scope — remains AUR-only)
 # Links:    —
 # Enables:  —
-# Note: losslesscut comes from Flathub; cliamp/lazyjournal/lazysql are built
-#       from upstream source via local PKGBUILDs (pkgbuilds/). lazyjournal
-#       and lazysql local PKGBUILDs replace= the former AUR -bin packages
-#       (auto-removed on install). signal-desktop stays AUR-only for now.
-#       Debug symbol packages are swept by 000550-cleanup-aur-debug.sh.
+# Note: losslesscut moved back to the AUR `losslesscut-bin` (an Electron app —
+#       the flatpak sandbox is mostly redundant overhead here, and pacman-db
+#       tracking of its .desktop + mimetype registration is cleaner). The
+#       former flatpak `no.mifi.losslesscut` is uninstalled if present.
+#       cliamp/lazyjournal/lazysql are built from upstream source via local
+#       PKGBUILDs (pkgbuilds/); lazyjournal/lazysql replace= the former AUR
+#       -bin packages (auto-removed on install). signal-desktop stays AUR-only
+#       (not in the off-AUR scope). Debug symbol packages are swept by 000550.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -25,9 +27,12 @@ install_pacman \
 # signal-desktop remains AUR-only (not in the off-AUR scope; see project note).
 install_aur signal-desktop
 
-# losslesscut: official Flathub build (maintained by mifi, the upstream dev).
-install_flatpak no.mifi.losslesscut
-remove_pkg losslesscut-bin
+# losslesscut: AUR -bin (Electron app; flatpak sandbox redundant, pacman-db
+# tracking the .desktop/mimetypes is the cleaner integration here). Uninstall
+# the former flatpak build if present (--delete-data; the AUR build keeps none
+# of the flatpak sandbox's per-app data by design).
+install_aur losslesscut-bin
+remove_flatpak no.mifi.losslesscut
 
 # cliamp, lazyjournal, lazysql: build from upstream source (local PKGBUILDs).
 # lazyjournal/lazysql local PKGBUILDs replace= the former -bin packages.
