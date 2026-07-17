@@ -204,16 +204,15 @@ them after a fresh install.
 
 ## Known issues
 
-- **Remaining `install_aur` calls (POLICY-HOLDOUTS)** — `calcure` and
-  `losslesscut-bin` are the only two `install_aur` calls after the 2026-07
-  off-AUR audit (every other install_aur was moved to `install_pacman` once
-  those packages landed in Arch `extra/`, or vendored into `pkgbuilds/` with
-  an `AUDIT.md` and pinned via sha256). Each holdout carries a documented
-  exception inline (calcure: the only PyPI-hosted holdout + a chain of AUR
-  python-* deps from PyPI sources, not worth vendoring ~7 packages just for
-  this app; losslesscut-bin: Electron app, github.com/mifi/lossless-cut
-  releases, pending an in-tree `pkgbuilds/losslesscut/` + AUDIT.md migration).
-  Use `scripts/audit-aur.sh <pkg>` to draft the AUDIT.md before vendoring.
+- **Remaining `install_aur` calls (POLICY-HOLDOUT)** — `calcure` is the only
+  remaining `install_aur` call after the 2026-07 off-AUR audit (every other
+  install_aur was moved to `install_pacman` once those packages landed in Arch
+  `extra/`, or vendored into `pkgbuilds/` with an `AUDIT.md` and sha256-pinned).
+  calcure carries a documented exception inline (the only PyPI-hosted holdout
+  + a chain of 7 AUR `python-*` deps sourced from PyPI; vendoring ~7
+  hand-sha-pinned packages isn't justified for this one app, and AUR is the
+  only available channel). Use `scripts/audit-aur.sh <pkg>` to draft the
+  AUDIT.md before vendoring a package.
 - **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
   `000210` migration runs `rustup toolchain install nightly` (rustup is the
   official Rust toolchain manager, rust-lang.org — not a registry).

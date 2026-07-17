@@ -2,21 +2,18 @@
 # Installs (pacman): thunar evince gnome-calculator gnome-disk-utility
 #                    gnome-keyring imagemagick libreoffice-fresh ghostscript
 #                    impala blanket bluetui signal-desktop
-# Installs (AUR):     losslesscut-bin (POLICY-HOLDOUT — see note)
-# Builds (local):    cliamp (go), lazyjournal (go), lazysql (go)
+# Builds (local):    cliamp (go), lazyjournal (go), lazysql (go), losslesscut-bin
 # Links:    —
 # Enables:  —
-# Note: losslesscut moved off flatpak to AUR `losslesscut-bin` (Electron app —
-#       flatpak sandbox redundant, pacman-db .desktop/mimetype integration is
-#       cleaner here). It stays `install_aur` pending an in-tree
-#       pkgbuilds/losslesscut/ + AUDIT.md migration (one of two remaining
-#       install_aur holdouts after the 2026-07 off-AUR audit; calcure is the
-#       other per its documented policy-exception note). Until that lands,
-#       yay builds the AUR package from github.com/mifi/lossless-cut releases.
-#       cliamp/lazyjournal/lazysql are built from upstream source via local
-#       PKGBUILDs (pkgbuilds/); lazyjournal/lazysql replace= the former AUR
-#       -bin packages (auto-removed on install). signal-desktop is now in
-#       extra/ (official Arch). Debug symbol packages swept by 000550.
+# Note: losslesscut moved off flatpak to an audited local PKGBUILD
+#       (pkgbuilds/losslesscut/, sha-pinned upstream tarball from
+#       github.com/mifi/lossless-cut, see its AUDIT.md). It's an Electron app
+#       so the flatpak sandbox was redundant; pacman-db .desktop/mimetype
+#       integration is the cleaner tier here. cliamp/lazyjournal/lazysql are
+#       likewise built from upstream source via local PKGBUILDs, lazyjournal/
+#       lazysql replace= the former AUR -bin packages (auto-removed on install).
+#       signal-desktop is now in extra/ (official Arch). Debug symbol packages
+#       swept by 000550.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -30,11 +27,10 @@ install_pacman \
 # signal-desktop is now in extra/ (Arch-maintained).
 install_pacman signal-desktop
 
-# losslesscut: AUR -bin (Electron app; flatpak sandbox redundant, pacman-db
-# tracking the .desktop/mimetypes is the cleaner integration here). Uninstall
-# the former flatpak build if present (--delete-data; the AUR build keeps none
-# of the flatpak sandbox's per-app data by design).
-install_aur losslesscut-bin
+# losslesscut: audited local PKGBUILD (Electron app; flatpak sandbox redundant,
+# pacman-db .desktop/mimetype tracking is the cleaner integration here). The
+# former flatpak build is uninstalled on first run.
+install_local_pkgbuild losslesscut-bin
 remove_flatpak no.mifi.losslesscut
 
 # cliamp, lazyjournal, lazysql: build from upstream source (local PKGBUILDs).
