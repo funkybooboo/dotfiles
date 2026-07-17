@@ -1,0 +1,60 @@
+# Maintainer: nate (local pin of the AUR brave-bin packaging, off-AUR)
+# Pinned to a single upstream release; sha256 below was personally computed
+# (2026-07-17) from a direct download of the GitHub release zip and matches
+# the AUR-published value. See AUDIT.md in this directory.
+#
+# Source: github.com/brave/brave-browser (Brave Software's official GitHub).
+# Co-located files brave-bin.sh + brave-browser.desktop are copied verbatim
+# from the AUR brave-bin package (audited 2026-07-17: the wrapper is a plain
+# ~/.config/brave-flags.conf reader that execs /opt/brave-bin/brave; the
+# .desktop is the standard Brave launch entry).
+pkgname=brave-bin
+pkgver=1.92.140
+pkgrel=1
+pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
+arch=(x86_64)
+url=https://brave.com
+license=(MPL-2.0)
+depends=(
+  alsa-lib gtk3 libxss nss ttf-font xdg-utils
+  libxcb libxml2 sqlite libpqxx
+)
+optdepends=(
+  'cups: printing support'
+  'pipewire: WebRTC desktop sharing under Wayland'
+  'libappindicator-gtk3: system tray support'
+)
+provides=("${pkgname%-bin}=$pkgver" 'brave-browser')
+conflicts=("${pkgname%-bin}")
+options=(!emptydirs !strip)
+source=("$pkgname.sh" "brave-browser.desktop")
+source_x86_64=("$pkgname-$pkgver-x86_64.zip::https://github.com/brave/brave-browser/releases/download/v$pkgver/brave-browser-$pkgver-linux-amd64.zip")
+noextract=("$pkgname-$pkgver-x86_64.zip")
+sha256sums=('75a87dd17b42fcc6f27adfd16c82bed1c08e9251b07d2012f8d49f7412fa1d00'
+            'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
+sha256sums_x86_64=('7935abc3349424ecd7d8752ae5b0dc123afda484f90e954f02e057095feff581')
+
+prepare() {
+  mkdir -p brave
+  bsdtar -xf "$pkgname-$pkgver-$CARCH.zip" -C brave
+  chmod +x brave/brave
+}
+
+package() {
+  mkdir -p "$pkgdir/opt" "$pkgdir/usr/bin" \
+           "$pkgdir/usr/share/applications" \
+           "$pkgdir/usr/share/licenses/$pkgname"
+  cp -a brave "$pkgdir/opt/brave-bin"
+  # SUID chrome-sandbox (Chrome needs this when an unprivileged user launches it
+  # directly outside a sandbox; benign, upstream ships this mode bit too).
+  chmod 4755 "$pkgdir/opt/brave-bin/chrome-sandbox"
+
+  install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
+  install -Dm0644 "brave-browser.desktop" "$pkgdir/usr/share/applications/brave-browser.desktop"
+  install -Dm0644 brave/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  for s in 16 24 32 48 64 128 256; do
+    install -Dm0644 "$pkgdir/opt/brave-bin/product_logo_${s}.png" \
+      "$pkgdir/usr/share/icons/hicolor/${s}x${s}/apps/brave-desktop.png"
+  done
+}
