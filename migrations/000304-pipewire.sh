@@ -16,6 +16,5 @@ section "pipewire"
 install_pacman \
   pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber \
   gst-plugin-pipewire libpulse pamixer playerctl sof-firmware \
-  pipewire-libcamera
-install_aur wiremix
+  pipewire-libcamera wiremix
 link_file "$DOTFILES_HOME/.config/wiremix/wiremix.toml" "$HOME/.config/wiremix/wiremix.toml"

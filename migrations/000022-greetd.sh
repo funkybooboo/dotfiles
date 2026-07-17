@@ -1,5 +1,5 @@
 # 000022-greetd.sh — greetd display manager + tuigreet greeter
-# Installs: greetd greetd-tuigreet
+# Installs: greetd greetd-tuigreet (both in extra/ — official Arch packages)
 # Links:    —
 # Enables:  greetd.service
 
@@ -7,8 +7,7 @@
 
 section "greetd"
 
-install_pacman greetd
-install_aur greetd-tuigreet
+install_pacman greetd greetd-tuigreet
 
 # Enable WITHOUT starting: greetd's default unit targets tty1, so starting it
 # now would take over the active VT and kill this session mid-migration. It

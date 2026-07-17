@@ -1,5 +1,5 @@
 # 000501-television.sh — television (TUI channel-switcher / launcher)
-# Installs: television
+# Installs: television (now in extra/ — official Arch package)
 # Links:    ~/.config/television/config.toml
 # Enables:  —
 
@@ -7,5 +7,5 @@
 
 section "television"
 
-install_aur television
+install_pacman television
 link_file "$DOTFILES_HOME/.config/television/config.toml" "$HOME/.config/television/config.toml"

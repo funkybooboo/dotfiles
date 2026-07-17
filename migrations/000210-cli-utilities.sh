@@ -1,8 +1,7 @@
 # 000210-cli-utilities.sh — CLI utilities and dev tools (no config needed)
 # Installs (pacman): fzf fd eza dust fastfetch jq wl-clipboard zoxide tree
 #                    tealdeer unzip rsync ncdu inotify-tools ast-grep 7zip socat
-#                    pandoc-cli (build dep for timg's manpage)
-# Installs (AUR):    gum lazydocker act
+#                    pandoc-cli (build dep for timg's manpage) gum lazydocker act
 # Builds (local):    tdf (cargo, needs nightly), timg (cmake)
 # Links:    —
 # Enables:  —
@@ -19,7 +18,8 @@ section "CLI utilities"
 install_pacman \
   fzf fd eza dust fastfetch jq wl-clipboard zoxide tree \
   tealdeer unzip rsync ncdu inotify-tools ast-grep 7zip socat \
-  pandoc-cli
+  pandoc-cli \
+  gum lazydocker act
 
 # tdf requires nightly Rust (upstream pins it via rust-toolchain.toml).
 # Provision the nightly toolchain via rustup (rust-lang.org, not a registry).
@@ -39,8 +39,6 @@ fi
 install_local_pkgbuild tdf
 install_local_pkgbuild timg
 
-# gum, lazydocker, act remain AUR-only (not currently installed).
-install_aur \
-  gum lazydocker act
+# gum, lazydocker, act were AUR-only originally but have since landed in extra/.
 
 ok "CLI utilities"

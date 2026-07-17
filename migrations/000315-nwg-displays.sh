@@ -1,5 +1,5 @@
 # 000315-nwg-displays.sh — nwg-displays (Wayland display/output manager)
-# Installs: nwg-displays
+# Installs: nwg-displays (now in extra/ — official Arch package)
 # Links:    ~/.config/nwg-displays/config
 # Enables:  —
 
@@ -7,5 +7,5 @@
 
 section "nwg-displays"
 
-install_aur nwg-displays
+install_pacman nwg-displays
 link_file "$DOTFILES_HOME/.config/nwg-displays/config" "$HOME/.config/nwg-displays/config"

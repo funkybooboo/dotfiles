@@ -1,5 +1,5 @@
 # 000202-mise.sh — mise polyglot runtime manager (node, python, go, rust, …)
-# Installs: mise
+# Installs: mise (now in extra/ — official Arch package)
 # Links:    ~/.config/mise/config.toml
 # Enables:  —
 # Note: mise manages all language runtimes (node, python, go, rust, zig, bun).
@@ -10,7 +10,7 @@
 
 section "mise"
 
-install_aur mise
+install_pacman mise
 link_file "$DOTFILES_HOME/.config/mise/config.toml" "$HOME/.config/mise/config.toml"
 
 if command -v mise &>/dev/null; then

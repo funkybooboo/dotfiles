@@ -20,12 +20,12 @@ section "neovim"
 
 install_pacman \
   neovim tree-sitter-cli stylua luarocks lua51 \
-  python-pynvim
+  python-pynvim tectonic
 # nvimpager: build from the upstream release tarball (github.com/lucc/nvimpager)
 # via a local PKGBUILD — no yay/AUR at runtime. (Was previously the AUR pkg;
 # the AUR package was also flagged out-of-date.)
 install_local_pkgbuild nvimpager
-install_aur tectonic
+# tectonic now in extra/ (official Arch LaTeX engine package).
 ok "neovim + tooling"
 
 link_tree "$DOTFILES_HOME/.config/nvim" "$HOME/.config/nvim"

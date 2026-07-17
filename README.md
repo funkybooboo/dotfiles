@@ -204,18 +204,20 @@ them after a fresh install.
 
 ## Known issues
 
-- **Remaining `install_aur` calls** — a handful of migrations still call
-  `install_aur` for packages NOT in the off-AUR scope (because they are not
-  currently installed): `greetd-tuigreet`, `tectonic`, `lazygit`, `mise`,
-  `ghostty`, `wiremix`, `uwsm`, `nwg-displays`, `zram-generator`,
-  `television`, `proton-vpn-cli`/`proton-vpn-gtk-app`, `lazydocker`, `act`,
-  `gum`, `signal-desktop`. Re-running `migrate.sh` may install these via yay.
-  Address each (official repo / flatpak / local PKGBUILD / drop) when ready.
+- **Remaining `install_aur` calls (POLICY-HOLDOUTS)** — `calcure` and
+  `losslesscut-bin` are the only two `install_aur` calls after the 2026-07
+  off-AUR audit (every other install_aur was moved to `install_pacman` once
+  those packages landed in Arch `extra/`, or vendored into `pkgbuilds/` with
+  an `AUDIT.md` and pinned via sha256). Each holdout carries a documented
+  exception inline (calcure: the only PyPI-hosted holdout + a chain of AUR
+  python-* deps from PyPI sources, not worth vendoring ~7 packages just for
+  this app; losslesscut-bin: Electron app, github.com/mifi/lossless-cut
+  releases, pending an in-tree `pkgbuilds/losslesscut/` + AUDIT.md migration).
+  Use `scripts/audit-aur.sh <pkg>` to draft the AUDIT.md before vendoring.
 - **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
   `000210` migration runs `rustup toolchain install nightly` (rustup is the
   official Rust toolchain manager, rust-lang.org — not a registry).
-- **calcure + mermaid-cli intentionally kept** on AUR/npm per user decision
-  (the only PyPI-only / npm-only holdouts).
+- **mermaid-cli intentionally kept** on npm (the only npm-only holdout).
 - **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 

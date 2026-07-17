@@ -1,19 +1,22 @@
 # 000530-desktop-apps.sh — GUI desktop applications (no config needed)
 # Installs (pacman): thunar evince gnome-calculator gnome-disk-utility
 #                    gnome-keyring imagemagick libreoffice-fresh ghostscript
-#                    impala blanket bluetui
-# Installs (AUR):     signal-desktop, losslesscut-bin
+#                    impala blanket bluetui signal-desktop
+# Installs (AUR):     losslesscut-bin (POLICY-HOLDOUT — see note)
 # Builds (local):    cliamp (go), lazyjournal (go), lazysql (go)
 # Links:    —
 # Enables:  —
-# Note: losslesscut moved back to the AUR `losslesscut-bin` (an Electron app —
-#       the flatpak sandbox is mostly redundant overhead here, and pacman-db
-#       tracking of its .desktop + mimetype registration is cleaner). The
-#       former flatpak `no.mifi.losslesscut` is uninstalled if present.
+# Note: losslesscut moved off flatpak to AUR `losslesscut-bin` (Electron app —
+#       flatpak sandbox redundant, pacman-db .desktop/mimetype integration is
+#       cleaner here). It stays `install_aur` pending an in-tree
+#       pkgbuilds/losslesscut/ + AUDIT.md migration (one of two remaining
+#       install_aur holdouts after the 2026-07 off-AUR audit; calcure is the
+#       other per its documented policy-exception note). Until that lands,
+#       yay builds the AUR package from github.com/mifi/lossless-cut releases.
 #       cliamp/lazyjournal/lazysql are built from upstream source via local
 #       PKGBUILDs (pkgbuilds/); lazyjournal/lazysql replace= the former AUR
-#       -bin packages (auto-removed on install). signal-desktop stays AUR-only
-#       (not in the off-AUR scope). Debug symbol packages are swept by 000550.
+#       -bin packages (auto-removed on install). signal-desktop is now in
+#       extra/ (official Arch). Debug symbol packages swept by 000550.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -24,8 +27,8 @@ install_pacman \
   gnome-keyring imagemagick libreoffice-fresh ghostscript \
   impala blanket bluetui
 
-# signal-desktop remains AUR-only (not in the off-AUR scope; see project note).
-install_aur signal-desktop
+# signal-desktop is now in extra/ (Arch-maintained).
+install_pacman signal-desktop
 
 # losslesscut: AUR -bin (Electron app; flatpak sandbox redundant, pacman-db
 # tracking the .desktop/mimetypes is the cleaner integration here). Uninstall

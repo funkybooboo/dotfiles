@@ -1,6 +1,5 @@
 # 000408-system-utilities.sh — system service & maintenance utilities
-# Installs (pacman): earlyoom fwupd yazi man-db less
-# Installs (AUR):    zram-generator
+# Installs (pacman): earlyoom fwupd yazi man-db less zram-generator
 # Links:    —
 # Enables:  earlyoom.service (started — safe, won't disrupt the session)
 # Note: fwupd is on-demand via fwupdmgr (used by the update-firmware admin
@@ -11,8 +10,7 @@
 
 section "system utilities"
 
-install_pacman earlyoom fwupd yazi man-db less
-install_aur zram-generator
+install_pacman earlyoom fwupd yazi man-db less zram-generator
 
 enable_system_service "earlyoom.service"
 
