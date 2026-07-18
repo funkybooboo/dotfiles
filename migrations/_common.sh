@@ -281,16 +281,24 @@ remove_flatpak() {
 
 # -----------------------------------------------------------------------------
 # Install a package from nixpkgs via `nix profile add`. Idempotent +
-# non-fatal. This is the TIER 2 install source (after pacman, before
-# pkgbuilds). nixpkgs is PR-reviewed on GitHub with CI, hermetic sandboxed
-# builds, sha256-verified sources, and a binary cache at cache.nixos.org.
+# non-fatal. This is the TIER 2 install source (after pacman).
+# nixpkgs is PR-reviewed on GitHub with CI, hermetic sandboxed builds,
+# sha256-verified sources, and a binary cache at cache.nixos.org.
 # No sudo needed — nix installs into the user's profile (~/.nix-profile/).
+#
+# --impure + NIXPKGS_ALLOW_UNFREE=1 is required because nix profile uses the
+# flake registry (pure mode by default), which ignores
+# ~/.config/nixpkgs/config.nix. --impure lets the NIXPKGS_ALLOW_UNFREE
+# environment variable influence evaluation. This is the documented nix
+# approach for imperative unfree installs with the flake registry — not a
+# hack.
+#
 # Usage: install_nix <nixpkg-attribute>   e.g. install_nix nixpkgs#calcure
 install_nix() {
   local attr="$1"
   local pkgname="${attr#nixpkgs#}"
   # Check if already installed in the nix profile
-  if command -v nix &>/dev/null && nix profile list 2>/dev/null | grep -q "$attr"; then
+  if command -v nix &>/dev/null && nix profile list 2>/dev/null | grep -q "$pkgname"; then
     skip "nix $pkgname (installed)"
     return 0
   fi
@@ -300,7 +308,7 @@ install_nix() {
     return 0
   fi
   info "installing $pkgname from nixpkgs"
-  if nix profile add "$attr" 2>/dev/null; then
+  if NIXPKGS_ALLOW_UNFREE=1 nix --impure profile add "$attr" 2>/dev/null; then
     ok "nix: $pkgname"
   else
     warn "nix profile add failed for $pkgname"

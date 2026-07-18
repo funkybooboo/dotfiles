@@ -33,9 +33,9 @@ sudo systemctl restart nix-daemon 2>/dev/null || true
 # daemon that listens on a socket, doesn't touch the active session.
 enable_system_service "nix-daemon.service"
 
-# Link ~/.config/nixpkgs/config.nix — allows unfree packages (brave, proton-
-# pass-cli, handbrake, etc. have non-OSI licenses). This is the standard
-# imperative nix way (not flakes, not --impure).
+# Link ~/.config/nixpkgs/config.nix — kept for reference/compatibility but
+# nix profile (flake registry) ignores it. Unfree is handled via --impure +
+# NIXPKGS_ALLOW_UNFREE=1 in the install_nix helper.
 mkdir -p "$HOME/.config/nixpkgs"
 link_file "$DOTFILES_HOME/.config/nixpkgs/config.nix" \
   "$HOME/.config/nixpkgs/config.nix"
