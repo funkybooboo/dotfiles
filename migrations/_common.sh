@@ -300,7 +300,7 @@ install_nix() {
     return 0
   fi
   info "installing $pkgname from nixpkgs"
-  if NIXPKGS_ALLOW_UNFREE=1 nix profile add "$attr" 2>/dev/null; then
+  if NIXPKGS_ALLOW_UNFREE=1 nix --impure profile add "$attr" 2>/dev/null; then
     ok "nix: $pkgname"
   else
     warn "nix profile add failed for $pkgname"
