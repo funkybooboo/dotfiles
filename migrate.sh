@@ -14,10 +14,15 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_ROOT="$PWD"
 
-# Output goes straight to stdout/stderr -- no log-file mirroring. To capture
-# a run, redirect yourself (./migrate.sh 2>&1 | tee my.log).
+# Mirror all output to a log file (logs/ is gitignored). stdout+stderr still
+# go to the terminal so you see progress in real time.
+LOGDIR="$REPO_ROOT/logs"
+mkdir -p "$LOGDIR"
+LOGFILE="$LOGDIR/migrate-$(date +%Y%m%d-%H%M%S)-$$.log"
+exec > >(tee -a "$LOGFILE") 2>&1
 
 echo "=== Migration started at $(date) ==="
+echo "=== Log: $LOGFILE ==="
 
 # shellcheck source=migrations/_common.sh
 source "$REPO_ROOT/migrations/_common.sh"

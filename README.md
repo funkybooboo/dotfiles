@@ -186,6 +186,9 @@ Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
 - `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
 - `vpn` — VPN management
 
+Both `migrate.sh` and `setup.sh` mirror all output to `logs/` (gitignored):
+`migrate-YYYYMMDD-HHMMSS-PID.log` and `setup-YYYYMMDD-HHMMSS-PID.log`.
+
 ## NAS sync
 
 Timers run automatically after `setup.sh`. Manual sync:
