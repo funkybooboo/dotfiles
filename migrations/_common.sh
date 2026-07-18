@@ -127,30 +127,6 @@ install_pacman() {
   fi
 }
 
-# Install AUR packages one at a time via yay. Already-installed packages are
-# skipped; a build failure on one package is recorded as a warning, not fatal.
-# Usage: install_aur pkg1 pkg2 ...
-# Note: Always returns 0 so a single AUR failure doesn't abort the migration
-#       run under 'set -e'. Failures are recorded via _add_warning and surface
-#       in the final summary.
-install_aur() {
-  local pkg failures=0
-  for pkg in "$@"; do
-    if pacman -Q "$pkg" &>/dev/null; then
-      skip "$pkg (already installed)"
-      continue
-    fi
-    if ! run_cmd_retry 3 30 yay -S --needed --noconfirm "$pkg"; then
-      warn "$pkg failed to install"
-      _add_warning "AUR package failed to install: $pkg"
-      failures=$((failures + 1))
-    else
-      ok "$pkg"
-    fi
-  done
-  return 0
-}
-
 # -----------------------------------------------------------------------------
 # Build + install a package from a locally-tracked PKGBUILD (NO yay, NO AUR
 # network at runtime). The PKGBUILD lives at $REPO_ROOT/pkgbuilds/<pkg>/PKGBUILD
