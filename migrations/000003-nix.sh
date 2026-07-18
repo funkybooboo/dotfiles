@@ -1,6 +1,6 @@
 # 000003-nix.sh — Nix package manager (tier 2: after pacman, before pkgbuilds)
 # Installs: nix (from extra/ — official Arch signed package)
-# Links:    —
+# Links:    ~/.config/nixpkgs/config.nix (allowUnfree = true)
 # Enables:  nix-daemon.service (started — needed for /nix/store access)
 # Note: Nix is the second-tier package source per the install priority:
 #       pacman → nix → pkgbuilds → sources → flatpak.
@@ -32,6 +32,13 @@ sudo systemctl restart nix-daemon 2>/dev/null || true
 # access so no user-group setup is needed. Starting it is safe — it's a build
 # daemon that listens on a socket, doesn't touch the active session.
 enable_system_service "nix-daemon.service"
+
+# Link ~/.config/nixpkgs/config.nix — allows unfree packages (brave, proton-
+# pass-cli, handbrake, etc. have non-OSI licenses). This is the standard
+# imperative nix way (not flakes, not --impure).
+mkdir -p "$HOME/.config/nixpkgs"
+link_file "$DOTFILES_HOME/.config/nixpkgs/config.nix" \
+  "$HOME/.config/nixpkgs/config.nix"
 
 # Verify nix is functional
 if command -v nix &>/dev/null; then
