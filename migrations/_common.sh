@@ -193,7 +193,7 @@ install_nix() {
   fi
   rm -f "$_nix_list_tmp"
   if ! command -v nix &>/dev/null; then
-    warn "nix not found — run the nix migration (000003) first"
+    warn "nix not found — run the nix migration (000011) first"
     _add_warning "nix not installed; cannot install $pkgname"
     return 0
   fi

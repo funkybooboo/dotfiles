@@ -1,4 +1,4 @@
-# 000003-nix.sh — Nix package manager (tier 2: after pacman, before pkgbuilds)
+# 000011-nix.sh — Nix package manager (tier 2: after pacman, before pkgbuilds)
 # Installs: nix (from extra/ — official Arch signed package)
 # Links:    —
 # Enables:  nix-daemon.service (started — needed for /nix/store access)
@@ -7,6 +7,7 @@
 #       `nix profile add .#<pkg>` installs from our local flake (flake.nix),
 #       which wraps nixpkgs with allowUnfree = true and pins the nixpkgs
 #       revision via flake.lock. This replaces the AUR entirely.
+#       Runs after 000010-base so base-devel + curl are available.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
