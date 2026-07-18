@@ -176,11 +176,22 @@ remove_flatpak() {
 install_nix() {
   local attr="$1"
   local pkgname="${attr#.#}"
-  # Check if already installed in the nix profile
-  if command -v nix &>/dev/null && nix profile list 2>/dev/null | grep -q "$pkgname"; then
+  # Check if already installed — match the exact flake attribute line in
+  # `nix profile list` to avoid false positives from substring matches.
+  # The flake attribute appears as "packages.x86_64-linux.<pkgname>" for
+  # our local flake. We capture to a temp file first because `nix profile
+  # list` is non-deterministic under pipefail (intermittently returns
+  # partial/empty output when piped directly).
+  local _nix_list_tmp
+  _nix_list_tmp=$(mktemp)
+  nix profile list >"$_nix_list_tmp" 2>/dev/null || true
+  if command -v nix &>/dev/null && \
+     grep -q "packages\.x86_64-linux\.$pkgname" "$_nix_list_tmp"; then
+    rm -f "$_nix_list_tmp"
     skip "nix $pkgname (installed)"
     return 0
   fi
+  rm -f "$_nix_list_tmp"
   if ! command -v nix &>/dev/null; then
     warn "nix not found — run the nix migration (000003) first"
     _add_warning "nix not installed; cannot install $pkgname"
