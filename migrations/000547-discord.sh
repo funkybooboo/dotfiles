@@ -2,8 +2,7 @@
 # Installs: discord (extra/discord)
 # Links:   --
 # Enables: --
-# Note: Uses the official Arch repo package (extra/discord), not the AUR
-#       -bin/-canary variants, in line with the off-AUR project. The package
+# Note: Uses the official Arch repo package (extra/discord). The package
 #       wraps the upstream AppImage and installs a desktop entry; no extra
 #       config or wrapper is needed.
 

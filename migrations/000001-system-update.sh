@@ -4,7 +4,7 @@
 # Enables:  —
 # Note: System updates are pacman-only (pacman -Syu). Packages not in Arch
 #       official repos come from nix (tier 2), sources/ (tier 3), or flatpak
-#       (tier 4). The AUR is never used.
+#       pacman -> nix -> sources -> flatpak.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

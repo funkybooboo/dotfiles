@@ -93,7 +93,7 @@ run_cmd_retry() {
 
 # Install pacman packages idempotently (--needed skips already-installed).
 # Always returns 0 so a single pacman failure (package renamed, removed,
-# conflict, or moved to the AUR) doesn't abort the migration run under 'set -e'.
+# conflict, or moved to nix) doesn't abort the migration run under 'set -e'.
 #
 # Resilience: a single bad target in a multi-package `pacman -S` aborts the
 # ENTIRE transaction (none of the other packages install). To avoid that, we
@@ -115,8 +115,8 @@ install_pacman() {
   done
 
   if (( ${#missing[@]} > 0 )); then
-    warn "not in pacman repos (skipping — likely AUR or renamed): ${missing[*]}"
-    _add_warning "pacman packages not in repos (install via AUR or manually): ${missing[*]}"
+    warn "not in pacman repos (skipping — likely nix or renamed): ${missing[*]}"
+    _add_warning "pacman packages not in repos (install via nix or manually): ${missing[*]}"
   fi
 
   if (( ${#available[@]} > 0 )); then
@@ -146,9 +146,9 @@ install_flatpak() {
 }
 
 # Remove a Flatpak app idempotently (non-fatal). Skips if not installed.
-# Used when an app moves OFF flatpak to a pacman/AUR/local-built package so the
-# flatpak copy doesn't ghost the AUR .desktop / binary. `--delete-data` drops
-# the app's per-user data too (the new AUR build keeps none of it by design).
+# Used when an app moves off flatpak to a pacman/nix package so the
+# flatpak copy doesn't ghost the replacement .desktop / binary. `--delete-data`
+# drops the app's per-user data too (the new package keeps none of it by design).
 # Usage: remove_flatpak <app-id>
 remove_flatpak() {
   local app="$1"
@@ -208,7 +208,7 @@ install_nix() {
 
 # -----------------------------------------------------------------------------
 # Remove one or more packages idempotently (non-fatal). Used to drop superseded
-# AUR -bin/-git packages after their flatpak/official/local-built replacement is
+# packages after their nix/pacman replacement is
 # in place. Uses plain -R (leaves shared deps as orphans; a later `pacman -Qdt`
 # cleanup can sweep them) and falls back to -Rdd if a dep check blocks removal.
 # Usage: remove_pkg <pkg1> [pkg2 ...]

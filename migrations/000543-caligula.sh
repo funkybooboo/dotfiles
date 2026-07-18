@@ -3,7 +3,7 @@
 # Links:    —
 # Enables:  —
 # Note: caligula is a user-friendly, lightweight TUI for disk imaging,
-#       available in the official Arch extra repository (no AUR needed).
+#       in the official Arch extra repository.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

@@ -2,7 +2,7 @@
 # Installs: limine efibootmgr
 # Links:    —
 # Enables:  —
-# Note: Installs the stock extra/limine package (UKI-based boot). The AUR
+# Note: Installs the stock extra/limine package (UKI-based boot). The
 #       limine-mkinitcpio-hook / limine-snapper-sync packages are intentionally
 #       NOT installed — they target a different config layout
 #       (/etc/default/limine) than this machine uses (/boot/limine/limine.conf).

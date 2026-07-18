@@ -12,7 +12,7 @@
 #       "current" build; we pin its sha256 so an upstream swap is detected and
 #       the maintainer is prompted to re-pin instead of silently replacing the
 #       installed binary. The full-color SVG icon is committed to the repo
-#       (its sha matches the AUR-pinned Mojang asset) and symlinked in.
+#       (its sha matches the Mojang-pinned asset) and symlinked in.
 #       The launcher self-updates its own game data under ~/.minecraft at
 #       runtime, so the binary itself only rarely needs a re-pin.
 
@@ -21,8 +21,8 @@
 section "minecraft launcher"
 
 MC_URL="https://launcher.mojang.com/download/Minecraft.tar.gz"
-# Pinned sha256 of Minecraft.tar.gz (version 2.1.3, matches AUR pkgver
-# 2.1.3-3). If Mojang replaces the rolling-current tarball, this checksum
+# Pinned sha256 of Minecraft.tar.gz (version 2.1.3). If Mojang replaces
+# the rolling-current tarball, this checksum
 # will no longer match and the install branch is skipped with a warning so
 # the maintainer can re-pin (rather than silently swapping the binary).
 MC_SHA256="695269281547bbbcf47fe74633027a0e4ddc13a61060c686a7217e85d314e45e"

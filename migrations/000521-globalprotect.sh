@@ -2,10 +2,9 @@
 # Installs: — (uninstalled; install_pacman line commented out)
 # Links:    —
 # Enables:  —
-# Note: Switched from the AUR globalprotect-openconnect-git to the official
-#       Arch repo package (extra/globalprotect-openconnect). The -git package
-#       is removed. The install_pacman for the official package is COMMENTED OUT
-#       because the user has a license but isn't actively using it, and wants
+# Note: The official Arch repo package (extra/globalprotect-openconnect) is
+#       available. The install_pacman is COMMENTED OUT because the user has
+#       a license but isn't actively using it, and wants
 #       to free disk. Uncomment the install_pacman line below to re-enable.
 #       Caveat: the official package (2.5.4) may lag the -git version
 #       (2.6.4+); revisit if a 2.6.x feature is needed.

@@ -3,7 +3,7 @@
 # Downloads:       https://proton.me/download/drive/cli/0.4.6/linux-x64/proton-drive
 # Links:           --
 # Enables:         --
-# Note: Proton Drive has NO official Arch/AUR or Flatpak package; the only
+# Note: Proton Drive has no official Arch or Flatpak package; the only
 #       supported Linux distribution is this single prebuilt ELF from
 #       proton.me (dynamically linked, needs only glibc). It is a fetched,
 #       verified artifact placed as a real file at ~/.local/bin/proton-drive

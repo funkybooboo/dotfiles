@@ -6,7 +6,7 @@
 #       pacman → nix → sources → flatpak.
 #       `nix profile add .#<pkg>` installs from our local flake (flake.nix),
 #       which wraps nixpkgs with allowUnfree = true and pins the nixpkgs
-#       revision via flake.lock. This replaces the AUR entirely.
+#       revision via flake.lock.
 #       Runs after 000010-base so base-devel + curl are available.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"

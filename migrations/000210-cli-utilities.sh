@@ -23,6 +23,6 @@ install_pacman \
 install_nix .#tdf
 install_nix .#timg
 
-# gum, lazydocker, act were AUR-only originally but have since landed in extra/.
+# gum, lazydocker, act are in extra/.
 
 ok "CLI utilities"

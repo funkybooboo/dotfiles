@@ -22,7 +22,7 @@ cd ~/dotfiles
 | 3 | **sources/** | Git submodules built from source (lazycsv, lazymusic, 99 nvim plugin). |
 | 4 | **flatpak** | Flathub (Proton Pass GUI — Proton's official Linux dist). |
 
-**No AUR, no yay, no pkgbuilds.** Packages not in Arch official repos come
+**No AUR or yay.** Packages not in Arch official repos come
 from nix. Language runtimes (rust, python, go, node, zig, bun) are managed
 globally by mise; language-ecosystem packages (cargo, npm, pip, go, gem) are
 per-project only.
