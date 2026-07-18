@@ -1,17 +1,17 @@
-# 000552-handbrake.sh -- HandBrake video transcoder (via nix)
-# Installs: handbrake (via nix — .#handbrake)
+# 000552-handbrake.sh -- HandBrake video transcoder (via pacman)
+# Installs: handbrake (from extra/ — official Arch signed package)
 # Links:    --
 # Enables:  --
-# Note: HandBrake is installed from nixpkgs — hermetic, sandboxed build with
-#       all dependencies resolved inside the nix store. This replaces the
-#       former from-source submodule build (sources/HandBrake). The sources/
-#       HandBrake submodule and setup.sh step 10b rebuild harness are now
-#       unnecessary for HandBrake (nix handles the build + roll-forward via
-#       `nix profile upgrade`).
-#       nixpkgs's handbrake build uses upstream's official build system.
+# Note: HandBrake is in Arch extra/ (official signed package). Previously
+#       built from source via a git submodule, then moved to nixpkgs — but
+#       nixpkgs's ffmpeg-full build is currently broken (a patch hunk fails
+#       on the pinned nixpkgs revision). pacman's handbrake uses the Arch-
+#       maintained ffmpeg which builds fine. Switch to nix .#handbrake when
+#       the ffmpeg-full build bug is fixed (run 'nix flake update' and try
+#       'nix profile add .#handbrake' again).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "HandBrake"
 
-install_nix .#handbrake
+install_pacman handbrake
