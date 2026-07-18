@@ -1,5 +1,5 @@
 # 000209-mermaid-cli.sh — Mermaid CLI (mmdc) for Snacks.image diagram rendering
-# Installs: mermaid-cli (via nix — nixpkgs#mermaid-cli, provides mmdc)
+# Installs: mermaid-cli (via nix — .#mermaid-cli, provides mmdc)
 # Links:    — (env vars live in ~/.config/environment.d/apps.conf, deployed by
 #            000319-xdg.sh)
 # Enables:  —
@@ -16,11 +16,11 @@
 #       finished, so the 000303-vs-000209 ordering does not matter.
 #
 #       Previously installed via npm global (npm install -g). Now installed
-#       via nix (nixpkgs#mermaid-cli) — hermetic, sandboxed, no npm global
+#       via nix (.#mermaid-cli) — hermetic, sandboxed, no npm global
 #       package install. The nix package puts mmdc in ~/.nix-profile/bin/.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "mermaid cli"
 
-install_nix nixpkgs#mermaid-cli
+install_nix .#mermaid-cli

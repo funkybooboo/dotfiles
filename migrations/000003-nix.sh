@@ -1,17 +1,12 @@
 # 000003-nix.sh — Nix package manager (tier 2: after pacman, before pkgbuilds)
 # Installs: nix (from extra/ — official Arch signed package)
-# Links:    ~/.config/nixpkgs/config.nix (allowUnfree = true)
+# Links:    —
 # Enables:  nix-daemon.service (started — needed for /nix/store access)
 # Note: Nix is the second-tier package source per the install priority:
-#       pacman → nix → pkgbuilds → sources → flatpak.
-#       `nix profile install nixpkgs#<pkg>` installs from nixpkgs (the NixOS
-#       community's package collection, PR-reviewed on GitHub with CI, hermetic
-#       sandboxed builds, sha256-verified sources, binary cache at
-#       cache.nixos.org). This replaces the AUR entirely — packages that
-#       aren't in Arch official repos go to nix instead of yay.
-#       The nix daemon creates /nix/store and /nix/var on first start.
-#       Profile-installed packages land in ~/.nix-profile/bin/ (user-managed,
-#       no sudo needed for installs).
+#       pacman → nix → sources → flatpak.
+#       `nix profile add .#<pkg>` installs from our local flake (flake.nix),
+#       which wraps nixpkgs with allowUnfree = true and pins the nixpkgs
+#       revision via flake.lock. This replaces the AUR entirely.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -32,13 +27,6 @@ sudo systemctl restart nix-daemon 2>/dev/null || true
 # access so no user-group setup is needed. Starting it is safe — it's a build
 # daemon that listens on a socket, doesn't touch the active session.
 enable_system_service "nix-daemon.service"
-
-# Link ~/.config/nixpkgs/config.nix — kept for reference/compatibility but
-# nix profile (flake registry) ignores it. Unfree is handled via --impure +
-# NIXPKGS_ALLOW_UNFREE=1 in the install_nix helper.
-mkdir -p "$HOME/.config/nixpkgs"
-link_file "$DOTFILES_HOME/.config/nixpkgs/config.nix" \
-  "$HOME/.config/nixpkgs/config.nix"
 
 # Verify nix is functional
 if command -v nix &>/dev/null; then

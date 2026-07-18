@@ -6,7 +6,7 @@
 # pacman are sufficient).
 # Links:    —
 # Enables:  apparmor.service
-# Note: apparmor.d is installed from nixpkgs (nixpkgs#apparmor-d) — hermetic,
+# Note: apparmor.d is installed from nixpkgs (.#apparmor-d) — hermetic,
 #       sandboxed build, GPG-verified upstream source, no pkgbuilds/ needed.
 #       The AppArmor LSM parameters are added to the kernel cmdline in
 #       /boot/limine/limine.conf by the follow-up migration 000051-apparmor-

@@ -1,5 +1,5 @@
 # 000552-handbrake.sh -- HandBrake video transcoder (via nix)
-# Installs: handbrake (via nix — nixpkgs#handbrake)
+# Installs: handbrake (via nix — .#handbrake)
 # Links:    --
 # Enables:  --
 # Note: HandBrake is installed from nixpkgs — hermetic, sandboxed build with
@@ -14,4 +14,4 @@
 
 section "HandBrake"
 
-install_nix nixpkgs#handbrake
+install_nix .#handbrake

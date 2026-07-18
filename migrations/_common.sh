@@ -280,23 +280,16 @@ remove_flatpak() {
 }
 
 # -----------------------------------------------------------------------------
-# Install a package from nixpkgs via `nix profile add`. Idempotent +
-# non-fatal. This is the TIER 2 install source (after pacman).
-# nixpkgs is PR-reviewed on GitHub with CI, hermetic sandboxed builds,
-# sha256-verified sources, and a binary cache at cache.nixos.org.
+# Install a package from our local flake (~/dotfiles/flake.nix) via
+# `nix profile add`. Idempotent + non-fatal. This is the TIER 2 install
+# source (after pacman). The flake wraps nixpkgs with allowUnfree = true
+# and pins the nixpkgs revision via flake.lock — so `nix profile add .#<pkg>`
+# works for both free and unfree packages without --impure or env vars.
 # No sudo needed — nix installs into the user's profile (~/.nix-profile/).
-#
-# --impure + NIXPKGS_ALLOW_UNFREE=1 is required because nix profile uses the
-# flake registry (pure mode by default), which ignores
-# ~/.config/nixpkgs/config.nix. --impure lets the NIXPKGS_ALLOW_UNFREE
-# environment variable influence evaluation. This is the documented nix
-# approach for imperative unfree installs with the flake registry — not a
-# hack.
-#
-# Usage: install_nix <nixpkg-attribute>   e.g. install_nix nixpkgs#calcure
+# Usage: install_nix <flake-attribute>   e.g. install_nix .#calcure
 install_nix() {
   local attr="$1"
-  local pkgname="${attr#nixpkgs#}"
+  local pkgname="${attr#.#}"
   # Check if already installed in the nix profile
   if command -v nix &>/dev/null && nix profile list 2>/dev/null | grep -q "$pkgname"; then
     skip "nix $pkgname (installed)"
@@ -307,8 +300,8 @@ install_nix() {
     _add_warning "nix not installed; cannot install $pkgname"
     return 0
   fi
-  info "installing $pkgname from nixpkgs"
-  if NIXPKGS_ALLOW_UNFREE=1 nix --impure profile add "$attr" 2>/dev/null; then
+  info "installing $pkgname from flake"
+  if nix profile add "$attr" 2>/dev/null; then
     ok "nix: $pkgname"
   else
     warn "nix profile add failed for $pkgname"

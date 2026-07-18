@@ -1,6 +1,6 @@
 # 000108-neovim.sh — Neovim + plugin tooling + config
 # Installs: neovim tree-sitter-cli stylua luarocks lua51 python-pynvim
-#           tectonic (pacman) nvimpager (via nix — nixpkgs#nvimpager)
+#           tectonic (pacman) nvimpager (via nix — .#nvimpager)
 # Links:    ~/.config/nvim/**, ~/.editorconfig
 # Enables:  —
 # Note: tectonic provides LaTeX for the nvim latex plugin. nvimpager is the
@@ -17,7 +17,7 @@ install_pacman \
   neovim tree-sitter-cli stylua luarocks lua51 \
   python-pynvim tectonic
 # nvimpager: installed from nixpkgs.
-install_nix nixpkgs#nvimpager
+install_nix .#nvimpager
 ok "neovim + tooling"
 
 link_tree "$DOTFILES_HOME/.config/nvim" "$HOME/.config/nvim"

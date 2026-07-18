@@ -20,7 +20,7 @@ install_pacman \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
   qt5-wayland qt6-wayland resvg
 # wayfreeze: installed from nixpkgs — replaces the former pkgbuilds/ build.
-install_nix nixpkgs#wayfreeze
+install_nix .#wayfreeze
 ok "Hyprland ecosystem"
 
 link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"

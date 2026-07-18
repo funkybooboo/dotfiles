@@ -1,5 +1,5 @@
 # 000500-calcure.sh — calcure (TUI calendar) + config
-# Installs: calcure (via nix — nixpkgs#calcure)
+# Installs: calcure (via nix — .#calcure)
 # Links:    ~/.config/calcure/config.ini
 # Enables:  —
 # Note: calendar-tui (in personal-admin-scripts) launches calcure. Calcure
@@ -13,5 +13,5 @@
 
 section "calcure"
 
-install_nix nixpkgs#calcure
+install_nix .#calcure
 link_file "$DOTFILES_HOME/.config/calcure/config.ini" "$HOME/.config/calcure/config.ini"

@@ -30,13 +30,13 @@ install_pacman signal-desktop
 # losslesscut: audited local PKGBUILD (Electron app; flatpak sandbox redundant,
 # pacman-db .desktop/mimetype tracking is the cleaner integration here). The
 # former flatpak build is uninstalled on first run.
-install_nix nixpkgs#losslesscut
+install_nix .#losslesscut
 remove_flatpak no.mifi.losslesscut
 
 # cliamp, lazyjournal, lazysql: build from upstream source (local PKGBUILDs).
 # lazyjournal/lazysql local PKGBUILDs replace= the former -bin packages.
-install_nix nixpkgs#cliamp
-install_nix nixpkgs#lazyjournal
-install_nix nixpkgs#lazysql
+install_nix .#cliamp
+install_nix .#lazyjournal
+install_nix .#lazysql
 
 ok "desktop apps"

@@ -20,8 +20,8 @@ install_pacman \
   gum lazydocker act
 
 # tdf + timg: installed from nixpkgs — hermetic, sandboxed builds, no pkgbuilds/.
-install_nix nixpkgs#tdf
-install_nix nixpkgs#timg
+install_nix .#tdf
+install_nix .#timg
 
 # gum, lazydocker, act were AUR-only originally but have since landed in extra/.
 
