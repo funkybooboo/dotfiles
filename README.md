@@ -67,7 +67,8 @@ dotfiles/
     └── etc/          # → /etc (copied with sudo)
 ```
 
-- `migrations/_common.sh` provides helpers: `install_pacman`, `install_aur`,
+- `migrations/_common.sh` provides helpers: `install_pacman`, `install_nix`,
+  `install_local_pkgbuild`, `install_flatpak`, `remove_flatpak`, `remove_pkg`,
   `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`, `enable_*_service`.
 - Each migration guard-sources `_common.sh` so it can run standalone.
 - No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
@@ -77,11 +78,28 @@ dotfiles/
 **Generic only.** Installs/configures software and upgrades it; it knows
 nothing about your repos, secrets, GitHub forks, or containers.
 First run installs everything; re-running it upgrades installed software to
-upstream-latest (the system upgrade prefers `yay -Syu` so AUR packages stay
-current too, plus Flatpak update, the Proton Drive manifest roll-forward, and
-the `000600` runtime roll-forward: rustup, cargo, go, mise, npm, uv, pipx,
-gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr). Pinned local PKGBUILDs
+upstream-latest (pacman -Syu, mise upgrade for runtimes, Flatpak update, the
+Proton Drive manifest roll-forward, and the `000600` runtime roll-forward:
+mise upgrade + pi update + tldr cache refresh). Pinned local PKGBUILDs
 do NOT roll forward — bump the tracked PKGBUILD to update them.
+
+**Install priority (in order):**
+1. **pacman** — Arch official repos (core/extra/multilib), GPG-signed by
+   Arch master keys. The dominant tier.
+2. **nix** — nixpkgs via `nix profile install nixpkgs#<pkg>`. Hermetic,
+   sandboxed builds, sha256-verified sources, PR-reviewed on GitHub with CI,
+   binary cache at cache.nixos.org. Replaces the AUR entirely.
+3. **pkgbuilds/** — audited local PKGBUILDs, sha256-pinned to upstream
+   release tarballs, each with an `AUDIT.md`. `install_local_pkgbuild`
+   builds via makepkg (no yay/AUR at runtime).
+4. **sources/** — git submodules of repos built from source (HandBrake,
+   lazycsv, lazymusic, the 99 nvim plugin). Rolled forward by `setup.sh`.
+5. **flatpak** — Flathub (Proton Pass GUI — Proton's official Linux dist).
+
+**The AUR is never used.** `yay` is removed. No `install_aur` helper exists.
+Language runtimes (rust, python, go, node, zig, bun) are managed globally by
+mise. Language-ecosystem packages (cargo crates, npm packages, pip packages,
+go binaries, ruby gems) are per-project only — never installed globally.
 
 ### `setup.sh` — secrets + repos (personal/environment management)
 
@@ -103,7 +121,7 @@ Docker/Podman container images.
 
 | Range | Concern |
 |-------|---------|
-| `000001`–`000082` | System, bootloader, kernels, AppArmor, security |
+| `000001`–`000082` | System, bootloader, kernels, nix, AppArmor, security |
 | `000100`–`000109` | Shell & editors |
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
@@ -204,15 +222,9 @@ them after a fresh install.
 
 ## Known issues
 
-- **Remaining `install_aur` calls (POLICY-HOLDOUT)** — `calcure` is the only
-  remaining `install_aur` call after the 2026-07 off-AUR audit (every other
-  install_aur was moved to `install_pacman` once those packages landed in Arch
-  `extra/`, or vendored into `pkgbuilds/` with an `AUDIT.md` and sha256-pinned).
-  calcure carries a documented exception inline (the only PyPI-hosted holdout
-  + a chain of 7 AUR `python-*` deps sourced from PyPI; vendoring ~7
-  hand-sha-pinned packages isn't justified for this one app, and AUR is the
-  only available channel). Use `scripts/audit-aur.sh <pkg>` to draft the
-  AUDIT.md before vendoring a package.
+- **AUR eliminated** — the AUR is no longer an install tier. `yay` is removed.
+  Packages not in Arch official repos come from nix (tier 2) or pkgbuilds/
+  (tier 3). Zero `install_aur` calls exist.
 - **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
   `000210` migration runs `rustup toolchain install nightly` (rustup is the
   official Rust toolchain manager, rust-lang.org — not a registry).
