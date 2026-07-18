@@ -50,12 +50,6 @@ if command -v nix >/dev/null 2>&1; then
   if nix profile upgrade --all 2>/dev/null; then ok "nix packages upgraded"; else warn "nix profile upgrade failed (non-fatal)"; fi
 fi
 
-# --- Pi coding agent (self-contained self-update, not a language package) --------
-if command -v pi >/dev/null 2>&1; then
-  info "Pi coding agent"
-  pi update 2>/dev/null || true
-fi
-
 # --- tldr cache refresh (cache, not a package install) --------------------------
 if command -v tldr >/dev/null 2>&1; then
   info "tldr cache"

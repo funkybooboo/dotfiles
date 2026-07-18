@@ -22,10 +22,15 @@ set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
 # PATH
 # ============================================================================
 fish_add_path -p $HOME/.local/bin
-fish_add_path -p $HOME/.bun/bin
 fish_add_path -p $HOME/.luarocks/bin
 fish_add_path -p /var/lib/flatpak/exports/share
 fish_add_path -p $HOME/.local/share/flatpak/exports/share
+
+# nix — source the profile.d script (sets PATH, NIX_SSL_CERT_FILE,
+# XDG_DATA_DIRS, NIX_PROFILES for nix-installed packages)
+if test -f /etc/profile.d/nix-daemon.fish
+    source /etc/profile.d/nix-daemon.fish
+end
 
 # ============================================================================
 # COLORS (Catppuccin Mocha)
