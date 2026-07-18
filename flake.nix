@@ -17,7 +17,7 @@
           inherit (pkgs)
             brave librewolf wayfreeze tdf timg nvimpager
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
-            handbrake calcure mermaid-cli bitwarden-cli;
+            calcure mermaid-cli bitwarden-cli;
         });
     };
 }

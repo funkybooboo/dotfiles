@@ -99,8 +99,8 @@ run_cmd_retry() {
 # ENTIRE transaction (none of the other packages install). To avoid that, we
 # pre-filter the requested packages against the sync repos with `pacman -Si`,
 # install the available ones in one transaction, and warn explicitly about any
-# that are not in a pacman repo (those are usually AUR packages or renamed
-# packages that belong in install_aur instead).
+# that are not in a pacman repo (those are usually nix packages or renamed
+# packages that belong in install_nix instead).
 #
 # Failures are recorded via _add_warning and surface in the final summary.
 # Usage: install_pacman pkg1 pkg2 ...
@@ -124,120 +124,6 @@ install_pacman() {
       warn "pacman install failed for one or more packages: ${available[*]}"
       _add_warning "pacman install failed for: ${available[*]}"
     fi
-  fi
-}
-
-# -----------------------------------------------------------------------------
-# Build + install a package from a locally-tracked PKGBUILD (NO yay, NO AUR
-# network at runtime). The PKGBUILD lives at $REPO_ROOT/pkgbuilds/<pkg>/PKGBUILD
-# and its source=() entries point at upstream release tarballs / official
-# binaries, so this is "build from source myself" using an audited recipe.
-#
-# Behaviour:
-#   - Skips if the package is already installed at a version >= the PKGBUILD's
-#     (compared with `vercmp`), so re-runs are cheap.
-#   - Builds in $HOME/.cache/dotfiles-pkgbuilds/<pkg> (keeps the repo tree clean
-#     of build artifacts). Co-located files (.install, patches) are copied in.
-#   - `makepkg -sCf` auto-installs official makedepends via sudo (migrate.sh is
-#     interactive, so sudo is available).
-#   - Installs the built artifact with `sudo pacman -U --noconfirm`.
-#   - Non-fatal: a build/install failure is recorded via _add_warning.
-#   - For split packages (e.g. apparmor.d), installs only the <pkg> base
-#     artifact (the glob `<pkg>-*.pkg.tar.zst` excludes `<pkg>.enforced-...`).
-# Usage: install_local_pkgbuild <pkgname>
-install_local_pkgbuild() {
-  local pkg="$1"
-  local srcdir="$REPO_ROOT/pkgbuilds/$pkg"
-  local src="$srcdir/PKGBUILD"
-
-  if [[ ! -f "$src" ]]; then
-    warn "no tracked PKGBUILD for $pkg at $src"
-    _add_warning "missing local PKGBUILD: $pkg"
-    return 0
-  fi
-
-  # Read pkgver-pkgrel from the (trusted, in-repo) PKGBUILD in an isolated shell.
-  local pvr
-  pvr=$(cd "$srcdir" && bash -c 'source ./PKGBUILD; printf "%s-%s" "$pkgver" "$pkgrel"' 2>/dev/null || true)
-  if [[ -z "$pvr" ]]; then
-    warn "could not read pkgver-pkgrel from $src"
-    _add_warning "malformed PKGBUILD (no pkgver-pkgrel): $pkg"
-    return 0
-  fi
-
-  # Skip if the EXACT audited package is already installed at >= version.
-  # `pacman -Q <name>` resolves provides/​replaces, so an AUR -bin package
-  # that `provides=($pkg)` would match here even though the audited local
-  # build was never installed — silently defeating the off-AUR swap. Require
-  # the installed package's NAME to equal $pkg before considering a skip.
-  local inst=""
-  local inst_name
-  # `pacman -Q <name>` exits 1 (with stderr silenced) when the EXACT audited
-  # package name is not installed -- e.g. the AUR -bin that provides nothing
-  # under this name. Under `set -euo pipefail` that pipeline failure would
-  # otherwise abort the whole migration, so neutralize the exit status here;
-  # inst_name stays empty, the exact-name check below fails, and we proceed to
-  # build (the intended path for an off-AUR swap).
-  inst_name=$(pacman -Q "$pkg" 2>/dev/null | awk '{print $1}' || true)
-  if [[ "$inst_name" == "$pkg" ]]; then
-    inst=$(pacman -Q "$pkg" | awk '{print $2}')
-    if [[ "$(vercmp "$inst" "$pvr")" -ge 0 ]]; then
-      skip "$pkg ($inst, already installed >= $pvr)"
-      return 0
-    fi
-  fi
-
-  local bld="$HOME/.cache/dotfiles-pkgbuilds/$pkg"
-  mkdir -p "$bld"
-  # Copy PKGBUILD + any co-located files (.install, patches, etc.).
-  cp -a "$srcdir/." "$bld/"
-
-  info "building $pkg $pvr from source (local PKGBUILD) → $bld"
-  local log="$bld/build.log"
-  if ( cd "$bld" && makepkg -sfC --noconfirm ) >"$log" 2>&1; then
-    ok "$pkg built"
-  else
-    warn "makepkg build failed for $pkg (log: $log)"
-    tail -n 25 "$log" 2>/dev/null | sed 's/^/      /' || true
-    _add_warning "local PKGBUILD build failed: $pkg"
-    return 0
-  fi
-
-  # Pick the base artifact (excludes split siblings like <pkg>.enforced-...
-  # and makepkg's auto-generated <pkg>-debug-... packages).
-  local artifact
-  artifact=$(cd "$bld" && ls -t "$pkg"-*.pkg.tar.zst 2>/dev/null | grep -vE -- '-debug-|\.enforced-' | head -1)
-  if [[ -z "$artifact" ]]; then
-    warn "no built package artifact for $pkg in $bld"
-    _add_warning "no build artifact produced: $pkg"
-    return 0
-  fi
-
-  # `pacman -U <file>` does NOT honour the package's conflicts=/replaces=
-  # against already-installed packages (those only fire during repo -Syu
-  # transactions). It instead prompts "Remove <conflict>? [y/N]" — and
-  # --noconfirm takes the default N, so the install aborts with
-  # "unresolvable package conflicts". Pre-empt by reading the built
-  # artifact's .PKGINFO (authoritative: makepkg writes it from the PKGBUILD
-  # arrays) for conflict=/replaces= entries, removing any that are currently
-  # installed before we hand off to pacman -U.
-  local conflict_pkg
-  while IFS= read -r conflict_pkg; do
-    [[ -n "$conflict_pkg" ]] || continue
-    if pacman -Q "$conflict_pkg" &>/dev/null; then
-      info "removing conflicting/replaced package before install: $conflict_pkg"
-      remove_pkg "$conflict_pkg"
-    fi
-  done < <(bsdtar -xOf "$bld/$artifact" .PKGINFO 2>/dev/null | \
-           awk '/^(conflict|replaces)[[:space:]]*=/ {sub(/^[^=]*=[[:space:]]*/, ""); print}' | \
-           sort -u)
-
-  if sudo pacman -U --noconfirm "$bld/$artifact"; then
-    ok "$pkg $pvr installed (built from source)"
-  else
-    warn "pacman -U failed for $pkg"
-    _add_warning "pacman -U failed for: $pkg"
-    return 0
   fi
 }
 

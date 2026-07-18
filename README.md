@@ -89,12 +89,9 @@ do NOT roll forward — bump the tracked PKGBUILD to update them.
 2. **nix** — nixpkgs via `nix profile install nixpkgs#<pkg>`. Hermetic,
    sandboxed builds, sha256-verified sources, PR-reviewed on GitHub with CI,
    binary cache at cache.nixos.org. Replaces the AUR entirely.
-3. **pkgbuilds/** — audited local PKGBUILDs, sha256-pinned to upstream
-   release tarballs, each with an `AUDIT.md`. `install_local_pkgbuild`
-   builds via makepkg (no yay/AUR at runtime).
-4. **sources/** — git submodules of repos built from source (HandBrake,
-   lazycsv, lazymusic, the 99 nvim plugin). Rolled forward by `setup.sh`.
-5. **flatpak** — Flathub (Proton Pass GUI — Proton's official Linux dist).
+3. **sources/** — git submodules of repos built from source (lazycsv,
+   lazymusic, the 99 nvim plugin). Rolled forward by `setup.sh`.
+4. **flatpak** — Flathub (Proton Pass GUI — Proton's official Linux dist).
 
 **The AUR is never used.** `yay` is removed. No `install_aur` helper exists.
 Language runtimes (rust, python, go, node, zig, bun) are managed globally by
@@ -126,7 +123,7 @@ Docker/Podman container images.
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (built from upstream source) |
+| `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (pacman) |
 | `000600` | Runtime roll-forward (generic software upgrades only): rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design). Repo/container refresh lives in `setup.sh`, not here |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
@@ -223,8 +220,7 @@ them after a fresh install.
 ## Known issues
 
 - **AUR eliminated** — the AUR is no longer an install tier. `yay` is removed.
-  Packages not in Arch official repos come from nix (tier 2) or pkgbuilds/
-  (tier 3). Zero `install_aur` calls exist.
+  Packages not in Arch official repos come from nix (tier 2). Zero `install_aur` calls exist.
 - **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
   `000210` migration runs `rustup toolchain install nightly` (rustup is the
   official Rust toolchain manager, rust-lang.org — not a registry).

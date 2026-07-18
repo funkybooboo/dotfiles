@@ -6,8 +6,11 @@
 # pacman are sufficient).
 # Links:    —
 # Enables:  apparmor.service
-# Note: apparmor.d is installed from nixpkgs (.#apparmor-d) — hermetic,
-#       sandboxed build, GPG-verified upstream source, no pkgbuilds/ needed.
+# Note: The third-party apparmor.d profile collection (by roddhjav) is NOT
+#       in nixpkgs and not in Arch official repos. The existing pacman-
+#       installed package (from the former pkgbuilds/) stays if already
+#       present; on a fresh machine, the stock apparmor profiles from the
+#       pacman package are sufficient.
 #       The AppArmor LSM parameters are added to the kernel cmdline in
 #       /boot/limine/limine.conf by the follow-up migration 000051-apparmor-
 #       cmdline.sh. A reboot is required for AppArmor to become active.

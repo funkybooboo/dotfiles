@@ -5,21 +5,20 @@
 # Links:     --
 # Enables:   --
 # Scope:     This migration is GENERIC: it upgrades mise-managed runtimes
-#            (rust, go, node, python, zig, bun) and refreshes non-package
-#            caches (tldr, fzf). It does NOT install or upgrade any language-
-#            ecosystem PACKAGES (no cargo crates, no npm -g, no pip, no go
-#            install @latest, no gem, no pipx, no composer). Language packages
-#            are per-project concerns managed by each project's tooling
-#            (Cargo.lock, package-lock.json, pyproject.toml, etc.).
+#            (rust, go, node, python, zig, bun), nix profile packages, and
+#            refreshes non-package caches (tldr, fzf). It does NOT install or
+#            upgrade any language-ecosystem PACKAGES (no cargo crates, no
+#            npm -g, no pip, no go install @latest, no gem, no pipx, no
+#            composer). Language packages are per-project concerns managed
+#            by each project's tooling (Cargo.lock, package-lock.json,
+#            pyproject.toml, etc.).
 #            pi update (coding agent self-update) stays — it's a self-contained
 #            tool, not a language-ecosystem package.
-# Note:      Unlike the audited, PINNED local PKGBUILDs (which intentionally do
-#            NOT roll forward -- you bump the tracked PKGBUILD to update them),
-#            the runtimes here are managed by mise under the deliberate
-#            "trust upstream latest" policy. Re-running ./migrate.sh keeps
-#            installed runtimes current.
-#            Firmware stays a separate manual `update-firmware` (reboot-gated).
-#            Flatpak + Proton Drive updates are owned by 000301 and 000551.
+# Note:      nix profile upgrade --all upgrades all nix-installed packages to
+#            the revision pinned in flake.lock. To bump the pin: nix flake
+#            update (in ~/dotfiles/). Firmware stays a separate manual
+#            `update-firmware` (reboot-gated). Flatpak + Proton Drive updates
+#            are owned by 000301 and 000551.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -33,6 +32,12 @@ section "runtime roll-forward (update)"
 if command -v mise >/dev/null 2>&1; then
   info "mise-managed runtimes"
   if mise upgrade --yes 2>/dev/null; then ok "mise runtimes upgraded"; else warn "mise upgrade failed (non-fatal)"; fi
+fi
+
+# --- nix profile packages (upgrade all to flake.lock-pinned revision) -----------
+if command -v nix >/dev/null 2>&1; then
+  info "nix profile packages"
+  if nix profile upgrade --all 2>/dev/null; then ok "nix packages upgraded"; else warn "nix profile upgrade failed (non-fatal)"; fi
 fi
 
 # --- Pi coding agent (self-contained self-update, not a language package) --------
