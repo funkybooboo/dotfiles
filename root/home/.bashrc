@@ -113,5 +113,5 @@ if command -v fzf &>/dev/null; then
         source /usr/share/fzf/key-bindings.bash
     fi
 fi
-# Pi
-export PATH="/home/nate/.local/share/mise/installs/node/24.18.0/bin:$PATH"
+# mise activates bash with all runtime paths (node, python, go, rust, etc.)
+# No hardcoded PATH entries needed

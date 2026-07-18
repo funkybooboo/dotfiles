@@ -22,7 +22,7 @@ set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
 # PATH
 # ============================================================================
 fish_add_path -p $HOME/.local/bin
-fish_add_path -p $HOME/.cargo/bin
+fish_add_path -p $HOME/.bun/bin
 fish_add_path -p $HOME/.luarocks/bin
 fish_add_path -p /var/lib/flatpak/exports/share
 fish_add_path -p $HOME/.local/share/flatpak/exports/share
@@ -187,9 +187,6 @@ end
 if type -q starship
     starship init fish | source
 end
-
-# ghcup
-set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/nate/.ghcup/bin $PATH # ghcup-env
 
 # opam
 test -r '/home/nate/.opam/opam-init/init.fish' && source '/home/nate/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
