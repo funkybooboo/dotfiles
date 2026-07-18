@@ -304,6 +304,35 @@ remove_flatpak() {
 }
 
 # -----------------------------------------------------------------------------
+# Install a package from nixpkgs via `nix profile install`. Idempotent +
+# non-fatal. This is the TIER 2 install source (after pacman, before
+# pkgbuilds). nixpkgs is PR-reviewed on GitHub with CI, hermetic sandboxed
+# builds, sha256-verified sources, and a binary cache at cache.nixos.org.
+# No sudo needed — nix installs into the user's profile (~/.nix-profile/).
+# Usage: install_nix <nixpkg-attribute>   e.g. install_nix nixpkgs#calcure
+install_nix() {
+  local attr="$1"
+  local pkgname="${attr#nixpkgs#}"
+  # Check if already installed in the nix profile
+  if command -v nix &>/dev/null && nix profile list 2>/dev/null | grep -q "$attr"; then
+    skip "nix $pkgname (installed)"
+    return 0
+  fi
+  if ! command -v nix &>/dev/null; then
+    warn "nix not found — run the nix migration (000003) first"
+    _add_warning "nix not installed; cannot install $pkgname"
+    return 0
+  fi
+  info "installing $pkgname from nixpkgs"
+  if nix profile install "$attr" 2>/dev/null; then
+    ok "nix: $pkgname"
+  else
+    warn "nix profile install failed for $pkgname"
+    _add_warning "nix install failed: $pkgname"
+  fi
+}
+
+# -----------------------------------------------------------------------------
 # Remove one or more packages idempotently (non-fatal). Used to drop superseded
 # AUR -bin/-git packages after their flatpak/official/local-built replacement is
 # in place. Uses plain -R (leaves shared deps as orphans; a later `pacman -Qdt`
