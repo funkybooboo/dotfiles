@@ -1,26 +1,22 @@
 # 000523-proton-pass.sh — Proton Pass CLI + GUI + bash completions
-# Installs: proton-pass-cli (local PKGBUILD — Proton's official release binary)
-# Flatpak:  me.proton.Pass (GUI, officially maintained by Proton)
-# Links:    — (completions generated at runtime below)
-# Enables:  —
-# Note: The CLI is packaged locally from Proton's checksummed official release
-#       binary (github.com/protonpass/pass-cli) — the local PKGBUILD's
-#       replaces=proton-pass-cli-bin auto-removes the former AUR -bin on
-#       install (same /usr/bin/pass-cli binary). The GUI comes from Flathub
-#       (me.proton.Pass), replacing the former AUR proton-pass-bin.
+# Nix:     .#proton-pass-cli (Proton's official release binary)
+# Flatpak: me.proton.Pass (GUI, officially maintained by Proton)
+# Links:   — (completions generated at runtime below)
+# Enables: —
+# Note: The CLI is installed from nix (via the local flake). The GUI comes
+#       from Flathub (me.proton.Pass), Proton's official Linux distribution.
 #       The interactive pass-cli LOGIN is deferred to setup.sh (needs a
 #       browser + desktop). This migration only installs + sets up
-#       completions. Debug symbol packages are swept by 000550.
+#       completions.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "proton pass"
 
-# Proton Pass CLI — local PKGBUILD wrapping Proton's official release binary
-# (replaces=proton-pass-cli-bin auto-removes the former AUR -bin on install).
+# Proton Pass CLI — from nix flake (Proton's official release binary).
 install_nix .#proton-pass-cli
 
-# Proton Pass GUI — official Flathub build, replacing the former AUR -bin.
+# Proton Pass GUI — official Flathub build.
 install_flatpak me.proton.Pass
 remove_pkg proton-pass-bin
 

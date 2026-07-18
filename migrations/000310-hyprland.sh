@@ -1,8 +1,9 @@
 # 000310-hyprland.sh — Hyprland compositor + Wayland ecosystem + config + scripts
 # Installs: hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper
-#           hyprpolkitagent hyprlauncher cliphist wayfreeze (local build) uwsm
+#           hyprpolkitagent hyprlauncher cliphist uwsm
 #           xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 #           xdg-desktop-portal-wlr qt5-wayland qt6-wayland resvg
+# Nix:     .#wayfreeze
 # Links:    ~/.config/hypr/**, ~/.config/systemd/user/hypr-wallpaper.service,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,screenshot,screencast,recording-indicator,

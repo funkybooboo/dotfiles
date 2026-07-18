@@ -1,19 +1,12 @@
 # 000303-browsers.sh — web browsers + chromium flags
 # Installs: firefox chromium
-# Builds (local audited PKGBUILDs):  brave-bin, librewolf-bin
-# Links:    ~/.config/chromium-flags.conf
-# Enables:  —
-# Note: Brave and LibreWolf moved here from flatpak back to audited local
-#       PKGBUILDs (pkgbuilds/{brave,librewolf}/), per the policy that AUR/3rd-
-#       party packages must be owned + audited in-tree and pinned via sha256
-#       (+ GPG sig where upstream publishes one — LibreWolf does). Each has an
-#       AUDIT.md recording upstream provenance, personally-computed sha256, and
-#       a packaging-script review. The flatpak builds they replaced (com.brave.
-#       Browser, io.gitlab.librewolf-community) are uninstalled on first run.
-#       This is a genuine integrity upgrade for LibreWolf (GPG-signed upstream
-#       vs flatpak TLS-only); for Brave it's parity (pinned sha256 vs flatpak
-#       TLS) plus pacman-db .desktop/mimetype integration. Debug symbol
-#       packages are swept by 000550-cleanup-aur-debug.sh.
+# Nix:     .#brave .#librewolf
+# Links:   ~/.config/chromium-flags.conf
+# Enables: —
+# Note: Brave and LibreWolf are installed from nix (via the local flake,
+#       which provides allowUnfree + sha256-verified hermetic builds). The
+#       former flatpak builds (com.brave.Browser,
+#       io.gitlab.librewolf-community) are uninstalled on first run.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

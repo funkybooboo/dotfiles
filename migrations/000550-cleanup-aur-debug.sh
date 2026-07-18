@@ -17,7 +17,6 @@ section "cleanup: AUR packages + yay"
 
 remove_pkg \
   apparmor.d-debug \
-  chkrootkit-debug \
   cliamp-debug \
   lazyjournal-bin-debug \
   lazysql-bin-debug \
