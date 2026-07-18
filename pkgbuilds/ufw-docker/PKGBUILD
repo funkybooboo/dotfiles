@@ -7,7 +7,9 @@ pkgdesc='To fix the Docker and UFW security flaw without disabling iptables.'
 arch=('any')
 url="https://github.com/chaifeng/${pkgname}"
 license=('GPL License Version 3.0')
-depends=('ufw' 'docker')
+depends=('ufw')
+optdepends=('docker: Docker container runtime (ufw-docker manipulates Docker iptables chains)'
+            'podman: Podman container runtime (ufw-docker is Docker-specific but the script stays installed for future use)')
 install=ufw-docker.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/chaifeng/$pkgname/archive/refs/tags/$pkgver.tar.gz"
 	'ufw-docker.install')
