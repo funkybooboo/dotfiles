@@ -10,6 +10,11 @@
 section "podman"
 
 install_pacman podman
+# Remove the standalone Docker runtime in favor of Podman (the docker wrapper
+# scripts linked below make `docker` / `docker-compose` commands forward to
+# podman). Docker was installed previously but is disabled; removing it frees
+# ~150 MiB and eliminates the duplicated container-runtime service.
+remove_pkg docker containerd
 
 link_file "$DOTFILES_HOME/.config/containers/storage.conf" \
   "$HOME/.config/containers/storage.conf"

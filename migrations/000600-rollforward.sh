@@ -5,9 +5,12 @@
 # Links:     --
 # Enables:   --
 # Scope:     This migration is GENERIC: it upgrades installed package-managed
-#            software (rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun,
+#            software (cargo, go, mise, npm, uv, pipx, gem, pnpm, bun,
 #            pi, composer, ghcup/stack/cabal, tldr) under the deliberate
-#            "trust upstream latest" policy (same principle as the Proton Drive
+#            "trust upstream latest" policy. mise manages all runtimes (rust,
+#            go, node, python, zig, bun) including the rustup binary — there
+#            is NO standalone rustup update step here.
+#            (same principle as (same principle as the Proton Drive
 #            roll-forward in 000551). It knows NOTHING about the user's repos,
 #            secrets, GitHub forks, submodule sources, or running containers --
 #            those are personal/environment management and live in setup.sh,
@@ -29,10 +32,13 @@
 section "runtime roll-forward (update)"
 
 # --- Rust toolchain + cargo crates ----------------------------------------------
-if command -v rustup >/dev/null 2>&1; then
-  info "rustup toolchain"
-  if rustup update 2>/dev/null; then ok "rustup updated"; else warn "rustup update failed (non-fatal)"; fi
-fi
+# mise manages the Rust stable toolchain (mise's Rust backend IS rustup —
+# the binary at ~/.cargo/bin/rustup is installed and updated by mise). The
+# separate `rustup update` call was REMOVED: `mise upgrade` above already
+# updates stable rust via the same rustup binary. The nightly toolchain (for
+# tdf, provisioned in 000210) is updated when 000210 re-provisions it each
+# migrate run. So there is no standalone rustup rustup step here.
+# cargo crates (mise-managed cargo from PATH) get install-updated below.
 if command -v cargo >/dev/null 2>&1; then
   info "cargo-installed crates"
   # cargo-update provides `cargo install-update`; install it if absent, then

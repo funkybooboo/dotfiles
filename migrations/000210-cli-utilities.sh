@@ -22,10 +22,12 @@ install_pacman \
   gum lazydocker act
 
 # tdf requires nightly Rust (upstream pins it via rust-toolchain.toml).
-# Provision the nightly toolchain via rustup (rust-lang.org, not a registry).
-# Prepend ~/.cargo/bin so the rustup cargo proxy is used by makepkg (a
-# system/pacman cargo would ignore the nightly toolchain override). migrate.sh
-# may run non-interactively without the user's shell having activated it.
+# Provision the nightly toolchain via the mise-managed rustup binary (at
+# ~/.cargo/bin/rustup — the same binary mise installed when it provisioned
+# the stable Rust toolchain). Prepend ~/.cargo/bin so the rustup cargo proxy
+# is used by makepkg (a system/pacman cargo would ignore the nightly toolchain
+# override). migrate.sh may run non-interactively without the user's shell
+# having activated mise shims.
 export PATH="$HOME/.cargo/bin:$PATH"
 if command -v rustup &>/dev/null; then
   rustup toolchain install nightly 2>/dev/null || \
