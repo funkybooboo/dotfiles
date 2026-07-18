@@ -30,27 +30,6 @@ else
 fi
 echo ""
 
-# --- chkrootkit last scan results ---
-echo "[$(TS)] chkrootkit last scan results:"
-if systemctl cat chkrootkit-scan.service >/dev/null 2>&1; then
-  LAST_RUN=$(systemctl show chkrootkit-scan.service --property=ExecMainStartTimestamp --value 2>/dev/null || echo "")
-  if [ -z "$LAST_RUN" ] || [ "$LAST_RUN" = "n/a" ]; then
-    echo "-> WARNING: timer has not run yet"
-  else
-    echo "-> Last run: $LAST_RUN"
-  fi
-  INFECTED=$(journalctl -u chkrootkit-scan.service -n 200 --no-pager 2>/dev/null | grep -i "INFECTED" || true)
-  if [ -z "$INFECTED" ]; then
-    echo "-> Nothing infected."
-  else
-    echo "-> Potential issues found:"
-    echo "$INFECTED" | sed 's/^/   /'
-  fi
-else
-  echo "-> chkrootkit-scan.service not found — timer not installed?"
-fi
-echo ""
-
 # --- auditd recent events ---
 if command -v ausearch >/dev/null 2>&1 && systemctl is-active --quiet auditd 2>/dev/null; then
   echo "[$(TS)] Recent auditd events (last 24h)..."

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
-# clean-disk — clean system on Arch Linux (supports Flatpak, Docker, Brew, pip, npm, pnpm, bun, Rust, Go)
+# clean-disk — clean system caches on Arch Linux
+#
+# Cleans: pacman cache, flatpak runtimes, podman images, systemd journal,
+# /tmp, nix store garbage, mise caches, trash. Launches ncdu at the end.
 #
 set -euo pipefail
 
@@ -27,8 +30,6 @@ fi
 echo "[$(TS)] Detected distro: $DISTRO"
 echo ""
 
-# --- Common cleanup steps ---
-
 # 1) Flatpak cleanup
 if command -v flatpak >/dev/null 2>&1; then
     echo "[$(TS)] Removing unused Flatpak runtimes and apps..."
@@ -43,13 +44,12 @@ sudo journalctl --vacuum-time=7d || echo "Failed to vacuum journal logs."
 echo "-> Old journal entries purged."
 echo ""
 
-# 3) Docker cleanup
-if command -v docker >/dev/null 2>&1; then
-    echo "[$(TS)] Pruning unused Docker objects..."
-    sudo docker system prune --all --volumes --force
-    sudo docker builder prune --all --force
-    sudo docker image prune --force --filter "until=24h"
-    echo "-> Docker cleanup finished."
+# 3) Podman cleanup
+if command -v podman >/dev/null 2>&1; then
+    echo "[$(TS)] Pruning unused Podman objects..."
+    podman system prune -a --volumes --force 2>/dev/null || true
+    podman builder prune --all --force 2>/dev/null || true
+    echo "-> Podman cleanup finished."
 fi
 echo ""
 
@@ -59,103 +59,29 @@ sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -rf {} \; || echo "Fai
 echo "-> /tmp cleaned."
 echo ""
 
-# 5) Multipass cleanup
-if command -v multipass >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning up Multipass VMs and images..."
-    multipass delete --all || true
-    multipass purge || true
-    echo "-> Multipass cleanup finished."
-fi
-echo ""
-
-# 6) Arch package cleanup
-echo "[$(TS)] Cleaning Arch package caches..."
-if command -v yay >/dev/null 2>&1; then
-    yay -Sc --noconfirm
-else
-    sudo pacman -Sc --noconfirm
-fi
+# 5) Arch package cache cleanup
+echo "[$(TS)] Cleaning pacman package cache..."
+sudo pacman -Sc --noconfirm
 echo "-> Package cache cleaned."
 echo ""
 
-# Homebrew
-if command -v brew >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning Homebrew..."
-    brew cleanup -s
-    echo "-> Homebrew cache cleaned."
+# 6) nix store garbage collection
+if command -v nix >/dev/null 2>&1; then
+    echo "[$(TS)] Garbage collecting nix store..."
+    nix store gc 2>/dev/null || true
+    echo "-> Nix store GC finished."
 fi
+echo ""
 
-# pip
-if command -v pyenv >/dev/null 2>&1; then
-    PYENV_PYTHON=$(pyenv prefix)/bin/python
-    
-    if [ -n "$PYENV_PYTHON" ]; then
-        echo "[$(TS)] Cleaning pip cache via pyenv..."
-        "$PYENV_PYTHON" -m pip cache purge || true
-        echo "-> pip cache cleaned."
-    fi
-elif command -v pip >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning pip cache..."
-    pip cache purge || true
-    echo "-> pip cache cleaned."
+# 7) mise cache cleanup (per-project tool caches, not runtimes)
+if command -v mise >/dev/null 2>&1; then
+    echo "[$(TS)] Cleaning mise cache..."
+    mise cache clear 2>/dev/null || true
+    echo "-> mise cache cleaned."
 fi
+echo ""
 
-# poetry
-if command -v poetry >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning Poetry cache..."
-    poetry cache clear pypi --all
-    poetry cache clear virtualenvs --all
-    echo "-> Poetry caches cleared."
-fi
-
-# npm
-if command -v npm >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning npm cache..."
-    npm cache clean --force
-    echo "-> npm cache cleaned."
-fi
-
-# pnpm
-if command -v pnpm >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning pnpm store and cache..."
-    pnpm store prune
-    rm -rf ~/.cache/pnpm || true
-    echo "-> pnpm store and cache cleaned."
-fi
-
-# bun
-if command -v bun >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning Bun cache..."
-    rm -rf ~/.bun/cache || true
-    echo "-> Bun cache cleaned."
-fi
-
-# Rust (cargo)
-if command -v cargo >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning Rust cargo cache..."
-    if command -v cargo-cache >/dev/null 2>&1; then
-        cargo-cache -a
-        echo "-> Rust cargo cache cleaned."
-    else
-        echo "-> cargo-cache not installed, skipping Rust cache cleanup."
-    fi
-fi
-
-# Go
-if command -v go >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning Go cache..."
-    go clean -cache -modcache -testcache
-    echo "-> Go cache cleaned."
-fi
-
-# uv
-if command -v uv >/dev/null 2>&1; then
-    echo "[$(TS)] Cleaning uv cache..."
-    uv cache clean
-    echo "-> uv cache cleaned."
-fi
-
-# Trash
+# 8) Trash
 echo "[$(TS)] Emptying trash..."
 rm -rf ~/.local/share/Trash/files/* ~/.local/share/Trash/info/* 2>/dev/null || true
 echo "-> Trash emptied."

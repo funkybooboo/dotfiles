@@ -179,8 +179,8 @@ login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 
 Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
 
-- `update` — shim over `./migrate.sh`. Firmware is separate (`update-firmware`,
-  reboot-gated, intentionally outside migrate.sh)
+- `update-firmware` — firmware updates (reboot-gated, intentionally outside
+  migrate.sh)
 - `clean-disk` — orphans, caches, unused flatpaks
 - `secretmgr` — Proton Pass wrapper
 - `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
@@ -215,10 +215,6 @@ after a fresh install.
 
 ## Known issues
 
-- **HandBrake via pacman** — nixpkgs's `ffmpeg-full` build is currently broken
-  on the pinned revision. HandBrake installs from Arch `extra/` instead. Switch
-  to `nix profile add .#handbrake` when the build bug is fixed (`nix flake
-  update` and retry).
 - **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 
