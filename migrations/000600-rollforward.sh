@@ -14,11 +14,15 @@
 #            pyproject.toml, etc.).
 #            pi update (coding agent self-update) stays — it's a self-contained
 #            tool, not a language-ecosystem package.
-# Note:      nix profile upgrade --all upgrades all nix-installed packages to
-#            the revision pinned in flake.lock. To bump the pin: nix flake
-#            update (in ~/dotfiles/). Firmware stays a separate manual
-#            `update-firmware` (reboot-gated). Flatpak + Proton Drive updates
-#            are owned by 000301 and 000551.
+# Note:      nix flake update bumps the nixpkgs pin in flake.lock to latest,
+#            then nix profile upgrade --all upgrades all nix-installed packages
+#            to that new revision. This makes nix consistent with pacman -Syu
+#            and flatpak update (always get upstream latest on each migrate run).
+#            The flake.lock bump shows as an uncommitted change — commit it to
+#            pin the new revision across machines (same pattern as setup.sh
+#            rolling forward sources/ submodules).
+#            Firmware stays a separate manual `update-firmware` (reboot-gated).
+#            Flatpak + Proton Drive updates are owned by 000301 and 000551.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -34,8 +38,14 @@ if command -v mise >/dev/null 2>&1; then
   if mise upgrade --yes 2>/dev/null; then ok "mise runtimes upgraded"; else warn "mise upgrade failed (non-fatal)"; fi
 fi
 
-# --- nix profile packages (upgrade all to flake.lock-pinned revision) -----------
+# --- nix profile packages (bump flake.lock pin, then upgrade all) --------------
 if command -v nix >/dev/null 2>&1; then
+  info "nix flake update (bump nixpkgs pin)"
+  if nix flake update 2>/dev/null; then
+    ok "flake.lock bumped to latest nixpkgs"
+  else
+    warn "nix flake update failed (non-fatal; using existing pin)"
+  fi
   info "nix profile packages"
   if nix profile upgrade --all 2>/dev/null; then ok "nix packages upgraded"; else warn "nix profile upgrade failed (non-fatal)"; fi
 fi
