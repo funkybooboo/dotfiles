@@ -1,139 +1,47 @@
-# 000600-rollforward.sh -- Generic runtime roll-forward (software upgrades only)
-# Installs:  none (this migration only UPGRADES tools already installed by
-#            earlier migrations; every step is guarded by `command -v`, so on
-#            a machine without a given tool the step is a silent no-op).
+# 000600-rollforward.sh -- Runtime roll-forward (runtimes + caches only)
+# Installs:  none (this migration only UPGRADES runtimes + refreshes caches;
+#            every step is guarded by `command -v`, so on a machine without
+#            a given tool the step is a silent no-op).
 # Links:     --
 # Enables:   --
-# Scope:     This migration is GENERIC: it upgrades installed package-managed
-#            software (cargo, go, mise, npm, uv, pipx, gem, pnpm, bun,
-#            pi, composer, ghcup/stack/cabal, tldr) under the deliberate
-#            "trust upstream latest" policy. mise manages all runtimes (rust,
-#            go, node, python, zig, bun) including the rustup binary — there
-#            is NO standalone rustup update step here.
-#            (same principle as (same principle as the Proton Drive
-#            roll-forward in 000551). It knows NOTHING about the user's repos,
-#            secrets, GitHub forks, submodule sources, or running containers --
-#            those are personal/environment management and live in setup.sh,
-#            not in migrate.sh.
+# Scope:     This migration is GENERIC: it upgrades mise-managed runtimes
+#            (rust, go, node, python, zig, bun) and refreshes non-package
+#            caches (tldr, fzf). It does NOT install or upgrade any language-
+#            ecosystem PACKAGES (no cargo crates, no npm -g, no pip, no go
+#            install @latest, no gem, no pipx, no composer). Language packages
+#            are per-project concerns managed by each project's tooling
+#            (Cargo.lock, package-lock.json, pyproject.toml, etc.).
+#            pi update (coding agent self-update) stays — it's a self-contained
+#            tool, not a language-ecosystem package.
 # Note:      Unlike the audited, PINNED local PKGBUILDs (which intentionally do
 #            NOT roll forward -- you bump the tracked PKGBUILD to update them),
-#            the tools here are managed by their own upstream channels.
-#            Re-running ./migrate.sh keeps installed runtimes current.
-#            Dropped vs. the old `update` script: `pip install --user --upgrade
-#            pip` (PEP 668 blocks it on Arch -- a silent no-op fighting the
-#            system Python); GitHub fork sync + ~/sources rebuild + container
-#            image pulls (moved to setup.sh as personal repo/environment
-#            management). Firmware stays a separate manual `update-firmware`
-#            (reboot-gated). Flatpak + Proton Drive updates are owned by 000301
-#            and 000551 respectively.
+#            the runtimes here are managed by mise under the deliberate
+#            "trust upstream latest" policy. Re-running ./migrate.sh keeps
+#            installed runtimes current.
+#            Firmware stays a separate manual `update-firmware` (reboot-gated).
+#            Flatpak + Proton Drive updates are owned by 000301 and 000551.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "runtime roll-forward (update)"
 
-# --- Rust toolchain + cargo crates ----------------------------------------------
-# mise manages the Rust stable toolchain (mise's Rust backend IS rustup —
-# the binary at ~/.cargo/bin/rustup is installed and updated by mise). The
-# separate `rustup update` call was REMOVED: `mise upgrade` above already
-# updates stable rust via the same rustup binary. The nightly toolchain (for
-# tdf, provisioned in 000210) is updated when 000210 re-provisions it each
-# migrate run. So there is no standalone rustup rustup step here.
-# cargo crates (mise-managed cargo from PATH) get install-updated below.
-if command -v cargo >/dev/null 2>&1; then
-  info "cargo-installed crates"
-  # cargo-update provides `cargo install-update`; install it if absent, then
-  # upgrade every cargo-installed binary. Both best-effort.
-  cargo install cargo-update 2>/dev/null || true
-  if cargo install-update -a 2>/dev/null; then ok "cargo crates updated"; else warn "cargo crate update failed (non-fatal)"; fi
-fi
-
-# --- Go packages (re-install every ~/go/bin binary at @latest) ------------------
-if command -v go >/dev/null 2>&1 && compgen -G "$HOME/go/bin/*" >/dev/null 2>&1; then
-  info "Go packages"
-  for _bin in "$HOME/go/bin/"*; do
-    [[ -f "$_bin" ]] || continue
-    _mod=$(go version -m "$_bin" 2>/dev/null | awk '/^\s+path/ {print $2}')
-    if [[ -n "$_mod" ]]; then
-      if go install "${_mod}@latest" 2>/dev/null; then
-        ok "go: $_mod"
-      else
-        warn "go: could not update $_mod (non-fatal)"
-      fi
-    fi
-  done
-fi
-
-# --- mise-managed runtimes (mise itself is upgraded by pacman/yay in 000001) ----
+# --- mise-managed runtimes (rust, go, node, python, zig, bun) -------------------
+# mise manages ALL language runtimes. mise upgrade updates each to the version
+# pinned in ~/.config/mise/config.toml (global defaults) or the project's
+# .mise.toml (per-project overrides). mise itself is upgraded by pacman in
+# 000001. No separate rustup/go/npm/pip steps — those are per-project.
 if command -v mise >/dev/null 2>&1; then
   info "mise-managed runtimes"
   if mise upgrade --yes 2>/dev/null; then ok "mise runtimes upgraded"; else warn "mise upgrade failed (non-fatal)"; fi
 fi
 
-# --- npm global packages --------------------------------------------------------
-if command -v npm >/dev/null 2>&1; then
-  info "npm global packages"
-  if npm update -g 2>/dev/null; then ok "npm globals updated"; else warn "npm global update failed (non-fatal)"; fi
-fi
-
-# --- uv (Python tool manager) ---------------------------------------------------
-if command -v uv >/dev/null 2>&1; then
-  info "uv + uv-managed tools"
-  uv self update 2>/dev/null || true
-  if uv tool upgrade --all 2>/dev/null; then ok "uv tools upgraded"; else warn "uv tool upgrade failed (non-fatal)"; fi
-fi
-
-# --- Haskell (ghcup / stack / cabal) --------------------------------------------
-if command -v ghcup >/dev/null 2>&1; then
-  info "ghcup"
-  ghcup upgrade 2>/dev/null || true
-fi
-if command -v stack >/dev/null 2>&1; then
-  info "stack"
-  stack upgrade 2>/dev/null || true
-fi
-if command -v cabal >/dev/null 2>&1; then
-  info "cabal (Hackage index)"
-  cabal update 2>/dev/null || true
-fi
-
-# --- pipx tools -----------------------------------------------------------------
-if command -v pipx >/dev/null 2>&1; then
-  info "pipx tools"
-  if pipx upgrade-all 2>/dev/null; then ok "pipx tools upgraded"; else warn "pipx upgrade-all failed (non-fatal)"; fi
-fi
-
-# --- Ruby gems (user-install; harmless if no gems) ------------------------------
-if command -v gem >/dev/null 2>&1; then
-  info "Ruby gems"
-  gem update --user-install 2>/dev/null || true
-fi
-
-# --- pnpm self-update -----------------------------------------------------------
-if command -v pnpm >/dev/null 2>&1; then
-  info "pnpm"
-  pnpm add -g pnpm 2>/dev/null || true
-fi
-
-# --- bun self-update ------------------------------------------------------------
-if command -v bun >/dev/null 2>&1; then
-  info "bun"
-  bun upgrade 2>/dev/null || true
-fi
-
-# --- Pi coding agent ------------------------------------------------------------
+# --- Pi coding agent (self-contained self-update, not a language package) --------
 if command -v pi >/dev/null 2>&1; then
   info "Pi coding agent"
   pi update 2>/dev/null || true
 fi
 
-# --- Composer (PHP) -------------------------------------------------------------
-if command -v composer >/dev/null 2>&1; then
-  info "Composer (PHP)"
-  composer self-update 2>/dev/null || true
-  composer global update 2>/dev/null || true
-fi
-
-# --- tldr cache refresh ---------------------------------------------------------
+# --- tldr cache refresh (cache, not a package install) --------------------------
 if command -v tldr >/dev/null 2>&1; then
   info "tldr cache"
   tldr --update 2>/dev/null || true
