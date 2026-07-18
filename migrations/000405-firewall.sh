@@ -1,5 +1,5 @@
-# 000405-firewall.sh — UFW firewall + ufw-docker
-# Installs: ufw ufw-docker
+# 000405-firewall.sh — UFW firewall
+# Installs: ufw
 # Links:    —
 # Enables:  ufw.service (started)
 # Note: This is a laptop with no inbound SSH requirement, so we apply a basic
@@ -9,14 +9,16 @@
 #       add an allow rule BEFORE re-running this migration or before reboot:
 #
 #         sudo ufw allow ssh   # or: sudo ufw allow 22/tcp
+#
+#       ufw-docker was removed: it manipulates Docker's iptables chains, and
+#       Docker has been removed in favor of Podman (which uses netavark for
+#       its own firewall rules — no ufw-docker needed).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "firewall"
 
 install_pacman ufw
-# ufw-docker: install the upstream shell script via a local PKGBUILD (no AUR).
-install_nix nixpkgs#ufw-docker
 
 # Base policy: deny inbound, allow outbound. Idempotent — ufw no-ops if the
 # policy is already set. Applied before `ufw enable` so the first activation

@@ -1,5 +1,9 @@
 # 000050-apparmor.sh — AppArmor + profiles + service
-# Installs: apparmor (pacman), apparmor-d (nix — nixpkgs#apparmor-d)
+# Installs: apparmor (pacman), apparmor.d stays as-is if already installed
+# (the third-party profile collection by roddhjav is NOT in nixpkgs; it stays
+# as the existing pacman-installed package from the former pkgbuilds/ — if it
+# was never installed on a fresh machine, the stock apparmor profiles from
+# pacman are sufficient).
 # Links:    —
 # Enables:  apparmor.service
 # Note: apparmor.d is installed from nixpkgs (nixpkgs#apparmor-d) — hermetic,
@@ -13,7 +17,6 @@
 section "AppArmor"
 
 install_pacman apparmor
-install_nix nixpkgs#apparmor-d
 ok "AppArmor + profiles"
 
 # AppArmor cannot actually run until the LSM parameters below are added to
