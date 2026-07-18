@@ -19,9 +19,8 @@ install_pacman \
   hyprpolkitagent hyprlauncher cliphist uwsm \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
   qt5-wayland qt6-wayland resvg
-# wayfreeze: build from the upstream 0.2.0 release tag (local PKGBUILD) —
-# replaces the former AUR wayfreeze-git.
-install_local_pkgbuild wayfreeze
+# wayfreeze: installed from nixpkgs — replaces the former pkgbuilds/ build.
+install_nix nixpkgs#wayfreeze
 ok "Hyprland ecosystem"
 
 link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"

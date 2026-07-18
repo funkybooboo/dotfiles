@@ -18,7 +18,7 @@ section "proton pass"
 
 # Proton Pass CLI — local PKGBUILD wrapping Proton's official release binary
 # (replaces=proton-pass-cli-bin auto-removes the former AUR -bin on install).
-install_local_pkgbuild proton-pass-cli
+install_nix nixpkgs#proton-pass-cli
 
 # Proton Pass GUI — official Flathub build, replacing the former AUR -bin.
 install_flatpak me.proton.Pass

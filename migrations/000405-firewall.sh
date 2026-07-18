@@ -16,7 +16,7 @@ section "firewall"
 
 install_pacman ufw
 # ufw-docker: install the upstream shell script via a local PKGBUILD (no AUR).
-install_local_pkgbuild ufw-docker
+install_nix nixpkgs#ufw-docker
 
 # Base policy: deny inbound, allow outbound. Idempotent — ufw no-ops if the
 # policy is already set. Applied before `ufw enable` so the first activation

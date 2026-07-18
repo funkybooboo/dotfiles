@@ -7,6 +7,3 @@
 [submodule "sources/lazycsv"]
 	path = sources/lazycsv
 	url = https://github.com/funkybooboo/lazycsv.git
-[submodule "sources/HandBrake"]
-	path = sources/HandBrake
-	url = https://github.com/HandBrake/HandBrake.git

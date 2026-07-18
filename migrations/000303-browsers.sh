@@ -20,12 +20,11 @@
 section "browsers"
 
 install_pacman firefox chromium
-# Brave + LibreWolf: audited local PKGBUILDs (sha256-pinned + AUDIT.md reviewed).
-# install_local_pkgbuild removes the previous AUR -bin (or old build) via the
-# PKGBUILD's conflicts= before pacman -U, so the swap is atomic.
-install_local_pkgbuild brave-bin
-install_local_pkgbuild librewolf-bin
-# Drop the former flatpaks now that the pacman packages are in place (so a
+# Brave + LibreWolf: installed from nixpkgs — hermetic, sandboxed builds,
+# sha256-verified, GPG-verified (librewolf). Replaces the former pkgbuilds/.
+install_nix nixpkgs#brave
+install_nix nixpkgs#librewolf
+# Drop the former flatpaks now that the nix packages are in place (so a
 # browser is never absent mid-swap).
 remove_flatpak com.brave.Browser
 remove_flatpak io.gitlab.librewolf-community

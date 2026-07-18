@@ -1,12 +1,9 @@
 # 000050-apparmor.sh — AppArmor + profiles + service
-# Installs: apparmor, apparmor.d (local PKGBUILD, GPG-verified upstream tarball)
+# Installs: apparmor (pacman), apparmor-d (nix — nixpkgs#apparmor-d)
 # Links:    —
 # Enables:  apparmor.service
-# Note: apparmor.d is built from the upstream release tarball
-#       (github.com/roddhjav/apparmor.d) via a local PKGBUILD in pkgbuilds/ —
-#       no yay/AUR at runtime. The source tarball is GPG-signed; the signing
-#       key is imported below so makepkg verifies the .asc (safe-source:
-#       signature verification kept ON, not skipped).
+# Note: apparmor.d is installed from nixpkgs (nixpkgs#apparmor-d) — hermetic,
+#       sandboxed build, GPG-verified upstream source, no pkgbuilds/ needed.
 #       The AppArmor LSM parameters are added to the kernel cmdline in
 #       /boot/limine/limine.conf by the follow-up migration 000051-apparmor-
 #       cmdline.sh. A reboot is required for AppArmor to become active.
@@ -16,11 +13,7 @@
 section "AppArmor"
 
 install_pacman apparmor
-# Import the apparmor.d upstream signing key (idempotent) so makepkg can
-# verify the release tarball signature. Key FP from the project's README.
-gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC 2>/dev/null || \
-  warn "could not import apparmor.d signing key — makepkg sig check may fail"
-install_local_pkgbuild apparmor.d
+install_nix nixpkgs#apparmor-d
 ok "AppArmor + profiles"
 
 # AppArmor cannot actually run until the LSM parameters below are added to
