@@ -102,7 +102,7 @@ scripts into `~/.local/bin/`.
 2. Guard-source the helpers as the first line:
    `[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"`
 3. Use the `_common.sh` helpers -- never call `pacman`/`sudo`/`ln` directly:
-   `install_pacman`, `install_aur`, `link_file`, `link_tree`, `link_dir`,
+   `install_pacman`, `install_nix`, `link_file`, `link_tree`, `link_dir`,
    `deploy_etc_file`, `enable_user_service`, `enable_system_service`,
    `enable_system_service_no_start`.
 4. Be **idempotent**: re-running must be safe (check before installing, skip
@@ -110,7 +110,7 @@ scripts into `~/.local/bin/`.
    `--force`/`--merge`/dry-run/restore.
 5. Be **non-fatal**: a single failure must not abort the run. Record problems
    with `_add_warning` / `_add_error` so they surface in the final summary.
-   `install_pacman`/`install_aur` already return 0 and warn on failure.
+   `install_pacman`/`install_nix` already return 0 and warn on failure.
 6. Mind **ordering**: migrations run in lexicographic order. If yours needs a
    runtime from an earlier migration (e.g. node/npm from `000202-mise.sh`),
    number it after that migration.

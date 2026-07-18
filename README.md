@@ -68,7 +68,7 @@ dotfiles/
 ```
 
 - `migrations/_common.sh` provides helpers: `install_pacman`, `install_nix`,
-  `install_local_pkgbuild`, `install_flatpak`, `remove_flatpak`, `remove_pkg`,
+  `install_flatpak`, `remove_flatpak`, `remove_pkg`,
   `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`, `enable_*_service`.
 - Each migration guard-sources `_common.sh` so it can run standalone.
 - No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
@@ -78,17 +78,21 @@ dotfiles/
 **Generic only.** Installs/configures software and upgrades it; it knows
 nothing about your repos, secrets, GitHub forks, or containers.
 First run installs everything; re-running it upgrades installed software to
-upstream-latest (pacman -Syu, mise upgrade for runtimes, Flatpak update, the
-Proton Drive manifest roll-forward, and the `000600` runtime roll-forward:
-mise upgrade + pi update + tldr cache refresh). Pinned local PKGBUILDs
-do NOT roll forward — bump the tracked PKGBUILD to update them.
+upstream-latest (pacman -Syu, nix profile upgrade --all, mise upgrade for
+runtimes, Flatpak update, the Proton Drive manifest roll-forward, and the
+`000600` runtime roll-forward: mise upgrade + nix profile upgrade --all +
+pi update + tldr cache refresh).
 
 **Install priority (in order):**
 1. **pacman** — Arch official repos (core/extra/multilib), GPG-signed by
    Arch master keys. The dominant tier.
-2. **nix** — nixpkgs via `nix profile install nixpkgs#<pkg>`. Hermetic,
+2. **nix** — nixpkgs via a local flake (`flake.nix` + `flake.lock`).
+   `nix profile add .#<pkg>` installs from the flake, which wraps nixpkgs
+   with `allowUnfree = true` and pins the nixpkgs revision. Hermetic,
    sandboxed builds, sha256-verified sources, PR-reviewed on GitHub with CI,
    binary cache at cache.nixos.org. Replaces the AUR entirely.
+   To bump the nixpkgs pin: `nix flake update` (in ~/dotfiles/).
+   To upgrade all nix packages: `nix profile upgrade --all`.
 3. **sources/** — git submodules of repos built from source (lazycsv,
    lazymusic, the 99 nvim plugin). Rolled forward by `setup.sh`.
 4. **flatpak** — Flathub (Proton Pass GUI — Proton's official Linux dist).
@@ -114,7 +118,7 @@ Docker/Podman container images.
 
 ## Migrations
 
-82 migrations grouped by concern. `ls migrations/` for the full list.
+83 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -124,15 +128,15 @@ Docker/Podman container images.
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
 | `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive CLI, NAS sync, games, lazycsv, Ollama, caligula, Minecraft launcher, rpi-imager (+GUI wrapper), AUR-debug cleanup, Discord, HandBrake (pacman) |
-| `000600` | Runtime roll-forward (generic software upgrades only): rustup, cargo, go, mise, npm, uv, pipx, gem, pnpm, bun, pi, composer, ghcup/stack/cabal, tldr. Re-running `./migrate.sh` keeps installed tools at upstream latest (trust-upstream-latest policy; pinned local PKGBUILDs do NOT roll forward by design). Repo/container refresh lives in `setup.sh`, not here |
+| `000600` | Runtime roll-forward (generic software upgrades only): mise upgrade (runtimes), nix profile upgrade --all, pi update, tldr cache refresh. Re-running `./migrate.sh` keeps installed tools at upstream latest. Repo/container refresh lives in `setup.sh`, not here |
 
 `sudo` is asserted as a preflight prerequisite — not installed by a migration.
 
 ### Sources as git submodules
 
-Repos built from source (HandBrake, `lazycsv`, `lazymusic`, the `99` nvim
-plugin) live as **git submodules under `sources/`** in the dotfiles repo, not
-in `~/sources`. A plain `git clone` won't populate them; either clone with
+Repos built from source (`lazycsv`, `lazymusic`, the `99` nvim plugin) live
+as **git submodules under `sources/`** in the dotfiles repo, not in
+`~/sources`. A plain `git clone` won't populate them; either clone with
 `--recurse-submodules` (above) or rely on `migrate.sh` preflight, which runs
 `git submodule update --init --recursive --depth 1`. Each migration that builds
 from source verifies its submodule is populated and builds from
@@ -221,10 +225,12 @@ them after a fresh install.
 
 - **AUR eliminated** — the AUR is no longer an install tier. `yay` is removed.
   Packages not in Arch official repos come from nix (tier 2). Zero `install_aur` calls exist.
-- **tdf needs nightly Rust** — built from source via a local PKGBUILD; the
-  `000210` migration runs `rustup toolchain install nightly` (rustup is the
-  official Rust toolchain manager, rust-lang.org — not a registry).
-- **mermaid-cli intentionally kept** on npm (the only npm-only holdout).
+- **HandBrake via pacman** — nixpkgs's `ffmpeg-full` build is currently broken
+  (a patch hunk fails on the pinned nixpkgs revision). HandBrake installs from
+  Arch `extra/` instead. Switch to `nix profile add .#handbrake` when the
+  ffmpeg-full build bug is fixed (run `nix flake update` and retry).
+- **tdf needs nightly Rust** — built inside the nix sandbox which provides its
+  own nightly Rust toolchain. No manual rustup install needed.
 - **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 
