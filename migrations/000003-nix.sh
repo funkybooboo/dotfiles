@@ -19,6 +19,15 @@ section "nix"
 
 install_pacman nix
 
+# Deploy /etc/nix/nix.conf with experimental-features = nix-command flakes.
+# Without this, `nix profile add` fails with "experimental Nix feature
+# 'nix-command' is disabled". The config also sets build-users-group.
+deploy_etc_file "$DOTFILES_ROOT_ETC/nix/nix.conf" "/etc/nix/nix.conf" 644
+
+# Restart the daemon to pick up the new config (deploy_etc_file may have
+# changed nix.conf after the daemon was already running).
+sudo systemctl restart nix-daemon 2>/dev/null || true
+
 # Enable + start the nix daemon (multi-user mode). The daemon manages /nix/store
 # access so no user-group setup is needed. Starting it is safe — it's a build
 # daemon that listens on a socket, doesn't touch the active session.

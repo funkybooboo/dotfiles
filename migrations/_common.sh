@@ -280,7 +280,7 @@ remove_flatpak() {
 }
 
 # -----------------------------------------------------------------------------
-# Install a package from nixpkgs via `nix profile install`. Idempotent +
+# Install a package from nixpkgs via `nix profile add`. Idempotent +
 # non-fatal. This is the TIER 2 install source (after pacman, before
 # pkgbuilds). nixpkgs is PR-reviewed on GitHub with CI, hermetic sandboxed
 # builds, sha256-verified sources, and a binary cache at cache.nixos.org.
@@ -300,10 +300,10 @@ install_nix() {
     return 0
   fi
   info "installing $pkgname from nixpkgs"
-  if nix profile install "$attr" 2>/dev/null; then
+  if nix profile add "$attr" 2>/dev/null; then
     ok "nix: $pkgname"
   else
-    warn "nix profile install failed for $pkgname"
+    warn "nix profile add failed for $pkgname"
     _add_warning "nix install failed: $pkgname"
   fi
 }
