@@ -79,7 +79,7 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-82 migrations grouped by concern. `ls migrations/` for the full list.
+83 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
@@ -88,7 +88,7 @@ rebuilds them, refreshes running Podman container images.
 | `000200`–`000210` | Dev tools |
 | `000300`–`000320` | Desktop, Hyprland, browsers, audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000552` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake |
+| `000500`–`000553` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI) |
 | `000600` | Runtime roll-forward: mise, nix, pi, tldr |
 
 `sudo` is a preflight prerequisite (not installed by a migration).
