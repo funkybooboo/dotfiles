@@ -15,22 +15,23 @@ cd ~/dotfiles
 
 ## Install priority
 
+Software is installed in priority order from the first source that can
+provide it. Each install is recorded in the migration that owns it.
+
 | Tier | Source | What lives here |
 |------|--------|-----------------|
 | 1 | **pacman** | Arch official repos (core/extra/multilib), GPG-signed. Dominant tier. |
-| 2 | **nix** | Local flake (`flake.nix`) wrapping nixpkgs with `allowUnfree = true`, pinned via `flake.lock`. Hermetic sandboxed builds, PR-reviewed, binary cache at cache.nixos.org. |
-| 3 | **sources/** | Git submodules built from source (lazycsv, lazymusic, 99 nvim plugin). |
-| 4 | **flatpak** | Flathub (Proton Pass GUI — Proton's official Linux dist). |
+| 2 | **upstream release assets** | Prebuilt binaries or source tarballs published by the project itself on its GitHub/GitLab/Codeberg/etc. release page. sha256-verified against an upstream-published checksum file, GPG-verified where a release key exists (e.g. Mullvad Browser, LibreWolf, gcx, HandBrake). |
+| 3 | **nix** | Local flake (`flake.nix`) wrapping nixpkgs with `allowUnfree = true`, pinned via `flake.lock`. Hermetic sandboxed builds, PR-reviewed, binary cache at cache.nixos.org. |
+| 4 | **from source** | Clone the repo (or download a source tarball from the releases page) and build it. Used when no prebuilt binary is published.
+| 5 | **flatpak** | Flathub (Proton Pass GUI -- Proton's official Linux dist). |
+| 6 | **AppImage** | Self-contained single-file executables from upstream releases. |
+| 7 | **snap** | Snap Store. |
 
-**No AUR or yay.** Packages not in Arch official repos come
-from nix. Language runtimes (rust, python, go, node, zig, bun) are managed
-globally by mise; language-ecosystem packages (cargo, npm, pip, go, gem) are
-per-project only.
-
-**Documented exception:** `librewolf` is built from the AUR source package
-(migration `000307-librewolf-source.sh`) because the nix build's
-distribution/policies layer blocked extension installs. This is the only AUR
-package; do not add more without an explicit policy decision.
+**No AUR or yay.** Packages not in Arch official repos come from the
+upstream release assets, then nix, then from source. Language runtimes
+(rust, python, go, node, zig, bun) are managed globally by mise;
+language-ecosystem packages (cargo, npm, pip, go, gem) are per-project only.
 
 ### nix usage
 
@@ -84,14 +85,14 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-84 migrations grouped by concern. `ls migrations/` for the full list.
+85 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
 | `000001`–`000082` | System, bootloader, kernels, nix, AppArmor, security |
 | `000100`–`000109` | Shell & editors |
 | `000200`–`000210` | Dev tools |
-| `000300`–`000320` | Desktop, Hyprland, browsers, audio |
+| `000300`–`000320` | Desktop, Hyprland, browsers (firefox + chromium via pacman, brave via nix, librewolf + mullvad-browser via upstream release assets), audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
 | `000500`–`000553` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI) |
 | `000600` | Runtime roll-forward: mise, nix, pi, tldr |

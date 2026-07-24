@@ -4,11 +4,11 @@
 # Links:   ~/.config/chromium-flags.conf
 # Enables: —
 # Note: Brave is installed from nix (via the local flake, which provides
-#       allowUnfree + sha256-verified hermetic build). LibreWolf is NO LONGER
-#       installed here — it moved to an AUR source build in 000307 (the nix
-#       build's distribution/policy layer blocked extension installs).
-#       The former flatpak builds (com.brave.Browser,
-#       io.gitlab.librewolf-community) are uninstalled on first run.
+#       allowUnfree + sha256-verified hermetic build). LibreWolf + Mullvad
+#       Browser are installed in 000307/000308 from upstream release assets
+#       (codeberg/github), NOT here. The former flatpak builds
+#       (com.brave.Browser, io.gitlab.librewolf-community) are uninstalled
+#       on first run.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
