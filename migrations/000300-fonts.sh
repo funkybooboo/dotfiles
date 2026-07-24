@@ -1,8 +1,7 @@
-# 000300-fonts.sh — Nerd Fonts + Noto fonts + OpenDyslexic + Comic Shanns + fontconfig
+# 000300-fonts.sh — Nerd Fonts + Noto fonts + Comic Shanns + fontconfig
 # Installs: noto-fonts, noto-fonts-cjk, noto-fonts-emoji,
 #           ttf-jetbrains-mono-nerd (the one used by ghostty/hyprlock/hyprtoolkit),
 #           ttf-nerd-fonts-symbols + ttf-nerd-fonts-symbols-mono (icon/powerline glyphs),
-#           otf-opendyslexic-nerd (OpenDyslexic typeface + Nerd Font icon glyphs),
 #           otf-comicshanns-nerd (Comic Sans lookalike + Nerd Font icon glyphs),
 #           fontconfig
 # Links:    ~/.config/fontconfig/fonts.conf
@@ -21,7 +20,7 @@ section "fonts"
 install_pacman \
   noto-fonts noto-fonts-cjk noto-fonts-emoji \
   ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono \
-  otf-opendyslexic-nerd otf-comicshanns-nerd \
+  otf-comicshanns-nerd \
   fontconfig
 
 link_file "$DOTFILES_HOME/.config/fontconfig/fonts.conf" \
