@@ -85,7 +85,7 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-85 migrations grouped by concern. `ls migrations/` for the full list.
+84 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|

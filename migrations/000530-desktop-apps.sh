@@ -5,9 +5,8 @@
 # Nix:               .#losslesscut .#cliamp .#lazyjournal .#lazysql
 # Links:   —
 # Enables: —
-# Note: losslesscut moved off flatpak to nix (Electron app; flatpak sandbox
-#       redundant). The former flatpak build is uninstalled on first run.
-#       signal-desktop is in extra/ (official Arch).
+# Note: signal-desktop is in extra/ (official Arch). losslesscut is
+#       installed from nix (Electron app; flatpak sandbox redundant).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -22,9 +21,7 @@ install_pacman \
 install_pacman signal-desktop
 
 # losslesscut: from nix (Electron app; flatpak sandbox redundant).
-# The former flatpak build is uninstalled on first run.
 install_nix .#losslesscut
-remove_flatpak no.mifi.losslesscut
 
 # cliamp, lazyjournal, lazysql: from nix.
 install_nix .#cliamp

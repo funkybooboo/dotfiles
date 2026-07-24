@@ -143,7 +143,16 @@ fi
 # This makes the migration "install-pinned-if-absent, else roll-to-upstream-
 # latest" (idempotent on every migrate run), mirroring proton-drive.
 if [[ -x "$GCX_BIN" ]]; then
-  latest="$(curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${GCX_REPO}/releases/latest" 2>/dev/null | grep -m1 '"tag_name"' | sed 's/.*"tag_name": *"//;s/".*//')"
+  # Fetch the latest-release JSON to a temp file FIRST, then parse it.
+  # The previous inline `curl ... | grep -m1 | sed` pipe raced: grep -m1
+  # closes curl's stdout after the first match, curl gets SIGPIPE and exits
+  # 23, and under `set -o pipefail` that aborts the whole migration (the
+  # exit-23 failure seen in migrate logs). Capturing to a file first breaks
+  # the pipe so curl runs to completion, matching the install_nix fix.
+  _gcx_latest_json="$(mktemp)"
+  curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${GCX_REPO}/releases/latest" >"$_gcx_latest_json" 2>/dev/null || true
+  latest="$(grep -m1 '"tag_name"' "$_gcx_latest_json" | sed 's/.*"tag_name": *"//;s/".*//')"
+  rm -f "$_gcx_latest_json"
   latest="${latest#v}"
   inst="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1)"
   inst="${inst#*version }"; inst="${inst%% *}"

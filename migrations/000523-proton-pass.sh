@@ -18,7 +18,6 @@ install_nix .#proton-pass-cli
 
 # Proton Pass GUI — official Flathub build.
 install_flatpak me.proton.Pass
-remove_pkg proton-pass-bin
 
 # Bash completions for pass-cli (the active login shell during migration).
 # fish completions are handled by fish's own config tree (000101-fish).
