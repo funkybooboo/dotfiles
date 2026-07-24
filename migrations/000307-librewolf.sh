@@ -148,6 +148,9 @@ _lw_install_tree() {
     return 1
   fi
   sudo chown -R root:root "${LW_PREFIX}.new"
+  # Ensure world-readable so the /usr/local/bin symlink is traversable for
+  # non-root users. Harmless when upstream already ships 0755 (librewolf does).
+  sudo chmod -R a+rX "${LW_PREFIX}.new"
   # Atomic-ish swap: rename old aside, move new in, remove old.
   sudo rm -rf "${LW_PREFIX}.old" 2>/dev/null || true
   if [[ -d "$LW_PREFIX" ]]; then

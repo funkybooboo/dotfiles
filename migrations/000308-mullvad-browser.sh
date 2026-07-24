@@ -153,6 +153,12 @@ if tar xJf "$DL" -C "$tmp" 2>/dev/null; then
     sudo rm -rf "${MB_PREFIX}.new" 2>/dev/null || true
     sudo cp -a "$tmp/mullvad-browser" "${MB_PREFIX}.new"
     sudo chown -R root:root "${MB_PREFIX}.new"
+    # The Tor-style tarball ships its top dir at 0700 for run-in-place-as-user
+    # portability. Under /opt with root ownership, 0700 blocks non-root users
+    # from even traversing the dir -> the launcher symlink dangles. Fix:
+    # make the tree world-readable (a+rX = read for all, execute for dirs +
+    # already-executable files). Idempotent + safe for a /opt browser tree.
+    sudo chmod -R a+rX "${MB_PREFIX}.new"
     # Mullvad Browser ships as a portable, run-in-place tree (Tor-Browser style).
     # The upstream start-mullvad-browser launcher resolves its own paths at run
     # time, so we just drop the tree in /opt + symlink the launcher.
