@@ -27,6 +27,11 @@ from nix. Language runtimes (rust, python, go, node, zig, bun) are managed
 globally by mise; language-ecosystem packages (cargo, npm, pip, go, gem) are
 per-project only.
 
+**Documented exception:** `librewolf` is built from the AUR source package
+(migration `000307-librewolf-source.sh`) because the nix build's
+distribution/policies layer blocked extension installs. This is the only AUR
+package; do not add more without an explicit policy decision.
+
 ### nix usage
 
 ```bash
@@ -79,7 +84,7 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-83 migrations grouped by concern. `ls migrations/` for the full list.
+84 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
