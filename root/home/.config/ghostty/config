@@ -5,6 +5,12 @@ theme = Catppuccin Mocha
 font-family = "JetBrainsMono Nerd Font"
 font-style = Regular
 font-size = 9
+# Disable font ligatures (calt=contextual alternates, liga=standard ligatures,
+# dlig=discretionary, clig=contextual ligatures). Leading '-' disables a feature.
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
+font-feature = -clig
 
 # Window
 window-padding-x = 14
