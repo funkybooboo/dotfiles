@@ -85,13 +85,13 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-123 migrations grouped by concern. `ls migrations/` for the full list.
+124 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
 | `000001`–`000082` | System, bootloader, kernels, nix, AppArmor, security |
 | `000100`–`000109` | Shell & editors |
-| `000200`–`000230` | Dev tools (one migration per package -- split from former 000210-cli-utilities grab-bag) |
+| `000200`–`000231` | Dev tools (one migration per package -- split from former 000210-cli-utilities grab-bag; 000231-texlive bundles the TeX Live scheme metapackages as one ecosystem) |
 | `000300`–`000320` | Desktop, Hyprland, browsers (firefox + chromium via pacman, brave via nix, librewolf + mullvad-browser via upstream release assets -- one migration per browser: 000303-firefox, 000309-chromium, 000313-brave, 000307-librewolf, 000308-mullvad-browser), audio |
 | `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
 | `000500`–`000569` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI) + desktop apps split one-per-package from former 000530-desktop-apps grab-bag |
