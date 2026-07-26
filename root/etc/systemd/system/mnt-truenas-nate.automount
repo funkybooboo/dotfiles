@@ -1,0 +1,18 @@
+[Unit]
+Description=TrueNAS 'nate' SMB share over Tailscale (auto-mount on access)
+Documentation=man:systemd.automount(5)
+After=network-online.target
+Wants=network-online.target
+
+[Automount]
+Where=/mnt/truenas/nate
+TimeoutIdleSec=300
+DirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target
+
+# Only this .automount unit is enabled (by migration 000525-nas-sync.sh). It
+# arms the mount point; /mnt/truenas/nate is mounted on first access (by the
+# sync-* user timers or a manual `ls /mnt/truenas/nate`) and unmounted after
+# TimeoutIdleSec of idleness.

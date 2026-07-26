@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# Check if we can reach the NAS (either on home network or via VPN)
+# Check if the TrueNAS SMB share is reachable over Tailscale.
+#
+# Connectivity moved off the old rsync daemon (port 873 on the now-gone "tnas"
+# host) to TrueNAS Scale's SMB service on port 445 at
+# truenas.tail54538d.ts.net. The nas-sync-* service units invoke this before
+# every run via sync-to-nas; an unreachable share is a skip, not a failure.
 
-NAS_IP="tnas"
-NAS_PORT="873"
+NAS_HOST="truenas.tail54538d.ts.net"
+NAS_PORT="445"
 
-# Try to connect to NAS rsync port with a short timeout
-if timeout 2 bash -c "echo > /dev/tcp/$NAS_IP/$NAS_PORT" 2>/dev/null; then
-    exit 0  # Success - NAS is reachable
+if timeout 3 bash -c "echo > /dev/tcp/$NAS_HOST/$NAS_PORT" 2>/dev/null; then
+    exit 0  # SMB reachable over Tailscale
 else
-    exit 1  # Failed - NAS is not reachable
+    exit 1  # not reachable (Tailscale down, NAS offline, or SMB service stopped)
 fi

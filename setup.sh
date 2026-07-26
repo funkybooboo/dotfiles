@@ -7,12 +7,12 @@
 # What it does:
 #   1. Proton Pass (pass-cli) login — opens a browser
 #   2. Tailscale authentication — opens a browser
-#   3. NAS rsync password — pulled from Proton Pass, or prompted
+#   3. NAS SMB credentials — pulled from Proton Pass, or prompted
 #   4. secretmgr bootstrap — deploys SSH/GPG keys, injects templated configs
 #   5. Agents: load SSH key into agent + prime GPG agent (passphrase prompts)
 #   6. Switch dotfiles remote HTTPS -> SSH (so you can push)
 #   7. Clone personal repos into ~/Projects (from ~/.config/dotfiles/projects-repos.txt)
-#   8. NAS initial clone — documents, music, photos, audiobooks, books
+#   8. NAS initial seed sync — documents, music, photos, audiobooks, books
 #   9. Enable NAS sync timers
 #
 # This script is intentionally separate from the migrations: migrations are
@@ -97,37 +97,48 @@ if [[ -f "$WAIT_ONLINE_OVERRIDE" ]] && tailscale status &>/dev/null; then
 fi
 
 # =============================================================================
-# 3. NAS rsync password
+# 3. NAS SMB credentials
 # =============================================================================
+# CIFS credentials file read by the mnt-truenas-nate.mount system unit
+# (deployed by migration 000525-nas-sync.sh). The share is
+# //truenas.tail54538d.ts.net/nate , user "nate". Lives under the user home
+# (root reads it at mount time anyway), 600, never committed.
 
-PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
-mkdir -p "$(dirname "$PASSWORD_FILE")"
+CREDS_FILE="$HOME/.config/nas-sync/smb-creds"
+mkdir -p "$(dirname "$CREDS_FILE")"
 
-if [[ -f "$PASSWORD_FILE" ]]; then
-  skip "NAS rsync password file already exists"
+# If a credentials file already exists with a non-empty password, keep it.
+if [[ -f "$CREDS_FILE" ]] && grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
+  skip "NAS SMB credentials file already exists ($CREDS_FILE)"
 else
-  NAS_PASS=""
+  NAS_SMB_USER="nate"
+  NAS_SMB_PASS=""
   if command -v pass-cli &>/dev/null && pass-cli info &>/dev/null 2>&1; then
-    NAS_PASS=$(pass-cli item view --vault-name NAS --item-title rsync --field password 2>/dev/null || true)
+    NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title smb --field password 2>/dev/null || true)
   fi
 
-  if [[ -n "$NAS_PASS" ]]; then
-    printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-    ok "NAS password set from Proton Pass"
+  if [[ -z "$NAS_SMB_PASS" ]]; then
+    # Fall back to the legacy rsync item if the user hasn't migrated it yet.
+    NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title rsync --field password 2>/dev/null || true)
+  fi
+
+  if [[ -n "$NAS_SMB_PASS" ]]; then
+    printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$NAS_SMB_PASS" > "$CREDS_FILE"
+    chmod 600 "$CREDS_FILE"
+    ok "NAS SMB credentials written from Proton Pass ($CREDS_FILE)"
   else
     echo ""
-    echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
+    echo -e "  ${BOLD}NAS SMB password${NC} for user 'nate' (press Enter to skip):"
     read -r -s -p "  Password: " nas_password
     echo ""
     if [[ -n "$nas_password" ]]; then
-      printf '%s' "$nas_password" > "$PASSWORD_FILE"
-      chmod 600 "$PASSWORD_FILE"
-      ok "NAS password file created: $PASSWORD_FILE"
+      printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$nas_password" > "$CREDS_FILE"
+      chmod 600 "$CREDS_FILE"
+      ok "NAS SMB credentials file created: $CREDS_FILE"
     else
-      warn "skipped password setup — create it later:"
-      echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
-      _add_warning "NAS rsync password not set"
+      warn "skipped SMB credentials — create it later:"
+      echo -e "    ${DIM}printf 'username=nate\npassword=YOUR_PASS\ndomain=WORKGROUP\n' > $CREDS_FILE && chmod 600 $CREDS_FILE${NC}"
+      _add_warning "NAS SMB credentials not set"
     fi
   fi
 fi
@@ -364,8 +375,12 @@ else
 fi
 
 # =============================================================================
-# 8. NAS initial clone
+# 8. NAS initial seed sync
 # =============================================================================
+# The share is empty on first use; the sync-to-nas helper detects an empty
+# remote subdir and uploads local -> NAS WITHOUT --delete (so an empty share
+# never wipes local files). Triggering each sync service once here seeds all
+# five trees. Re-running is safe (the helper seeds only empty remotes).
 
 NAS_MODULES=(
   "documents:Documents"
@@ -374,35 +389,28 @@ NAS_MODULES=(
   "audiobooks:Audiobooks"
   "books:Books"
 )
-NAS_RSYNC_BASE="rsync://funkybooboo@tnas:873/public/funkybooboo"
 
-if [[ ! -f "$PASSWORD_FILE" ]]; then
-  warn "no NAS password file — skipping initial clone"
-  _add_warning "NAS initial clone skipped (no password)"
+if [[ ! -f "$CREDS_FILE" ]] || ! grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
+  warn "no NAS SMB credentials — skipping initial seed"
+  _add_warning "NAS initial seed skipped (no SMB credentials)"
 else
-  info "checking NAS connectivity..."
+  info "checking NAS connectivity (SMB 445 / Tailscale)..."
   if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
-    ok "NAS reachable — checking for initial clone"
+    ok "TrueNAS reachable — running one-shot seed sync"
     for entry in "${NAS_MODULES[@]}"; do
       module="${entry%%:*}"
       local_dir="${entry##*:}"
-      if [[ -d "$HOME/$local_dir" ]] && [[ -n "$(ls -A "$HOME/$local_dir" 2>/dev/null)" ]]; then
-        skip "$module (already synced to ~/$local_dir)"
+      info "seeding $module (local -> NAS)"
+      if "$HOME/.local/bin/sync-$module" 2>/dev/null; then
+        ok "$module seed sync ran"
       else
-        mkdir -p "$HOME/$local_dir"
-        info "syncing $module -> ~/$local_dir..."
-        if rsync -az --password-file="$PASSWORD_FILE" \
-          "$NAS_RSYNC_BASE/$local_dir/" "$HOME/$local_dir/" 2>/dev/null; then
-          ok "$module synced"
-        else
-          warn "failed to sync $module — continuing"
-          _add_warning "NAS initial sync failed for: $module"
-        fi
+        warn "seed sync $module reported an error (non-fatal; timer will retry)"
+        _add_warning "NAS initial seed failed for: $module"
       fi
     done
   else
-    warn "NAS not reachable — timers will sync automatically once it is accessible"
-    _add_warning "NAS not reachable — initial clone skipped"
+    warn "TrueNAS not reachable — timers will seed on first successful run"
+    _add_warning "TrueNAS not reachable — initial seed skipped"
   fi
 fi
 

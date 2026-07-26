@@ -1,87 +1,103 @@
 #!/usr/bin/env bash
-# Bidirectional sync script for syncing directories with NAS
+# Sync a local directory with the TrueNAS 'nate' SMB share.
 # Usage: sync-to-nas <local_dir> <nas_subdir>
+#
+# The share is mounted at /mnt/truenas/nate by the systemd automount unit
+# mnt-truenas-nate.automount (= /etc/systemd/system/mnt-truenas-nate.{mount,
+# automount}, deployed by migration 000525-nas-sync.sh). rsync cannot speak SMB
+# itself, so it runs local-to-local between <local_dir> and
+# /mnt/truenas/nate/<nas_subdir>; the kernel CIFS mount exposes the share as a
+# normal filesystem tree.
+#
+# rsync flags chosen for CIFS, which has no unix ownership/mode server-side:
+#   -r -l -t            recurse, keep symlinks, keep mtimes (for change detection)
+#   --no-perms          do not chmod the dest (cifs modes are not meaningful)
+#   --no-owner/--no-group do not chown (cifs has no unix ownership)
+#   --modify-window=1  tolerate SMB 1-2s timestamp quantisation (stops re-copy loops)
+#   --inplace           avoid temp-file rename on cifs (rename-over-existing is not atomic)
+#   -u                  skip files that are newer on the receiver (bidirectional guard)
+#   --delete            remove files absent on the sender (mirror)
+#
+# First-run seed: if the remote subdir is empty/absent, upload local->NAS
+# WITHOUT --delete, so an empty share can never wipe local files. The remote
+# subdir is created on demand. Subsequent runs are bidirectional with --delete.
 
 set -euo pipefail
 
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <local_dir> <nas_subdir>"
-    echo "Example: $0 ~/Documents documents"
+    echo "Example: $0 ~/Documents Documents"
     exit 1
 fi
 
 LOCAL_DIR="$1"
 NAS_SUBDIR="$2"
-NAS_HOST="tnas"
-NAS_PORT="873"
-USERNAME="funkybooboo"
-NAS_RSYNC_BASE="rsync://$USERNAME@$NAS_HOST:$NAS_PORT/public/funkybooboo"
 
-# Password file location (will be created separately)
-PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
+MOUNT_ROOT="/mnt/truenas/nate"
+REMOTE_DIR="$MOUNT_ROOT/$NAS_SUBDIR"
 
 # Per-subdir lock so concurrent invocations (manual run + systemd timer, or two
-# timer fires) don't race: rsync --delete treats another session's temp file
-# (.name.XXXXXX) as a stale file not in the source list and deletes it mid-
-# transfer, causing "stat temp file failed: No such file" / rename ENOENT errors.
-# Different subdirs are independent (--delete stays within its own subtree) so
-# they may still run in parallel; only same-subdir runs serialize.
+# timer fires) don't race: rsync --delete treats another session's temp file as
+# a stale file not in the sender's list and deletes it mid-transfer.
 LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}/nas-sync"
 mkdir -p "$LOCK_DIR"
 LOCK_FILE="$LOCK_DIR/${NAS_SUBDIR//\//_}.lock"
 exec 9>"$LOCK_FILE"
 if ! flock -n 9; then
-    echo "A sync of NAS:$NAS_SUBDIR is already in progress. Skipping this run."
+    echo "A sync of ${NAS_SUBDIR} is already in progress. Skipping this run."
     exit 0
 fi
 
-# Check if NAS is reachable
+# Reachability gate (SMB port 445 over Tailscale).
 if ! "$HOME/.local/lib/check-nas-connection"; then
-    echo "NAS not reachable. Skipping sync."
+    echo "TrueNAS not reachable (port 445 / Tailscale). Skipping sync."
     exit 0
 fi
 
-# Check if password file exists; try secretmgr as fallback
-if [ ! -f "$PASSWORD_FILE" ]; then
-    if command -v secretmgr &>/dev/null && secretmgr status &>/dev/null; then
-        NAS_PASS=$(secretmgr get NAS/rsync password 2>/dev/null) || true
-        if [ -n "$NAS_PASS" ]; then
-            printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
-            chmod 600 "$PASSWORD_FILE"
-        fi
-    fi
-    # Re-check after fallback attempt
-    if [ ! -f "$PASSWORD_FILE" ]; then
-        echo "Error: Password file not found at $PASSWORD_FILE"
-        echo "Create it with: secretmgr get NAS/rsync password > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
-        echo "Or manually: printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE"
-        exit 1
-    fi
-fi
-
-# Ensure local directory exists
 mkdir -p "$LOCAL_DIR"
 
-# Rsync options:
-# -a: archive mode (preserve permissions, times, etc.)
-# -v: verbose
-# -z: compress during transfer
-# -u: skip files that are newer on receiver
-# --delete: delete files that don't exist on sender
-# --progress: show progress
-# --password-file: use password from file
+# Trigger the automount by listing the mount root, then ensure the remote
+# subdir exists. mkdir -p is safe on cifs; the mkdir is retried after a touch
+# in case the first attempt raced the automount coming up.
+ls "$MOUNT_ROOT" >/dev/null 2>&1 || true
+mkdir -p "$REMOTE_DIR" 2>/dev/null || true
 
-RSYNC_OPTS="-avzu --delete --progress --password-file=$PASSWORD_FILE"
-REMOTE="$NAS_RSYNC_BASE/$NAS_SUBDIR/"
+if [ ! -d "$REMOTE_DIR" ]; then
+    echo "Error: $REMOTE_DIR is not available -- the SMB mount may have failed."
+    echo "Check: systemctl status mnt-truenas-nate.automount"
+    echo "       /home/nate/.config/nas-sync/smb-creds (username/password set?)"
+    exit 1
+fi
 
-echo "=== Syncing $LOCAL_DIR with NAS:$NAS_SUBDIR ==="
+RSYNC_OPTS=(
+    -rlt
+    --no-perms --no-owner --no-group
+    --modify-window=1
+    --inplace
+    --verbose --compress
+    -u
+)
 
-# First: Sync local → NAS (upload changes)
+echo "=== Syncing $LOCAL_DIR <-> $REMOTE_DIR ==="
+
+# Seed path: empty/missing remote -> one-way upload, no --delete.
+if [ -z "$(ls -A "$REMOTE_DIR" 2>/dev/null)" ]; then
+    echo "--- First-run seed: uploading local -> NAS (no --delete) ---"
+    if ! rsync "${RSYNC_OPTS[@]}" "$LOCAL_DIR/" "$REMOTE_DIR/"; then
+        echo "Error seeding $NAS_SUBDIR"
+        exit 1
+    fi
+    echo "=== Seed complete for $NAS_SUBDIR ==="
+    exit 0
+fi
+
+# Normal bidirectional sync (upload then download), both with --delete.
+RSYNC_OPTS+=( --delete )
+
 echo "--- Uploading local changes to NAS ---"
-rsync $RSYNC_OPTS "$LOCAL_DIR/" "$REMOTE"
+rsync "${RSYNC_OPTS[@]}" "$LOCAL_DIR/" "$REMOTE_DIR/"
 
-# Second: Sync NAS → local (download changes)
 echo "--- Downloading NAS changes to local ---"
-rsync $RSYNC_OPTS "$REMOTE" "$LOCAL_DIR/"
+rsync "${RSYNC_OPTS[@]}" "$REMOTE_DIR/" "$LOCAL_DIR/"
 
-echo "=== Sync complete ==="
+echo "=== Sync complete for $NAS_SUBDIR ==="
