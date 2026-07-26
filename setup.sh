@@ -117,11 +117,6 @@ else
     NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title smb --field password 2>/dev/null || true)
   fi
 
-  if [[ -z "$NAS_SMB_PASS" ]]; then
-    # Fall back to the legacy rsync item if the user hasn't migrated it yet.
-    NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title rsync --field password 2>/dev/null || true)
-  fi
-
   if [[ -n "$NAS_SMB_PASS" ]]; then
     printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$NAS_SMB_PASS" > "$CREDS_FILE"
     chmod 600 "$CREDS_FILE"
