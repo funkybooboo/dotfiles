@@ -166,6 +166,23 @@ remove_flatpak() {
 }
 
 # -----------------------------------------------------------------------------
+# Resolve the nix binary. nix is installed by 000011 via the UPSTREAM Nix
+# installer (releases.nixos.org), NOT the Arch extra/nix pacman package, so it
+# lives at /nix/var/nix/profiles/default/bin/nix and only reaches PATH for NEW
+# login shells via /etc/profile.d/nix.sh. migrate.sh sources each migration in
+# an isolated subshell that does NOT re-source that file, so `command -v nix`
+# is empty for every migration AFTER 000011 in the same run. Fall back to the
+# absolute installer path so `install_nix` keeps working in-process after the
+# pacman->upstream swap.
+_nix_bin() {
+  if command -v nix &>/dev/null; then
+    command -v nix
+  elif [[ -x /nix/var/nix/profiles/default/bin/nix ]]; then
+    echo /nix/var/nix/profiles/default/bin/nix
+  fi
+}
+
+# -----------------------------------------------------------------------------
 # Install a package from our local flake (~/dotfiles/flake.nix) via
 # `nix profile add`. Idempotent + non-fatal. This is the TIER 2 install
 # source (after pacman). The flake wraps nixpkgs with allowUnfree = true
@@ -176,6 +193,12 @@ remove_flatpak() {
 install_nix() {
   local attr="$1"
   local pkgname="${attr#.#}"
+  local nix_bin; nix_bin="$(_nix_bin)"
+  if [[ -z "$nix_bin" ]]; then
+    warn "nix not found — run the nix migration (000011) first"
+    _add_warning "nix not installed; cannot install $pkgname"
+    return 0
+  fi
   # Check if already installed — match the exact flake attribute line in
   # `nix profile list` to avoid false positives from substring matches.
   # The flake attribute appears as "packages.x86_64-linux.<pkgname>" for
@@ -184,21 +207,15 @@ install_nix() {
   # partial/empty output when piped directly).
   local _nix_list_tmp
   _nix_list_tmp=$(mktemp)
-  nix profile list >"$_nix_list_tmp" 2>/dev/null || true
-  if command -v nix &>/dev/null && \
-     grep -q "packages\.x86_64-linux\.$pkgname" "$_nix_list_tmp"; then
+  "$nix_bin" profile list >"$_nix_list_tmp" 2>/dev/null || true
+  if grep -q "packages\.x86_64-linux\.$pkgname" "$_nix_list_tmp"; then
     rm -f "$_nix_list_tmp"
     skip "nix $pkgname (installed)"
     return 0
   fi
   rm -f "$_nix_list_tmp"
-  if ! command -v nix &>/dev/null; then
-    warn "nix not found — run the nix migration (000011) first"
-    _add_warning "nix not installed; cannot install $pkgname"
-    return 0
-  fi
   info "installing $pkgname from flake"
-  if nix profile add "$attr" 2>/dev/null; then
+  if "$nix_bin" profile add "$attr" 2>/dev/null; then
     ok "nix: $pkgname"
   else
     warn "nix profile add failed for $pkgname"

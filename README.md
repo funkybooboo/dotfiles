@@ -35,10 +35,16 @@ language-ecosystem packages (cargo, npm, pip, go, gem) are per-project only.
 
 ### nix usage
 
+Nix itself is installed by `000011-nix` via the **upstream Nix installer**
+(`releases.nixos.org`), NOT the Arch `extra/nix` pacman package — the Arch
+package links `libmimalloc` and crashes (SIGSEGV) on glibc ABI bumps. Update
+nix itself with `nix upgrade-nix`; update flake packages as below.
+
 ```bash
 nix profile add .#<pkg>       # install a package from the flake
-nix profile upgrade --all     # upgrade all nix packages
-nix flake update              # bump the nixpkgs pin (in ~/dotfiles/)
+nix profile upgrade --all      # upgrade all nix packages
+nix flake update               # bump the nixpkgs pin (in ~/dotfiles/)
+nix upgrade-nix               # upgrade nix itself (upstream installer)
 ```
 
 ## Repository layout
