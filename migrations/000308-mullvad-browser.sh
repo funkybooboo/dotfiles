@@ -66,7 +66,24 @@ _mb_version() {
   fi
 }
 
-# --- 1. already installed at the pinned version? skip -------------------------
+# --- 1. ensure the "system-install" marker is present -------------------------
+# The Tor-style start-mullvad-browser launcher, by default (no marker), runs as
+# a portable bundle: it WRITES cache/.config/.local and re-regenerates the
+# .desktop INTO ITS OWN Browser dir. Under /opt root-owned read-only that
+# fails for a normal user (mkdir/.config/ibus/cp/.local all -> Permission
+# denied) and the browser never starts. Upstream supports a "system install"
+# mode for exactly this case: if `is-packaged-app` exists in the Browser dir,
+# the launcher instead uses ~/.mullvad-browser as the writable profile home and
+# SKIPS the .desktop self-regen (the migration already wrote one). Run BEFORE
+# the version-skip so re-runs on an already-installed tree converge too.
+MB_MARKER="${MB_PREFIX}/Browser/is-packaged-app"
+if [[ ! -f "$MB_MARKER" ]]; then
+  if [[ -d "$MB_PREFIX/Browser" ]]; then
+    sudo touch "$MB_MARKER" 2>/dev/null && ok "system-install marker (is-packaged-app) created"
+  fi
+fi
+
+# --- 2. already installed at the pinned version? skip -------------------------
 if [[ "$(_mb_version)" == "$MB_VERSION" ]]; then
   skip "mullvad-browser ${MB_VERSION} (installed at ${MB_PREFIX})"
   ok "mullvad-browser (github release)"
@@ -172,6 +189,9 @@ if tar xJf "$DL" -C "$tmp" 2>/dev/null; then
     sudo mkdir -p "$(dirname "$MB_BIN_SYMLINK")"
     sudo ln -sfn "${MB_PREFIX}/Browser/start-mullvad-browser" "$MB_BIN_SYMLINK"
     ok "symlink ${MB_BIN_SYMLINK} -> ${MB_PREFIX}/Browser/start-mullvad-browser"
+    # Create the system-install marker so the launcher uses ~/.mullvad-browser
+    # as the writable profile (not the read-only /opt Browser dir). See step 1.
+    sudo touch "${MB_PREFIX}/Browser/is-packaged-app" 2>/dev/null || true
     mkdir -p "$(dirname "$MB_DESKTOP")"
     cat > "$MB_DESKTOP" <<EOF
 [Desktop Entry]
@@ -179,7 +199,7 @@ Version=1.0
 Name=Mullvad Browser
 GenericName=Web Browser
 Comment=Mullvad Browser is a privacy-focused Firefox build (Tor/Mullvad).
-Exec=sh -c '"${MB_PREFIX}/Browser/start-mullvad-browser" --detach || "${MB_PREFIX}/Browser/start-mullvad-browser"' dummy %u
+Exec=${MB_PREFIX}/Browser/start-mullvad-browser --detach %u
 Icon=web-browser
 Terminal=false
 Type=Application
