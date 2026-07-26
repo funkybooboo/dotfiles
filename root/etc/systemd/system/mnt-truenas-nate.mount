@@ -3,7 +3,7 @@ Description=TrueNAS 'nate' SMB share over Tailscale
 Documentation=man:systemd.mount(5)
 After=network-online.target
 Wants=network-online.target
-RequiresMounts=/mnt/truenas
+RequiresMountsFor=/mnt/truenas
 
 [Mount]
 What=//truenas.tail54538d.ts.net/nate
