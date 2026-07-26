@@ -1,5 +1,5 @@
 # 000231-texlive.sh -- TeX Live (XeLaTeX, fonts, LaTeX extras) for document builds
-# Installs: texlive-xetex  texlive-fontsextra  texlive-latexextra
+# Installs: texlive-xetex  texlive-fontsextra  texlive-fontsrecommended  texlive-latexextra
 # Links:    --
 # Enables:  --
 # Note: TeX Live is ONE distribution split across several pacman scheme
@@ -11,15 +11,14 @@
 #       tectonic's vendored XeTeX chokes on fontawesome5's virtual-font / utex
 #       machinery with a reproducible `free(): invalid pointer`). texlive-xetex
 #       pulls texlive-bin + texlive-basic + texlive-latex transitively.
-#       Package names are the modern Arch scheme metapackages (texlive-core no
-#       longer exists -- replaced by texlive-basic). Resume Makefile's xelatex
-#       target depends on these exact packages.
+#       texlive-fontsrecommended provides the Latin Modern fonts that
+#       awesome-cv uses as its default body font (lmroman10-regular.tfm).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "texlive (xelatex + fonts + latex extras)"
 
-install_pacman texlive-xetex texlive-fontsextra texlive-latexextra
+install_pacman texlive-xetex texlive-fontsextra texlive-fontsrecommended texlive-latexextra
 
 if command -v xelatex >/dev/null 2>&1; then
   ok "xelatex available"
