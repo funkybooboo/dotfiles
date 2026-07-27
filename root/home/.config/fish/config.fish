@@ -15,6 +15,17 @@ set -gx MANROFFOPT "-c"
 set -gx LESSHISTFILE -
 set -gx PYTHONSTARTUP $HOME/.config/python/pythonrc
 
+# pi coding agent: skip startup network ops by default. pi awaits a
+# best-effort remote model-catalog refresh (https://pi.dev/api/models/...)
+# on every startup for each provider with a stored credential; that
+# endpoint currently hangs server-side and pi only aborts it after 15s,
+# making every launch freeze ~15s (e.g. `pi --help` takes 15.7s vs 0.9s).
+# PI_OFFLINE only gates the catalog/version-check/telemetry fetches, NOT
+# model inference, so the agent is fully functional offline. To force a
+# one-off catalog refresh (e.g. after pi.dev is fixed), use:
+#   env -u PI_OFFLINE pi --list-models
+set -gx PI_OFFLINE 1
+
 # Libvirt: Use system connection by default for virt-manager and virsh
 set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
 
