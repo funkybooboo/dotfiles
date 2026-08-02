@@ -6,6 +6,7 @@ rust = "latest"
 zig = "0.16.0"
 bun = "latest"
 usage = "latest"
+uv = "latest"
 
 [settings]
 experimental = true
