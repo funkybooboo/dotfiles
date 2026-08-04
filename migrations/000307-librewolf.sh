@@ -3,10 +3,6 @@
 # Installs to:     /opt/librewolf  (binary tree extracted here, owned by root)
 # Links:           /usr/local/bin/librewolf -> /opt/librewolf/librewolf
 #                  ~/.local/share/applications/librewolf.desktop (written file)
-#                  ~/.librewolf/<*.default*>/user.js -> librewolf-sync.user.js
-#                  (identity.sync.tokenserver.uri = self-hosted syncstorage-rs on
-#                  CT 131 tailnet 100.123.239.50:8000; Option A -- Mozilla hosts
-#                  identity, we host storage)
 # Enables:         --
 # GPG verifies:    yes (LibreWolf Maintainers <gpg@librewolf.net>,
 #                  primary 662E3CDD6FE329002D0CA5BB4039DD82B12EF16)
@@ -39,24 +35,6 @@
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "librewolf (codeberg release)"
-
-# --- 0. link the self-hosted-sync tokenserver pref into every existing -----------
-# LibreWolf profile (independent of install state). Firefox/LibreWolf reads
-# <profile>/user.js at startup and forces these prefs over prefs.js + the
-# about:config UI, so identity.sync.tokenserver.uri becomes sticky across
-# machines. Profile dirs have random per-install names (and may contain
-# spaces, e.g. "m9P5TIX6.Profile 2"), so use find -print0. LibreWolf profile
-# roots: ~/.librewolf (legacy -- the active one on this bsys6 install) and
-# ~/.config/librewolf/librewolf (XDG -- some distros). Non-fatal if no profile
-# exists yet (LibreWolf makes it on first launch; re-run migrate after).
-_lw_tracked_userjs="$DOTFILES_HOME/.config/librewolf/librewolf-sync.user.js"
-for _lw_root in "$HOME/.librewolf" "$HOME/.config/librewolf/librewolf"; do
-  [[ -d "$_lw_root" ]] || continue
-  while IFS= read -r -d '' _lw_prof; do
-    [[ -d "$_lw_prof" ]] || continue
-    link_file "$_lw_tracked_userjs" "$_lw_prof/user.js"
-  done < <(find "$_lw_root" -mindepth 1 -maxdepth 1 -type d -name '*.default*' -print0)
-done
 
 # --- pinned version + upstream release URL ------------------------------------
 LW_VERSION="153.0-3"
