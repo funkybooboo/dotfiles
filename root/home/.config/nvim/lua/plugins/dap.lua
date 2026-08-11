@@ -40,6 +40,73 @@ return {
     },
   },
 
+  -- Python debugger. Separate plugin from `mfussenegger/nvim-dap` (whose
+  -- `config` is owned by zig.lua -> would be dropped if we re-declared it
+  -- there), so this spec is safe. `python.lua` already ensures Mason installs
+  -- `debugpy`, so the adapter venv exists before this runs. The shared DAP
+  -- keymaps live on nvim-dap-ui below (<leader>dc/db/...), so no Python-
+  -- specific keymaps are needed.
+  {
+    "mfussenegger/nvim-dap-python",
+    dependencies = { "mfussenegger/nvim-dap" },
+    config = function()
+      local mason = vim.fn.stdpath("data") .. "/mason"
+      -- Mason installs debugpy into a self-contained venv; its python is the
+      -- adapter entry point dap-python expects. Fall back to `python3` from
+      -- PATH if the Mason package isn't present yet.
+      local adapter_python = mason .. "/packages/debugpy/venv/bin/python"
+      if vim.fn.filereadable(adapter_python) ~= 1 then
+        adapter_python = vim.fn.exepath("python3")
+        if adapter_python == "" then
+          adapter_python = "python3"
+        end
+      end
+      require("dap-python").setup(adapter_python)
+
+      -- Promote the default Launch config to also work when invoked away from
+      -- a buffer (e.g. from nvim-tree) by keying on the active file, and add
+      -- an args-prompting variant. dap-python already registers a basic
+      -- "Launch file" config; these augment it.
+      local dap = require("dap")
+      dap.configurations.python = dap.configurations.python or {}
+      vim.list_extend(dap.configurations.python, {
+        {
+          type = "python",
+          request = "launch",
+          name = "python: launch file (args)",
+          program = "${file}",
+          args = function()
+            local raw = vim.fn.input("Arguments: ")
+            -- split on whitespace, honoring simple quoted runs
+            local t = {}
+            for arg in string.gmatch(raw, [[%S+]]) do
+              table.insert(t, arg)
+            end
+            return t
+          end,
+          console = "integratedTerminal",
+        },
+        {
+          type = "python",
+          request = "launch",
+          name = "python: launch module -m (args)",
+          module = function()
+            return vim.fn.input("Module: ")
+          end,
+          args = function()
+            local raw = vim.fn.input("Arguments: ")
+            local t = {}
+            for arg in string.gmatch(raw, [[%S+]]) do
+              table.insert(t, arg)
+            end
+            return t
+          end,
+          console = "integratedTerminal",
+        },
+      })
+    end,
+  },
+
   {
     "rcarriga/nvim-dap-ui",
     dependencies = {
@@ -79,8 +146,7 @@ return {
       -- Breakpoint/stopped signs (replicate the dap-core extra). Prefer
       -- LazyVim's icon set so the gutter matches the rest of the config;
       -- fall back to ASCII glyphs so this is correct even without it.
-      local icons = (LazyVim and LazyVim.config and LazyVim.config.icons and LazyVim.config.icons.dap)
-        or {}
+      local icons = (LazyVim and LazyVim.config and LazyVim.config.icons and LazyVim.config.icons.dap) or {}
       local defaults = {
         Breakpoint = "B",
         BreakpointCondition = "C",
@@ -135,10 +201,7 @@ return {
         -- message via the dap error path. Mason auto-installs on next load
         -- (ensure_installed in javascript-typescript.lua).
         vim.schedule(function()
-          vim.notify(
-            "js-debug-adapter not found in Mason; run :MasonInstall js-debug-adapter",
-            vim.log.levels.WARN
-          )
+          vim.notify("js-debug-adapter not found in Mason; run :MasonInstall js-debug-adapter", vim.log.levels.WARN)
         end)
       end
 
