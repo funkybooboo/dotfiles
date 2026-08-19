@@ -64,7 +64,14 @@
 #cpu,
 #memory,
 #disk,
-#custom-expand-icon {
+#custom-expand-icon,
+#custom-help,
+#custom-clipboard,
+#custom-launcher,
+#custom-search,
+#custom-power,
+#custom-display,
+#custom-nightmode {
     min-width: 12px;
     margin: 0 7.5px;
 }
