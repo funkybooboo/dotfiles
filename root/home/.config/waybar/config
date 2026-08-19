@@ -22,10 +22,10 @@
         "cpu",
         "memory",
         "disk",
-        "battery",
         "custom/display",
-        "custom/power",
-        "custom/nightmode"
+        "custom/nightmode",
+        "battery",
+        "custom/power"
     ],
     "hyprland/workspaces": {
         "on-click": "activate",
@@ -216,7 +216,7 @@
         ]
     },
     "custom/expand-icon": {
-        "format": "\uf054",
+        "format": "\uf053",
         "tooltip": false
     },
     "custom/help": {
