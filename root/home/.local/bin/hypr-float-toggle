@@ -1,0 +1,20 @@
+#!/bin/bash
+# hypr-float-toggle -- toggle floating for the active window.
+# When making it floating, apply the consistent centered size via
+# hypr-float-apply (so Super+T and app launches all look the same).
+# Bound to Super+T.
+set -euo pipefail
+
+info=$(hyprctl activewindow -j)
+floating=$(printf '%s' "$info" | jq -r '.floating // false')
+addr=$(printf '%s' "$info" | jq -r '.address // empty')
+
+# Nothing to act on (no focused client, e.g. empty workspace).
+[[ -n "$addr" && "$addr" != "null" ]] || exit 0
+
+# Already floating -> restore to tiled. Otherwise -> float + size + center.
+if [[ "$floating" == "true" ]]; then
+  hyprctl dispatch togglefloating "address:$addr"
+else
+  exec ~/.local/bin/hypr-float-apply "$addr"
+fi

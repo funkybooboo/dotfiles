@@ -1,0 +1,27 @@
+#!/bin/bash
+# power-menu -- prompt the user to lock, logout, restart, or shutdown.
+# Presented as a floating ghostty TUI prompt (same pattern as power-mode-menu).
+# Bound to the waybar power button.
+
+choose() {
+    echo "=== Power Menu ==="
+    echo ""
+    echo "  l) Lock screen"
+    echo "  o) Logout (exit Hyprland)"
+    echo "  r) Restart"
+    echo "  s) Shutdown"
+    echo ""
+    printf "Select [l/o/r/s] (Enter=cancel): "
+    read -r choice
+    case "$choice" in
+        l|L) hyprlock ;;
+        o|O) uwsm stop ;;
+        r|R) systemctl reboot ;;
+        s|S) systemctl poweroff ;;
+        *) echo "Cancelled" ;;
+    esac
+    printf "Press Enter to close..."
+    read -r
+}
+
+ghostty --title=hypr-float -e bash -c "$(declare -f choose); choose"

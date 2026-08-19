@@ -1,0 +1,32 @@
+#!/bin/bash
+# hypr-window-switcher-inner -- run inside ghostty (provides a real tty for fzf).
+# Reads window list from hyprctl, pipes through fzf, then dispatches
+# the hyprctl commands to switch + focus the selected window.
+
+set -euo pipefail
+
+# Build the list: workspace_id \t address \t class \t title
+entries=$(hyprctl clients -j 2>/dev/null | jq -r '
+    .[]
+    | [(.workspace.id // "-"), .address, .class, .title]
+    | @csv
+')
+
+# Pipe through fzf. --with-nth shows workspace + class
+# (cols 1,2) as the fzf list, title (col 4) as hidden match text.
+selection=$(printf '%s\n' "$entries" \
+    | fzf --prompt="Windows > " \
+        --header-first \
+        --delimiter='\t' \
+        --with-nth=1,2,4 \
+    ) || exit 0
+
+[[ -z "$selection" ]] && exit 0
+
+# Parse the selected row (tab-delimited): ws \t addr \t class \t title
+ws=$(printf '%s' "$selection" | cut -f1)
+addr=$(printf '%s' "$selection" | cut -f2)
+
+# Switch to the window's workspace, then focus the window.
+[[ "$ws" != "-" ]] && hyprctl dispatch workspace "$ws"
+hyprctl dispatch focuswindow "address:$addr"

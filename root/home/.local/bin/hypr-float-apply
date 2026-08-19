@@ -1,0 +1,56 @@
+#!/bin/bash
+# hypr-float-apply -- make a window floating, give it the consistent
+# "super+t" size (fraction of the focused monitor), and center it.
+# Single source of truth for the float-window dimensions, used by
+# hypr-float-toggle and hypr-float-launch so every floated window is the
+# same size.
+#
+# Usage: hypr-float-apply [address]
+#   no arg  -> apply to the currently focused window
+#   address -> apply to the given window address (e.g. 0x1234)
+#
+# Override the size fraction via env:
+#   FLOAT_W_FRAC=0.85 FLOAT_H_FRAC=0.90 hypr-float-apply
+set -euo pipefail
+
+w_frac="${FLOAT_W_FRAC:-0.85}"
+h_frac="${FLOAT_H_FRAC:-0.90}"
+
+addr="${1:-}"
+if [[ -z "$addr" ]]; then
+  addr=$(hyprctl activewindow -j | jq -r '.address // empty')
+fi
+[[ -n "$addr" && "$addr" != "null" ]] || exit 0
+
+# Ensure floating -- but only if the window isn't already floating.
+# The window rule (initial_title:^(hypr-float-.*)$) may have already
+# floated it at creation time; calling setfloating/togglefloating on an
+# already-floating window can un-float it, so check first.
+info=$(hyprctl clients -j | jq -r --arg addr "$addr" '.[] | select(.address == $addr) | .floating // false')
+if [[ "$info" != "true" ]]; then
+  hyprctl dispatch setfloating "address:$addr" 2>/dev/null || \
+    hyprctl dispatch togglefloating "address:$addr"
+fi
+
+# Focused monitor geometry. width/height are physical px; the resize
+# dispatchers use logical px, so divide by scale.
+mon=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true)')
+[[ -n "$mon" ]] || exit 0
+
+mw=$(printf '%s' "$mon" | jq -r '.width')
+mh=$(printf '%s' "$mon" | jq -r '.height')
+scale=$(printf '%s' "$mon" | jq -r '.scale // 1')
+[[ -z "$scale" || "$scale" == "null" ]] && scale=1
+
+awk -v mw="$mw" -v mh="$mh" -v s="$scale" -v wf="$w_frac" -v hf="$h_frac" '
+BEGIN {
+  if (s == 0) s = 1
+  lw = int((mw / s) * wf)
+  lh = int((mh / s) * hf)
+  if (lw < 1) lw = 1
+  if (lh < 1) lh = 1
+  printf "%d %d\n", lw, lh
+}' | { read -r lw lh
+  hyprctl dispatch resizewindowpixel "exact $lw $lh,address:$addr"
+  hyprctl dispatch centerwindow "address:$addr"
+}

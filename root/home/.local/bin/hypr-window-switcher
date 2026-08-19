@@ -1,0 +1,9 @@
+#!/bin/bash
+# hypr-window-switcher -- fuzzy-find a window across all workspaces
+# and switch to it + focus it.
+#
+# Bound to Super+Slash. Runs fzf inside a floating ghostty
+# terminal (super+t mode) so fzf gets a real tty (fzf TUI
+# ioctls fail without a controlling terminal).
+
+exec ~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-window-switcher-inner
