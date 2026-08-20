@@ -20,4 +20,4 @@ choose() {
     read -r
 }
 
-ghostty -e bash -c "$(declare -f choose); choose"
+ghostty --title=hypr-float -e bash -c "$(declare -f choose); choose"

@@ -116,7 +116,7 @@
             ]
         },
         "interval": 5,
-        "on-click": "~/.local/bin/power-mode-menu",
+        "on-click": "~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu",
         "tooltip-format": "{capacity}%\nClick: power mode menu  (Super+Shift+P)",
         "tooltip-format-charging": "{power:>1.0f}W {capacity}%\nClick: power mode menu  (Super+Shift+P)",
         "tooltip-format-discharging": "{power:>1.0f}W {capacity}%\nClick: power mode menu  (Super+Shift+P)"
