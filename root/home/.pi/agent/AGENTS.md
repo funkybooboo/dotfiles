@@ -66,9 +66,9 @@
 ## Declarative Setups & Migrations (dotfiles)
 
 **Rule: every system-level fix or setup must be reproducible.** This machine is
-managed declaratively from `~/dotfiles/` (see `~/dotfiles/README.md`). A change
-that only fixes *this* machine is a bug -- it must be captured so every other
-machine converges to the same state.
+managed declaratively from `~/Projects/personal/dotfiles/` (see its
+`README.md`). A change that only fixes *this* machine is a bug -- it must be
+captured so every other machine converges to the same state.
 
 **When you change system state, write a migration -- do not just run a live
 command.** System state includes: installing/removing packages, deploying or
@@ -78,7 +78,7 @@ scripts into `~/.local/bin/`.
 
 **Where each kind of change belongs:**
 
-- **Tracked config files** (under `~/dotfiles/root/home/` and `~/dotfiles/root/etc/`)
+- **Tracked config files** (under the repo's `root/home/` and `root/etc/`)
   replicate automatically via the `link_file`/`link_tree`/`link_dir`/`deploy_etc_file`
   calls in existing migrations. Editing a tracked file is enough -- no new
   migration needed just to change config contents. Example: editing
@@ -96,7 +96,7 @@ scripts into `~/.local/bin/`.
 
 **How to write a migration** (follow existing conventions exactly):
 
-1. Create `~/dotfiles/migrations/NNNNNN-name.sh`. Pick the next free number in
+1. Create `~/Projects/personal/dotfiles/migrations/NNNNNN-name.sh`. Pick the next free number in
    the right concern range (see the README migration table; e.g. dev tools
    `000200`-`000210`, apps `000500`-`000542`). Re-run `./migrate.sh` to apply.
 2. Guard-source the helpers as the first line:
@@ -119,7 +119,7 @@ scripts into `~/.local/bin/`.
 
 **After writing a migration:** test it standalone (`bash
 migrations/NNNNNN-name.sh`) including the idempotent re-run path and the
-missing-dependency path; update the migration count in `~/dotfiles/README.md`;
+missing-dependency path; update the migration count in `~/Projects/personal/dotfiles/README.md`;
 `git add` + commit with a clear message; and remind the user to re-run
 `./migrate.sh` on other machines (or note that the change replicates via the
 existing link helpers).
