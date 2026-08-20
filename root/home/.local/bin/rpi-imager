@@ -1,0 +1,42 @@
+#!/bin/bash
+# rpi-imager -- Wayland/XWayland root-access wrapper for the GUI.
+#
+# The upstream rpi-imager binary escalates the *entire* GUI to root via
+# polkit/sudo. On a Wayland (Hyprland) session using XWayland, the
+# re-execed root process is rejected by the X server with:
+#   "Authorization required, but no authorization protocol specified"
+#   "qt.qpa.xcb: could not connect to display :0"
+# because root is a different local user than the one running the session.
+#
+# This wrapper grants xhost +SI:localuser:root for *this process lifetime
+# only*, then revokes it on exit, so the root instance can connect to
+# display :0 (XWayland) -- or the Wayland socket under
+# XDG_RUNTIME_DIR=/run/user/1000, which root reaches via filesystem access.
+# The grant is the narrow secure-intercept flavor: only root, only local,
+# not the wide "xhost +" network-open form.
+#
+# The wrapper shadows /usr/bin/rpi-imager via PATH ordering (~/.local/bin
+# precedes /usr/bin) and calls the real binary by absolute path to avoid
+# recursion.
+
+set -u
+
+BIN=/usr/bin/rpi-imager
+
+_grant() {
+  if command -v xhost >/dev/null 2>&1; then
+    xhost +SI:localuser:root >/dev/null 2>&1 || true
+  fi
+}
+
+_revoke() {
+  if command -v xhost >/dev/null 2>&1; then
+    xhost -SI:localuser:root >/dev/null 2>&1 || true
+  fi
+}
+
+_grant
+"$BIN" "$@"
+rc=$?
+_revoke
+exit $rc

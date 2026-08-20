@@ -7,12 +7,12 @@
 # What it does:
 #   1. Proton Pass (pass-cli) login -- opens a browser
 #   2. Tailscale authentication -- opens a browser
-#   3. NAS rsync password -- pulled from Proton Pass, or prompted
+#   3. NAS SMB credentials -- pulled from Proton Pass, or prompted
 #   4. secretmgr bootstrap -- deploys SSH/GPG keys, injects templated configs
 #   5. Agents: load SSH key into agent + prime GPG agent (passphrase prompts)
 #   6. Switch dotfiles remote HTTPS -> SSH (so you can push)
 #   7. Clone personal repos into ~/Projects (from ~/.config/dotfiles/projects-repos.txt)
-#   8. NAS initial clone -- documents, music, photos, audiobooks, books
+#   8. NAS initial seed sync -- documents, music, photos, audiobooks, books
 #   9. Enable NAS sync timers
 #
 # This script is intentionally separate from the migrations: migrations are
@@ -24,22 +24,15 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_ROOT="$PWD"
 
-# ---------------------------------------------------------------------------
-# Logging -- mirror all output to a timestamped log in logs/ (same FIFO+sed
-# design as migrate.sh). Color goes to the terminal; ANSI escapes are stripped
-# for a clean, grep-friendly text file.
-# ---------------------------------------------------------------------------
-mkdir -p "$REPO_ROOT/logs"
-LOG_FILE="$REPO_ROOT/logs/setup-$(date +%Y%m%d-%H%M%S)-$$.log"
-LOG_FIFO="$(mktemp -u "$REPO_ROOT/logs/.log-fifo-XXXXXX")"
-mkfifo "$LOG_FIFO"
-sed -E $'s/\x1b\[[0-9;]*m//g' < "$LOG_FIFO" >> "$LOG_FILE" &
-LOG_STRIP_PID=$!
-exec 3>&1 4>&2
-exec > >(tee "$LOG_FIFO") 2>&1
-trap 'exec 1>&3 2>&4 3>&- 4>&-; wait "$LOG_STRIP_PID"; rm -f "$LOG_FIFO"' EXIT
+# Mirror all output to a log file (logs/ is gitignored). stdout+stderr still
+# go to the terminal so you see progress in real time.
+LOGDIR="$REPO_ROOT/logs"
+mkdir -p "$LOGDIR"
+LOGFILE="$LOGDIR/setup-$(date +%Y%m%d-%H%M%S)-$$.log"
+exec > >(tee -a "$LOGFILE") 2>&1
+
 echo "=== Setup started at $(date) ==="
-echo "=== Log file: $LOG_FILE ==="
+echo "=== Log: $LOGFILE ==="
 
 # shellcheck source=_common.sh
 source "$REPO_ROOT/_common.sh"
@@ -104,37 +97,43 @@ if [[ -f "$WAIT_ONLINE_OVERRIDE" ]] && tailscale status &>/dev/null; then
 fi
 
 # =============================================================================
-# 3. NAS rsync password
+# 3. NAS SMB credentials
 # =============================================================================
+# CIFS credentials file read by the mnt-truenas-nate.mount system unit
+# (deployed by migration 000525-nas-sync.sh). The share is
+# //truenas.tail54538d.ts.net/nate , user "nate". Lives under the user home
+# (root reads it at mount time anyway), 600, never committed.
 
-PASSWORD_FILE="$HOME/.config/nas-sync/rsync-password"
-mkdir -p "$(dirname "$PASSWORD_FILE")"
+CREDS_FILE="$HOME/.config/nas-sync/smb-creds"
+mkdir -p "$(dirname "$CREDS_FILE")"
 
-if [[ -f "$PASSWORD_FILE" ]]; then
-  skip "NAS rsync password file already exists"
+# If a credentials file already exists with a non-empty password, keep it.
+if [[ -f "$CREDS_FILE" ]] && grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
+  skip "NAS SMB credentials file already exists ($CREDS_FILE)"
 else
-  NAS_PASS=""
+  NAS_SMB_USER="nate"
+  NAS_SMB_PASS=""
   if command -v pass-cli &>/dev/null && pass-cli info &>/dev/null 2>&1; then
-    NAS_PASS=$(pass-cli item view --vault-name NAS --item-title rsync --field password 2>/dev/null || true)
+    NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title smb --field password 2>/dev/null || true)
   fi
 
-  if [[ -n "$NAS_PASS" ]]; then
-    printf '%s' "$NAS_PASS" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-    ok "NAS password set from Proton Pass"
+  if [[ -n "$NAS_SMB_PASS" ]]; then
+    printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$NAS_SMB_PASS" > "$CREDS_FILE"
+    chmod 600 "$CREDS_FILE"
+    ok "NAS SMB credentials written from Proton Pass ($CREDS_FILE)"
   else
     echo ""
-    echo -e "  ${BOLD}NAS rsync password${NC} (press Enter to skip):"
+    echo -e "  ${BOLD}NAS SMB password${NC} for user 'nate' (press Enter to skip):"
     read -r -s -p "  Password: " nas_password
     echo ""
     if [[ -n "$nas_password" ]]; then
-      printf '%s' "$nas_password" > "$PASSWORD_FILE"
-      chmod 600 "$PASSWORD_FILE"
-      ok "NAS password file created: $PASSWORD_FILE"
+      printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$nas_password" > "$CREDS_FILE"
+      chmod 600 "$CREDS_FILE"
+      ok "NAS SMB credentials file created: $CREDS_FILE"
     else
-      warn "skipped password setup -- create it later:"
-      echo -e "    ${DIM}printf 'your_password' > $PASSWORD_FILE && chmod 600 $PASSWORD_FILE${NC}"
-      _add_warning "NAS rsync password not set"
+      warn "skipped SMB credentials -- create it later:"
+      echo -e "    ${DIM}printf 'username=nate\npassword=YOUR_PASS\ndomain=WORKGROUP\n' > $CREDS_FILE && chmod 600 $CREDS_FILE${NC}"
+      _add_warning "NAS SMB credentials not set"
     fi
   fi
 fi
@@ -282,7 +281,7 @@ if [[ "$GITHUB_SSH_OK" == "true" ]]; then
       ok "dotfiles remote switched to SSH: $_ssh_url"
     else
       warn "failed to switch dotfiles remote to SSH"
-      _add_warning "dotfiles remote switch failed; run: git -C ~/dotfiles remote set-url origin $_ssh_url"
+      _add_warning "dotfiles remote switch failed; run: git -C \"$REPO_ROOT\" remote set-url origin $_ssh_url"
     fi
   fi
 else
@@ -344,7 +343,14 @@ else
 
       _dest="$PROJECTS_DIR/$_name"
       if [[ -d "$_dest/.git" ]]; then
-        skip "$_name (already cloned)"
+        # Second (and later) runs: refresh the cloned repo instead of skipping,
+        # so re-running setup.sh keeps ~/Projects current (--ff-only is safe and
+        # non-destructive; repos needing rebase are left alone and reported).
+        if git -C "$_dest" pull --ff-only --quiet 2>/dev/null; then
+          ok "$_name (updated)"
+        else
+          skip "$_name (diverged or up-to-date; left as-is)"
+        fi
       else
         if [[ "$GITHUB_SSH_OK" == "true" ]]; then
           _clone_url=$(_to_ssh_url "$_url")
@@ -364,8 +370,12 @@ else
 fi
 
 # =============================================================================
-# 8. NAS initial clone
+# 8. NAS initial seed sync
 # =============================================================================
+# The share is empty on first use; the sync-to-nas helper detects an empty
+# remote subdir and uploads local -> NAS WITHOUT --delete (so an empty share
+# never wipes local files). Triggering each sync service once here seeds all
+# five trees. Re-running is safe (the helper seeds only empty remotes).
 
 NAS_MODULES=(
   "documents:Documents"
@@ -374,35 +384,28 @@ NAS_MODULES=(
   "audiobooks:Audiobooks"
   "books:Books"
 )
-NAS_RSYNC_BASE="rsync://funkybooboo@tnas:873/public/funkybooboo"
 
-if [[ ! -f "$PASSWORD_FILE" ]]; then
-  warn "no NAS password file -- skipping initial clone"
-  _add_warning "NAS initial clone skipped (no password)"
+if [[ ! -f "$CREDS_FILE" ]] || ! grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
+  warn "no NAS SMB credentials -- skipping initial seed"
+  _add_warning "NAS initial seed skipped (no SMB credentials)"
 else
-  info "checking NAS connectivity..."
+  info "checking NAS connectivity (SMB 445 / Tailscale)..."
   if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
-    ok "NAS reachable -- checking for initial clone"
+    ok "TrueNAS reachable -- running one-shot seed sync"
     for entry in "${NAS_MODULES[@]}"; do
       module="${entry%%:*}"
       local_dir="${entry##*:}"
-      if [[ -d "$HOME/$local_dir" ]] && [[ -n "$(ls -A "$HOME/$local_dir" 2>/dev/null)" ]]; then
-        skip "$module (already synced to ~/$local_dir)"
+      info "seeding $module (local -> NAS)"
+      if "$HOME/.local/bin/sync-$module" 2>/dev/null; then
+        ok "$module seed sync ran"
       else
-        mkdir -p "$HOME/$local_dir"
-        info "syncing $module -> ~/$local_dir..."
-        if rsync -az --password-file="$PASSWORD_FILE" \
-          "$NAS_RSYNC_BASE/$local_dir/" "$HOME/$local_dir/" 2>/dev/null; then
-          ok "$module synced"
-        else
-          warn "failed to sync $module -- continuing"
-          _add_warning "NAS initial sync failed for: $module"
-        fi
+        warn "seed sync $module reported an error (non-fatal; timer will retry)"
+        _add_warning "NAS initial seed failed for: $module"
       fi
     done
   else
-    warn "NAS not reachable -- timers will sync automatically once it is accessible"
-    _add_warning "NAS not reachable -- initial clone skipped"
+    warn "TrueNAS not reachable -- timers will seed on first successful run"
+    _add_warning "TrueNAS not reachable -- initial seed skipped"
   fi
 fi
 
@@ -415,5 +418,145 @@ for entry in "${NAS_MODULES[@]}"; do
   module="${entry%%:*}"
   enable_user_service "nas-sync-${module}.timer"
 done
+
+# =============================================================================
+# 10. Personal repo & environment refresh
+# =============================================================================
+# This is the home for everything that is PERSONAL/environment-specific and
+# therefore must NOT live in migrate.sh (migrate is a generic install/upgrade
+# of configs and software and knows nothing about your repos, secrets, or
+# containers). Re-running setup.sh keeps these current. These steps used to
+# live in the retired standalone `update` script; they were moved here when
+# `update` became a shim over migrate.sh. Three concerns:
+#   10a. Sync GitHub forks with upstream (needs `gh` auth from step 1+).
+#   10b. Update + rebuild ~/sources (personal built-from-source repos).
+#   10c. Refresh running-container images (Docker/Podman).
+# All idempotent and best-effort.
+
+# -- 10a. Sync GitHub forks with upstream -------------------------------------
+if command -v gh >/dev/null 2>&1; then
+  _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
+  if [[ -z "$_forks" ]]; then
+    skip "GitHub fork sync (no forks found)"
+  else
+    info "syncing ${#_forks[@]} GitHub fork(s) with upstream"
+    while IFS= read -r _repo; do
+      if gh repo sync "$_repo" 2>/dev/null; then
+        ok "fork synced: $_repo"
+      else
+        warn "could not sync fork: $_repo (non-fatal)"
+      fi
+    done <<< "$_forks"
+  fi
+else
+  skip "GitHub fork sync (gh not installed)"
+fi
+
+# -- 10b. Update + rebuild git submodule sources (sources/*) ---------------
+# The built-from-source repos live as git submodules of the dotfiles repo
+# (sources/<name>), initialized by migrate.sh preflight. Roll them forward to
+# upstream-latest with `git submodule update --init --remote --merge`, then run
+# an incremental build in each working tree (ninja/cmake/go/cargo/meson/
+# make/autotools). `sudo make install` re-runs for the install-target branches.
+# NOTE: --remote advances each submodule to its remote-tracking branch tip and
+# merges into the local branch, which updates the submodule pointer recorded in
+# the dotfiles repo (so `git status` in the repo will show updated submodule
+# SHAs as an uncommitted change). Commit those pointer bumps to
+# pin the new versions across machines.
+_setup_build_repo() {
+  local repo="$1" name
+  name=$(basename "$repo")
+
+  local ninja_dir=""
+  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+    [[ -f "$d/build.ninja" ]] && { ninja_dir="$d"; break; }
+  done
+  if [[ -n "$ninja_dir" ]]; then
+    if ninja -C "$ninja_dir" 2>/dev/null; then ok "$name (ninja)"; return 0; else warn "$name (ninja) failed"; return 1; fi
+  fi
+
+  local cmake_make_dir=""
+  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+    [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && { cmake_make_dir="$d"; break; }
+  done
+  if [[ -n "$cmake_make_dir" ]]; then
+    if make -C "$cmake_make_dir" 2>/dev/null; then ok "$name (cmake+make)"; return 0; else warn "$name (cmake+make) failed"; return 1; fi
+  fi
+
+  if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+    if [[ ! -f "$repo/build/Makefile" ]]; then
+      info "$name (configure: bootstrapping build/Makefile)"
+      ( cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch ) >/dev/null 2>&1 || true
+    fi
+    if [[ -f "$repo/build/Makefile" ]]; then
+      # WARNING: sudo make install runs arbitrary install targets from source repos.
+      if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
+        ok "$name (make -C build)"; return 0
+      else
+        warn "$name (make -C build) failed"; return 1
+      fi
+    fi
+  fi
+
+  if [[ -f "$repo/go.mod" ]]; then
+    if (cd "$repo" && go install ./... 2>/dev/null); then ok "$name (go install)"; return 0; else warn "$name (go install) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Cargo.toml" ]]; then
+    if (cd "$repo" && cargo build --release 2>/dev/null); then ok "$name (cargo build)"; return 0; else warn "$name (cargo build) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/meson.build" ]]; then
+    if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then ok "$name (meson+ninja)"; return 0; else warn "$name (meson+ninja) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+    if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then ok "$name (make)"; return 0; else warn "$name (make) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/Gemfile" ]]; then
+    if (cd "$repo" && bundle install 2>/dev/null); then ok "$name (bundle)"; return 0; else warn "$name (bundle) failed"; return 1; fi
+  fi
+  if [[ -f "$repo/package.json" ]]; then
+    if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then ok "$name (npm)"; return 0; else warn "$name (npm) failed"; return 1; fi
+  fi
+
+  return 2
+}
+
+if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
+  info "Updating git submodule sources (sources/*) to upstream-latest"
+  if git -C "$REPO_ROOT" submodule update --init --remote --merge 2>/dev/null; then
+    ok "submodule sources rolled forward"
+  else
+    warn "submodule update reported an error (non-fatal; some sources may be stale)"
+    _add_warning "git submodule update --remote failed; one or more sources/* not rolled forward"
+  fi
+
+  info "Rebuilding source submodule trees"
+  for _repo in "$REPO_ROOT"/sources/*/; do
+    # Submodule checkouts have a `.git` FILE (gitlink), not a dir -- use -e.
+    [[ -e "$_repo/.git" ]] || continue
+    _rc=0
+    _setup_build_repo "$_repo" || _rc=$?
+    (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"
+  done
+else
+  skip "source submodule update (no .gitmodules present)"
+fi
+
+# -- 10c. Refresh running-container images (Docker/Podman) --------------------
+if command -v docker >/dev/null 2>&1 && sudo docker ps -q >/dev/null 2>&1; then
+  info "Docker: pulling fresh images for running containers"
+  for _ctr in $(sudo docker ps --format '{{.Names}}'); do
+    _img=$(sudo docker inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+    [[ -n "$_img" ]] || continue
+    if sudo docker pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+  done
+fi
+if command -v podman >/dev/null 2>&1 && podman ps -q >/dev/null 2>&1; then
+  info "Podman: pulling fresh images for running containers"
+  for _ctr in $(podman ps --format '{{.Names}}'); do
+    _img=$(podman inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+    [[ -n "$_img" ]] || continue
+    if podman pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+  done
+fi
 
 print_summary "secrets"

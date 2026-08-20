@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Raspberry Pi Imager
+Comment=Tool for writing images to SD cards for Raspberry Pi
+Icon=rpi-imager
+Exec=/home/nate/.local/bin/rpi-imager %u
+Categories=Utility;
+StartupNotify=false
+MimeType=x-scheme-handler/rpi-imager;application/vnd.raspberrypi.imager-manifest+json;

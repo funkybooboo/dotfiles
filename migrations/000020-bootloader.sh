@@ -2,7 +2,7 @@
 # Installs: limine efibootmgr
 # Links:    --
 # Enables:  --
-# Note: Installs the stock extra/limine package (UKI-based boot). The AUR
+# Note: Installs the stock extra/limine package (UKI-based boot). The
 #       limine-mkinitcpio-hook / limine-snapper-sync packages are intentionally
 #       NOT installed -- they target a different config layout
 #       (/etc/default/limine) than this machine uses (/boot/limine/limine.conf).
@@ -13,7 +13,9 @@
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
-require_os arch || return 0
+# Limine + efibootmgr manage an Arch UKI boot layout that does not exist on
+# Debian/Ubuntu (which boots via GRUB + initramfs-tools). Skip on non-Arch.
+require_os arch || { return 0 2>/dev/null || exit 0; }
 
 section "Bootloader (Limine)"
 

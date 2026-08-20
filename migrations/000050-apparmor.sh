@@ -1,8 +1,17 @@
 # 000050-apparmor.sh -- AppArmor + profiles + service
-# Installs: apparmor apparmor.d
+# Installs: apparmor (pacman), apparmor.d stays as-is if already installed
+# (the third-party profile collection by roddhjav is NOT in nixpkgs; it stays
+# as the existing pacman-installed package from the former pkgbuilds/ -- if it
+# was never installed on a fresh machine, the stock apparmor profiles from
+# pacman are sufficient).
 # Links:    --
 # Enables:  apparmor.service
-# Note: The AppArmor LSM parameters are added to the kernel cmdline in
+# Note: The third-party apparmor.d profile collection (by roddhjav) is NOT
+#       in nixpkgs and not in Arch official repos. The existing pacman-
+#       installed package (from the former pkgbuilds/) stays if already
+#       present; on a fresh machine, the stock apparmor profiles from the
+#       pacman package are sufficient.
+#       The AppArmor LSM parameters are added to the kernel cmdline in
 #       /boot/limine/limine.conf by the follow-up migration 000051-apparmor-
 #       cmdline.sh. A reboot is required for AppArmor to become active.
 
@@ -11,10 +20,11 @@
 section "AppArmor"
 
 if is_debian; then
+  # apparmor-profiles-extra is the Debian counterpart to the extra
+  # profile set; Arch ships only the base package in extra/.
   install_apt apparmor apparmor-profiles-extra
 else
   install_pacman apparmor
-  install_aur apparmor.d
 fi
 ok "AppArmor + profiles"
 

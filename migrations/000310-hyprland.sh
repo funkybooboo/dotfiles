@@ -1,8 +1,9 @@
 # 000310-hyprland.sh -- Hyprland compositor + Wayland ecosystem + config + scripts
 # Installs: hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper
-#           hyprpolkitagent hyprlauncher cliphist wayfreeze-git (AUR) uwsm (AUR)
+#           hyprpolkitagent hyprlauncher cliphist uwsm
 #           xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 #           xdg-desktop-portal-wlr qt5-wayland qt6-wayland resvg
+# Nix:     .#wayfreeze
 # Links:    ~/.config/hypr/**, ~/.config/systemd/user/hypr-wallpaper.service,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,screenshot,screencast,recording-indicator,
@@ -15,26 +16,26 @@
 section "hyprland"
 
 if is_debian; then
+  # Ubuntu 26.04 packages most of the Hyprland ecosystem. Renamed: qt5-wayland
+  # -> qtwayland5.
   install_apt \
     hyprland hypridle hyprlock hyprpicker hyprpaper \
-    hyprpolkitagent uwsm cliphist \
+    hyprpolkitagent cliphist uwsm \
     xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
     qtwayland5 qt6-wayland resvg
-  # hyprsunset is not packaged for Debian; wlsunset is the substitute
-  install_apt wlsunset
-  # hyprlauncher is not packaged for Debian; fuzzel is the substitute
-  install_apt fuzzel
-  # wayfreeze is not packaged for Debian/Ubuntu
-  _add_warning "wayfreeze not packaged on Debian; skipped"
+  # Not in apt: hyprsunset (blue-light filter) and hyprlauncher. Both are in
+  # nixpkgs, which is the cross-distro tier-3 source.
+  install_nix .#hyprsunset
+  install_nix .#hyprlauncher
 else
   install_pacman \
     hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper \
-    hyprpolkitagent hyprlauncher cliphist \
+    hyprpolkitagent hyprlauncher cliphist uwsm \
     xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
     qt5-wayland qt6-wayland resvg
-  # wayfreeze is only in the AUR (wayfreeze-git); the pacman target was removed.
-  install_aur uwsm wayfreeze-git
 fi
+# wayfreeze: installed from nixpkgs -- replaces the former pkgbuilds/ build.
+install_nix .#wayfreeze
 ok "Hyprland ecosystem"
 
 link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"

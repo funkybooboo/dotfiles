@@ -1,5 +1,5 @@
 # 000402-network.sh -- network stack: iwd (wifi) + systemd-networkd (IP/DHCP)
-# Installs: iwd wireless-regdb bind openresolv
+# Installs: iwd wireless-regdb openresolv
 # Deploys: /etc/systemd/network/{20-ethernet,20-wlan,20-wwan}.network,
 #          /etc/conf.d/wireless-regdom,
 #          /etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf
@@ -25,13 +25,13 @@
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
-# iwd + systemd-networkd would fight NetworkManager on Debian/Ubuntu (corp
+# iwd + systemd-networkd would fight NetworkManager on Debian/Ubuntu (the corp
 # box uses NetworkManager + 802.1x). Skip entirely on non-Arch.
-require_os arch || return 0
+require_os arch || { return 0 2>/dev/null || exit 0; }
 
 section "network"
 
-install_pacman iwd wireless-regdb bind openresolv
+install_pacman iwd wireless-regdb openresolv
 
 # systemd-networkd interface config (DHCP for ethernet / wlan / wwan).
 for _netfile in 20-ethernet.network 20-wlan.network 20-wwan.network; do

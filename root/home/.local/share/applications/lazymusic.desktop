@@ -2,7 +2,7 @@
 Type=Application
 Name=LazyMusic
 Comment=Shuffle play your music directory with mpv
-Exec=/home/nate/sources/lazymusic/lazymusic
+Exec=/home/nate/dotfiles/sources/lazymusic/lazymusic
 Icon=audio-x-generic
 Terminal=false
 Categories=AudioVideo;Audio;Player;

@@ -120,3 +120,4 @@ x-scheme-handler/http=librewolf.desktop
 x-scheme-handler/https=librewolf.desktop
 x-scheme-handler/terminal=com.mitchellh.ghostty.desktop
 x-scheme-handler/webcal=librewolf.desktop
+x-scheme-handler/rpi-imager=com.raspberrypi.rpi-imager-uri-handler.desktop

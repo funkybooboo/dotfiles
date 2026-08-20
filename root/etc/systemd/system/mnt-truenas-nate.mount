@@ -1,0 +1,16 @@
+[Unit]
+Description=TrueNAS 'nate' SMB share over Tailscale
+Documentation=man:systemd.mount(5)
+After=network-online.target
+Wants=network-online.target
+RequiresMountsFor=/mnt/truenas
+
+[Mount]
+What=//truenas.tail54538d.ts.net/nate
+Where=/mnt/truenas/nate
+Type=cifs
+Options=credentials=/home/nate/.config/nas-sync/smb-creds,uid=1000,gid=1000,iocharset=utf8,_netdev,soft,file_mode=0644,dir_mode=0755
+
+# Idempotent: enabled transitively by the .automount unit (only the .automount is
+# explicitly enabled by migration 000525-nas-sync.sh). Do NOT enable this .mount
+# directly or the share mounts at boot regardless of reachability.

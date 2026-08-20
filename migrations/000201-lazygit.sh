@@ -1,5 +1,5 @@
 # 000201-lazygit.sh -- lazygit TUI for git
-# Installs: lazygit
+# Installs: lazygit (in extra/ -- official Arch package)
 # Links:    ~/.config/lazygit/config.yml
 # Enables:  --
 
@@ -7,7 +7,9 @@
 
 section "lazygit"
 
-if is_debian; then install_apt lazygit
-else install_aur lazygit
+if is_debian; then
+  install_apt lazygit
+else
+  install_pacman lazygit
 fi
 link_file "$DOTFILES_HOME/.config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"

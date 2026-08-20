@@ -1,27 +1,188 @@
 # Dotfiles
 
-Minimalist Arch Linux dotfiles for a Hyprland desktop, managed as ordered,
-idempotent migrations.
+Minimalist Hyprland dotfiles, managed as ordered, idempotent migrations.
+Supports **Arch** (the primary target) and **Debian/Ubuntu**.
+
+## Quick start
+
+```bash
+git clone --recurse-submodules git@github.com:funkybooboo/dotfiles.git \
+  ~/Projects/personal/dotfiles
+cd ~/Projects/personal/dotfiles
+./migrate.sh        # install + configure everything
+# reboot into Hyprland
+./setup.sh          # secrets, repos, NAS sync, project clone
+```
+
+The scripts locate the repo from their own path, so it can live anywhere;
+`~/Projects/personal/dotfiles` is just where it currently sits.
+
+## Supported distros
+
+`_common.sh` detects the distro once at source time and exports `OS_FAMILY`
+(`arch` or `debian`), with `is_arch` / `is_debian` predicates. Derivatives are
+matched via `ID_LIKE`, so Manjaro/EndeavourOS resolve to `arch` and
+Mint/Pop!_OS/elementary resolve to `debian`.
+
+Only **tier 1** of the install priority below is distro-specific (`pacman` vs
+`apt`). Tiers 2-7 are distro-agnostic and run unchanged on both.
+
+Migrations that cannot apply to a family opt out explicitly:
+
+```bash
+require_os arch || { return 0 2>/dev/null || exit 0; }
+```
+
+Arch-only by nature: the Limine bootloader, hardened kernels, the AppArmor
+kernel cmdline, and the iwd + systemd-networkd stack. `ufw` is Arch-only by
+choice -- a Debian box is assumed to have a managed firewall policy already,
+and a default-deny-incoming rule could strand it.
+
+Opt-in on Debian (they replace something the machine already provides):
+
+| Migration | Enable with |
+|-----------|-------------|
+| `000022-greetd`, `000023-greetd-config` | `DOTFILES_ENABLE_GREETD=1` |
+| `000082-auditd` | `DOTFILES_ENABLE_AUDITD=1` |
+| `000511-virtualization` | `DOTFILES_ENABLE_VIRT=1` |
+
+## Install priority
+
+Software is installed in priority order from the first source that can
+provide it. Each install is recorded in the migration that owns it.
+
+| Tier | Source | What lives here |
+|------|--------|-----------------|
+| 1 | **pacman** / **apt** | The distro's own official repos, GPG-signed. Dominant tier. `install_pacman` on Arch, `install_apt` on Debian; a call to the wrong one no-ops with a warning rather than failing. |
+| 2 | **upstream release assets** | Prebuilt binaries or source tarballs published by the project itself on its GitHub/GitLab/Codeberg/etc. release page. sha256-verified against an upstream-published checksum file, GPG-verified where a release key exists (e.g. Mullvad Browser, LibreWolf, gcx, HandBrake). Helpers: `install_gh_release`, `install_deb_url`, `install_via_script`. |
+| 3 | **nix** | Local flake (`flake.nix`) wrapping nixpkgs with `allowUnfree = true`, pinned via `flake.lock`. Hermetic sandboxed builds, PR-reviewed, binary cache at cache.nixos.org. Distro-agnostic, so it is the default answer for anything missing from a distro's archive. |
+| 4 | **from source** | Clone the repo (or download a source tarball from the releases page) and build it. Used when no prebuilt binary is published.
+| 5 | **flatpak** | Flathub (Proton Pass GUI -- Proton's official Linux dist). |
+| 6 | **AppImage** | Self-contained single-file executables from upstream releases. |
+| 7 | **snap** | Snap Store. |
+
+**No AUR or yay.** Packages not in the distro's official repos come from the
+upstream release assets, then nix, then from source. Language runtimes
+(rust, python, go, node, zig, bun) are managed globally by mise;
+language-ecosystem packages (cargo, npm, pip, go, gem) are per-project only.
+
+Third-party apt repos are added explicitly with `add_apt_repo`, which pins the
+signing key with `signed-by=` and never registers an unsigned repo. Used for
+mise and Signal, which are absent from the Ubuntu archive.
+
+### nix usage
+
+Nix itself is installed by `000011-nix` via the **upstream Nix installer**
+(`releases.nixos.org`), NOT the Arch `extra/nix` pacman package -- the Arch
+package links `libmimalloc` and crashes (SIGSEGV) on glibc ABI bumps. The
+upstream installer is also what makes nix work identically on Debian. Update
+nix itself with `nix upgrade-nix`; update flake packages as below.
+
+```bash
+nix profile add .#<pkg>       # install a package from the flake
+nix profile upgrade --all      # upgrade all nix packages
+nix flake update               # bump the nixpkgs pin (run in the repo root)
+nix upgrade-nix               # upgrade nix itself (upstream installer)
+```
+
+## Repository layout
+
+```
+dotfiles/
++-- flake.nix         # nix packages (allowUnfree, pinned nixpkgs)
++-- flake.lock        # pinned nixpkgs revision
++-- _common.sh        # shared helpers + OS detection, sourced by everything
++-- migrate.sh        # preflight -> run migrations in order -> summary
++-- setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
++-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
++-- sources/          # git submodules built from source
++-- root/
+    +-- home/         # -> $HOME (symlinked)
+    +-- etc/          # -> /etc (copied with sudo)
+```
+
+`_common.sh` provides:
+
+- **OS detection:** `OS_FAMILY`, `OS_ID`, `is_arch`, `is_debian`, `require_os`.
+- **Tier 1 installs:** `install_pacman` (Arch), `install_apt` (Debian).
+- **Tier 2 installs:** `install_gh_release`, `install_deb_url`,
+  `install_via_script`, plus `add_apt_repo` for signed third-party apt repos.
+- **Tier 3+ installs:** `install_nix`, `install_flatpak`, `remove_flatpak`,
+  `remove_pkg` (Arch-only).
+- **Linking / services:** `link_file`, `link_tree`, `link_dir`,
+  `deploy_etc_file`, `enable_*_service`.
+
+Each migration guard-sources `_common.sh` so it can run standalone. Conflicts
+back up to `<dest>.bak.N`. No dry-run or restore mode.
+
+## migrate.sh vs setup.sh
+
+**`migrate.sh`** -- generic software install + upgrade. Knows nothing about
+your repos, secrets, or containers. First run installs everything; re-running
+upgrades all software to upstream-latest:
+
+- `pacman -Syu` (system update)
+- `nix profile upgrade --all` (nix packages)
+- `mise upgrade` (language runtimes)
+- `flatpak update` (flatpak apps)
+- Proton Drive manifest roll-forward
+- `000600` roll-forward: mise upgrade, nix profile upgrade --all, pi update,
+  tldr cache refresh
+
+**`setup.sh`** -- personal/environment management. Run after reboot (needs
+browser + network). First run: Proton Pass login, Tailscale auth, NAS rsync
+password, `secretmgr bootstrap`, SSH/GPG agent setup, GitHub SSH verification,
+clone personal repos into `~/Projects`. Re-running: updates `~/Projects` repos,
+syncs GitHub forks with upstream, rolls `sources/*` submodules forward and
+rebuilds them, refreshes running Podman container images.
+
+## Migrations
+
+125 migrations grouped by concern. `ls migrations/` for the full list.
+
+| Range | Concern |
+|-------|---------|
+| `000001`-`000082` | System, bootloader, kernels, nix, AppArmor, security |
+| `000100`-`000109` | Shell & editors |
+| `000200`-`000232` | Dev tools (one migration per package -- split from former 000210-cli-utilities grab-bag; 000231-texlive bundles the TeX Live scheme metapackages as one ecosystem; 000232-smb bundles gvfs-smb+smbclient+cifs-utils as one SMB ecosystem) |
+| `000300`-`000320` | Desktop, Hyprland, browsers (firefox + chromium via pacman, brave via nix, librewolf + mullvad-browser via upstream release assets -- one migration per browser: 000303-firefox, 000309-chromium, 000313-brave, 000307-librewolf, 000308-mullvad-browser), audio |
+| `000400`-`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
+| `000500`-`000569` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI) + desktop apps split one-per-package from former 000530-desktop-apps grab-bag |
+| `000600` | Runtime roll-forward: mise, nix, pi, tldr |
+
+`sudo` is a preflight prerequisite (not installed by a migration).
+
+### Sources as git submodules
+
+Repos built from source (`lazycsv`, `lazymusic`, the `99` nvim plugin) live
+as git submodules under `sources/`. Clone with `--recurse-submodules` or rely
+on `migrate.sh` preflight (`git submodule update --init --recursive --depth 1`).
+Re-running `setup.sh` rolls submodules to upstream-latest and rebuilds them;
+commit the resulting pointer bumps to pin new versions across machines.
+
+**Not deployed by migrations** (machine-specific): `/etc/fstab`,
+`/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`.
+
+**Deferred:** USBGuard, OpenSnitch.
 
 ## Fresh install (archinstall)
-
-Install with these options so `./migrate.sh` applies cleanly:
 
 ### Disk layout
 
 | Mount | Size | Type | Encryption |
 |-------|------|------|------------|
-| `/boot` | 1 GiB | FAT32 | **none** |
-| `/` | rest | btrfs | **LUKS** |
+| `/boot` | 1 GiB | FAT32 | none |
+| `/` | rest | btrfs | LUKS |
 
-Btrfs subvolumes: `@` -> `/`, `@home` -> `/home`, `@log` -> `/var/log`, `@pkg` -> `/var/cache/pacman/pkg`.
+Btrfs subvolumes: `@` -> `/`, `@home` -> `/home`, `@log` -> `/var/log`,
+`@pkg` -> `/var/cache/pacman/pkg`.
 
 ### archinstall options
 
 - **Disk encryption:** YES
 - **Filesystem:** btrfs, `zstd`
 - **Bootloader:** Limine (or systemd-boot, then migrate to Limine)
-- **Kernels:** `linux-lts` + `linux-hardened` (or just `linux-lts`, migration adds hardened)
+- **Kernels:** `linux-lts` + `linux-hardened` (or just `linux-lts`)
 - **Swap:** zram
 - **User:** `nate`, sudo, **shell = bash** (migration sets fish later)
 - **Profile:** minimal (not Hyprland -- migration owns it)
@@ -37,71 +198,9 @@ grep '^HOOKS' /etc/mkinitcpio.conf        # must contain 'encrypt'
 grep cryptdevice /boot/limine/limine.conf  # must have cryptdevice=...:root
 ```
 
-`/etc/crypttab` is **not** required for root encryption -- the initramfs `encrypt`
-hook unlocks root via `cryptdevice=` in the kernel cmdline. `migrate.sh` enforces
-these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
-
-### After archinstall
-
-```bash
-git clone git@github.com:funkybooboo/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-./migrate.sh
-```
-
-Then **reboot into Hyprland** and run:
-
-```bash
-./setup.sh
-```
-
-## How it works
-
-```
-dotfiles/
-+-- migrate.sh        # preflight -> run migrations in order -> summary
-+-- setup.sh          # post-reboot: Proton Pass, Tailscale, SSH, NAS sync, projects
-+-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
-`-- root/
-    +-- home/         # -> $HOME (symlinked)
-    `-- etc/          # -> /etc (copied with sudo)
-```
-
-- `_common.sh` provides helpers: `install_pacman`, `install_aur`,
-  `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`, `enable_*_service`.
-- Each migration guard-sources `_common.sh` so it can run standalone.
-- No arguments. Conflicts back up to `<dest>.bak.N`. No dry-run or restore mode.
-
-### `setup.sh`
-
-Run after reboot. Handles Proton Pass login, Tailscale auth, NAS rsync
-password, `secretmgr bootstrap`, agent setup (loading the SSH key into
-ssh-agent with a terminal passphrase prompt, and priming the GPG agent's
-passphrase cache via pinentry-qt so git signed commits don't prompt for 8h),
-GitHub SSH verification, switching the dotfiles remote to SSH, cloning
-personal repos into `~/Projects` (from `~/.config/dotfiles/projects-repos.txt`),
-and the initial NAS clone.
-
-## Migrations
-
-74 migrations grouped by concern. `ls migrations/` for the full list.
-
-| Range | Concern |
-|-------|---------|
-| `000001`-`000082` | System, bootloader, kernels, AppArmor, security |
-| `000100`-`000109` | Shell & editors |
-| `000200`-`000210` | Dev tools |
-| `000300`-`000320` | Desktop, Hyprland, browsers, audio |
-| `000400`-`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`-`000543` | Apps: VPN, Tailscale, Proton Pass, NAS sync, games, lazycsv, Ollama, caligula |
-
-`sudo` is asserted as a preflight prerequisite -- not installed by a migration.
-
-**Not deployed by migrations** (too machine-specific): `/etc/fstab`,
-`/etc/crypttab`, `/etc/mkinitcpio.conf`, `/etc/hosts`. On an existing install,
-these are already correct.
-
-**Deferred:** USBGuard, OpenSnitch (not yet implemented).
+`/etc/crypttab` is not required for root encryption -- the initramfs `encrypt`
+hook unlocks root via `cryptdevice=` in the kernel cmdline. `migrate.sh`
+enforces these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
 
 ### Reboot checklist
 
@@ -118,7 +217,7 @@ sudo aa-status | head
 
 ## Secrets
 
-All secrets live in **Proton Pass**, accessed via `secretmgr` (`pass-cli` wrapper).
+All secrets live in **Proton Pass**, accessed via `secretmgr`.
 
 | Command | Purpose |
 |---------|---------|
@@ -132,21 +231,24 @@ All secrets live in **Proton Pass**, accessed via `secretmgr` (`pass-cli` wrappe
 Vault aliases: `nas`, `api`, `ssh`, `gpg`, `home`, `services`, `subscriptions`,
 `identity`, `gaming`, `school`, `projects`, `apply`, `finance`, `aws`.
 
-`secretmgr bootstrap` runs in `setup.sh`. SSH keys load into the agent
-on login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
+`secretmgr bootstrap` runs in `setup.sh`. SSH keys load into the agent on
+login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 
 ## Scripts
 
-Migrations link their own scripts into `~/.local/bin/` and `~/.local/lib/`.
-Key ones:
+Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
 
-- `update` -- yay + flatpak + firmware
+- `update-firmware` -- firmware updates (reboot-gated, intentionally outside
+  migrate.sh)
 - `clean-disk` -- orphans, caches, unused flatpaks
 - `secretmgr` -- Proton Pass wrapper
 - `sync-*` -- NAS sync (documents, music, photos, audiobooks, books)
 - `vpn` -- VPN management
 
-## NAS Sync
+Both `migrate.sh` and `setup.sh` mirror all output to `logs/` (gitignored):
+`migrate-YYYYMMDD-HHMMSS-PID.log` and `setup-YYYYMMDD-HHMMSS-PID.log`.
+
+## NAS sync
 
 Timers run automatically after `setup.sh`. Manual sync:
 
@@ -160,7 +262,7 @@ Bidirectional with `--delete`.
 
 ## Back up before wiping
 
-These are NOT recoverable from dotfiles / NAS / Proton Pass:
+Not recoverable from dotfiles / NAS / Proton Pass:
 
 | Item | Backup command |
 |------|---------------|
@@ -170,13 +272,11 @@ These are NOT recoverable from dotfiles / NAS / Proton Pass:
 | Atuin history | `atuin sync` (cloud), or copy `~/.local/share/atuin` |
 | pi sessions | `~/.pi/agent/sessions/` |
 
-SSH keys are stored in Proton Pass `SSH` vault; `secretmgr ssh-add` reloads
-them after a fresh install.
+SSH keys are in Proton Pass `SSH` vault; `secretmgr ssh-add` reloads them
+after a fresh install.
 
 ## Known issues
 
-- **nvimpager** (AUR, flagged out-of-date) -- installed from AUR after `extra/nvimpager`
-  was dropped. Replace with a maintained alternative at a future date.
 - **rkhunter egrep spam** -- cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 

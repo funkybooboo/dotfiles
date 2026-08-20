@@ -20,7 +20,7 @@ if is_debian; then
     enable_system_service "auditd.service"
   else
     skip "auditd (set DOTFILES_ENABLE_AUDITD=1 to enable on Debian)"
-    return 0
+    return 0 2>/dev/null || exit 0
   fi
 else
   install_pacman audit

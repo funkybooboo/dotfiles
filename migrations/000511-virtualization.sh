@@ -20,7 +20,7 @@ section "virtualization"
 # Safety gate: skip on Debian unless explicitly opted in.
 if is_debian && [[ "${DOTFILES_ENABLE_VIRT:-}" != "1" ]]; then
   skip "virtualization (set DOTFILES_ENABLE_VIRT=1 to enable on Debian/Ubuntu)"
-  return 0
+  return 0 2>/dev/null || exit 0
 fi
 
 if is_debian; then

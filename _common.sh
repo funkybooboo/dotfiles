@@ -21,7 +21,6 @@ if [[ -z "${_COMMON_LOADED:-}" ]]; then
 fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATIONS_DIR="$REPO_ROOT/migrations"
 DOTFILES_ROOT="$REPO_ROOT/root"
 DOTFILES_ROOT_ETC="$DOTFILES_ROOT/etc"
 DOTFILES_HOME="$DOTFILES_ROOT/home"
@@ -57,14 +56,18 @@ is_debian() { [[ "$OS_FAMILY" == "debian" ]]; }
 # require_os <family> [family...]
 #   Returns 0 if the current OS_FAMILY is in the list; otherwise prints a skip
 #   line and returns 1. Migrations that only apply to certain distros call this
-#   right after the guard-source and short-circuit with `|| return 0`:
+#   right after the guard-source and short-circuit:
 #
-#     require_os arch || return 0
+#     require_os arch || { return 0 2>/dev/null || exit 0; }
 #
-#   `return 0` (NOT exit, NOT return 1) is deliberate: migrate.sh sources each
-#   migration inside `( set -euo pipefail; source ... )`, so a sourced return 0
-#   ends the file cleanly and the runner counts the migration as success. A
-#   nonzero return would be counted as a FAILED migration.
+#   The return-then-exit dance covers both invocation styles. migrate.sh sources
+#   each migration inside `( set -euo pipefail; source ... )`, where a bare
+#   `return 0` ends the file cleanly and the runner counts it as a success (a
+#   nonzero return would be counted as FAILED). But a migration run standalone
+#   for testing (`bash migrations/000020-bootloader.sh`, per AGENTS.md) is NOT
+#   sourced, and there `return` is an error that bash reports and then CONTINUES
+#   past -- running the very migration the guard meant to skip. Suppressing that
+#   error and falling back to `exit 0` makes the skip real in both cases.
 require_os() {
   local fam
   for fam in "$@"; do
@@ -141,14 +144,14 @@ run_cmd_retry() {
 
 # Install pacman packages idempotently (--needed skips already-installed).
 # Always returns 0 so a single pacman failure (package renamed, removed,
-# conflict, or moved to the AUR) doesn't abort the migration run under 'set -e'.
+# conflict, or moved to nix) doesn't abort the migration run under 'set -e'.
 #
 # Resilience: a single bad target in a multi-package `pacman -S` aborts the
 # ENTIRE transaction (none of the other packages install). To avoid that, we
 # pre-filter the requested packages against the sync repos with `pacman -Si`,
 # install the available ones in one transaction, and warn explicitly about any
-# that are not in a pacman repo (those are usually AUR packages or renamed
-# packages that belong in install_aur instead).
+# that are not in a pacman repo (those are usually nix packages or renamed
+# packages that belong in install_nix instead).
 #
 # Failures are recorded via _add_warning and surface in the final summary.
 # Usage: install_pacman pkg1 pkg2 ...
@@ -168,8 +171,8 @@ install_pacman() {
   done
 
   if (( ${#missing[@]} > 0 )); then
-    warn "not in pacman repos (skipping -- likely AUR or renamed): ${missing[*]}"
-    _add_warning "pacman packages not in repos (install via AUR or manually): ${missing[*]}"
+    warn "not in pacman repos (skipping -- likely nix or renamed): ${missing[*]}"
+    _add_warning "pacman packages not in repos (install via nix or manually): ${missing[*]}"
   fi
 
   if (( ${#available[@]} > 0 )); then
@@ -180,44 +183,21 @@ install_pacman() {
   fi
 }
 
-# Install AUR packages one at a time via yay. Already-installed packages are
-# skipped; a build failure on one package is recorded as a warning, not fatal.
-# Usage: install_aur pkg1 pkg2 ...
-# Note: Always returns 0 so a single AUR failure doesn't abort the migration
-#       run under 'set -e'. Failures are recorded via _add_warning and surface
-#       in the final summary.
-install_aur() {
-  if is_debian; then
-    skip "install_aur no-op on $OS_ID (no AUR; use install_apt/install_via_script/install_gh_release): $*"
-    _add_warning "install_aur used on Debian for: $* -- not installed"
-    return 0
-  fi
-  local pkg failures=0
-  for pkg in "$@"; do
-    if pacman -Q "$pkg" &>/dev/null; then
-      skip "$pkg (already installed)"
-      continue
-    fi
-    if ! run_cmd_retry 3 30 yay -S --needed --noconfirm "$pkg"; then
-      warn "$pkg failed to install"
-      _add_warning "AUR package failed to install: $pkg"
-      failures=$((failures + 1))
-    else
-      ok "$pkg"
-    fi
-  done
-  return 0
-}
-
 # =============================================================================
 # APT (Debian/Ubuntu) INSTALL HELPERS
 # =============================================================================
 
 # One `apt-get update` per migrate.sh run. Each migration runs in its own
 # subshell that re-sources this file, so a shell var would not persist across
-# migrations; the stamp is keyed to the parent PID (the migrate.sh process) so
-# the whole run shares a single refresh.
-_APT_UPDATED_STAMP="${TMPDIR:-/tmp}/.dotfiles-apt-updated.${PPID}"
+# migrations; a stamp file is used instead.
+#
+# Keyed on $$, NOT $PPID. Bash does not change $$ in a subshell, so $$ is
+# migrate.sh's own PID in migrate.sh and in every migration subshell it spawns
+# -- exactly one stamp per run. $PPID would be the PID of the shell that
+# LAUNCHED migrate.sh (usually the interactive terminal), which is identical
+# across separate runs from that terminal, so a second ./migrate.sh would find
+# the first run's stamp and skip the refresh with a stale package list.
+_APT_UPDATED_STAMP="${TMPDIR:-/tmp}/.dotfiles-apt-updated.$$"
 
 _apt_update_once() {
   is_debian || return 0
@@ -381,6 +361,130 @@ install_gh_release() {
     warn "could not locate '$dest' binary in $repo asset"; _add_warning "gh release extract failed: $dest"
   fi
   rm -rf "$tmpd"
+}
+
+# -----------------------------------------------------------------------------
+# Install a Flatpak app from the flathub remote. Idempotent + non-fatal.
+# Requires the flathub remote (provisioned by 000301-flatpak.sh).
+# Usage: install_flatpak <app-id>
+install_flatpak() {
+  local app="$1"
+  if flatpak list --columns=application 2>/dev/null | grep -qx "$app"; then
+    skip "flatpak $app (installed)"
+    return 0
+  fi
+  if flatpak install -y --noninteractive flathub "$app"; then
+    ok "flatpak: $app"
+  else
+    warn "flatpak install failed: $app"
+    _add_warning "flatpak install failed: $app"
+  fi
+}
+
+# Remove a Flatpak app idempotently (non-fatal). Skips if not installed.
+# Used when an app moves off flatpak to a pacman/nix package so the
+# flatpak copy doesn't ghost the replacement .desktop / binary. `--delete-data`
+# drops the app's per-user data too (the new package keeps none of it by design).
+# Usage: remove_flatpak <app-id>
+remove_flatpak() {
+  local app="$1"
+  if ! flatpak list --columns=application 2>/dev/null | grep -qx "$app"; then
+    skip "flatpak $app (not installed)"
+    return 0
+  fi
+  info "removing flatpak: $app"
+  if flatpak uninstall -y --noninteractive --delete-data "$app" 2>/dev/null; then
+    ok "removed flatpak: $app"
+  else
+    warn "failed to remove flatpak $app"
+    _add_warning "failed to remove flatpak: $app"
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Resolve the nix binary. nix is installed by 000011 via the UPSTREAM Nix
+# installer (releases.nixos.org), NOT the Arch extra/nix pacman package, so it
+# lives at /nix/var/nix/profiles/default/bin/nix and only reaches PATH for NEW
+# login shells via /etc/profile.d/nix.sh. migrate.sh sources each migration in
+# an isolated subshell that does NOT re-source that file, so `command -v nix`
+# is empty for every migration AFTER 000011 in the same run. Fall back to the
+# absolute installer path so `install_nix` keeps working in-process after the
+# pacman->upstream swap.
+_nix_bin() {
+  if command -v nix &>/dev/null; then
+    command -v nix
+  elif [[ -x /nix/var/nix/profiles/default/bin/nix ]]; then
+    echo /nix/var/nix/profiles/default/bin/nix
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Install a package from our local flake (flake.nix at the repo root) via
+# `nix profile add`. Idempotent + non-fatal. This is the TIER 2 install
+# source (after pacman). The flake wraps nixpkgs with allowUnfree = true
+# and pins the nixpkgs revision via flake.lock -- so `nix profile add .#<pkg>`
+# works for both free and unfree packages without --impure or env vars.
+# No sudo needed -- nix installs into the user's profile (~/.nix-profile/).
+# Usage: install_nix <flake-attribute>   e.g. install_nix .#calcure
+install_nix() {
+  local attr="$1"
+  local pkgname="${attr#.#}"
+  local nix_bin; nix_bin="$(_nix_bin)"
+  if [[ -z "$nix_bin" ]]; then
+    warn "nix not found -- run the nix migration (000011) first"
+    _add_warning "nix not installed; cannot install $pkgname"
+    return 0
+  fi
+  # Check if already installed -- match the exact flake attribute line in
+  # `nix profile list` to avoid false positives from substring matches.
+  # The flake attribute appears as "packages.x86_64-linux.<pkgname>" for
+  # our local flake. We capture to a temp file first because `nix profile
+  # list` is non-deterministic under pipefail (intermittently returns
+  # partial/empty output when piped directly).
+  local _nix_list_tmp
+  _nix_list_tmp=$(mktemp)
+  "$nix_bin" profile list >"$_nix_list_tmp" 2>/dev/null || true
+  if grep -q "packages\.x86_64-linux\.$pkgname" "$_nix_list_tmp"; then
+    rm -f "$_nix_list_tmp"
+    skip "nix $pkgname (installed)"
+    return 0
+  fi
+  rm -f "$_nix_list_tmp"
+  info "installing $pkgname from flake"
+  if "$nix_bin" profile add "$attr" 2>/dev/null; then
+    ok "nix: $pkgname"
+  else
+    warn "nix profile add failed for $pkgname"
+    _add_warning "nix install failed: $pkgname"
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Remove one or more packages idempotently (non-fatal). Used to drop superseded
+# packages after their nix/pacman replacement is
+# in place. Uses plain -R (leaves shared deps as orphans; a later `pacman -Qdt`
+# cleanup can sweep them) and falls back to -Rdd if a dep check blocks removal.
+# Arch-only: the callers remove packages that only ever existed as Arch
+# packages, so there is nothing to sweep on Debian.
+# Usage: remove_pkg <pkg1> [pkg2 ...]
+remove_pkg() {
+  is_arch || return 0
+  local pkg
+  for pkg in "$@"; do
+    if ! pacman -Q "$pkg" &>/dev/null; then
+      skip "$pkg (not installed)"
+      continue
+    fi
+    info "removing superseded package: $pkg"
+    if sudo pacman -R --noconfirm "$pkg" 2>/dev/null; then
+      ok "removed: $pkg"
+    elif sudo pacman -Rdd --noconfirm "$pkg" 2>/dev/null; then
+      ok "removed (--nodeps): $pkg"
+    else
+      warn "failed to remove $pkg"
+      _add_warning "failed to remove: $pkg"
+    fi
+  done
 }
 
 # =============================================================================
@@ -594,16 +698,18 @@ preflight() {
   ok "not running as root"
 
   # sudo is a hard prerequisite: it is used from the very first migration
-  # (000001-system-update). On a fresh Arch install `base`/`base-devel` do not
-  # include it; Debian/Ubuntu ship it, but a minimal container might not.
+  # (000001-system-update). It is intentionally NOT installed by a migration --
+  # on a truly fresh Arch install `base`/`base-devel` do not include it, so we
+  # fail here with a clear instruction instead of dying mid-run later.
+  # Debian/Ubuntu ship sudo, but a minimal container image may not.
   if command -v sudo &>/dev/null; then
     ok "sudo available"
   else
     fail "sudo is not installed -- migrations use it from the first step."
-    if is_arch; then
-      fail "install it first:  pacman -S sudo"
-    else
+    if is_debian; then
       fail "install it first:  apt-get install sudo"
+    else
+      fail "install it first:  pacman -S sudo"
     fi
     exit 1
   fi
@@ -621,11 +727,20 @@ preflight() {
       exit 1
       ;;
   esac
+
+  _preflight_submodules
+
+  # Disk-encryption enforcement reads Arch-specific state (the mkinitcpio
+  # encrypt hook, archinstall's cryptdevice= cmdline), so it stays Arch-only.
+  # Spelled as an if, not `is_arch && ...`: as the last command in the function
+  # a failing && list would make preflight return 1, and migrate.sh calls
+  # preflight at top level under `set -e`.
+  if is_arch; then
+    _preflight_encryption
+  fi
 }
 
-# Arch preflight: connectivity + enforced disk-encryption checks. The encryption
-# signals inspect Arch-specific state (/proc/cmdline cryptdevice=, the
-# mkinitcpio encrypt hook) and stay Arch-only.
+# Arch: distro line + connectivity against the mirror host we actually use.
 _preflight_arch() {
   ok "distro family: arch ($OS_ID)"
 
@@ -635,72 +750,97 @@ _preflight_arch() {
     fail "no internet connection -- required for package installation"
     exit 1
   fi
-
-  # ---------------------------------------------------------------------------
-  # Disk encryption checks (enforced). Silent encryption-setup failure is
-  # otherwise undetectable: archinstall can pull in cryptsetup and write a
-  # crypttab template yet never actually create the LUKS container, leaving an
-  # unencrypted system that boots with no passphrase prompt. Three independent
-  # signals are checked -- all must pass on a properly encrypted install. See
-  # the README "Fresh install (archinstall)" section for the setup that
-  # satisfies these.
-  #
-  # Override with DOTFILES_ALLOW_UNENCRYPTED=1 to skip (for intentionally
-  # unencrypted systems -- discouraged for a laptop).
-  # ---------------------------------------------------------------------------
-  if [[ "${DOTFILES_ALLOW_UNENCRYPTED:-0}" == "1" ]]; then
-    warn "DOTFILES_ALLOW_UNENCRYPTED=1 -- skipping disk encryption checks"
-    _add_warning "running without disk encryption (DOTFILES_ALLOW_UNENCRYPTED=1)"
-  else
-    _enc_fail=0
-
-    # 1. Kernel cmdline must reference cryptdevice= (tells the initramfs to
-    #    unlock a LUKS device for root). /proc/cmdline is world-readable.
-    if grep -q 'cryptdevice=' /proc/cmdline 2>/dev/null; then
-      ok "kernel cmdline has cryptdevice= (encrypted root)"
-    else
-      fail "no cryptdevice= in /proc/cmdline -- root is not configured for LUKS"
-      _enc_fail=1
-    fi
-
-    # 2. A LUKS container must physically exist (lsblk reports crypto_LUKS).
-    if lsblk -o FSTYPE -n 2>/dev/null | grep -q 'crypto_LUKS'; then
-      ok "LUKS container detected by lsblk"
-    else
-      fail "no crypto_LUKS device found by lsblk -- disk is not encrypted"
-      _enc_fail=1
-    fi
-
-    # 3. mkinitcpio must carry the encrypt hook (initramfs can prompt + unlock).
-    if grep -E '^HOOKS=' /etc/mkinitcpio.conf 2>/dev/null | grep -qw 'encrypt'; then
-      ok "mkinitcpio has encrypt hook"
-    else
-      fail "mkinitcpio.conf HOOKS lacks 'encrypt' -- initramfs cannot unlock LUKS"
-      _enc_fail=1
-    fi
-
-    if (( _enc_fail != 0 )); then
-      echo ""
-      fail "disk encryption checks FAILED -- the root filesystem is not encrypted."
-      fail "See the README 'Fresh install (archinstall)' section for the setup,"
-      fail "or, if you intentionally run without encryption, re-run with:"
-      fail "  DOTFILES_ALLOW_UNENCRYPTED=1 ./migrate.sh"
-      exit 1
-    fi
-  fi
 }
 
-# Debian/Ubuntu preflight: connectivity via a neutral host. The Arch LUKS /
-# mkinitcpio encryption checks are intentionally skipped -- they inspect files
-# that do not exist on Ubuntu (/etc/mkinitcpio.conf, the encrypt hook); Ubuntu
-# encryption uses cryptsetup + initramfs-tools/GRUB and is out of scope here.
+# Debian/Ubuntu: distro line + connectivity. Two hosts are tried because a
+# network that blocks ICMP to one may allow the other.
 _preflight_debian() {
   ok "distro family: debian ($OS_ID)"
 
-  if ping -c1 -W2 1.1.1.1 &>/dev/null || ping -c1 -W2 deb.debian.org &>/dev/null; then
+  if ping -c1 -W2 deb.debian.org &>/dev/null || ping -c1 -W2 1.1.1.1 &>/dev/null; then
     ok "internet connectivity"
   else
     fail "no internet connection -- required for package installation"
+    exit 1
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Initialize git submodules (sources/*). A plain `git clone` of the dotfiles
+# repo does NOT populate submodule working trees, so several migrations that
+# build from source (000108 99-plugin, 000305 lazymusic, 000540 lazycsv,
+# 000552 HandBrake) would find empty directories. This --init --recursive
+# is a fast no-op when submodules are already checked out at the recorded
+# SHA; --depth 1 limits the cost for the large HandBrake history. Non-fatal:
+# a failure is recorded as a warning so the rest of the run continues and
+# the affected migration reports its own missing-source warning.
+# ---------------------------------------------------------------------------
+_preflight_submodules() {
+  if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
+    if git -C "$REPO_ROOT" submodule update --init --recursive --depth 1 2>/dev/null; then
+      _submods=$(git -C "$REPO_ROOT" config -f "$REPO_ROOT/.gitmodules" --name-only --get-regexp 'path' 2>/dev/null | wc -l)
+      ok "git submodules initialized (${_submods} source tree(s): sources/*)"
+    else
+      warn "git submodule init failed -- building from source may be skipped"
+      _add_warning "git submodule init failed; some sources/* migrations may skip their build"
+    fi
+  else
+    skip "git submodules (no .gitmodules present)"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Disk encryption checks (enforced, Arch only). Silent encryption-setup failure
+# is otherwise undetectable: archinstall can pull in cryptsetup and write a
+# crypttab template yet never actually create the LUKS container, leaving an
+# unencrypted system that boots with no passphrase prompt. Three independent
+# signals are checked -- all must pass on a properly encrypted install. See
+# the README "Fresh install (archinstall)" section for the setup that
+# satisfies these.
+#
+# Override with DOTFILES_ALLOW_UNENCRYPTED=1 to skip (for intentionally
+# unencrypted systems -- discouraged for a laptop).
+# ---------------------------------------------------------------------------
+_preflight_encryption() {
+  if [[ "${DOTFILES_ALLOW_UNENCRYPTED:-0}" == "1" ]]; then
+    warn "DOTFILES_ALLOW_UNENCRYPTED=1 -- skipping disk encryption checks"
+    _add_warning "running without disk encryption (DOTFILES_ALLOW_UNENCRYPTED=1)"
+    return 0
+  fi
+
+  local _enc_fail=0
+
+  # 1. Kernel cmdline must reference cryptdevice= (tells the initramfs to
+  #    unlock a LUKS device for root). /proc/cmdline is world-readable.
+  if grep -q 'cryptdevice=' /proc/cmdline 2>/dev/null; then
+    ok "kernel cmdline has cryptdevice= (encrypted root)"
+  else
+    fail "no cryptdevice= in /proc/cmdline -- root is not configured for LUKS"
+    _enc_fail=1
+  fi
+
+  # 2. A LUKS container must physically exist (lsblk reports crypto_LUKS).
+  if lsblk -o FSTYPE -n 2>/dev/null | grep -q 'crypto_LUKS'; then
+    ok "LUKS container detected by lsblk"
+  else
+    fail "no crypto_LUKS device found by lsblk -- disk is not encrypted"
+    _enc_fail=1
+  fi
+
+  # 3. mkinitcpio must carry the encrypt hook (initramfs can prompt + unlock).
+  if grep -E '^HOOKS=' /etc/mkinitcpio.conf 2>/dev/null | grep -qw 'encrypt'; then
+    ok "mkinitcpio has encrypt hook"
+  else
+    fail "mkinitcpio.conf HOOKS lacks 'encrypt' -- initramfs cannot unlock LUKS"
+    _enc_fail=1
+  fi
+
+  if (( _enc_fail != 0 )); then
+    echo ""
+    fail "disk encryption checks FAILED -- the root filesystem is not encrypted."
+    fail "See the README 'Fresh install (archinstall)' section for the setup,"
+    fail "or, if you intentionally run without encryption, re-run with:"
+    fail "  DOTFILES_ALLOW_UNENCRYPTED=1 ./migrate.sh"
     exit 1
   fi
 }
@@ -737,9 +877,9 @@ print_summary() {
 
   echo ""
   if [[ "$mode" == "secrets" ]]; then
-    echo -e "  ${GREEN}[x] Secrets & sync setup complete!${NC}"
+    echo -e "  ${GREEN}[+] Secrets & sync setup complete!${NC}"
   else
-    echo -e "  ${GREEN}[x] Migrations complete!${NC}"
+    echo -e "  ${GREEN}[+] Migrations complete!${NC}"
     echo -e "  ${DIM}Next: reboot into Hyprland, then run ./setup.sh${NC}"
   fi
   echo ""

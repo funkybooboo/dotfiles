@@ -11,7 +11,7 @@
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
-require_os arch || return 0
+require_os arch || { return 0 2>/dev/null || exit 0; }
 
 section "Hardened + LTS Kernels"
 

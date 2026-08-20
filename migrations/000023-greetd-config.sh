@@ -29,7 +29,7 @@ section "greetd config"
 if is_debian; then
   if [[ "${DOTFILES_ENABLE_GREETD:-0}" != "1" ]]; then
     skip "greetd config (set DOTFILES_ENABLE_GREETD=1 to enable on Debian)"
-    return 0
+    return 0 2>/dev/null || exit 0
   fi
   deploy_etc_file \
     "$DOTFILES_ROOT_ETC/greetd/config.toml" \

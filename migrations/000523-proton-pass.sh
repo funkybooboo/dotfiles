@@ -1,42 +1,23 @@
 # 000523-proton-pass.sh -- Proton Pass CLI + GUI + bash completions
-# Installs (AUR): proton-pass-cli-bin proton-pass-bin
-# Links:    -- (completions generated at runtime below)
-# Enables:  --
-# Note: The interactive pass-cli LOGIN is deferred to setup.sh (needs a
-#       browser + desktop). This migration only installs + sets up completions.
-#       Requires yay (installed by 000001-system-update); if yay is missing it
-#       warns and skips rather than piping a remote script to a shell.
+# Nix:     .#proton-pass-cli (Proton's official release binary)
+# Flatpak: me.proton.Pass (GUI, officially maintained by Proton)
+# Links:   -- (completions generated at runtime below)
+# Enables: --
+# Note: The CLI is installed from nix (via the local flake). The GUI comes
+#       from Flathub (me.proton.Pass), Proton's official Linux distribution.
+#       The interactive pass-cli LOGIN is deferred to setup.sh (needs a
+#       browser + desktop). This migration only installs + sets up
+#       completions.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
 
 section "proton pass"
 
-if is_debian; then
-  # pass-cli: official vendor installer (cross-distro, downloads to tempfile)
-  install_via_script pass-cli https://proton.me/download/pass-cli/install.sh pass-cli
+# Proton Pass CLI -- from nix flake (Proton's official release binary).
+install_nix .#proton-pass-cli
 
-  # Proton Pass GUI is not in apt; use flatpak or the .deb from Proton's site.
-  _add_warning "proton-pass GUI: install via flatpak or .deb from https://proton.me/pass/download/linux"
-else
-  if ! command -v yay &>/dev/null; then
-    warn "yay not available -- cannot install Proton Pass packages"
-    _add_warning "yay missing; install proton-pass-cli-bin and proton-pass-bin manually via yay"
-  else
-    # Proton Pass CLI
-    if command -v pass-cli &>/dev/null; then
-      skip "pass-cli (already installed)"
-    else
-      install_aur proton-pass-cli-bin
-    fi
-
-    # Proton Pass GUI
-    if command -v proton-pass &>/dev/null; then
-      skip "proton-pass GUI (already installed)"
-    else
-      install_aur proton-pass-bin
-    fi
-  fi
-fi
+# Proton Pass GUI -- official Flathub build.
+install_flatpak me.proton.Pass
 
 # Bash completions for pass-cli (the active login shell during migration).
 # fish completions are handled by fish's own config tree (000101-fish).
