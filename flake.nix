@@ -17,7 +17,7 @@
           inherit (pkgs)
             brave librewolf wayfreeze tdf timg nvimpager
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
-            calcure mermaid-cli bitwarden-cli pi-coding-agent;
+            calcure mermaid-cli bitwarden-cli pi-coding-agent vscode;
         });
     };
 }
