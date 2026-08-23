@@ -46,10 +46,16 @@ info() { echo -e "  ${BLUE}→${NC} $*"; }
 skip() { echo -e "  ${DIM}–${NC} ${DIM}$*${NC}"; }
 
 section() {
-  echo ""
-  echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
-  echo -e "${BOLD}${CYAN}  $*${NC}"
-  echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+  if [[ -n "${_DOTFILES_QUIET:-}" ]]; then
+    # Compact: one dim line, no box. Keeps progress visible without the
+    # 3-line cyan banner that dominates steady-state re-run output.
+    echo -e "${DIM}── $* ${NC}"
+  else
+    echo ""
+    echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+    echo -e "${BOLD}${CYAN}  $*${NC}"
+    echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+  fi
 }
 
 # Summary tracking — collected and printed once at the end by migrate.sh
@@ -120,9 +126,32 @@ install_pacman() {
   fi
 
   if (( ${#available[@]} > 0 )); then
-    if ! sudo pacman -S --needed --noconfirm "${available[@]}"; then
-      warn "pacman install failed for one or more packages: ${available[*]}"
-      _add_warning "pacman install failed for: ${available[*]}"
+    if [[ -n "${_DOTFILES_QUIET:-}" ]]; then
+      # Quiet: run pacman to a temp file (NOT inside $(...) -- command
+      # substitution strips sudo's controlling terminal, so an expired sudo
+      # timestamp mid-run would fail with "a terminal is required to read the
+      # password" and silently install nothing). A normal `sudo ... >file 2>&1`
+      # keeps the TTY for the prompt. `sudo -v` first refreshes the timestamp so
+      # the captured call won't need to prompt blind. On a pure no-op ("there is
+      # nothing to do") the spam ("warning: X is up to date -- skipping" x N) is
+      # suppressed entirely; the calling migration's own ok line still reports
+      # the package. On a real install the captured output is replayed so
+      # upgrades/errors stay visible.
+      sudo -v 2>/dev/null || true
+      local _pac_tmp; _pac_tmp=$(mktemp)
+      if sudo pacman -S --needed --noconfirm "${available[@]}" >"$_pac_tmp" 2>&1; then
+        grep -q 'there is nothing to do' "$_pac_tmp" || cat "$_pac_tmp"
+      else
+        cat "$_pac_tmp"
+        warn "pacman install failed for one or more packages: ${available[*]}"
+        _add_warning "pacman install failed for: ${available[*]}"
+      fi
+      rm -f "$_pac_tmp"
+    else
+      if ! sudo pacman -S --needed --noconfirm "${available[@]}"; then
+        warn "pacman install failed for one or more packages: ${available[*]}"
+        _add_warning "pacman install failed for: ${available[*]}"
+      fi
     fi
   fi
 }
@@ -469,6 +498,19 @@ preflight() {
     fail "install it first:  pacman -S sudo"
     exit 1
   fi
+
+  # Authenticate sudo ONCE up front (caches the timestamp for ~15 min). Without
+  # this, the first migration's `sudo pacman -Syu` prompts mid-run and, if the
+  # user cancels with Ctrl+C, the timestamp is never cached — so every later
+  # migration re-prompts and the non-fatal loop turns a single cancel into a
+  # spam of password prompts. If this fails or is cancelled, abort the whole
+  # run here with a clear message rather than failing 131 times.
+  if ! sudo -v 2>/dev/null; then
+    fail "sudo authentication failed or was cancelled — cannot proceed."
+    fail "Re-run migrate.sh and enter your password at the prompt."
+    exit 1
+  fi
+  ok "sudo authenticated (cached for this run)"
 
   if [[ -f /etc/os-release ]]; then
     . /etc/os-release

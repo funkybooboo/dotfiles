@@ -2,8 +2,6 @@
 -- Translated from autostart.conf.
 --   exec-once = cmd  -> hl.on("hyprland.start", ...) -- fires once at startup
 --   exec = cmd       -> hl.on("config.reloaded", ...) -- re-fires on each reload
--- The single plain `exec` (swayosd-server guard) re-fires on reload so the OSD
--- survives one-off scope stops and crashes; exec-once never re-runs.
 
 hl.on("hyprland.start", function() hl.exec_cmd("bluetoothctl power off") end)
 
@@ -22,10 +20,9 @@ hl.on("hyprland.start", function() hl.exec_cmd("/home/nate/.config/hypr/set-wall
 hl.on("hyprland.start", function() hl.exec_cmd("/home/nate/.config/hypr/monitor-watcher.sh") end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- mako") end)
 
--- swayosd-server: plain `exec` (re-fires on reload), guarded against duplicates.
-hl.on("config.reloaded", function()
-    hl.exec_cmd("pgrep -x swayosd-server >/dev/null || uwsm app -- swayosd-server")
-end)
+-- swayosd-server is no longer autostarted: volume/brightness state is shown
+-- live in the waybar pulseaudio/backlight modules (icon + percent) instead of
+-- a floating OSD, and media-keys applies changes via wpctl/brightnessctl.
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- /usr/lib/hyprpolkitagent/hyprpolkitagent")

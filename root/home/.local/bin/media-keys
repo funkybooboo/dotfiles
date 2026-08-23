@@ -1,59 +1,34 @@
 #!/usr/bin/env bash
-# media-keys -- robust wrapper for volume/brightness media keys.
+# media-keys -- volume/brightness media-key handler for Hyprland binds.
 #
 # Mirrors the swayosd-client CLI (--output-volume raise|lower|mute-toggle [N],
 # --input-volume mute-toggle, --brightness raise|lower [N]) so it can be a
 # drop-in replacement in Hyprland binds.
 #
-# Why this exists: swayosd-server periodically hangs (process stays alive in
-# pgrep but stops responding to swayosd-client, which then blocks forever).
-# Every volume/brightness bind goes through swayosd-client, so a single wedged
-# server silently kills ALL of them at once. The autostart guard only checks
-# that the process exists, so a hung server never gets restarted.
-#
-# Strategy:
-#   1. Try swayosd-client with a short timeout. If it responds, swayosd both
-#      performed the action AND showed the OSD -- done.
-#   2. If it hung/failed, kill the wedged server, start a fresh one, retry
-#      once (so the OSD recovers automatically for this and future presses).
-#   3. If it STILL fails, perform the action directly via wpctl/brightnessctl.
-#      No OSD, but the key always does something -- the user is never left
-#      with a dead volume/brightness key.
+# No on-screen display. The state is shown live in the waybar pulseaudio /
+# backlight modules (icon + percent), like the battery module -- so there is
+# no floating popup. This wrapper just performs the change:
+#   - Volume: wpctl (PipeWire) directly. Capped at VOL_MAX (150%, i.e. allows
+#     boost above 100). -l limits the raise so it never exceeds VOL_MAX_LINEAR.
+#   - Brightness: brightnessctl directly (reliable, clamps to [0, max]).
+#     swayosd 0.3.2 gets brightness WRONG on this backlight (raise no-ops /
+#     lowers, lower raises) so it is not used at all.
 set -u
 
-OSD_TIMEOUT=1.5            # max seconds to wait for swayosd-client
-OSD_RESTART_WAIT=0.5       # seconds to let a freshly started server come up
-VOL_DEFAULT_STEP=5         # percent, used by fallback when no step given
+VOL_DEFAULT_STEP=5         # percent, used when no step given
+VOL_MAX=150                # max output volume as a percent (0-150; >100 = boost)
+VOL_MAX_LINEAR=1.5         # VOL_MAX as a wpctl linear limit (150%)
 
-# --- helpers ---------------------------------------------------------------
-try_osd() {
-  # Run swayosd-client with the wrapper's args, bounded by OSD_TIMEOUT.
-  # Returns 0 only if swayosd actually responded.
-  timeout "$OSD_TIMEOUT" swayosd-client "$@" >/dev/null 2>&1
-}
-
-restart_osd() {
-  # Kill any swayosd-server (hung or not) and start a fresh one detached.
-  # SIGKILL, not SIGTERM: a wedged process may be stopped/deadlocked and will
-  # not act on SIGTERM, leaving it holding the Unix socket so the new server
-  # can't bind. SIGKILL guarantees the socket is released.
-  pkill -KILL -x swayosd-server 2>/dev/null || true
-  sleep 0.3
-  setsid swayosd-server >/dev/null 2>&1 < /dev/null &
-  disown 2>/dev/null || true
-  sleep "$OSD_RESTART_WAIT"
-}
-
-# Direct fallback: perform the action without the OSD.
-# Mirrors swayosd's semantics: raise/lower take an optional percent step,
-# defaulting to VOL_DEFAULT_STEP for volume; brightness step is passed through
-# (brightnessctl clamps to [0, max], so a big step jumps to the rail).
-fallback() {
+# Apply the action directly via wpctl (volume) or brightnessctl (brightness).
+# raise/lower take an optional percent step (default VOL_DEFAULT_STEP);
+# brightness step is passed through (brightnessctl clamps to [0, max], so a big
+# step jumps to the rail).
+apply() {
   local kind="$1" verb="$2" step="${3:-}"
   case "$kind" in
     --output-volume)
       case "$verb" in
-        raise)        wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ "${step:-$VOL_DEFAULT_STEP}%+" ;;
+        raise)        wpctl set-volume -l "$VOL_MAX_LINEAR" @DEFAULT_AUDIO_SINK@ "${step:-$VOL_DEFAULT_STEP}%+" ;;
         lower)        wpctl set-volume         @DEFAULT_AUDIO_SINK@ "${step:-$VOL_DEFAULT_STEP}%-" ;;
         mute-toggle)  wpctl set-mute           @DEFAULT_AUDIO_SINK@ toggle ;;
       esac
@@ -80,17 +55,4 @@ if (( $# == 0 )); then
   exit 2
 fi
 
-# First attempt: let swayosd do it (shows the OSD).
-if try_osd "$@"; then
-  exit 0
-fi
-
-# swayosd is hung or down. Restart it, then retry once.
-restart_osd
-if try_osd "$@"; then
-  exit 0
-fi
-
-# Last resort: perform the action directly so the key is never dead.
-# (No OSD this press, but the server we just started will serve the next one.)
-fallback "$@"
+apply "$@"

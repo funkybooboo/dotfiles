@@ -16,13 +16,14 @@
         "group/tray-expander",
         "custom/help",
         "custom/clipboard",
+        "pulseaudio",
         "bluetooth",
         "network",
-        "pulseaudio",
         "cpu",
         "memory",
         "disk",
         "custom/display",
+        "backlight",
         "custom/nightmode",
         "battery",
         "custom/power"
@@ -63,13 +64,13 @@
         "max-length": 50
     },
     "custom/launcher": {
-        "format": "\uf00a",
+        "format": "",
         "tooltip": true,
         "tooltip-format": "Applications  (Super+Space)",
         "on-click": "hyprlauncher"
     },
     "custom/search": {
-        "format": "\udb80\udf49",
+        "format": "󰍉",
         "tooltip": true,
         "tooltip-format": "Search windows  (Super+Slash)",
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-window-switcher-inner"
@@ -88,31 +89,31 @@
         "format-discharging": "{icon} {capacity}%",
         "format-charging": "{icon} {capacity}%",
         "format-plugged": "{icon} {capacity}%",
-        "format-full": "\udb80\udc79 {capacity}%",
+        "format-full": "󰁹 {capacity}%",
         "format-icons": {
             "charging": [
-                "\udb82\udc9c",
-                "\udb80\udc86",
-                "\udb80\udc87",
-                "\udb80\udc88",
-                "\udb82\udc9d",
-                "\udb80\udc89",
-                "\udb82\udc9e",
-                "\udb80\udc8a",
-                "\udb80\udc8b",
-                "\udb80\udc85"
+                "󰢜",
+                "󰂆",
+                "󰂇",
+                "󰂈",
+                "󰢝",
+                "󰂉",
+                "󰢞",
+                "󰂊",
+                "󰂋",
+                "󰂅"
             ],
             "default": [
-                "\udb80\udc7a",
-                "\udb80\udc7b",
-                "\udb80\udc7c",
-                "\udb80\udc7d",
-                "\udb80\udc7e",
-                "\udb80\udc7f",
-                "\udb80\udc80",
-                "\udb80\udc81",
-                "\udb80\udc82",
-                "\udb80\udc79"
+                "󰁺",
+                "󰁻",
+                "󰁼",
+                "󰁽",
+                "󰁾",
+                "󰁿",
+                "󰂀",
+                "󰂁",
+                "󰂂",
+                "󰁹"
             ]
         },
         "interval": 5,
@@ -123,41 +124,41 @@
     },
     "network": {
         "format-icons": [
-            "\udb82\udd2f",
-            "\udb82\udd1f",
-            "\udb82\udd22",
-            "\udb82\udd25",
-            "\udb82\udd28"
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
         ],
         "format": "{icon}",
         "format-wifi": "{icon}",
-        "format-ethernet": "\udb80\udc02",
-        "format-disconnected": "\udb82\udd2e",
-        "tooltip-format": "{essid} ({frequency} GHz)\n\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
-        "tooltip-format-ethernet": "Connected\n\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
+        "format-ethernet": "󰀂",
+        "format-disconnected": "󰤮",
+        "tooltip-format": "{essid} ({frequency} GHz)\n↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
+        "tooltip-format-ethernet": "Connected\n↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
         "tooltip-format-disconnected": "Disconnected",
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e impala",
-        "interval": 3,
+        "interval": 2,
         "tooltip-format-wifi": "Wi-Fi: {essid} ({signaldBm} dBm)\nClick: open Wi-Fi manager  (Super+Shift+W)"
     },
     "network#speed": {
-        "format": "\u2193{bandwidthDownBits}",
-        "format-wifi": "\u2193{bandwidthDownBits}",
-        "format-ethernet": "\u2193{bandwidthDownBits}",
+        "format": "↓{bandwidthDownBits}",
+        "format-wifi": "↓{bandwidthDownBits}",
+        "format-ethernet": "↓{bandwidthDownBits}",
         "format-disconnected": "",
-        "tooltip-format": "\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
+        "tooltip-format": "↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
         "interval": 3
     },
     "pulseaudio": {
-        "format": "{icon}",
-        "format-muted": "\udb81\udf5f",
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 {volume}%",
         "format-icons": {
             "headphone": "",
             "headset": "",
             "default": [
-                "\uf026",
-                "\uf027",
-                "\uf028"
+                "",
+                "",
+                ""
             ]
         },
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e wiremix",
@@ -165,36 +166,37 @@
         "tooltip-format": "Volume {volume}%\nClick: open volume mixer  (Super+Shift+V)  |  Right-click: mute"
     },
     "backlight": {
-        "format": "{icon}",
+        "format": "{icon} {percent}%",
         "format-icons": [
-            "\udb80\udcde",
-            "\udb80\udcdf"
-        ]
+            "󰃞",
+            "󰃟"
+        ],
+        "tooltip-format": "Brightness: {percent}%"
     },
     "bluetooth": {
-        "format": "\udb80\udcaf",
-        "format-off": "\udb80\udcb2",
-        "format-disabled": "\udb80\udcb2",
-        "format-connected": "\udb80\udcb1 {device_alias}",
+        "format": "󰂯",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱 {device_alias}",
         "format-no-controller": "",
         "tooltip-format": "Bluetooth: {num_connections} connected\nClick: open Bluetooth manager  (Super+Shift+B)",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e bluetui"
     },
     "cpu": {
-        "format": "\uf2db",
-        "interval": 5,
+        "format": "",
+        "interval": 2,
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e btop",
         "tooltip-format": "CPU: {usage}%\nClick: open system monitor  (Super+Shift+T)"
     },
     "memory": {
-        "format": "\uefc5",
-        "interval": 5,
+        "format": "",
+        "interval": 2,
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e btop",
         "tooltip-format": "RAM: {percentage}%\nClick: open system monitor  (Super+Shift+T)"
     },
     "disk": {
-        "format": "\udb80\udeca",
+        "format": "󰋊",
         "path": "/",
         "interval": 30,
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e ncdu /",
@@ -216,17 +218,17 @@
         ]
     },
     "custom/expand-icon": {
-        "format": "\uf053",
+        "format": "",
         "tooltip": false
     },
     "custom/help": {
-        "format": "\uf059",
+        "format": "",
         "tooltip": true,
         "tooltip-format": "Keybindings  (Super+C)",
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"
     },
     "custom/clipboard": {
-        "format": "\udb80\udd47",
+        "format": "󰅇",
         "tooltip": true,
         "tooltip-format": "Clipboard history  (Super+Ctrl+V)",
         "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/clipboard-manager"
@@ -239,21 +241,23 @@
         "tooltip-format": "Screen recording toggle  (Super+Shift+R)"
     },
     "custom/display": {
-        "format": "\udb80\udf79",
+        "format": "󰍹",
         "tooltip": true,
         "tooltip-format": "Display settings  (Super+D)",
         "on-click": "~/.local/bin/hypr-float-launch nwg-displays"
     },
     "custom/power": {
-        "format": "\u23fb",
+        "format": "⏻",
         "tooltip": true,
         "tooltip-format": "Power menu  (lock / logout / restart / shutdown)",
         "on-click": "~/.local/bin/power-menu"
     },
     "custom/nightmode": {
-        "format": "\uf186",
-        "tooltip": true,
-        "tooltip-format": "Night mode toggle  (Super+Ctrl+N)",
-        "on-click": "~/.local/bin/nightmode-toggle"
+        "exec": "~/.local/bin/nightmode-indicator",
+        "exec-if": "true",
+        "interval": 2,
+        "return-type": "json",
+        "on-click": "~/.local/bin/nightmode-toggle",
+        "tooltip": true
     }
 }

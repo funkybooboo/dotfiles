@@ -1,0 +1,17 @@
+#!/bin/bash
+# nightmode-indicator -- waybar custom/nightmode module state output.
+#
+# Emits JSON for waybar (return-type json). Polls hyprsunset so the icon/class
+# reflect whether night mode (night light / color temperature) is on or off.
+# nightmode-toggle starts/stops hyprsunset; waybar re-runs this on its interval
+# and the icon updates within ~2s.
+#
+# Icons (Nerd Font / Font Awesome): moon when on, sun when off. A CSS class is
+# set so the active state can be colored (e.g. amber) -- see style.css
+# #custom-nightmode.nightmode-on.
+
+if pgrep -x hyprsunset >/dev/null; then
+  printf '{"text":"\\uf186","class":"nightmode-on","alt":"on","tooltip":"Night mode: On\\nClick to toggle  (Super+Ctrl+N)"}\n'
+else
+  printf '{"text":"\\uf185","class":"nightmode-off","alt":"off","tooltip":"Night mode: Off\\nClick to toggle  (Super+Ctrl+N)"}\n'
+fi

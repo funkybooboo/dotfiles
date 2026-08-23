@@ -89,11 +89,11 @@ hl.curve("easeInOutCubic", {
     points = { { 0.65, 0 }, { 0.35, 1 } },
 })
 
-hl.animation({ leaf = "windows",    enabled = true, speed = 3,   bezier = "easeOutQuint",   style = "popin 87%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.5, bezier = "easeInOutCubic", style = "popin 80%" })
-hl.animation({ leaf = "border",     enabled = true, speed = 3,   bezier = "easeOutQuint" })
-hl.animation({ leaf = "fade",       enabled = true, speed = 3,   bezier = "easeInOutCubic" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 3,   bezier = "easeOutQuint" })
+hl.animation({ leaf = "windows",    enabled = true, speed = 2,   bezier = "easeOutQuint",   style = "popin 87%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 1,   bezier = "easeInOutCubic", style = "popin 80%" })
+hl.animation({ leaf = "border",     enabled = true, speed = 2,   bezier = "easeOutQuint" })
+hl.animation({ leaf = "fade",       enabled = true, speed = 2,   bezier = "easeInOutCubic" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 2,   bezier = "easeOutQuint" })
 
 -- cursor
 hl.config({

@@ -158,33 +158,48 @@ hl.bind(mainMod .. " + SHIFT + ALT + up",    hl.dsp.workspace.move({ monitor = "
 hl.bind(mainMod .. " + SHIFT + ALT + down",  hl.dsp.workspace.move({ monitor = "d" }))
 
 -- Scroll workspaces (mouse wheel; NOT a mouse drag bind, so no { mouse = true })
+-- NOTE: SUPER+mouse binds are broken by a Hyprland 0.55+ regression (PR #14633
+-- aggregates modifier state across all keyboard devices on focus-enter, so
+-- SUPER held on the real keyboard is overwritten by empty-mod devices). Use
+-- the 3-finger touchpad swipe below as the primary mouse/touch path instead.
 hl.bind(mainMod .. " + mouse_down",        hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",          hl.dsp.focus({ workspace = "e-1" }))
+
+-- Touchpad gesture: 3-finger horizontal swipe switches workspaces (1:1 swipe,
+-- like GNOME/KDE). Native Hyprland gesture support -- no plugin required. This
+-- is the robust touchpad path: it bypasses both the SUPER+mouse mod-aggregation
+-- regression and waybar's touchpad-emulated-scroll guard.
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 -- Mouse drag/resize (bindm -> { mouse = true })
 hl.bind(mainMod .. " + mouse:272",         hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = true })
 
--- Volume / brightness go through media-keys, which wraps swayosd-client so a
--- hung swayosd-server never leaves the keys dead: it times out, SIGKILLs and
--- restarts the server, retries, and finally falls back to wpctl/brightnessctl.
-hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("media-keys --output-volume raise"))
-hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("media-keys --output-volume lower"))
-hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("media-keys --output-volume mute-toggle"))
-hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("media-keys --output-volume raise 1"))
-hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("media-keys --output-volume lower 1"))
-hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("media-keys --input-volume mute-toggle"))
+-- Volume / brightness go through the media-keys wrapper. IMPORTANT: the path
+-- must be explicit (~/.local/bin/media-keys) because Hyprland's exec PATH does
+-- NOT include ~/.local/bin, so a bare "media-keys" is silently not found and
+-- the key does nothing. No on-screen display: the state is shown live in the
+-- waybar pulseaudio/backlight modules (icon + percent). Volume uses wpctl
+-- (capped at 150%); brightness uses brightnessctl directly (swayosd gets it
+-- wrong on this backlight -- raise no-ops, lower raises -- while returning
+-- success). See root/home/.local/bin/media-keys for details.
+hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume raise"))
+hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume lower"))
+hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume mute-toggle"))
+hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume raise 1"))
+hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume lower 1"))
+hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("~/.local/bin/media-keys --input-volume mute-toggle"))
 hl.bind("XF86AudioPlay",                   hl.dsp.exec_cmd("playerctl play-pause"))
 hl.bind("XF86AudioNext",                   hl.dsp.exec_cmd("playerctl next"))
 hl.bind("XF86AudioPrev",                   hl.dsp.exec_cmd("playerctl previous"))
 hl.bind(mainMod .. " + XF86AudioMute", hl.dsp.exec_cmd(
-    [[media-keys --output-volume mute-toggle && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
+    [[~/.local/bin/media-keys --output-volume mute-toggle && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
 
--- Brightness
-hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("media-keys --brightness raise"))
-hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("media-keys --brightness lower"))
-hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("media-keys --brightness raise 100"))
-hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("media-keys --brightness lower 100"))
+-- Brightness (brightnessctl direct via media-keys)
+hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness raise"))
+hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness lower"))
+hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness raise 100"))
+hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness lower 100"))
 
 -- Keyboard backlight
 hl.bind("XF86KbdBrightnessUp",             hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"))

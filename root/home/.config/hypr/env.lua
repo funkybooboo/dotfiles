@@ -23,3 +23,21 @@ hl.env("GTK_THEME", "Adwaita-dark")
 hl.env("GTK2_RC_FILES", "/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc")
 hl.env("GTK3_RC_FILES", "/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css")
 hl.env("XCOMPOSEFILE", "~/.XCompose")
+
+-- Ensure Hyprland's exec PATH includes ~/.local/bin. The systemd user session
+-- PATH (inherited from PAM/nix at login) does NOT include it, so a bare-name
+-- script in a bind silently fails to resolve and the key does nothing -- this
+-- is exactly what broke the media keys. environment.d CANNOT fix this: it is
+-- unable to override an already-set PATH (verified empirically -- a spawned
+-- user service still lacked ~/.local/bin). hl.env setenv's into Hyprland's own
+-- process, so every exec_cmd child inherits the extended PATH. Guarded so a
+-- config reload (which re-runs this and would see the already-extended PATH)
+-- does not keep appending duplicates.
+do
+  local cur  = os.getenv("PATH") or ""
+  local home = os.getenv("HOME") or ""
+  local entry = home .. "/.local/bin"
+  if not (":" .. cur .. ":"):find(":" .. entry .. ":", 1, true) then
+    hl.env("PATH", cur .. ":" .. entry)
+  end
+end

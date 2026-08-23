@@ -8,7 +8,8 @@
 #           ~/.config/systemd/user/hypr-wallpaper.service,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,screenshot,screencast,recording-indicator,
-#             toggle-lock,nightmode-toggle,theme-switch,clipboard-manager,
+#             toggle-lock,nightmode-toggle,nightmode-indicator,theme-switch,
+#             clipboard-manager,
 #             power-mode-menu,hypr-float-apply,hypr-float-launch,
 #             hypr-float-toggle,hypr-window-switcher,
 #             hypr-window-switcher-inner,power-menu}
@@ -54,9 +55,10 @@ link_file "$DOTFILES_HOME/.config/systemd/user/hypr-wallpaper.service" \
 # Hyprland helper scripts
 for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   hypr-toggle-display screenshot screencast recording-indicator \
-  toggle-lock nightmode-toggle theme-switch clipboard-manager power-mode-menu \
-  hypr-float-apply hypr-float-launch hypr-float-toggle hypr-window-switcher \
-  hypr-window-switcher-inner power-menu media-keys; do
+  toggle-lock nightmode-toggle nightmode-indicator theme-switch \
+  clipboard-manager power-mode-menu hypr-float-apply hypr-float-launch \
+  hypr-float-toggle hypr-window-switcher hypr-window-switcher-inner \
+  power-menu media-keys; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done
 
