@@ -9,7 +9,7 @@ set -euo pipefail
 entries=$(hyprctl clients -j 2>/dev/null | jq -r '
     .[]
     | [(.workspace.id // "-"), .address, .class, .title]
-    | @csv
+    | @tsv
 ')
 
 # Pipe through fzf. --with-nth shows workspace + class
