@@ -3,5 +3,8 @@
   "theme": "dark",
   "defaultProvider": "opencode-go",
   "defaultModel": "glm-5.2",
-  "defaultThinkingLevel": "high"
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-web-access"
+  ]
 }
