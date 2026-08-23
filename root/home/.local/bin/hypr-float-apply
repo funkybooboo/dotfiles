@@ -11,6 +11,12 @@
 #
 # Override the size fraction via env:
 #   FLOAT_W_FRAC=0.85 FLOAT_H_FRAC=0.90 hypr-float-apply
+#
+# Uses the Hyprland Lua dispatcher API (hl.dsp.window.*) via
+# `hyprctl dispatch '<lua>'`. In Lua config mode (0.55+) the old hyprlang
+# dispatcher names (setfloating / resizewindowpixel / centerwindow) and the
+# bare "address:0x.." arg syntax are gone; window dispatchers take a table
+# with a `window` selector, e.g. hl.dsp.window.float({ window = "address:0x.." }).
 set -euo pipefail
 
 w_frac="${FLOAT_W_FRAC:-0.85}"
@@ -22,18 +28,24 @@ if [[ -z "$addr" ]]; then
 fi
 [[ -n "$addr" && "$addr" != "null" ]] || exit 0
 
+# Hyprland window selectors need the "address:" prefix; hyprctl reports the
+# bare "0x...." form, so add the prefix if it is missing.
+case "$addr" in
+  address:*) sel="$addr" ;;
+  *)         sel="address:$addr" ;;
+esac
+
 # Ensure floating -- but only if the window isn't already floating.
 # The window rule (initial_title:^(hypr-float-.*)$) may have already
-# floated it at creation time; calling setfloating/togglefloating on an
-# already-floating window can un-float it, so check first.
+# floated it at creation time; toggling an already-floating window would
+# un-float it, so check first and use action="enable" (idempotent).
 info=$(hyprctl clients -j | jq -r --arg addr "$addr" '.[] | select(.address == $addr) | .floating // false')
 if [[ "$info" != "true" ]]; then
-  hyprctl dispatch setfloating "address:$addr" 2>/dev/null || \
-    hyprctl dispatch togglefloating "address:$addr"
+  hyprctl dispatch "hl.dsp.window.float({ window = \"$sel\", action = \"enable\" })" >/dev/null 2>&1 || true
 fi
 
 # Focused monitor geometry. width/height are physical px; the resize
-# dispatchers use logical px, so divide by scale.
+# dispatcher sets logical px, so divide by scale.
 mon=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true)')
 [[ -n "$mon" ]] || exit 0
 
@@ -42,7 +54,7 @@ mh=$(printf '%s' "$mon" | jq -r '.height')
 scale=$(printf '%s' "$mon" | jq -r '.scale // 1')
 [[ -z "$scale" || "$scale" == "null" ]] && scale=1
 
-awk -v mw="$mw" -v mh="$mh" -v s="$scale" -v wf="$w_frac" -v hf="$h_frac" '
+read -r lw lh < <(awk -v mw="$mw" -v mh="$mh" -v s="$scale" -v wf="$w_frac" -v hf="$h_frac" '
 BEGIN {
   if (s == 0) s = 1
   lw = int((mw / s) * wf)
@@ -50,7 +62,9 @@ BEGIN {
   if (lw < 1) lw = 1
   if (lh < 1) lh = 1
   printf "%d %d\n", lw, lh
-}' | { read -r lw lh
-  hyprctl dispatch resizewindowpixel "exact $lw $lh,address:$addr"
-  hyprctl dispatch centerwindow "address:$addr"
-}
+}')
+
+# Resize to the exact logical size, then center. relative defaults to false
+# (absolute set), matching the old `resizewindowpixel exact W H`.
+hyprctl dispatch "hl.dsp.window.resize({ x = $lw, y = $lh, window = \"$sel\" })" >/dev/null 2>&1 || true
+hyprctl dispatch "hl.dsp.window.center({ window = \"$sel\" })" >/dev/null 2>&1 || true

@@ -3,6 +3,10 @@
 # When making it floating, apply the consistent centered size via
 # hypr-float-apply (so Super+T and app launches all look the same).
 # Bound to Super+T.
+#
+# Uses the Hyprland Lua dispatcher API (hl.dsp.window.float) via
+# `hyprctl dispatch '<lua>'`. The no-arg form acts on the currently focused
+# window, which is what we want for a Super+T toggle.
 set -euo pipefail
 
 info=$(hyprctl activewindow -j)
@@ -14,7 +18,11 @@ addr=$(printf '%s' "$info" | jq -r '.address // empty')
 
 # Already floating -> restore to tiled. Otherwise -> float + size + center.
 if [[ "$floating" == "true" ]]; then
-  hyprctl dispatch togglefloating "address:$addr"
+  case "$addr" in
+    address:*) sel="$addr" ;;
+    *)         sel="address:$addr" ;;
+  esac
+  hyprctl dispatch "hl.dsp.window.float({ window = \"$sel\", action = \"disable\" })" >/dev/null 2>&1 || true
 else
   exec ~/.local/bin/hypr-float-apply "$addr"
 fi
