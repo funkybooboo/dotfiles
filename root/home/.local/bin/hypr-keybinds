@@ -18,7 +18,7 @@ tmp=$(mktemp)
 display=$(mktemp)
 trap 'rm -f "$tmp" "$display"' EXIT
 
-BINDINGS_LUA="${HYPR_BINDINGS_LUA:-$HOME/.config/hypr/lua/bindings.lua}"
+BINDINGS_LUA="${HYPR_BINDINGS_LUA:-$HOME/.config/hypr/bindings.lua}"
 
 python3 - "$BINDINGS_LUA" <<'PY' > "$tmp"
 import re, sys, os

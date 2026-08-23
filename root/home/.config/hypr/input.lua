@@ -1,6 +1,6 @@
 -- Input device configuration + DPMS wake misc.
 -- Translated from input.conf (the two `windowrule` lines that were at the
--- bottom of input.conf moved to lua/windows.lua -- window rules are global).
+-- bottom of input.conf moved to windows.lua -- window rules are global).
 -- hyprlang options written with dashes become Lua underscore keys
 -- (tap-to-click -> tap_to_click).
 
