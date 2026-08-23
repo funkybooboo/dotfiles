@@ -28,5 +28,11 @@ ws=$(printf '%s' "$selection" | cut -f1)
 addr=$(printf '%s' "$selection" | cut -f2)
 
 # Switch to the window's workspace, then focus the window.
-[[ "$ws" != "-" ]] && hyprctl dispatch workspace "$ws"
-hyprctl dispatch focuswindow "address:$addr"
+# Uses the Hyprland Lua dispatcher API (hl.dsp.*) via `hyprctl dispatch
+# '<lua>'`. In Lua config mode (0.55+) the old `hyprctl dispatch workspace`
+# and `focuswindow address:..` hyprlang syntax is gone; workspace switching
+# is hl.dsp.focus({workspace=..}) and window focus is
+# hl.dsp.focus({window="address:.."}) -- the selector needs the "address:"
+# prefix (hyprctl reports the bare "0x..." form).
+[[ "$ws" != "-" ]] && hyprctl dispatch "hl.dsp.focus({ workspace = $ws })" >/dev/null 2>&1 || true
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$addr\" })" >/dev/null 2>&1 || true

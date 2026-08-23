@@ -1,61 +1,158 @@
 #!/bin/bash
+# hypr-keybinds -- interactive keybindings cheatsheet (fzf), and on Enter
+# re-run the selected bind's dispatcher. Bound to Super+C.
+#
+# In Hyprland 0.55+ (Lua config mode) `hyprctl binds -j` returns
+# dispatcher="__lua" + arg=<internal-id> for every bind -- there is no
+# usable dispatcher/arg to re-execute. So we parse the bindings.lua source
+# instead: each line is `hl.bind(KEY, DISPATCHER_EXPR, FLAGS?)`, and the
+# dispatcher expr (e.g. hl.dsp.window.close() or
+# hl.dsp.exec_cmd("...")) is runnable verbatim via `hyprctl dispatch`.
+#
+# Output columns (tab-delimited, for the lookup table):
+#   sortkey \t key_combo \t action_label \t lua_dispatch_string
+# The fzf list shows key_combo + action_label; on Enter we look up the
+# matching lua_dispatch_string and run `hyprctl dispatch '<lua>'`.
 
 tmp=$(mktemp)
 display=$(mktemp)
 trap 'rm -f "$tmp" "$display"' EXIT
 
-hyprctl -j binds | python3 -c '
-import json, sys
+BINDINGS_LUA="${HYPR_BINDINGS_LUA:-$HOME/.config/hypr/lua/bindings.lua}"
 
-MODMAP = {
-    1: "SHIFT", 4: "CTRL", 5: "SHIFT CTRL",
-    8: "ALT", 9: "SHIFT ALT", 12: "CTRL ALT", 13: "SHIFT CTRL ALT",
-    64: "SUPER", 65: "SUPER SHIFT", 68: "SUPER CTRL", 69: "SUPER SHIFT CTRL",
-    72: "SUPER ALT", 73: "SUPER SHIFT ALT", 76: "SUPER CTRL ALT", 77: "SUPER SHIFT CTRL ALT",
-}
+python3 - "$BINDINGS_LUA" <<'PY' > "$tmp"
+import re, sys, os
 
-MOUSE = {272: "Left Click", 273: "Right Click", 274: "Middle Click"}
+path = sys.argv[1]
+src = open(path).read()
 
-binds = json.load(sys.stdin)
-seen = set()
+# Resolve `local mainMod = "SUPER"` (or similar) so we can substitute the
+# variable name in bind key strings. Falls back to "SUPER".
+mainmod = "SUPER"
+m = re.search(r'local\s+mainMod\s*=\s*"([^"]+)"', src)
+if m:
+    mainmod = m.group(1)
 
-for b in binds:
-    if b.get("submap", ""):
+# Strip line comments (keep # outside strings -- good enough for our file).
+def strip_comment(line):
+    in_s = False
+    in_d = False
+    i = 0
+    while i < len(line):
+        c = line[i]
+        if c == '"' and not in_s:
+            in_d = not in_d
+        elif c == "'" and not in_d:
+            in_s = not in_s
+        elif c == '#' and not in_s and not in_d:
+            return line[:i]
+        i += 1
+    return line
+
+# Find hl.bind(KEY, DISP, FLAGS?) calls. KEY is a double-quoted string that
+# may concatenate mainMod .. " + X". DISP is everything up to the matching
+# close-paren of the bind call (handles nested parens in the dispatcher
+# expr). We scan character-by-character to balance parens.
+bind_re = re.compile(r'hl\.bind\(\s*')
+
+results = []
+for li, line in enumerate(src.splitlines(), 1):
+    line = strip_comment(line).strip()
+    if not line or line.startswith('--'):
         continue
+    m = bind_re.search(line)
+    if not m:
+        continue
+    # Balance parens from the hl.bind( opening.
+    depth = 0
+    start = m.end() - 1  # the '('
+    end = None
+    in_s = in_d = False
+    i = start
+    while i < len(line):
+        c = line[i]
+        if c == '"' and not in_s: in_d = not in_d
+        elif c == "'" and not in_d: in_s = not in_s
+        elif not in_s and not in_d:
+            if c == '(': depth += 1
+            elif c == ')':
+                depth -= 1
+                if depth == 0:
+                    end = i; break
+        i += 1
+    if end is None:
+        continue  # multi-line bind; our file keeps them one-per-line
+    inner = line[start+1:end]
 
-    mods = MODMAP.get(b["modmask"], str(b["modmask"]))
-    key = b.get("key", "")
+    # Split inner into args on the top-level comma.
+    args = []
+    depth = 0
+    in_s = in_d = False
+    cur = ''
+    for c in inner:
+        if c == '"' and not in_s: in_d = not in_d
+        elif c == "'" and not in_d: in_s = not in_s
+        if not in_s and not in_d and c == '(':
+            depth += 1
+        elif not in_s and not in_d and c == ')':
+            depth -= 1
+        if c == ',' and depth == 0:
+            args.append(cur.strip()); cur = ''
+        else:
+            cur += c
+    if cur.strip():
+        args.append(cur.strip())
+    if len(args) < 2:
+        continue
+    key_expr = args[0]
+    disp_expr = args[1]
 
-    if not key and b.get("keycode", 0):
-        kc = b["keycode"]
-        key = MOUSE.get(kc, f"code:{kc}")
+    # Evaluate the key expression: substitute mainMod and concat `..`.
+    # The expression is like: mainMod .. " + SHIFT + F"
+    # Substitute the variable, then keep only the string-literal pieces BUT
+    # prepend the mainMod value when mainMod appears as a bare token (it is
+    # NOT inside quotes, so the naive join of quoted parts drops it).
+    key = key_expr
+    has_mainmod_bare = re.search(r'\bmainMod\b', key) is not None
+    key = re.sub(r'\bmainMod\b', mainmod, key)
+    parts = re.findall(r'"([^"]*)"', key)
+    if parts:
+        if has_mainmod_bare:
+            key = mainmod + ''.join(parts)
+        else:
+            key = ''.join(parts)
+    key = key.strip()
 
-    key_combo = (mods + " + " + key) if mods else key
+    # Build a runnable Lua dispatch string and a human-readable action.
+    disp_expr = disp_expr.strip()
+    # Strip a trailing comment if any slipped through.
+    disp_expr = re.sub(r'\s*--.*$', '', disp_expr).strip()
 
-    desc = b.get("description", "")
-    dispatcher = b.get("dispatcher", "")
-    arg = b.get("arg", "")
-
-    if desc:
-        action = desc
-    elif dispatcher == "exec":
-        action = arg.replace("uwsm app -- ", "").replace("uwsm-app -- ", "")
-        if "hyprlauncher" in action:
-            action = "App launcher"
+    action = disp_expr
+    # exec_cmd("...") -> show the command
+    em = re.search(r'hl\.dsp\.exec_cmd\(\s*"((?:[^"\\]|\\.)*)"\s*\)', disp_expr)
+    if em:
+        cmd = em.group(1).encode().decode('unicode_escape')
+        cmd = cmd.replace('uwsm app -- ', '').replace('uwsm-app -- ', '')
+        if 'hyprlauncher' in cmd: cmd = 'App launcher'
+        action = cmd
     else:
-        action = (dispatcher + " " + arg).strip() if arg else dispatcher
-
+        # Turn hl.dsp.window.close() into "window.close", etc.
+        am = re.search(r'hl\.dsp\.(.+)', disp_expr)
+        if am:
+            action = am.group(1).strip()
+            # Drop the args for readability where they're trivial.
+            action = re.sub(r'\(\s*\)', '()', action)
     action = action.strip()
     if not action:
         continue
 
-    unique = (key_combo, action)
-    if unique in seen:
-        continue
-    seen.add(unique)
+    # sortkey: first char of the modifier group, so SUPER.. sorts together.
+    sortkey = key.split('+')[0].strip()[:1] or '_'
+    print(f"{sortkey}\t{key}\t{action}\t{disp_expr}")
+PY
 
-    print(f"{mods}\t{key_combo}\t{action}\t{dispatcher}\t{arg}")
-' | sort -t$'\t' -k1,1.2 -k2,2 > "$tmp"
+sort -t$'\t' -k1,1.2 -k2,2 "$tmp" -o "$tmp"
 
 awk -F'\t' '{
     pad = sprintf("%-28s", $2)
@@ -75,15 +172,13 @@ selection=$(fzf \
     --color=border:#444466,header:#888888 \
     --color=gutter:#1a1a2e,spinner:#666666 \
     --color=pointer:#ffffff,marker:#888888 \
-    < "$display")
+    < "$display") || exit 0
 
 [[ -z "$selection" ]] && exit 0
 
 action_part=$(echo "$selection" | sed 's/^.\{28\}  //')
-record=$(awk -F'\t' -v a="$action_part" '$3 == a {print $4 "\t" $5; exit}' "$tmp")
+record=$(awk -F'\t' -v a="$action_part" '$3 == a {print $4; exit}' "$tmp")
 
 if [[ -n "$record" ]]; then
-    dispatcher=$(echo "$record" | cut -f1)
-    arg=$(echo "$record" | cut -f2)
-    hyprctl dispatch "$dispatcher" "$arg"
+    hyprctl dispatch "$record" >/dev/null 2>&1 || true
 fi
