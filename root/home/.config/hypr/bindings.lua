@@ -39,7 +39,12 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 
 -- Window management
 hl.bind(mainMod .. " + W",               hl.dsp.window.close())
-hl.bind(mainMod .. " + CTRL + delete",   hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"))
+-- Close every window on the current workspace.
+-- Was SUPER+CTRL+delete, which collided with the laptop display toggle at the
+-- bottom of this file. Both registered the same combo, and the later one wins, so
+-- this one never fired. Moved to SHIFT+CTRL+delete rather than displacing the
+-- display toggle, which is the behaviour that combo actually had.
+hl.bind(mainMod .. " + SHIFT + CTRL + delete", hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"))
 hl.bind(mainMod .. " + F",               hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + CTRL + F",        hl.dsp.window.fullscreen({ mode = "maximized" }))
 hl.bind(mainMod .. " + ALT + F",         hl.dsp.window.fullscreen({ mode = "fullscreen" }))

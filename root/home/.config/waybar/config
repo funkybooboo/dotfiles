@@ -153,8 +153,10 @@
         "format": "{icon} {volume}%",
         "format-muted": "󰝟 {volume}%",
         "format-icons": {
-            "headphone": "",
-            "headset": "",
+            "headphone": "",
+            "headset": "",
+            "hands-free": "",
+            "phone": "",
             "default": [
                 "",
                 "",

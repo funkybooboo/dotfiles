@@ -79,12 +79,28 @@ rounding_large = 10
 rounding_small = 5
 EOF
 
-# --- hyprland.conf (only themed lines) ---
-sed -i \
-    -e "s/col\.active_border = rgba([^ ]*) # THEME: active_border/col.active_border = rgba($(hex_to_rgba_hex "$ACTIVE_BORDER")) # THEME: active_border/" \
-    -e "s/col\.inactive_border = rgba([^ ]*) # THEME: inactive_border/col.inactive_border = rgba($(hex_to_rgba_hex "$SURFACE1" aa)) # THEME: inactive_border/" \
-    -e "s/color = rgba([^ ]*) # THEME: shadow/color = rgba($(hex_to_rgba_hex "$CRUST" ee)) # THEME: shadow/" \
-    "$HOME/.config/hypr/hyprland.conf"
+# --- looknfeel.lua (only themed lines) ---
+# The Hyprland config moved from hyprlang to Lua, so the themed lines now read
+#   active_border   = "rgba(hex)", -- THEME: active_border
+# rather than
+#   col.active_border = rgba(hex) # THEME: active_border
+# This block used to patch hyprland.conf, which the Lua migration deleted, so
+# re-theming Hyprland's borders and shadow silently did nothing.
+#
+# --follow-symlinks is required: ~/.config/hypr/looknfeel.lua is a symlink into
+# the dotfiles repo (created by link_tree). Without it, sed -i unlinks the symlink
+# and writes a plain file in its place, so the new colours would exist only in ~
+# and be backed up and replaced on the next migrate run. With it, the edit lands
+# in the repo and shows up as ordinary git drift, which is what symlink
+# deployment is for.
+#
+# The patterns capture everything up to `rgba(` and everything from `)` onward, so
+# the trailing comment (including the "(catppuccin mauve)" note) is preserved.
+sed -i --follow-symlinks \
+    -e "s/\(active_border *= *\"rgba(\)[^)]*\()\".*-- THEME: active_border.*\)/\1$(hex_to_rgba_hex "$ACTIVE_BORDER")\2/" \
+    -e "s/\(inactive_border *= *\"rgba(\)[^)]*\()\".*-- THEME: inactive_border.*\)/\1$(hex_to_rgba_hex "$SURFACE1" aa)\2/" \
+    -e "s/\(color *= *\"rgba(\)[^)]*\()\".*-- THEME: shadow.*\)/\1$(hex_to_rgba_hex "$CRUST" ee)\2/" \
+    "$HOME/.config/hypr/looknfeel.lua"
 
 # --- hyprlock.conf ---
 cat > "$HOME/.config/hypr/hyprlock.conf" <<EOF
