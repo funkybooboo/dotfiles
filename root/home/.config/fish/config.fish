@@ -11,7 +11,7 @@ set -gx PAGER less
 set -gx MANPAGER less
 set -gx SUDO_EDITOR nvim
 set -gx BAT_THEME "Catppuccin Mocha"
-set -gx MANROFFOPT "-c"
+set -gx MANROFFOPT -c
 set -gx LESSHISTFILE -
 set -gx PYTHONSTARTUP $HOME/.config/python/pythonrc
 
@@ -28,6 +28,11 @@ set -gx PI_OFFLINE 1
 
 # Libvirt: Use system connection by default for virt-manager and virsh
 set -gx LIBVIRT_DEFAULT_URI "qemu:///system"
+
+# Podman: expose the rootless API socket so Docker-API clients (lazydocker,
+# docker CLI via the ~/.local/bin/docker->podman wrapper) connect to podman.
+# Requires the user podman.socket: `systemctl --user enable --now podman.socket`.
+set -gx DOCKER_HOST unix://$XDG_RUNTIME_DIR/podman/podman.sock
 
 # ============================================================================
 # PATH
@@ -168,7 +173,7 @@ if command -v fzf &>/dev/null
     set -l fzf_cache ~/.cache/fzf_fish_init.fish
     if not test -f $fzf_cache
         mkdir -p ~/.cache
-        fzf --fish > $fzf_cache
+        fzf --fish >$fzf_cache
     end
     source $fzf_cache
 end
@@ -205,4 +210,4 @@ if type -q starship
 end
 
 # opam
-test -r '/home/nate/.opam/opam-init/init.fish' && source '/home/nate/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
+test -r '/home/nate/.opam/opam-init/init.fish' && source '/home/nate/.opam/opam-init/init.fish' >/dev/null 2>/dev/null; or true
