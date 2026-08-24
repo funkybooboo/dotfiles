@@ -1,7 +1,14 @@
 #!/bin/bash
+# hypr-toggle-display -- toggle the laptop panel (eDP-1) on/off.
+# Bound to Super+Ctrl+Delete.
+#
+# Uses the Hyprland Lua API (hl.monitor) via `hyprctl eval '<lua>'`. In Lua
+# config mode (0.55+) `hyprctl keyword monitor ...` is gone ("keyword can't
+# work with non-legacy parsers"). Disabling is `disabled = true`; re-enabling
+# is `disabled = false` + mode/position/scale so Hyprland lays it out again.
 current=$(hyprctl monitors -j | jq -r '.[] | select(.name == "eDP-1") | .name')
 if [[ -n "$current" ]]; then
-    hyprctl keyword monitor eDP-1,disabled
+  hyprctl eval 'hl.monitor({output="eDP-1", disabled=true})' >/dev/null 2>&1 || true
 else
-    hyprctl keyword monitor eDP-1,preferred,auto,1.33
+  hyprctl eval 'hl.monitor({output="eDP-1", disabled=false, mode="preferred", position="auto", scale=1.33})' >/dev/null 2>&1 || true
 fi

@@ -76,6 +76,15 @@ const BASH_DENIED_PATTERNS = [
   /> \/dev\//,
   /\bchmod\s+777/,
   /\bchown\s+root/,
+  // The agent must NEVER run sudo or migrate.sh. These require the user's
+  // TTY + password and are the user's responsibility. If a sudo command is
+  // needed, the agent asks the user to run it and works from the pasted
+  // output. sudo is blocked anywhere in the command (covers `sudo ...`,
+  // `echo p | sudo -S ...`, etc.). migrate.sh is blocked because it calls
+  // sudo from the very first migration (000001-system-update) and is the
+  // user's to run end-to-end.
+  /\bsudo\b/,
+  /\bmigrate\.sh\b/,
 ];
 
 // Bash command patterns that require confirmation

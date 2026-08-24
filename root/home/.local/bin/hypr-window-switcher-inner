@@ -1,0 +1,108 @@
+#!/bin/bash
+# hypr-window-switcher-inner -- run inside ghostty (provides a real tty for fzf).
+# Reads the window list from hyprctl, shows a column-aligned table with
+# workspace / app / title / size / state / monitor, lets the user pick one
+# with fzf, then dispatches the hyprctl commands to switch + focus it.
+#
+# Columns (left -> right):
+#   WS     workspace id (or special-workspace name)
+#   APP    short app class  (last segment of the xdg class, e.g. "ghostty")
+#   TITLE  window title
+#   SIZE   width x height in px
+#   STATE  tile|float, +fs (fullscreen), +pin (pinned), +xway (xwayland)
+#   MON    monitor id
+# The window address + workspace id are carried as hidden trailing fields
+# so fzf shows a clean table but we can still dispatch the selection.
+
+set -euo pipefail
+
+# Raw TSV from hyprctl, one window per line, sorted by workspace then
+# focus-recency (focusHistoryID 0 == most recently focused).
+raw=$(hyprctl clients -j 2>/dev/null | jq -r '
+    map(. + {
+        wsid:   (.workspace.id   // 0),
+        wsname: (.workspace.name // ""),
+        cls:    ((.class // "?") | split(".") | last // "?")
+    })
+    | sort_by(.wsid, .focusHistoryID)
+    | .[]
+    | [
+        .wsid, .wsname, .cls, (.title // ""),
+        (.size[0] // 0), (.size[1] // 0),
+        (.floating // false), (.fullscreen // 0),
+        (.monitor // 0), (.pinned // false),
+        (.xwayland // false), .address
+      ]
+    | @tsv
+') || true
+
+[[ -z "$raw" ]] && { echo "No open windows." >&2; sleep 1; exit 0; }
+
+# Format the display line (padded columns) and append the hidden
+# address + wsid as tab-separated trailing fields.
+# Field layout coming in (1-indexed):
+#   1 wsid  2 wsname  3 cls  4 title  5 w  6 h
+#   7 floating  8 fullscreen  9 monitor  10 pinned  11 xwayland  12 address
+mapfile -t rows <<<"$raw"
+
+print_row() {
+    awk -F'\t' -v show="$1" '{
+        ws   = ($1 < 0) ? $2 : $1                  # special ws -> name
+        app  = substr($3, 1, 16)
+        ttl  = substr($4, 1, 48)
+        size = $5 "x" $6
+        state = ($7 == "true") ? "float" : "tile"
+        if ($8 + 0 > 0)  state = state "+fs"
+        if ($10 == "true") state = state "+pin"
+        if ($11 == "true") state = state "+xway"
+        mon = $9
+        line = sprintf("%-4s %-16s %-48s %-10s %-12s mon:%s", ws, app, ttl, size, state, mon)
+        if (show == "1") {
+            printf "%s\t%s\t%s\n", line, $12, $1     # display \t address \t wsid
+        } else {
+            print line
+        }
+    }'
+}
+
+# Header shown above the fzf list.
+header=$(printf '%-4s %-16s %-48s %-10s %-12s %s' "WS" "APP" "TITLE" "SIZE" "STATE" "MON")
+
+# Pipe the padded rows through fzf. --with-nth=1 hides the trailing
+# address + wsid fields so the user only sees the table.
+selection=$(printf '%s\n' "${rows[@]}" \
+    | print_row 1 \
+    | fzf --prompt="Windows > " \
+        --header="$header" \
+        --header-first \
+        --delimiter='\t' \
+        --with-nth=1 \
+        --tiebreak=index \
+        --info=inline \
+    ) || exit 0
+
+[[ -z "$selection" ]] && exit 0
+
+# Parse the hidden trailing fields: display \t address \t wsid
+addr=$(printf '%s' "$selection" | cut -f2)
+ws=$(printf '%s' "$selection"  | cut -f3)
+
+# Switch to the window's workspace, then focus the window itself.
+# Uses the Hyprland Lua dispatcher API (hl.dsp.*) via `hyprctl dispatch
+# '<lua>'`. In Lua config mode (0.55+) the old `hyprctl dispatch workspace`
+# and `focuswindow address:..` hyprlang syntax is gone; workspace switching
+# is hl.dsp.focus({workspace=..}) and window focus is
+# hl.dsp.focus({window="address:.."}) -- the selector needs the "address:"
+# prefix (hyprctl reports the bare "0x..." form).
+#
+# Special workspaces (id < 0) are addressed by NAME in Lua, so quote them;
+# normal workspaces use the bare integer.
+if [[ "$ws" =~ ^-?[0-9]+$ && "$ws" -gt 0 ]]; then
+    hyprctl dispatch "hl.dsp.focus({ workspace = $ws })" >/dev/null 2>&1 || true
+elif [[ "$ws" =~ ^-[0-9]+$ ]]; then
+    # special workspace: wsid field is numeric-negative, but we carried the
+    # name in the display column -- re-derive it would need another field,
+    # so just focus the window directly (Hyprland raises its workspace).
+    :
+fi
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$addr\" })" >/dev/null 2>&1 || true

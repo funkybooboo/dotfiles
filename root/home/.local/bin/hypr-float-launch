@@ -1,0 +1,62 @@
+#!/bin/bash
+# hypr-float-launch -- launch an application and open it in "super+t mode":
+# floating, consistent centered size (see hypr-float-apply).
+#
+# Used for app-launch hotkeys and waybar icon clicks so every app opened via
+# keybind or the bar comes up in the same floating centered state.
+#
+# Usage: hypr-float-launch <command...>
+#   hypr-float-launch uwsm app -- thunar
+#   hypr-float-launch ghostty -e btop
+#
+# How it works:
+#   1. Inject --title=hypr-float-<pid> after ghostty in the command (if
+#      ghostty is present).  The permanent window rule
+#      windowrule[float] = initialTitle:^(hypr-float-.*)$  in windows.conf
+#      then makes the window float IMMEDIATELY at creation time -- no
+#      tiled-then-float flash.  Apps launched via hyprlauncher don't get
+#      this title, so they stay tiled.
+#   2. Snapshot the current set of client window addresses.
+#   3. Start the command (detached).
+#   4. Poll for up to FLOAT_LAUNCH_TIMEOUT (default 12s) for a NEW window.
+#   5. Apply the consistent size + center via hypr-float-apply.
+set -euo pipefail
+
+timeout_s="${FLOAT_LAUNCH_TIMEOUT:-12}"
+
+[[ $# -gt 0 ]] || { echo "hypr-float-launch: no command given" >&2; exit 1; }
+
+marker="hypr-float-$$"
+
+# Inject --title=<marker> after the first occurrence of "ghostty" in the
+# command array.  This works for both `ghostty -e ...` and
+# `uwsm app -- ghostty` (uwsm passes everything after -- to the app).
+args=("$@")
+for i in "${!args[@]}"; do
+  if [[ "${args[$i]}" == "ghostty" ]]; then
+    args=("${args[@]:0:$((i+1))}" "--title=$marker" "${args[@]:$((i+1))}")
+    break
+  fi
+done
+
+# 1. Snapshot existing client addresses.
+snap=$(hyprctl clients -j | jq -r '.[].address' | sort)
+
+# 2. Launch the command detached so the keybind returns immediately.
+( "${args[@]}" & ) </dev/null >/dev/null 2>&1 &
+
+# 3. Poll for a new window.
+end=$(( SECONDS + timeout_s ))
+while (( SECONDS < end )); do
+  cur=$(hyprctl clients -j | jq -r '.[].address' | sort)
+  new=$(comm -13 <(printf '%s\n' "$snap") <(printf '%s\n' "$cur") | head -1)
+  if [[ -n "$new" ]]; then
+    # Give the window a beat to finish mapping so size/center land correctly.
+    sleep 0.15
+    exec ~/.local/bin/hypr-float-apply "$new"
+  fi
+  sleep 0.1
+done
+
+# No window appeared in time (e.g. a CLI-only command, or still loading).
+exit 0

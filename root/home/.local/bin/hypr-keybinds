@@ -1,67 +1,582 @@
 #!/bin/bash
+# hypr-keybinds -- interactive keybindings cheatsheet (fzf), and on Enter
+# re-run the selected bind's dispatcher. Bound to Super+C.
+#
+# In Hyprland 0.55+ (Lua config mode) `hyprctl binds -j` returns
+# dispatcher="__lua" + arg=<internal-id> for every bind -- there is no
+# usable dispatcher/arg to re-execute. So we parse the bindings.lua source
+# instead: each call is `hl.bind(KEY, DISPATCHER_EXPR, FLAGS?)`, and the
+# dispatcher expr (e.g. hl.dsp.window.close() or
+# hl.dsp.exec_cmd("...")) is runnable verbatim via `hyprctl dispatch`.
+#
+# We also:
+#   * EXPAND `for i = 1, N do ... end` blocks (the workspace 1..10 binds
+#     are generated this way -- 30 binds a static parser would miss);
+#   * ACCUMULATE multi-line binds (several exec_cmd binds wrap their long
+#     shell command onto the next physical line);
+#   * understand `[[ ... ]]` long strings (the cursor-zoom bind) as well
+#     as "..."/'...' short strings, so `--` inside strings is not treated
+#     as a Lua comment and parens inside strings don't desync matching;
+#   * include `hl.gesture(...)` rows (shown for reference, not re-runnable).
+#
+# Output (tab-delimited, fed straight to fzf):
+#   key_combo \t human_description \t lua_dispatch_string
+# fzf displays only columns 1-2 (--with-nth=1,2); on Enter it emits the
+# FULL selected line, so we recover column 3 with `cut -f3` and run
+# `hyprctl dispatch '<lua>'`. No description-uniqueness assumptions.
 
 tmp=$(mktemp)
-display=$(mktemp)
-trap 'rm -f "$tmp" "$display"' EXIT
+trap 'rm -f "$tmp"' EXIT
 
-hyprctl -j binds | python3 -c '
-import json, sys
+BINDINGS_LUA="${HYPR_BINDINGS_LUA:-$HOME/.config/hypr/bindings.lua}"
 
-MODMAP = {
-    1: "SHIFT", 4: "CTRL", 5: "SHIFT CTRL",
-    8: "ALT", 9: "SHIFT ALT", 12: "CTRL ALT", 13: "SHIFT CTRL ALT",
-    64: "SUPER", 65: "SUPER SHIFT", 68: "SUPER CTRL", 69: "SUPER SHIFT CTRL",
-    72: "SUPER ALT", 73: "SUPER SHIFT ALT", 76: "SUPER CTRL ALT", 77: "SUPER SHIFT CTRL ALT",
-}
+python3 - "$BINDINGS_LUA" <<'PY' > "$tmp"
+import re, sys
 
-MOUSE = {272: "Left Click", 273: "Right Click", 274: "Middle Click"}
+path = sys.argv[1]
+src = open(path).read()
 
-binds = json.load(sys.stdin)
-seen = set()
+# Resolve `local mainMod = "SUPER"` so we can substitute the variable name
+# in bind key strings. Falls back to "SUPER".
+mainmod = "SUPER"
+m = re.search(r'local\s+mainMod\s*=\s*"([^"]+)"', src)
+if m:
+    mainmod = m.group(1)
 
-for b in binds:
-    if b.get("submap", ""):
+
+# --- A single string-aware lexer used for comment stripping, paren
+# matching, and arg splitting. Handles "..." / '...' short strings and
+# [[ ... ]] long strings, so `--` inside a string is not a comment and
+# parens inside a string don't count. ---
+
+def strip_comment(line):
+    """Return line with a trailing Lua `--` comment removed."""
+    i = 0
+    n = len(line)
+    in_d = in_s = in_long = False
+    while i < n:
+        c = line[i]
+        if in_long:
+            if c == ']' and i + 1 < n and line[i + 1] == ']':
+                in_long = False
+                i += 2
+                continue
+            i += 1
+            continue
+        if in_d:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == '"':
+                in_d = False
+            i += 1
+            continue
+        if in_s:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == "'":
+                in_s = False
+            i += 1
+            continue
+        if c == '[' and i + 1 < n and line[i + 1] == '[':
+            in_long = True
+            i += 2
+            continue
+        if c == '"':
+            in_d = True
+            i += 1
+            continue
+        if c == "'":
+            in_s = True
+            i += 1
+            continue
+        if c == '-' and i + 1 < n and line[i + 1] == '-':
+            return line[:i]
+        i += 1
+    return line
+
+
+def total_depth(line):
+    """Net paren depth, ignoring parens inside any string literal."""
+    depth = 0
+    i = 0
+    n = len(line)
+    in_d = in_s = in_long = False
+    while i < n:
+        c = line[i]
+        if in_long:
+            if c == ']' and i + 1 < n and line[i + 1] == ']':
+                in_long = False
+                i += 2
+                continue
+            i += 1
+            continue
+        if in_d:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == '"':
+                in_d = False
+            i += 1
+            continue
+        if in_s:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == "'":
+                in_s = False
+            i += 1
+            continue
+        if c == '[' and i + 1 < n and line[i + 1] == '[':
+            in_long = True
+            i += 2
+            continue
+        if c == '"':
+            in_d = True
+            i += 1
+            continue
+        if c == "'":
+            in_s = True
+            i += 1
+            continue
+        if c == '-' and i + 1 < n and line[i + 1] == '-':
+            break
+        if c == '(':
+            depth += 1
+        elif c == ')':
+            depth -= 1
+        i += 1
+    return depth
+
+
+def match_paren(line, start):
+    """Index of the ')' matching line[start]=='(', or None if unbalanced."""
+    depth = 0
+    i = start
+    n = len(line)
+    in_d = in_s = in_long = False
+    while i < n:
+        c = line[i]
+        if in_long:
+            if c == ']' and i + 1 < n and line[i + 1] == ']':
+                in_long = False
+                i += 2
+                continue
+            i += 1
+            continue
+        if in_d:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == '"':
+                in_d = False
+            i += 1
+            continue
+        if in_s:
+            if c == '\\' and i + 1 < n:
+                i += 2
+                continue
+            if c == "'":
+                in_s = False
+            i += 1
+            continue
+        if c == '[' and i + 1 < n and line[i + 1] == '[':
+            in_long = True
+            i += 2
+            continue
+        if c == '"':
+            in_d = True
+            i += 1
+            continue
+        if c == "'":
+            in_s = True
+            i += 1
+            continue
+        if c == '-' and i + 1 < n and line[i + 1] == '-':
+            break
+        if c == '(':
+            depth += 1
+        elif c == ')':
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    return None
+
+
+def split_args(inner):
+    """Split a bind call's inner args on top-level commas."""
+    args = []
+    depth = 0
+    in_d = in_s = in_long = False
+    cur = ''
+    i = 0
+    n = len(inner)
+    while i < n:
+        c = inner[i]
+        if in_long:
+            cur += c
+            if c == ']' and i + 1 < n and inner[i + 1] == ']':
+                cur += ']'
+                in_long = False
+                i += 2
+                continue
+            i += 1
+            continue
+        if in_d:
+            cur += c
+            if c == '\\' and i + 1 < n:
+                cur += inner[i + 1]
+                i += 2
+                continue
+            if c == '"':
+                in_d = False
+            i += 1
+            continue
+        if in_s:
+            cur += c
+            if c == '\\' and i + 1 < n:
+                cur += inner[i + 1]
+                i += 2
+                continue
+            if c == "'":
+                in_s = False
+            i += 1
+            continue
+        if c == '[' and i + 1 < n and inner[i + 1] == '[':
+            cur += '[['
+            in_long = True
+            i += 2
+            continue
+        if c == '"':
+            in_d = True
+            cur += c
+            i += 1
+            continue
+        if c == "'":
+            in_s = True
+            cur += c
+            i += 1
+            continue
+        if c == '(':
+            depth += 1
+            cur += c
+        elif c == ')':
+            depth -= 1
+            cur += c
+        elif c == ',' and depth == 0:
+            args.append(cur.strip())
+            cur = ''
+        else:
+            cur += c
+        i += 1
+    if cur.strip():
+        args.append(cur.strip())
+    return args
+
+
+def expand_loops(src):
+    """Expand `for VAR = A, B do ... end` blocks into repeated body lines,
+    substituting the loop variable and any `local X = VAR % MOD` derived
+    locals. Generic enough for the workspace 1..10 block in bindings.lua."""
+    out = []
+    lines = src.splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r'\s*for\s+(\w+)\s*=\s*(\d+)\s*,\s*(\d+)\s+do\b', line)
+        if m:
+            var, lo, hi = m.group(1), int(m.group(2)), int(m.group(3))
+            body = []
+            depth = 1
+            i += 1
+            while i < len(lines) and depth > 0:
+                bl = lines[i]
+                if re.match(r'\s*for\b', bl):
+                    depth += 1
+                if re.match(r'\s*end\b', bl):
+                    depth -= 1
+                    if depth == 0:
+                        break
+                body.append(bl)
+                i += 1
+            derived = []
+            for bl in body:
+                dm = re.match(r'\s*local\s+(\w+)\s*=\s*\w+\s*%\s*(\d+)', bl)
+                if dm:
+                    derived.append((dm.group(1), int(dm.group(2))))
+            for v in range(lo, hi + 1):
+                for bl in body:
+                    nl = re.sub(r'\b' + re.escape(var) + r'\b', str(v), bl)
+                    for dvar, mod in derived:
+                        nl = re.sub(r'\b' + re.escape(dvar) + r'\b',
+                                    str(v % mod), nl)
+                    out.append(nl)
+            i += 1  # skip the closing `end`
+            continue
+        out.append(line)
+        i += 1
+    return '\n'.join(out)
+
+
+src = expand_loops(src)
+
+# ---- Human-readable labels for exec_cmd commands (checked in order) ----
+EXEC_LABELS = [
+    (r'hypr-float-launch uwsm app -- thunar',          'File manager (floating)'),
+    (r'hypr-float-launch ghostty -e nvim',             'Neovim (floating)'),
+    (r'hypr-float-launch uwsm app -- signal-desktop',  'Signal (floating)'),
+    (r'hypr-float-launch uwsm app -- mpv',             'Media player (floating)'),
+    (r'hypr-float-launch ghostty -e .*hypr-keybinds',  'Keybindings cheatsheet (this)'),
+    (r'hypr-float-launch ghostty -e .*clipboard-manager', 'Clipboard manager (floating)'),
+    (r'hypr-float-launch ghostty -e .*calendar-tui',   'Calendar (floating)'),
+    (r'hypr-float-launch ghostty -e bluetui',          'Bluetooth (floating)'),
+    (r'hypr-float-launch ghostty -e impala',           'Wi-Fi (floating)'),
+    (r'hypr-float-launch ghostty -e wiremix',          'Volume mixer (floating)'),
+    (r'hypr-float-launch ghostty -e btop',             'System monitor (floating)'),
+    (r'hypr-float-launch ghostty -e ncdu',             'Disk usage (floating)'),
+    (r'hypr-float-launch .*power-mode-menu',           'Power menu (floating)'),
+    (r'hypr-window-switcher',                          'Window switcher (floating)'),
+    (r'uwsm app -- ghostty',                           'Terminal'),
+    (r'hyprlauncher',                                  'App launcher'),
+    (r'nightmode-toggle',                              'Toggle night mode'),
+    (r'hypr-kill-workspace',                           'Close all windows in workspace'),
+    (r'hypr-float-toggle',                             'Toggle floating (centered)'),
+    (r'uwsm app -- hyprlock',                          'Lock screen'),
+    (r'uwsm stop',                                     'Log out'),
+    (r'screenshot region',                             'Screenshot: region'),
+    (r'screenshot full',                               'Screenshot: full screen'),
+    (r'screenshot window',                             'Screenshot: active window'),
+    (r'screencast',                                    'Screen record / stop'),
+    (r'pactl set-default-sink',                        'Mute + cycle default audio sink'),
+    (r'media-keys --output-volume raise',              'Volume up'),
+    (r'media-keys --output-volume lower',              'Volume down'),
+    (r'media-keys --output-volume mute-toggle',        'Mute speakers'),
+    (r'media-keys --input-volume mute-toggle',         'Mute microphone'),
+    (r'media-keys --brightness raise',                 'Brightness up'),
+    (r'media-keys --brightness lower',                 'Brightness down'),
+    (r'playerctl play-pause',                          'Play / pause'),
+    (r'playerctl next',                                'Next track'),
+    (r'playerctl previous',                            'Previous track'),
+    (r'makoctl dismiss --all',                         'Dismiss all notifications'),
+    (r'makoctl dismiss',                               'Dismiss notification'),
+    (r'makoctl restore && makoctl invoke',             'Restore + invoke last notification'),
+    (r'makoctl restore',                               'Restore notification'),
+    (r'makoctl set-mode dnd',                          'Toggle Do-not-disturb mode'),
+    (r'toggle-touchpad',                               'Toggle touchpad'),
+    (r'hypr-toggle-display',                           'Toggle laptop display'),
+    (r'pkill waybar',                                  'Toggle waybar'),
+    (r'decoration:active_opacity',                     'Toggle window transparency'),
+    (r'general:gaps_in',                               'Toggle window gaps'),
+    (r'cursor:zoom_factor 1\.0',                       'Reset cursor zoom'),
+    (r'cursor:zoom_factor',                            'Cursor zoom in (+0.1)'),
+    (r'dpms off',                                      'Toggle screen blank / hypridle'),
+    (r'kbd_backlight set \+10%',                       'Keyboard backlight up'),
+    (r'kbd_backlight set 10%-',                        'Keyboard backlight down'),
+]
+
+
+def describe_exec(cmd):
+    for pat, label in EXEC_LABELS:
+        if re.search(pat, cmd):
+            return label
+    c = cmd.replace('uwsm app -- ', '').replace('uwsm-app -- ', '')
+    if len(c) > 64:
+        c = c[:61] + '...'
+    return c
+
+
+def describe_disp(d):
+    """Given the dispatcher expr (everything after hl.dsp.), return a
+    human label for the dispatchers used in bindings.lua."""
+    d = d.strip()
+    if d.startswith('window.close'):
+        return 'Close window'
+    if d.startswith('window.fullscreen'):
+        if 'maximized' in d:
+            return 'Toggle maximize'
+        if '"fullscreen"' in d:
+            return 'Toggle fullscreen (real)'
+        return 'Toggle fullscreen'
+    if d.startswith('window.pseudo'):
+        return 'Toggle pseudo-tile'
+    if d.startswith('window.pin'):
+        return 'Pin window (show on all workspaces)'
+    if d.startswith('window.drag'):
+        return 'Drag window (mouse)'
+    if d.startswith('window.resize()'):
+        return 'Resize window (mouse drag)'
+    if d.startswith('window.resize'):
+        xm = re.search(r'x\s*=\s*(-?\d+)', d)
+        ym = re.search(r'y\s*=\s*(-?\d+)', d)
+        xv = int(xm.group(1)) if xm else None
+        yv = int(ym.group(1)) if ym else None
+        if xv is not None and (yv is None or yv == 0):
+            return f'Resize width {xv:+d}px'
+        if yv is not None and (xv is None or xv == 0):
+            return f'Resize height {yv:+d}px'
+        if xv is not None and yv is not None:
+            return f'Resize {xv:+d}x {yv:+d}y'
+        return 'Resize window'
+    if d.startswith('window.move'):
+        if 'out_of_group' in d:
+            return 'Move window out of group'
+        if 'workspace' in d:
+            wm = re.search(r'workspace\s*=\s*"?([^",}]*)"?', d)
+            ws = wm.group(1).strip() if wm else '?'
+            follow = re.search(r'follow\s*=\s*false', d) is not None
+            if 'special' in ws:
+                base = 'Move window to scratchpad'
+            else:
+                base = f'Move window to workspace {ws}'
+            return base + ' (no follow)' if follow else base
+        if 'direction' in d:
+            dm = re.search(r'direction\s*=\s*"([^"]+)"', d)
+            return f'Move window {dm.group(1)}' if dm else 'Move window'
+        return 'Move window'
+    if d.startswith('focus'):
+        if 'workspace' in d:
+            wm = re.search(r'workspace\s*=\s*"?([^",}]*)"?', d)
+            ws = wm.group(1).strip() if wm else '?'
+            mapping = {
+                'e+1': 'Next workspace',
+                'e-1': 'Previous workspace',
+                'previous': 'Previously focused workspace',
+            }
+            if ws in mapping:
+                return mapping[ws]
+            return f'Focus workspace {ws}'
+        if 'direction' in d:
+            dm = re.search(r'direction\s*=\s*"([^"]+)"', d)
+            return f'Focus {dm.group(1)}' if dm else 'Focus'
+        return 'Focus'
+    if d.startswith('layout'):
+        if 'togglesplit' in d:
+            return 'Toggle split direction'
+        if 'swapsplit' in d:
+            return 'Swap split halves'
+        return 'Layout: ' + d
+    if d.startswith('group.toggle'):
+        return 'Toggle group (tabbed)'
+    if d.startswith('group.next'):
+        return 'Next window in group'
+    if d.startswith('group.prev'):
+        return 'Previous window in group'
+    if d.startswith('workspace.toggle_special'):
+        return 'Toggle scratchpad'
+    if d.startswith('workspace.move'):
+        mm = re.search(r'monitor\s*=\s*"([^"]+)"', d)
+        mon = mm.group(1) if mm else '?'
+        names = {'l': 'left', 'r': 'right', 'u': 'up', 'd': 'down'}
+        return f'Move workspace to monitor {names.get(mon, mon)}'
+    return d
+
+
+def eval_key(key_expr):
+    """Evaluate a bind key expression like `mainMod .. " + SHIFT + F"`,
+    `"Print"`, or (after for-loop expansion) `mainMod .. " + " .. 3` into
+    a normalized "SUPER + SHIFT + F" / "SUPER + 3" string. mainMod is
+    substituted as a quoted string; then we walk the expression collecting
+    string-literal contents AND bare numeric tokens in order, so the
+    expanded workspace keys (bare numbers) are preserved."""
+    k = re.sub(r'\bmainMod\b', f'"{mainmod}"', key_expr)
+    out = []
+    i = 0
+    n = len(k)
+    while i < n:
+        c = k[i]
+        if c == '"':
+            j = i + 1
+            while j < n and k[j] != '"':
+                j += 1
+            out.append(k[i + 1:j])
+            i = j + 1
+        elif c.isdigit():
+            j = i
+            while j < n and k[j].isdigit():
+                j += 1
+            out.append(k[i:j])
+            i = j
+        else:
+            i += 1
+    return ''.join(out).strip()
+
+
+def emit(key, desc, dispatch):
+    if not key or not desc:
+        return
+    print(f"{key}\t{desc}\t{dispatch}")
+
+
+bind_re = re.compile(r'hl\.bind\(\s*')
+gest_re = re.compile(r'hl\.gesture\(\s*\{([^}]*)\}\s*\)')
+
+_lines = src.splitlines()
+_li = 0
+while _li < len(_lines):
+    line = strip_comment(_lines[_li]).strip()
+    _li += 1
+    if not line or line.startswith('--'):
         continue
 
-    mods = MODMAP.get(b["modmask"], str(b["modmask"]))
-    key = b.get("key", "")
+    gm = gest_re.search(line)
+    if gm:
+        body = gm.group(1)
+        fingers = re.search(r'fingers\s*=\s*(\d+)', body)
+        direction = re.search(r'direction\s*=\s*"([^"]+)"', body)
+        action = re.search(r'action\s*=\s*"([^"]+)"', body)
+        if fingers and direction:
+            label = f"{fingers.group(1)}-finger {direction.group(1)} swipe"
+            desc = f"Gesture: {action.group(1)}" if action else "Gesture"
+            emit(label, desc, '')  # not re-runnable via hyprctl dispatch
+        continue
 
-    if not key and b.get("keycode", 0):
-        kc = b["keycode"]
-        key = MOUSE.get(kc, f"code:{kc}")
+    m = bind_re.search(line)
+    if not m:
+        continue
 
-    key_combo = (mods + " + " + key) if mods else key
+    # Accumulate continuation lines until the hl.bind( call's parens
+    # balance -- handles multi-line binds where the exec_cmd argument
+    # (often a long shell command) is on the next physical line.
+    while total_depth(line) > 0 and _li < len(_lines):
+        line += ' ' + strip_comment(_lines[_li]).strip()
+        _li += 1
 
-    desc = b.get("description", "")
-    dispatcher = b.get("dispatcher", "")
-    arg = b.get("arg", "")
+    start = m.end() - 1  # the '(' of hl.bind(
+    end = match_paren(line, start)
+    if end is None:
+        continue  # unbalanced; skip defensively
+    inner = line[start + 1:end]
 
-    if desc:
-        action = desc
-    elif dispatcher == "exec":
-        action = arg.replace("uwsm app -- ", "").replace("uwsm-app -- ", "")
-        if "hyprlauncher" in action:
-            action = "App launcher"
+    args = split_args(inner)
+    if len(args) < 2:
+        continue
+
+    key = eval_key(args[0])
+    disp_expr = args[1].strip()
+
+    # exec_cmd with either a "..." short string or a [[ ... ]] long string.
+    em = re.search(
+        r'hl\.dsp\.exec_cmd\(\s*(?:"((?:[^"\\]|\\.)*)"|\[\[(.*?)\]\])\s*\)',
+        disp_expr, re.DOTALL)
+    if em:
+        if em.group(1) is not None:
+            cmd = em.group(1).encode().decode('unicode_escape')
+        else:
+            cmd = em.group(2) or ''  # [[ ]] long strings are literal
+        desc = describe_exec(cmd)
+        dispatch = disp_expr
     else:
-        action = (dispatcher + " " + arg).strip() if arg else dispatcher
+        am = re.search(r'hl\.dsp\.(.+)', disp_expr)
+        desc = describe_disp(am.group(1)) if am else disp_expr
+        dispatch = disp_expr
 
-    action = action.strip()
-    if not action:
-        continue
+    emit(key, desc, dispatch)
+PY
 
-    unique = (key_combo, action)
-    if unique in seen:
-        continue
-    seen.add(unique)
-
-    print(f"{mods}\t{key_combo}\t{action}\t{dispatcher}\t{arg}")
-' | sort -t$'\t' -k1,1.2 -k2,2 > "$tmp"
-
-awk -F'\t' '{
-    pad = sprintf("%-28s", $2)
-    printf "%s  %s\n", pad, $3
-}' "$tmp" > "$display"
-
+# fzf: display only key + description; on Enter it emits the full line, so
+# we recover the dispatch (col 3) with cut. No description-uniqueness magic.
 selection=$(fzf \
     --prompt="Keybindings > " \
     --no-multi \
@@ -70,20 +585,20 @@ selection=$(fzf \
     --border=none \
     --no-info \
     --no-scrollbar \
+    --delimiter='\t' \
+    --with-nth=1,2 \
+    --tabstop=30 \
+    --header='Enter: run binding  Esc/C-c: close' \
     --color=fg:#c0c0c0,bg:#1a1a2e,hl:#ffffff \
     --color=fg+:#ffffff,bg+:#2a2a4a,hl+:#ffffff \
     --color=border:#444466,header:#888888 \
     --color=gutter:#1a1a2e,spinner:#666666 \
     --color=pointer:#ffffff,marker:#888888 \
-    < "$display")
+    < "$tmp") || exit 0
 
 [[ -z "$selection" ]] && exit 0
 
-action_part=$(echo "$selection" | sed 's/^.\{28\}  //')
-record=$(awk -F'\t' -v a="$action_part" '$3 == a {print $4 "\t" $5; exit}' "$tmp")
-
+record=$(printf '%s' "$selection" | cut -f3)
 if [[ -n "$record" ]]; then
-    dispatcher=$(echo "$record" | cut -f1)
-    arg=$(echo "$record" | cut -f2)
-    hyprctl dispatch "$dispatcher" "$arg"
+    hyprctl dispatch "$record" >/dev/null 2>&1 || true
 fi

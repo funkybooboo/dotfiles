@@ -1,0 +1,3 @@
+-- Workspace rules placeholder.
+-- Translated from workspaces.conf (which was empty). Add hl.workspace_rule(...)
+-- calls here if needed. See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/

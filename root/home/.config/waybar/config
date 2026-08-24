@@ -3,14 +3,36 @@
     "position": "top",
     "spacing": 0,
     "height": 26,
-    "modules-left": ["hyprland/workspaces"],
-    "modules-center": ["clock", "custom/recording"],
-    "modules-right": ["group/tray-expander", "bluetooth", "network", "pulseaudio", "cpu", "memory", "disk", "battery"],
+    "modules-left": [
+        "custom/launcher",
+        "custom/search",
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "clock",
+        "custom/recording"
+    ],
+    "modules-right": [
+        "group/tray-expander",
+        "custom/help",
+        "custom/clipboard",
+        "pulseaudio",
+        "bluetooth",
+        "network",
+        "cpu",
+        "memory",
+        "disk",
+        "custom/display",
+        "backlight",
+        "custom/nightmode",
+        "battery",
+        "custom/power"
+    ],
     "hyprland/workspaces": {
         "on-click": "activate",
         "format": "{icon}",
         "format-icons": {
-            "default": "󰊠",
+            "default": "\udb80\udea0",
             "1": "1",
             "2": "2",
             "3": "3",
@@ -21,7 +43,7 @@
             "8": "8",
             "9": "9",
             "10": "0",
-            "active": "󱓻",
+            "active": "\udb85\udcfb",
             "urgent": ""
         },
         "persistent-workspaces": {
@@ -41,10 +63,22 @@
         "format": "{}",
         "max-length": 50
     },
+    "custom/launcher": {
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "Applications  (Super+Space)",
+        "on-click": "hyprlauncher"
+    },
+    "custom/search": {
+        "format": "󰍉",
+        "tooltip": true,
+        "tooltip-format": "Search windows  (Super+Slash)",
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-window-switcher-inner"
+    },
     "clock": {
         "format": "{:L%A, %B %d, %Y  %I:%M %p}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "ghostty -e ~/.local/bin/calendar-tui"
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>\nClick: open calendar  (Super+Shift+A)",
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"
     },
     "battery": {
         "states": {
@@ -54,52 +88,90 @@
         "format": "{icon} {capacity}%",
         "format-discharging": "{icon} {capacity}%",
         "format-charging": "{icon} {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-icons": {
-            "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
-            "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
-        },
+        "format-plugged": "{icon} {capacity}%",
         "format-full": "󰁹 {capacity}%",
-        "tooltip-format-discharging": "{power:>1.0f}W {capacity}%",
-        "tooltip-format-charging": "{power:>1.0f}W {capacity}%",
+        "format-icons": {
+            "charging": [
+                "󰢜",
+                "󰂆",
+                "󰂇",
+                "󰂈",
+                "󰢝",
+                "󰂉",
+                "󰢞",
+                "󰂊",
+                "󰂋",
+                "󰂅"
+            ],
+            "default": [
+                "󰁺",
+                "󰁻",
+                "󰁼",
+                "󰁽",
+                "󰁾",
+                "󰁿",
+                "󰂀",
+                "󰂁",
+                "󰂂",
+                "󰁹"
+            ]
+        },
         "interval": 5,
-        "on-click": "/home/nate/.local/bin/power-mode-menu"
+        "on-click": "~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu",
+        "tooltip-format": "{capacity}%\nClick: power mode menu  (Super+Shift+P)",
+        "tooltip-format-charging": "{power:>1.0f}W {capacity}%\nClick: power mode menu  (Super+Shift+P)",
+        "tooltip-format-discharging": "{power:>1.0f}W {capacity}%\nClick: power mode menu  (Super+Shift+P)"
     },
-"network": {
-        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "network": {
+        "format-icons": [
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
+        ],
         "format": "{icon}",
         "format-wifi": "{icon}",
         "format-ethernet": "󰀂",
         "format-disconnected": "󰤮",
-        "tooltip-format-wifi": "{essid} ({frequency} GHz)\n\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
-        "tooltip-format-ethernet": "Connected\n\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
+        "tooltip-format": "{essid} ({frequency} GHz)\n↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
+        "tooltip-format-ethernet": "Connected\n↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
         "tooltip-format-disconnected": "Disconnected",
-        "on-click": "ghostty -e impala",
-        "interval": 3
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e impala",
+        "interval": 2,
+        "tooltip-format-wifi": "Wi-Fi: {essid} ({signaldBm} dBm)\nClick: open Wi-Fi manager  (Super+Shift+W)"
     },
     "network#speed": {
-        "format": "\u2193{bandwidthDownBits}",
-        "format-wifi": "\u2193{bandwidthDownBits}",
-        "format-ethernet": "\u2193{bandwidthDownBits}",
+        "format": "↓{bandwidthDownBits}",
+        "format-wifi": "↓{bandwidthDownBits}",
+        "format-ethernet": "↓{bandwidthDownBits}",
         "format-disconnected": "",
-        "tooltip-format": "\u2193 {bandwidthDownBits}  \u2191 {bandwidthUpBits}",
+        "tooltip-format": "↓ {bandwidthDownBits}  ↑ {bandwidthUpBits}",
         "interval": 3
     },
     "pulseaudio": {
-        "format": "{icon}",
-        "format-muted": "󰝟",
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 {volume}%",
         "format-icons": {
             "headphone": "",
             "headset": "",
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
-        "on-click": "ghostty -e wiremix",
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e wiremix",
         "on-click-right": "pamixer -t",
-        "tooltip-format": "Volume {volume}%"
+        "tooltip-format": "Volume {volume}%\nClick: open volume mixer  (Super+Shift+V)  |  Right-click: mute"
     },
     "backlight": {
-        "format": "{icon}",
-        "format-icons": ["󰃞", "󰃟"]
+        "format": "{icon} {percent}%",
+        "format-icons": [
+            "󰃞",
+            "󰃟"
+        ],
+        "tooltip-format": "Brightness: {percent}%"
     },
     "bluetooth": {
         "format": "󰂯",
@@ -107,25 +179,28 @@
         "format-disabled": "󰂲",
         "format-connected": "󰂱 {device_alias}",
         "format-no-controller": "",
-        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+        "tooltip-format": "Bluetooth: {num_connections} connected\nClick: open Bluetooth manager  (Super+Shift+B)",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
-        "on-click": "ghostty -e bluetui"
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e bluetui"
     },
     "cpu": {
-        "format": "󰍛",
-        "interval": 5,
-        "on-click": "ghostty -e btop"
+        "format": "",
+        "interval": 2,
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e btop",
+        "tooltip-format": "CPU: {usage}%\nClick: open system monitor  (Super+Shift+T)"
     },
     "memory": {
         "format": "",
-        "interval": 5,
-        "on-click": "ghostty -e btop"
+        "interval": 2,
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e btop",
+        "tooltip-format": "RAM: {percentage}%\nClick: open system monitor  (Super+Shift+T)"
     },
     "disk": {
         "format": "󰋊",
         "path": "/",
         "interval": 30,
-        "on-click": "ghostty -e ncdu /"
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e ncdu /",
+        "tooltip-format": "Disk: {path} {percentage_used}%\nClick: open disk usage  (Super+Shift+D)"
     },
     "tray": {
         "icon-size": 12,
@@ -137,16 +212,52 @@
             "transition-duration": 600,
             "children-class": "tray-group-item"
         },
-        "modules": ["custom/expand-icon", "tray"]
+        "modules": [
+            "custom/expand-icon",
+            "tray"
+        ]
     },
     "custom/expand-icon": {
         "format": "",
         "tooltip": false
     },
+    "custom/help": {
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "Keybindings  (Super+C)",
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"
+    },
+    "custom/clipboard": {
+        "format": "󰅇",
+        "tooltip": true,
+        "tooltip-format": "Clipboard history  (Super+Ctrl+V)",
+        "on-click": "~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/clipboard-manager"
+    },
     "custom/recording": {
         "exec": "~/.local/bin/recording-indicator",
         "interval": 1,
         "on-click": "~/.local/bin/screencast",
-        "return-type": "json"
+        "return-type": "json",
+        "tooltip-format": "Screen recording toggle  (Super+Shift+R)"
+    },
+    "custom/display": {
+        "format": "󰍹",
+        "tooltip": true,
+        "tooltip-format": "Display settings  (Super+D)",
+        "on-click": "~/.local/bin/hypr-float-launch nwg-displays"
+    },
+    "custom/power": {
+        "format": "⏻",
+        "tooltip": true,
+        "tooltip-format": "Power menu  (lock / logout / restart / shutdown)",
+        "on-click": "~/.local/bin/power-menu"
+    },
+    "custom/nightmode": {
+        "exec": "~/.local/bin/nightmode-indicator",
+        "exec-if": "true",
+        "interval": 2,
+        "return-type": "json",
+        "on-click": "~/.local/bin/nightmode-toggle",
+        "tooltip": true
     }
 }

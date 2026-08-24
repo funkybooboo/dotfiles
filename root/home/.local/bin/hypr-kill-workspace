@@ -1,1 +1,19 @@
-hyprctl clients -j | jq -r ".[] | select(.workspace.id == $(hyprctl activeworkspace -j | jq .id)) | .address" | xargs -I{} hyprctl dispatch killwindow {}
+#!/bin/bash
+# hypr-kill-workspace -- close every window on the active workspace.
+# Bound to Super+Ctrl+Delete.
+#
+# Uses the Hyprland Lua dispatcher API (hl.dsp.window.close) via
+# `hyprctl dispatch '<lua>'`. In Lua config mode (0.55+) the old
+# `hyprctl dispatch killwindow <addr>` hyprlang syntax is gone; window
+# dispatchers take a table with a `window` selector needing the "address:"
+# prefix. hyprctl reports bare "0x...." addresses, so we add the prefix.
+
+set -euo pipefail
+
+ws_id=$(hyprctl activeworkspace -j | jq .id)
+
+hyprctl clients -j | jq -r --argjson ws "$ws_id" \
+  '.[] | select(.workspace.id == $ws) | .address' \
+| while IFS= read -r addr; do
+  hyprctl dispatch "hl.dsp.window.close({ window = \"address:$addr\" })" >/dev/null 2>&1 || true
+done

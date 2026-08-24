@@ -1,6 +1,14 @@
 #!/bin/bash
+# hypr-lid-switch -- enable/disable the laptop panel (eDP-1) on lid
+# open/close. Called by hypridle (see hypridle.conf).
+#
+# Uses the Hyprland Lua API (hl.monitor) via `hyprctl eval '<lua>'`. In Lua
+# config mode (0.55+) `hyprctl keyword monitor ...` is gone ("keyword can't
+# work with non-legacy parsers"). Disabling is a `disabled = true` field; to
+# re-enable, set disabled = false plus a mode/position/scale (mode="preferred"
+# + position="auto" lets Hyprland pick a sane layout).
 if [[ "$1" == "close" ]]; then
-    hyprctl keyword monitor eDP-1,disabled
+  hyprctl eval 'hl.monitor({output="eDP-1", disabled=true})' >/dev/null 2>&1 || true
 elif [[ "$1" == "open" ]]; then
-    hyprctl keyword monitor eDP-1,preferred,auto,1.33
+  hyprctl eval 'hl.monitor({output="eDP-1", disabled=false, mode="preferred", position="auto", scale=1.33})' >/dev/null 2>&1 || true
 fi
