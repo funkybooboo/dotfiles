@@ -51,6 +51,10 @@
 	editor = nvim
 	pager = diffnav
 
+[pager]
+	log = nvimpager
+	diff = diffnav
+
 [diff]
 	algorithm = histogram
 	colorMoved = plain

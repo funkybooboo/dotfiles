@@ -1,7 +1,7 @@
 # 000108-neovim.sh — Neovim + plugin tooling + config
 # Installs: neovim tree-sitter-cli stylua luarocks lua51 python-pynvim
 #           tectonic (pacman) nvimpager (via nix — .#nvimpager)
-# Links:    ~/.config/nvim/**, ~/.editorconfig
+# Links:    ~/.config/nvim/**, ~/.config/nvimpager/init.lua, ~/.editorconfig
 # Enables:  —
 # Note: tectonic provides LaTeX for the nvim latex plugin. nvimpager is the
 #       PAGER/MANPAGER set in environment-variables. lua51 + luarocks +
@@ -21,6 +21,7 @@ install_nix .#nvimpager
 ok "neovim + tooling"
 
 link_tree "$DOTFILES_HOME/.config/nvim" "$HOME/.config/nvim"
+link_file "$DOTFILES_HOME/.config/nvimpager/init.lua" "$HOME/.config/nvimpager/init.lua"
 link_file "$DOTFILES_HOME/.editorconfig" "$HOME/.editorconfig"
 
 # The 99 plugin lives in the dotfiles git submodule sources/99 (initialized in
