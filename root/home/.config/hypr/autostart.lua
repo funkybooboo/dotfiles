@@ -15,9 +15,13 @@ end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")
 end)
-hl.on("hyprland.start", function() hl.exec_cmd("sleep 2 && uwsm app -- hyprpaper") end)
-hl.on("hyprland.start", function() hl.exec_cmd("/home/nate/.config/hypr/set-wallpaper.sh") end)
-hl.on("hyprland.start", function() hl.exec_cmd("/home/nate/.config/hypr/monitor-watcher.sh") end)
+-- Wallpaper + hyprpaper are owned by the systemd user service hypr-wallpaper.service
+-- (enabled by migration 000310). It runs monitor-watcher.sh, which calls
+-- set-wallpaper.sh at startup and on monitoradded/monitorremoved events, and
+-- set-wallpaper.sh starts hyprpaper. Do NOT also spawn them here -- doing so
+-- multiplies the watchers and hyprpaper processes, so every monitor flap
+-- (e.g. a flaky external DP cable) fires killall+restart several times in
+-- parallel, which makes all screens flash black on a loop.
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- mako") end)
 
 -- swayosd-server is no longer autostarted: volume/brightness state is shown

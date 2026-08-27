@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=tdf
+GenericName=PDF Viewer
+Comment=TUI PDF viewer (nix flake)
+Exec=/usr/bin/ghostty -e tdf %f
+Icon=application-pdf
+Terminal=false
+Categories=Office;Viewer;
+Keywords=pdf;viewer;terminal;
+MimeType=application/pdf;

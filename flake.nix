@@ -18,12 +18,12 @@
             brave librewolf wayfreeze tdf timg nvimpager
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
             calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
-            exercism codecrafters-cli
+            exercism codecrafters-cli opencode
             # Added for Debian/Ubuntu, where these have no archive package and
             # no upstream Linux release asset. Unused on Arch (pacman covers
             # them there), but harmless -- an unreferenced attr costs nothing.
             ast-grep bluetui fastfetch hyprlauncher hyprsunset impala
-            tectonic wiremix;
+            tectonic wiremix yazi;
 
           # waybar 0.15.0 (nixpkgs) + PR #5013: Hyprland Lua-IPC dispatch fix so
           # the native hyprland/workspaces module's click works under Hyprland's

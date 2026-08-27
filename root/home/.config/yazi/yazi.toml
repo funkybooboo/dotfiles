@@ -1,0 +1,6 @@
+# yazi.toml -- Yazi terminal file manager config
+# Source: ~/.config/yazi/yazi.toml (symlinked here by migrations/000235-yazi.sh)
+
+[mgr]
+show_hidden  = true   # show dotfiles/hidden entries
+show_symlink  = true   # show the target path after symlink names

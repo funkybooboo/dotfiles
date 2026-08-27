@@ -34,6 +34,7 @@ hl.bind(mainMod .. " + SHIFT + B",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e impala"))
 hl.bind(mainMod .. " + SHIFT + V",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e wiremix"))
 hl.bind(mainMod .. " + SHIFT + T",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e btop"))
+hl.bind(mainMod .. " + SHIFT + Y",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e fish -c y"))  -- yazi (fish `y` wrapper)
 hl.bind(mainMod .. " + SHIFT + D",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ncdu /"))
 hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu"))
 
