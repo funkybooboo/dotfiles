@@ -48,7 +48,7 @@ case "$arch" in
   x86_64|amd64) arch=amd64 ;;
   aarch64|arm64) arch=arm64 ;;
   *)
-    warn "gcx: unsupported arch '$arch' — skipping (only amd64/arm64 pinned)"
+    warn "gcx: unsupported arch '$arch' -- skipping (only amd64/arm64 pinned)"
     _add_warning "gcx: unsupported arch $arch (skipped)"
     ok "gcx (skipped, unsupported arch $arch)"
     exit 0  # nb: _common.sh is sourced, not exec'd; 'return' would error
@@ -157,7 +157,7 @@ if [[ -x "$GCX_BIN" ]]; then
   inst="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1)"
   inst="${inst#*version }"; inst="${inst%% *}"
   if [[ -z "$latest" ]]; then
-    warn "could not fetch gcx latest release (offline/rate-limit?) — keeping $inst"
+    warn "could not fetch gcx latest release (offline/rate-limit?) -- keeping $inst"
     _add_warning "gcx: latest-release fetch failed (kept $inst)"
   elif [[ -z "$inst" || "$(vercmp "$latest" "$inst")" -gt 0 ]]; then
     up_base="https://github.com/${GCX_REPO}/releases/download/v${latest}"
@@ -171,7 +171,7 @@ if [[ -x "$GCX_BIN" ]]; then
       up_expected="$(grep "${up_archive}" "$tmp/checksums.txt" | awk '{print $1}')"
       up_actual="$(sha256sum "$tmp/$up_archive" | awk '{print $1}')"
       if [[ -z "$up_expected" ]]; then
-        warn "gcx $latest: $up_archive not in checksums.txt — not installing (kept $inst)"
+        warn "gcx $latest: $up_archive not in checksums.txt -- not installing (kept $inst)"
         _add_warning "gcx: $latest missing from checksums.txt (kept $inst)"
       elif [[ "$up_actual" == "$up_expected" ]]; then
         if tar xzf "$tmp/$up_archive" -C "$tmp" gcx 2>/dev/null && install -m755 "$tmp/gcx" "$GCX_BIN" 2>/dev/null; then
@@ -180,15 +180,15 @@ if [[ -x "$GCX_BIN" ]]; then
             "$GCX_BIN" completion fish >"$HOME/.config/fish/completions/gcx.fish" 2>/dev/null || true
           fi
         else
-          warn "gcx $latest install failed — keeping $inst"
+          warn "gcx $latest install failed -- keeping $inst"
           _add_warning "gcx: $latest install failed (kept $inst)"
         fi
       else
-        warn "gcx $latest sha mismatch — not installing (kept $inst)"
+        warn "gcx $latest sha mismatch -- not installing (kept $inst)"
         _add_warning "gcx: $latest sha mismatch (kept $inst)"
       fi
     else
-      warn "gcx $latest download failed — keeping $inst"
+      warn "gcx $latest download failed -- keeping $inst"
       _add_warning "gcx: $latest download failed (kept $inst)"
     fi
     rm -rf "$tmp"

@@ -1,7 +1,7 @@
-# 000001-system-update.sh — full system upgrade
+# 000001-system-update.sh -- full system upgrade
 # Installs: git, base-devel (needed by migrations + makepkg)
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 # Note: System updates are pacman-only (pacman -Syu). Packages not in Arch
 #       official repos come from nix (tier 2), sources/ (tier 3), or flatpak
 #       pacman -> nix -> sources -> flatpak.
@@ -14,7 +14,7 @@ info "updating system packages..."
 if sudo pacman -Syu --noconfirm; then
   ok "system updated (pacman)"
 else
-  warn "system update failed — continuing, but subsequent installs may be affected"
+  warn "system update failed -- continuing, but subsequent installs may be affected"
   _add_warning "pacman -Syu failed; some packages may not install correctly"
 fi
 sudo systemctl daemon-reload 2>/dev/null || true

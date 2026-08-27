@@ -1,5 +1,5 @@
 {
-  description = "Dotfiles nix packages — allows unfree, pinned nixpkgs revision";
+  description = "Dotfiles nix packages -- allows unfree, pinned nixpkgs revision";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 

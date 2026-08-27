@@ -1,7 +1,7 @@
-# 000501-television.sh — television (TUI channel-switcher / launcher)
-# Installs: television (now in extra/ — official Arch package)
+# 000501-television.sh -- television (TUI channel-switcher / launcher)
+# Installs: television (now in extra/ -- official Arch package)
 # Links:    ~/.config/television/config.toml
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

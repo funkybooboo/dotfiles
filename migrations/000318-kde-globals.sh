@@ -1,7 +1,7 @@
-# 000318-kde-globals.sh — KDE global settings (Breeze Dark look)
-# Installs: —
+# 000318-kde-globals.sh -- KDE global settings (Breeze Dark look)
+# Installs: --
 # Links:    ~/.config/kdeglobals
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

@@ -1,7 +1,7 @@
-# 000235-yazi.sh — Yazi terminal file manager
+# 000235-yazi.sh -- Yazi terminal file manager
 # Installs: yazi
 # Links:    ~/.config/yazi/yazi.toml
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

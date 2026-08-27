@@ -1,7 +1,7 @@
-# 000100-bash.sh — bash shell dotfiles (no install — bash is in base)
-# Installs: —
+# 000100-bash.sh -- bash shell dotfiles (no install -- bash is in base)
+# Installs: --
 # Links:    ~/.bashrc, ~/.bash_profile, ~/.inputrc
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

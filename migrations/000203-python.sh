@@ -1,7 +1,7 @@
-# 000203-python.sh — system Python + poetry + pythonrc
+# 000203-python.sh -- system Python + poetry + pythonrc
 # Installs: python python-poetry-core
 # Links:    ~/.config/python/pythonrc
-# Enables:  —
+# Enables:  --
 # Note: System python is installed for pythonrc / poetry-core. Language runtime
 #       versions for projects are managed by mise (see 000202-mise).
 

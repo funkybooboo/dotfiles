@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# clean-disk — clean system caches on Arch Linux
+# clean-disk -- clean system caches on Arch Linux
 #
 # Cleans: pacman cache, flatpak runtimes, podman images, systemd journal,
 # /tmp, nix store garbage, mise caches, trash. Launches ncdu at the end.

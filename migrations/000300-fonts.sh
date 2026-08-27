@@ -1,10 +1,10 @@
-# 000300-fonts.sh — Nerd Fonts + Noto fonts + fontconfig
+# 000300-fonts.sh -- Nerd Fonts + Noto fonts + fontconfig
 # Installs: noto-fonts, noto-fonts-cjk, noto-fonts-emoji,
 #           ttf-jetbrains-mono-nerd (the one used by ghostty/hyprlock/hyprtoolkit),
 #           ttf-nerd-fonts-symbols + ttf-nerd-fonts-symbols-mono (icon/powerline glyphs),
 #           fontconfig
 # Links:    ~/.config/fontconfig/fonts.conf
-# Enables:  —
+# Enables:  --
 # Note: Previously installed the entire Nerd Fonts collection (~70 packages,
 #       ~8.5 GiB). Trimmed to just JetBrainsMono Nerd Font + the symbols
 #       packages (which provide the Powerline/icons glyphs JetBrainsMono

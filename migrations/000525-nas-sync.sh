@@ -1,5 +1,5 @@
-# 000525-nas-sync.sh — TrueNAS SMB sync units + helper scripts + timers
-# Installs: — (rsync installed by 000221-rsync, cifs-utils by 000232-smb)
+# 000525-nas-sync.sh -- TrueNAS SMB sync units + helper scripts + timers
+# Installs: -- (rsync installed by 000221-rsync, cifs-utils by 000232-smb)
 # Deploys: /etc/systemd/system/mnt-truenas-nate.{mount,automount}
 # Links:    ~/.config/systemd/user/nas-sync-{documents,music,photos,
 #             audiobooks,books}.{service,timer},

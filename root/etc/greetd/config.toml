@@ -1,4 +1,4 @@
-# greetd config — tuigreet greeter launching the uwsm-managed Hyprland session.
+# greetd config -- tuigreet greeter launching the uwsm-managed Hyprland session.
 #
 # tuigreet is a console greeter that auto-discovers Wayland/X sessions from
 # /usr/share/wayland-sessions and /usr/share/xsessions. --remember remembers

@@ -1,7 +1,7 @@
-# 000200-git.sh — git + GitHub CLI + diff pagers + config + hooks
+# 000200-git.sh -- git + GitHub CLI + diff pagers + config + hooks
 # Installs: git github-cli git-filter-repo git-lfs git-delta diffnav
 # Links:    ~/.gitconfig
-# Enables:  —
+# Enables:  --
 # Note: git-delta (interactive.diffFilter) and diffnav (core.pager) are the diff
 #       pagers referenced in .gitconfig. git-lfs is referenced by [filter "lfs"].
 #       Sets core.hooksPath to .githooks for pre-commit secret scanning.

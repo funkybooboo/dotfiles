@@ -209,7 +209,7 @@ if [[ "$_SHA_OK" != "true" ]]; then
   return 0 2>/dev/null || exit 0
 fi
 if [[ "$_GPG_OK" != "true" ]]; then
-  warn "GPG not verified — installing with sha256-only (see warnings)"
+  warn "GPG not verified -- installing with sha256-only (see warnings)"
 fi
 
 # --- 3. extract + install -----------------------------------------------------

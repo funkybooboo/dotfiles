@@ -1,13 +1,13 @@
-# 000402-network.sh — network stack: iwd (wifi) + systemd-networkd (IP/DHCP)
+# 000402-network.sh -- network stack: iwd (wifi) + systemd-networkd (IP/DHCP)
 # Installs: iwd wireless-regdb openresolv
 # Deploys: /etc/systemd/network/{20-ethernet,20-wlan,20-wwan}.network,
 #          /etc/conf.d/wireless-regdom,
 #          /etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf
 # Enables: iwd.service, systemd-networkd.service
 #
-# This is a pure iwd + systemd-networkd setup — NO NetworkManager. iwd handles
+# This is a pure iwd + systemd-networkd setup -- NO NetworkManager. iwd handles
 # wifi authentication (WPA/PSK, stored per-SSID in /var/lib/iwd/*.psk, which is
-# machine-specific and NOT tracked here — configure your SSIDs with `iwctl`).
+# machine-specific and NOT tracked here -- configure your SSIDs with `iwctl`).
 # systemd-networkd handles IP configuration via the .network files below, which
 # are generic (Match by interface Type, DHCP=yes) and safe to ship.
 #
@@ -38,7 +38,7 @@ done
 # Set the wireless regulatory domain. Without WIRELESS_REGDOM set, the global
 # regdom stays at 'country 00' (restricted 5GHz / low tx power) and boot emits
 #   cfg80211: Process '/usr/bin/set-wireless-regdom' failed with exit code 1
-# Deploy the regdom config (defaults to US — adjust per location).
+# Deploy the regdom config (defaults to US -- adjust per location).
 deploy_etc_file "$DOTFILES_ROOT_ETC/conf.d/wireless-regdom" \
   "/etc/conf.d/wireless-regdom" 644
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cleanup-system — run all system cleanup and diagnostic scripts
+# cleanup-system -- run all system cleanup and diagnostic scripts
 #
 set -euo pipefail
 

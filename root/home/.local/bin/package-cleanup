@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# package-cleanup — review recently installed packages and optionally uninstall them
+# package-cleanup -- review recently installed packages and optionally uninstall them
 #
 # Usage: package-cleanup [--days N] [--dry-run]
 #
@@ -132,11 +132,11 @@ for pkg in "${CURRENT[@]}"; do
     case "${answer,,}" in
       y|yes)
         TO_REMOVE+=("$pkg")
-        echo -e "    ${RED}→ Queued for removal${NC}"
+        echo -e "    ${RED}-> Queued for removal${NC}"
         break
         ;;
       n|no|"")
-        echo -e "    ${GREEN}→ Keeping${NC}"
+        echo -e "    ${GREEN}-> Keeping${NC}"
         break
         ;;
       q|quit)
@@ -160,7 +160,7 @@ fi
 
 echo -e "${BOLD}Packages to remove (${#TO_REMOVE[@]}):${NC}"
 for pkg in "${TO_REMOVE[@]}"; do
-  echo -e "  ${RED}✗${NC} ${pkg}"
+  echo -e "  ${RED}[x]${NC} ${pkg}"
 done
 echo ""
 

@@ -1,6 +1,6 @@
-# 000522-tailscale.sh — Tailscale mesh VPN
+# 000522-tailscale.sh -- Tailscale mesh VPN
 # Installs: tailscale (via official install script)
-# Links:    —
+# Links:    --
 # Enables:  tailscaled
 # Note: The interactive 'tailscale up' authentication is deferred to
 #       setup.sh (run after reboot into Hyprland). This migration only

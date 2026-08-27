@@ -1,4 +1,4 @@
-# 000400-power-management.sh — power-profiles-daemon + udev rule + battery notify
+# 000400-power-management.sh -- power-profiles-daemon + udev rule + battery notify
 # Installs: power-profiles-daemon brightnessctl
 # Links:    ~/.config/systemd/user/power-profile-switch.service,
 #           ~/.config/systemd/user/battery-notify.service,

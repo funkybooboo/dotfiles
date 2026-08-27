@@ -1,7 +1,7 @@
-# 000208-neovim-node-host.sh — REMOVE the Neovim Node.js provider host
+# 000208-neovim-node-host.sh -- REMOVE the Neovim Node.js provider host
 # Removes: the "neovim" npm global package (provides neovim-node-host)
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 # Note: Superseded. The nvim config uses nvim-lspconfig + typescript-language-
 #       server (an LSP server) for JS/TS; there are ZERO node-host remote
 #       plugins in the config. The node_host_prog / NODE_PATH lines in
@@ -33,7 +33,7 @@ if [[ ! -e "$HOST_BIN" ]] && [[ ! -d "$MOD_DIR" ]]; then
   skip "neovim npm global (already removed)"
 else
   if ! NPM="$(resolve_cmd npm)"; then
-    warn "npm not found — cannot uninstall neovim global; remove manually:"
+    warn "npm not found -- cannot uninstall neovim global; remove manually:"
     warn "  rm -rf ~/.local/lib/node_modules/neovim ~/.local/bin/neovim-node-host"
     _add_warning "npm not available; neovim npm global not removed"
   else
@@ -46,7 +46,7 @@ else
       if [[ ! -e "$HOST_BIN" ]] && [[ ! -d "$MOD_DIR" ]]; then
         ok "neovim npm global removed (manual fallback)"
       else
-        warn "could not fully remove neovim npm global — check $MOD_DIR"
+        warn "could not fully remove neovim npm global -- check $MOD_DIR"
         _add_warning "neovim npm global not fully removed"
       fi
     fi
@@ -55,7 +55,7 @@ fi
 
 # Final sanity: nothing should remain.
 if [[ -e "$HOST_BIN" ]] || [[ -d "$MOD_DIR" ]]; then
-  warn "residual neovim node-host files remain — remove manually:"
+  warn "residual neovim node-host files remain -- remove manually:"
   warn "  rm -rf $MOD_DIR $HOST_BIN"
   _add_warning "residual neovim node-host files after removal"
 fi

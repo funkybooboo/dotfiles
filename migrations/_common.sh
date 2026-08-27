@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# _common.sh — shared helpers and globals for migrations
+# _common.sh -- shared helpers and globals for migrations
 #
 # Sourced once by migrate.sh before running migrations. Each migration also
 # guard-sources this file so it can be executed standalone:
@@ -39,26 +39,26 @@ BOLD='\033[1m'
 DIM='\033[2m'
 NC='\033[0m'
 
-ok()   { echo -e "  ${GREEN}✓${NC} $*"; }
-fail() { echo -e "  ${RED}✗${NC} $*"; }
-warn() { echo -e "  ${YELLOW}⚠${NC} $*"; }
-info() { echo -e "  ${BLUE}→${NC} $*"; }
-skip() { echo -e "  ${DIM}–${NC} ${DIM}$*${NC}"; }
+ok()   { echo -e "  ${GREEN}[+]${NC} $*"; }
+fail() { echo -e "  ${RED}[x]${NC} $*"; }
+warn() { echo -e "  ${YELLOW}[!]${NC} $*"; }
+info() { echo -e "  ${BLUE}->${NC} $*"; }
+skip() { echo -e "  ${DIM}-${NC} ${DIM}$*${NC}"; }
 
 section() {
   if [[ -n "${_DOTFILES_QUIET:-}" ]]; then
     # Compact: one dim line, no box. Keeps progress visible without the
     # 3-line cyan banner that dominates steady-state re-run output.
-    echo -e "${DIM}── $* ${NC}"
+    echo -e "${DIM}-- $* ${NC}"
   else
     echo ""
-    echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+    echo -e "${BOLD}${CYAN}==========================================${NC}"
     echo -e "${BOLD}${CYAN}  $*${NC}"
-    echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+    echo -e "${BOLD}${CYAN}==========================================${NC}"
   fi
 }
 
-# Summary tracking — collected and printed once at the end by migrate.sh
+# Summary tracking -- collected and printed once at the end by migrate.sh
 WARNINGS=()
 ERRORS=()
 _add_warning() { WARNINGS+=("$1"); }
@@ -85,7 +85,7 @@ run_cmd_retry() {
       return 0
     fi
     if [[ $attempt -lt $retries ]]; then
-      warn "attempt $attempt/$retries failed for: $* — retrying in ${delay}s"
+      warn "attempt $attempt/$retries failed for: $* -- retrying in ${delay}s"
       sleep "$delay"
     fi
     attempt=$((attempt + 1))
@@ -121,7 +121,7 @@ install_pacman() {
   done
 
   if (( ${#missing[@]} > 0 )); then
-    warn "not in pacman repos (skipping — likely nix or renamed): ${missing[*]}"
+    warn "not in pacman repos (skipping -- likely nix or renamed): ${missing[*]}"
     _add_warning "pacman packages not in repos (install via nix or manually): ${missing[*]}"
   fi
 
@@ -215,20 +215,20 @@ _nix_bin() {
 # Install a package from our local flake (~/dotfiles/flake.nix) via
 # `nix profile add`. Idempotent + non-fatal. This is the TIER 2 install
 # source (after pacman). The flake wraps nixpkgs with allowUnfree = true
-# and pins the nixpkgs revision via flake.lock — so `nix profile add .#<pkg>`
+# and pins the nixpkgs revision via flake.lock -- so `nix profile add .#<pkg>`
 # works for both free and unfree packages without --impure or env vars.
-# No sudo needed — nix installs into the user's profile (~/.nix-profile/).
+# No sudo needed -- nix installs into the user's profile (~/.nix-profile/).
 # Usage: install_nix <flake-attribute>   e.g. install_nix .#calcure
 install_nix() {
   local attr="$1"
   local pkgname="${attr#.#}"
   local nix_bin; nix_bin="$(_nix_bin)"
   if [[ -z "$nix_bin" ]]; then
-    warn "nix not found — run the nix migration (000011) first"
+    warn "nix not found -- run the nix migration (000011) first"
     _add_warning "nix not installed; cannot install $pkgname"
     return 0
   fi
-  # Check if already installed — match the exact flake attribute line in
+  # Check if already installed -- match the exact flake attribute line in
   # `nix profile list` to avoid false positives from substring matches.
   # The flake attribute appears as "packages.x86_64-linux.<pkgname>" for
   # our local flake. We capture to a temp file first because `nix profile
@@ -310,7 +310,7 @@ enable_user_service() {
 # Note: Starts the unit immediately (--now). Only use this for services that
 #       cannot disrupt the running session. For services that would (e.g.
 #       greetd grabbing the active TTY, ufw dropping an SSH session), use
-#       enable_system_service_no_start instead — the unit starts on next boot.
+#       enable_system_service_no_start instead -- the unit starts on next boot.
 enable_system_service() {
   local unit="$1"
   sudo systemctl daemon-reload 2>/dev/null || true
@@ -336,10 +336,10 @@ enable_system_service_no_start() {
   local unit="$1"
   sudo systemctl daemon-reload 2>/dev/null || true
   if sudo systemctl is-enabled --quiet "$unit" 2>/dev/null; then
-    skip "$unit (already enabled — starts on next boot)"
+    skip "$unit (already enabled -- starts on next boot)"
   else
     if sudo systemctl enable "$unit" 2>/dev/null; then
-      ok "enabled (no start): $unit — starts on next boot"
+      ok "enabled (no start): $unit -- starts on next boot"
     else
       warn "failed to enable $unit"
       _add_warning "systemd system unit failed to enable: $unit"
@@ -363,27 +363,27 @@ _resolve_conflict() {
     if [[ "$(readlink "$dest")" == "$src" ]]; then
       return 1  # already correctly linked
     fi
-    rm -f "$dest"  # wrong target — replace
+    rm -f "$dest"  # wrong target -- replace
   fi
 
-  # Nothing at dest — proceed
+  # Nothing at dest -- proceed
   [[ -e "$dest" ]] || [[ -L "$dest" ]] || return 0
 
-  # Real file with identical content — silently replace with symlink
+  # Real file with identical content -- silently replace with symlink
   if [[ -f "$dest" ]] && [[ ! -L "$dest" ]] && cmp -s "$src" "$dest"; then
     info "replacing identical file with symlink: ${dest/$HOME/\~}"
     rm -f "$dest"
     return 0
   fi
 
-  # Conflict — back up the existing file, then proceed
+  # Conflict -- back up the existing file, then proceed
   local backup_dest="${dest}.bak"
   local counter=1
   while [[ -e "$backup_dest" ]]; do
     backup_dest="${dest}.bak.${counter}"
     counter=$((counter + 1))
   done
-  info "backing up: ${dest/$HOME/\~} → ${backup_dest/$HOME/\~}"
+  info "backing up: ${dest/$HOME/\~} -> ${backup_dest/$HOME/\~}"
   mv "$dest" "$backup_dest"
   return 0
 }
@@ -430,7 +430,7 @@ link_dir() {
   fi
   if [[ -e "$dest" ]] || [[ -L "$dest" ]]; then
     local bak="${dest}.bak.$(date +%s)"
-    info "backing up: ${dest/$HOME/\~} → ${bak/$HOME/\~}"
+    info "backing up: ${dest/$HOME/\~} -> ${bak/$HOME/\~}"
     mv "$dest" "$bak"
   fi
   mkdir -p "$(dirname "$dest")"
@@ -463,7 +463,7 @@ deploy_etc_file() {
 
   if [[ -f "$dest" ]]; then
     local bak="${dest}.bak.$(date +%s)"
-    info "backing up $dest → $bak"
+    info "backing up $dest -> $bak"
     sudo cp "$dest" "$bak"
   fi
 
@@ -488,25 +488,25 @@ preflight() {
   ok "not running as root"
 
   # sudo is a hard prerequisite: it is used from the very first migration
-  # (000001-system-update). It is intentionally NOT installed by a migration —
+  # (000001-system-update). It is intentionally NOT installed by a migration --
   # on a truly fresh Arch install `base`/`base-devel` do not include it, so we
   # fail here with a clear instruction instead of dying mid-run later.
   if command -v sudo &>/dev/null; then
     ok "sudo available"
   else
-    fail "sudo is not installed — migrations use it from the first step."
+    fail "sudo is not installed -- migrations use it from the first step."
     fail "install it first:  pacman -S sudo"
     exit 1
   fi
 
   # Authenticate sudo ONCE up front (caches the timestamp for ~15 min). Without
   # this, the first migration's `sudo pacman -Syu` prompts mid-run and, if the
-  # user cancels with Ctrl+C, the timestamp is never cached — so every later
+  # user cancels with Ctrl+C, the timestamp is never cached -- so every later
   # migration re-prompts and the non-fatal loop turns a single cancel into a
   # spam of password prompts. If this fails or is cancelled, abort the whole
   # run here with a clear message rather than failing 131 times.
   if ! sudo -v 2>/dev/null; then
-    fail "sudo authentication failed or was cancelled — cannot proceed."
+    fail "sudo authentication failed or was cancelled -- cannot proceed."
     fail "Re-run migrate.sh and enter your password at the prompt."
     exit 1
   fi
@@ -519,7 +519,7 @@ preflight() {
         ok "distro: $NAME"
         ;;
       *)
-        fail "unsupported distro: ${NAME:-unknown} — Arch Linux required"
+        fail "unsupported distro: ${NAME:-unknown} -- Arch Linux required"
         exit 1
         ;;
     esac
@@ -531,7 +531,7 @@ preflight() {
   if ping -c1 -W2 archlinux.org &>/dev/null; then
     ok "internet connectivity"
   else
-    fail "no internet connection — required for package installation"
+    fail "no internet connection -- required for package installation"
     exit 1
   fi
 
@@ -550,7 +550,7 @@ preflight() {
       _submods=$(git -C "$REPO_ROOT" config -f "$REPO_ROOT/.gitmodules" --name-only --get-regexp 'path' 2>/dev/null | wc -l)
       ok "git submodules initialized (${_submods} source tree(s): sources/*)"
     else
-      warn "git submodule init failed — building from source may be skipped"
+      warn "git submodule init failed -- building from source may be skipped"
       _add_warning "git submodule init failed; some sources/* migrations may skip their build"
     fi
   else
@@ -562,15 +562,15 @@ preflight() {
   # otherwise undetectable: archinstall can pull in cryptsetup and write a
   # crypttab template yet never actually create the LUKS container, leaving an
   # unencrypted system that boots with no passphrase prompt. Three independent
-  # signals are checked — all must pass on a properly encrypted install. See
+  # signals are checked -- all must pass on a properly encrypted install. See
   # the README "Fresh install (archinstall)" section for the setup that
   # satisfies these.
   #
   # Override with DOTFILES_ALLOW_UNENCRYPTED=1 to skip (for intentionally
-  # unencrypted systems — discouraged for a laptop).
+  # unencrypted systems -- discouraged for a laptop).
   # ---------------------------------------------------------------------------
   if [[ "${DOTFILES_ALLOW_UNENCRYPTED:-0}" == "1" ]]; then
-    warn "DOTFILES_ALLOW_UNENCRYPTED=1 — skipping disk encryption checks"
+    warn "DOTFILES_ALLOW_UNENCRYPTED=1 -- skipping disk encryption checks"
     _add_warning "running without disk encryption (DOTFILES_ALLOW_UNENCRYPTED=1)"
   else
     _enc_fail=0
@@ -580,7 +580,7 @@ preflight() {
     if grep -q 'cryptdevice=' /proc/cmdline 2>/dev/null; then
       ok "kernel cmdline has cryptdevice= (encrypted root)"
     else
-      fail "no cryptdevice= in /proc/cmdline — root is not configured for LUKS"
+      fail "no cryptdevice= in /proc/cmdline -- root is not configured for LUKS"
       _enc_fail=1
     fi
 
@@ -588,7 +588,7 @@ preflight() {
     if lsblk -o FSTYPE -n 2>/dev/null | grep -q 'crypto_LUKS'; then
       ok "LUKS container detected by lsblk"
     else
-      fail "no crypto_LUKS device found by lsblk — disk is not encrypted"
+      fail "no crypto_LUKS device found by lsblk -- disk is not encrypted"
       _enc_fail=1
     fi
 
@@ -596,13 +596,13 @@ preflight() {
     if grep -E '^HOOKS=' /etc/mkinitcpio.conf 2>/dev/null | grep -qw 'encrypt'; then
       ok "mkinitcpio has encrypt hook"
     else
-      fail "mkinitcpio.conf HOOKS lacks 'encrypt' — initramfs cannot unlock LUKS"
+      fail "mkinitcpio.conf HOOKS lacks 'encrypt' -- initramfs cannot unlock LUKS"
       _enc_fail=1
     fi
 
     if (( _enc_fail != 0 )); then
       echo ""
-      fail "disk encryption checks FAILED — the root filesystem is not encrypted."
+      fail "disk encryption checks FAILED -- the root filesystem is not encrypted."
       fail "See the README 'Fresh install (archinstall)' section for the setup,"
       fail "or, if you intentionally run without encryption, re-run with:"
       fail "  DOTFILES_ALLOW_UNENCRYPTED=1 ./migrate.sh"
@@ -614,9 +614,9 @@ preflight() {
 print_summary() {
   local mode="${1:-migrate}"
   echo ""
-  echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+  echo -e "${BOLD}${CYAN}==========================================${NC}"
   echo -e "${BOLD}${CYAN}  Summary${NC}"
-  echo -e "${BOLD}${CYAN}══════════════════════════════════════════${NC}"
+  echo -e "${BOLD}${CYAN}==========================================${NC}"
 
   if [[ ${#WARNINGS[@]} -gt 0 ]]; then
     echo ""
@@ -634,18 +634,18 @@ print_summary() {
     done
     echo ""
     if [[ "$mode" == "secrets" ]]; then
-      echo -e "  ${RED}Secrets setup completed with errors — see above.${NC}"
+      echo -e "  ${RED}Secrets setup completed with errors -- see above.${NC}"
     else
-      echo -e "  ${RED}Migrations completed with errors — see above.${NC}"
+      echo -e "  ${RED}Migrations completed with errors -- see above.${NC}"
     fi
     exit 1
   fi
 
   echo ""
   if [[ "$mode" == "secrets" ]]; then
-    echo -e "  ${GREEN}✓ Secrets & sync setup complete!${NC}"
+    echo -e "  ${GREEN}[+] Secrets & sync setup complete!${NC}"
   else
-    echo -e "  ${GREEN}✓ Migrations complete!${NC}"
+    echo -e "  ${GREEN}[+] Migrations complete!${NC}"
     echo -e "  ${DIM}Next: reboot into Hyprland, then run ./setup.sh${NC}"
   fi
   echo ""

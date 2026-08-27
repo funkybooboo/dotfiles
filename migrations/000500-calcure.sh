@@ -1,9 +1,9 @@
-# 000500-calcure.sh — calcure (TUI calendar) + config
-# Installs: calcure (via nix — .#calcure)
+# 000500-calcure.sh -- calcure (TUI calendar) + config
+# Installs: calcure (via nix -- .#calcure)
 # Links:    ~/.config/calcure/config.ini
-# Enables:  —
+# Enables:  --
 # Note: calendar-tui (in personal-admin-scripts) launches calcure. Calcure
-#       is installed from nixpkgs — hermetic, sha256-verified, sandboxed
+#       is installed from nixpkgs -- hermetic, sha256-verified, sandboxed
 #       build with all Python deps resolved inside the nix store.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"

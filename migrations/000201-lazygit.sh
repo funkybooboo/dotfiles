@@ -1,7 +1,7 @@
-# 000201-lazygit.sh — lazygit TUI for git
-# Installs: lazygit (in extra/ — official Arch package)
+# 000201-lazygit.sh -- lazygit TUI for git
+# Installs: lazygit (in extra/ -- official Arch package)
 # Links:    ~/.config/lazygit/config.yml
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

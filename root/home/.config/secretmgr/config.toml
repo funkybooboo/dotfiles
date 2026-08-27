@@ -6,7 +6,7 @@ type = "protonpass"
 [protonpass]
 cli = "pass-cli"
 
-# Vault name aliases — map short names to Proton Pass vault names
+# Vault name aliases -- map short names to Proton Pass vault names
 [vaults]
 nas = "NAS"
 api = "API"

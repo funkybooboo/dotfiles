@@ -1,7 +1,7 @@
-# 000511-virtualization.sh — libvirt + virt-manager + QEMU + network config
+# 000511-virtualization.sh -- libvirt + virt-manager + QEMU + network config
 # Installs: libvirt virt-manager qemu-full dnsmasq edk2-ovmf swtpm
 # Deploys: /etc/libvirt/networks/default.xml, /etc/profile.d/libvirt.sh
-# Links:    —
+# Links:    --
 # Enables:  libvirtd.service, virtlogd.service
 # Note: Adds $USER to the libvirt group (requires logout/login to take effect),
 #       configures the default NAT network with DNS forwarders, and adds UFW
@@ -22,7 +22,7 @@ if groups "$USER" | grep -qw libvirt; then
   skip "libvirt group (already a member)"
 else
   if sudo usermod -aG libvirt "$USER"; then
-    warn "added $USER to libvirt group — log out and back in for this to take effect"
+    warn "added $USER to libvirt group -- log out and back in for this to take effect"
     _add_warning "log out and back in for libvirt group membership to take effect"
   else
     warn "failed to add $USER to libvirt group"
@@ -46,14 +46,14 @@ if [[ -f "$LIBVIRT_NETWORK_XML" ]] && systemctl is-active --quiet libvirtd.servi
       virsh -c qemu:///system net-start default &>/dev/null || true
       ok "libvirt default network configured"
     else
-      warn "failed to configure libvirt network — check libvirt group membership"
-      _add_warning "libvirt network configuration failed — may need logout/login for group membership"
+      warn "failed to configure libvirt network -- check libvirt group membership"
+      _add_warning "libvirt network configuration failed -- may need logout/login for group membership"
     fi
   else
     skip "libvirt default network (already defined)"
   fi
 else
-  skip "libvirt default network (libvirtd not running — will apply on first start)"
+  skip "libvirt default network (libvirtd not running -- will apply on first start)"
 fi
 
 # UFW rules for the virbr0 bridge (only if UFW is installed). ufw is NOT
@@ -72,9 +72,9 @@ if command -v ufw &>/dev/null; then
       comment 'libvirt NAT' 2>/dev/null || true
     ok "UFW: libvirt virbr0 rules added (apply on next boot)"
   else
-    warn "could not detect primary interface — add the UFW route rule manually"
-    _add_warning "UFW libvirt NAT route rule skipped — primary interface not detected"
+    warn "could not detect primary interface -- add the UFW route rule manually"
+    _add_warning "UFW libvirt NAT route rule skipped -- primary interface not detected"
   fi
 else
-  skip "ufw not installed — libvirt firewall rules skipped"
+  skip "ufw not installed -- libvirt firewall rules skipped"
 fi

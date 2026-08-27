@@ -1,7 +1,7 @@
-# 000315-nwg-displays.sh — nwg-displays (Wayland display/output manager)
-# Installs: nwg-displays (now in extra/ — official Arch package)
+# 000315-nwg-displays.sh -- nwg-displays (Wayland display/output manager)
+# Installs: nwg-displays (now in extra/ -- official Arch package)
 # Links:    ~/.config/nwg-displays/config
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

@@ -1,7 +1,7 @@
-# 000011-nix.sh — Nix package manager (upstream Nix installer, multi-user)
+# 000011-nix.sh -- Nix package manager (upstream Nix installer, multi-user)
 # Installs: nix via the OFFICIAL upstream installer (releases.nixos.org),
 #           NOT the Arch extra/nix pacman package.
-# Links:    /etc/nix/nix.conf (deploy_etc_file — flakes + nix-command)
+# Links:    /etc/nix/nix.conf (deploy_etc_file -- flakes + nix-command)
 # Enables:  nix-daemon.service (started by the installer; restarted here)
 # Note: Nix is the second-tier package source per the install priority
 #       (pacman -> nix -> sources -> flatpak). We install nix ITSELF from the
@@ -9,7 +9,7 @@
 #       extra/nix pacman package, because the Arch package links libmimalloc as
 #       a hard NEEDED lib and crashes (SIGSEGV in mimalloc's operator delete[]
 #       during glibc locale-facet init) on every glibc ABI bump where Arch
-#       doesn't rebuild nix+mimalloc in lockstep — see 2026-07-26 (glibc
+#       doesn't rebuild nix+mimalloc in lockstep -- see 2026-07-26 (glibc
 #       2.43->2.44). The upstream installer ships its own tested binary
 #       decoupled from the system glibc; nix updates come via `nix upgrade-nix`,
 #       not pacman. /nix/store + nixbld users from a prior pacman nix install
@@ -45,7 +45,7 @@ fi
 # orphaned deps mimalloc/lowdown/nix-busybox, which ONLY nix needs). pacman
 # does NOT own /nix/store, so the populated store + the user's flake profile
 # survive; the upstream installer reuses /nix/store. The Arch-package nixbld
-# users/group, HOWEVER, are NOT reused — see the reconciliation block below.
+# users/group, HOWEVER, are NOT reused -- see the reconciliation block below.
 # ---------------------------------------------------------------------------
 if pacman -Q nix &>/dev/null; then
   info "removing broken Arch extra/nix (mimalloc+glibc ABI crash)"
@@ -56,7 +56,7 @@ if pacman -Q nix &>/dev/null; then
   else
     # Fall back to a plain -R if a dep edge blocks -Rns; orphans sweep later.
     sudo pacman -R --noconfirm nix &>/dev/null || true
-    warn "pacman -Rns nix failed — attempted plain -R; continuing"
+    warn "pacman -Rns nix failed -- attempted plain -R; continuing"
     _add_warning "nix: pacman -Rns failed, used plain -R (orphan deps may remain)"
   fi
 else
@@ -71,7 +71,7 @@ fi
 # `nixbld1..nixbld32` (no padding, uid 30001..). It BAILS on a gid mismatch
 # ("the build group nixbld already exists, but with the UID 946"), and even
 # NIX_BUILD_GROUP_ID=946 wouldn't fully work because the username templates
-# differ (nixbld%d vs Arch's nixbld%02d) — the installer would try to create
+# differ (nixbld%d vs Arch's nixbld%02d) -- the installer would try to create
 # nixbld1..nixbld32 over the existing nixbld01..nixbld10 names and collide.
 #
 # Clean reproducible fix: delete the Arch-created nixbld users + group so the
@@ -100,7 +100,7 @@ if (( ${#_arch_nixblds[@]} > 0 )); then
 fi
 if getent group nixbld >/dev/null 2>&1; then
   _old_gid=$(getent group nixbld | cut -d: -f3)
-  # Only remove if NOT the upstream default gid (30000) — protects a
+  # Only remove if NOT the upstream default gid (30000) -- protects a
   # completed upstream install whose binary check somehow failed this run.
   if [[ "$_old_gid" != "30000" ]]; then
     sudo groupdel nixbld 2>/dev/null || true
@@ -114,11 +114,11 @@ fi
 # first run. --yes: non-interactive (answers the "ready to continue" prompt).
 # --no-channel-add: we use a local flake pinned via flake.lock, not channels.
 # (Not --no-modify-profile: the installer setting up /etc/profile.d/nix.sh +
-#  /etc/fish/conf.d/nix.fish is how nix lands on PATH for new login shells —
+#  /etc/fish/conf.d/nix.fish is how nix lands on PATH for new login shells --
 #  the right system-wide mechanism, and idempotent.)
 # ---------------------------------------------------------------------------
 if ! command -v curl &>/dev/null; then
-  warn "curl missing — run 000010-base first"
+  warn "curl missing -- run 000010-base first"
   _add_warning "nix install skipped: curl unavailable"
   exit 0
 fi
@@ -155,6 +155,6 @@ sudo systemctl restart nix-daemon 2>/dev/null || true
 if [[ -x "$NIX_BIN" ]] && "$NIX_BIN" --version &>/dev/null; then
   ok "nix installed ($("$NIX_BIN" --version 2>/dev/null | head -1))"
 else
-  warn "nix binary not functional after install — check /nix and nix-daemon"
+  warn "nix binary not functional after install -- check /nix and nix-daemon"
   _add_warning "nix installed but --version failed; daemon may not be running"
 fi

@@ -1,7 +1,7 @@
-# 000302-ghostty.sh — Ghostty terminal emulator
-# Installs: ghostty (now in extra/ — official Arch package)
+# 000302-ghostty.sh -- Ghostty terminal emulator
+# Installs: ghostty (now in extra/ -- official Arch package)
 # Links:    ~/.config/ghostty/config
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

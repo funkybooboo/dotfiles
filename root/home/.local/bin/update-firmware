@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# update-firmware — refresh and apply firmware updates via fwupd
+# update-firmware -- refresh and apply firmware updates via fwupd
 #                    with logging, robust reboot detection, and retry
 #
 set -euo pipefail
@@ -37,7 +37,7 @@ retry() {
     local cmd=("$@") n=1 max=3 delay=10
     until "${cmd[@]}"; do
         ((n >= max)) && return 1
-        echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s…"
+        echo "[$(TS)] WARNING: '${cmd[*]}' failed (attempt $n/$max), retrying in ${delay}s..."
         sleep $delay
         ((n++))
     done

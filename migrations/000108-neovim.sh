@@ -1,12 +1,12 @@
-# 000108-neovim.sh — Neovim + plugin tooling + config
+# 000108-neovim.sh -- Neovim + plugin tooling + config
 # Installs: neovim tree-sitter-cli stylua luarocks lua51 python-pynvim
-#           tectonic (pacman) nvimpager (via nix — .#nvimpager)
+#           tectonic (pacman) nvimpager (via nix -- .#nvimpager)
 # Links:    ~/.config/nvim/**, ~/.config/nvimpager/init.lua, ~/.editorconfig
-# Enables:  —
+# Enables:  --
 # Note: tectonic provides LaTeX for the nvim latex plugin. nvimpager is the
 #       PAGER/MANPAGER set in environment-variables. lua51 + luarocks +
 #       stylua + tree-sitter-cli support nvim plugins.
-#       nvimpager is installed from nixpkgs — hermetic, sandboxed build,
+#       nvimpager is installed from nixpkgs -- hermetic, sandboxed build,
 #       no pkgbuilds/ needed.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
@@ -32,6 +32,6 @@ NINES_DIR="$REPO_ROOT/sources/99"
 if [[ -e "$NINES_DIR/.git" ]]; then
   ok "99 plugin source (submodule sources/99)"
 else
-  warn "sources/99 submodule not populated — nvim will error on :lazy load"
+  warn "sources/99 submodule not populated -- nvim will error on :lazy load"
   _add_warning "sources/99 submodule missing; run 'git -C ~/dotfiles submodule update --init sources/99'"
 fi

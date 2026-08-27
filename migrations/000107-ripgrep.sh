@@ -1,7 +1,7 @@
-# 000107-ripgrep.sh — ripgrep (grep replacement) + config
+# 000107-ripgrep.sh -- ripgrep (grep replacement) + config
 # Installs: ripgrep
 # Links:    ~/.config/ripgrep/config
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

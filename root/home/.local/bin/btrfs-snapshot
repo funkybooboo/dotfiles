@@ -39,7 +39,7 @@ SNAPSHOT_PATH="$SNAPSHOT_DIR/$SNAPSHOT_NAME"
 echo "Creating snapshot: $SNAPSHOT_PATH"
 
 if btrfs subvolume snapshot -r /home "$SNAPSHOT_PATH"; then
-    echo -e "${GREEN}✓ Snapshot created successfully!${NC}"
+    echo -e "${GREEN}[+] Snapshot created successfully!${NC}"
     echo ""
     echo "Snapshot details:"
     echo "  Path: $SNAPSHOT_PATH"
@@ -66,7 +66,7 @@ EOF
     echo "  sudo btrfs subvolume delete $SNAPSHOT_PATH"
 
 else
-    echo -e "${RED}✗ Failed to create snapshot${NC}"
+    echo -e "${RED}[x] Failed to create snapshot${NC}"
     exit 1
 fi
 

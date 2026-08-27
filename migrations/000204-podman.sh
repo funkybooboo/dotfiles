@@ -1,4 +1,4 @@
-# 000204-podman.sh — Podman container runtime + docker/compose wrappers
+# 000204-podman.sh -- Podman container runtime + docker/compose wrappers
 # Installs: podman, docker-compose, fuse-overlayfs
 # Links:    ~/.config/containers/storage.conf,
 #           ~/.config/containers/storage.conf.d/01-overlay.conf,

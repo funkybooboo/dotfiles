@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# vpn — unified VPN manager for Proton VPN and GlobalProtect
+# vpn -- unified VPN manager for Proton VPN and GlobalProtect
 
 set -euo pipefail
 
@@ -24,15 +24,15 @@ function error() {
 }
 
 function success() {
-    echo -e "${GREEN}✓${NC} $*"
+    echo -e "${GREEN}[+]${NC} $*"
 }
 
 function info() {
-    echo -e "${BLUE}ℹ${NC} $*"
+    echo -e "${BLUE}[i]${NC} $*"
 }
 
 function warn() {
-    echo -e "${YELLOW}⚠${NC} $*"
+    echo -e "${YELLOW}[!]${NC} $*"
 }
 
 # Parse VPN type and connection name
@@ -87,7 +87,7 @@ function status() {
         fi
 
         if is_active "$vpn"; then
-            echo -e "${GREEN}● $display_name${NC} - ACTIVE"
+            echo -e "${GREEN}* $display_name${NC} - ACTIVE"
             active_count=$((active_count + 1))
 
             case $type in
@@ -107,7 +107,7 @@ function status() {
                     ;;
             esac
         else
-            echo -e "${RED}○ $display_name${NC} - inactive"
+            echo -e "${RED}o $display_name${NC} - inactive"
         fi
     done
 
@@ -298,7 +298,7 @@ function list() {
     for vpn in "${!VPNS[@]}"; do
         local type conn_name
         read -r type conn_name <<< "$(parse_vpn "$vpn")"
-        local status_icon="○"
+        local status_icon="o"
         local status_text="inactive"
         local autoconnect_status=""
 
@@ -309,7 +309,7 @@ function list() {
         fi
 
         if is_active "$vpn"; then
-            status_icon="●"
+            status_icon="*"
             status_text="${GREEN}active${NC}"
         else
             status_text="${RED}inactive${NC}"

@@ -1,7 +1,7 @@
-# 000406-btrfs.sh — Btrfs tools + snapper + swappiness sysctl
+# 000406-btrfs.sh -- Btrfs tools + snapper + swappiness sysctl
 # Installs: btrfs-progs snapper
 # Deploys: /etc/sysctl.d/99-swappiness.conf
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

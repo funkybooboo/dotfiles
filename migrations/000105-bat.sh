@@ -1,7 +1,7 @@
-# 000105-bat.sh — bat (cat clone with syntax highlighting)
+# 000105-bat.sh -- bat (cat clone with syntax highlighting)
 # Installs: bat
 # Links:    ~/.config/bat/**
-# Enables:  —
+# Enables:  --
 # Note: Includes a Catppuccin Mocha theme under themes/. bat requires
 #       `bat cache --build` to register custom themes, so that runs after
 #       linking. The active theme is set via --theme in config.
@@ -18,6 +18,6 @@ if command -v bat &>/dev/null; then
   bat cache --build >/dev/null 2>&1 || warn "bat cache --build failed"
   ok "bat cache built"
 else
-  warn "bat not found — skipping cache build"
+  warn "bat not found -- skipping cache build"
   _add_warning "bat not found; run 'bat cache --build' manually"
 fi

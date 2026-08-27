@@ -1,6 +1,6 @@
-# 000405-firewall.sh — UFW firewall
+# 000405-firewall.sh -- UFW firewall
 # Installs: ufw
-# Links:    —
+# Links:    --
 # Enables:  ufw.service (started)
 # Note: This is a laptop with no inbound SSH requirement, so we apply a basic
 #       default-deny-incoming / default-allow-outgoing policy and activate UFW
@@ -12,7 +12,7 @@
 #
 #       ufw-docker was removed: it manipulates Docker's iptables chains, and
 #       Docker has been removed in favor of Podman (which uses netavark for
-#       its own firewall rules — no ufw-docker needed).
+#       its own firewall rules -- no ufw-docker needed).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -20,7 +20,7 @@ section "firewall"
 
 install_pacman ufw
 
-# Base policy: deny inbound, allow outbound. Idempotent — ufw no-ops if the
+# Base policy: deny inbound, allow outbound. Idempotent -- ufw no-ops if the
 # policy is already set. Applied before `ufw enable` so the first activation
 # has a safe policy in place.
 sudo ufw default deny incoming
@@ -35,7 +35,7 @@ else
   if sudo ufw --force enable; then
     ok "ufw activated (default deny incoming / allow outgoing)"
   else
-    warn "failed to activate ufw — run 'sudo ufw enable' manually"
+    warn "failed to activate ufw -- run 'sudo ufw enable' manually"
     _add_warning "ufw --force enable failed; run 'sudo ufw enable' manually"
   fi
 fi

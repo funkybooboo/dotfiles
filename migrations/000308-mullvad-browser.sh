@@ -158,7 +158,7 @@ if [[ -s "$ASC" ]]; then
   fi
   rm -f /tmp/mb_gpg.out
 else
-  warn ".asc not fetched — GPG skipped (sha256 verified)"
+  warn ".asc not fetched -- GPG skipped (sha256 verified)"
   _add_warning "mullvad: GPG skipped (no .asc)"
 fi
 

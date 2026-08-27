@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# migrate.sh — run all migrations in order
+# migrate.sh -- run all migrations in order
 #
 # Migrations live in migrations/NNNNNN-*.sh and are sourced in lexicographic
 # order. Each migration is idempotent and safe to re-run. Shared helpers live
@@ -24,8 +24,8 @@
 # Interrupts: Ctrl+C (SIGINT) / SIGTERM abort the run cleanly. The first
 # interrupt finishes the in-flight step and then stops; a second interrupt
 # exits immediately with status 130. (Without this, the non-fatal subshell
-# loop would swallow the signal and keep launching migrations — each one
-# re-prompting for sudo — so Ctrl+C appeared to do nothing.)
+# loop would swallow the signal and keep launching migrations -- each one
+# re-prompting for sudo -- so Ctrl+C appeared to do nothing.)
 
 set -euo pipefail
 
@@ -70,7 +70,7 @@ echo "=== Log: $LOGFILE ==="
 # --- interrupt handling -------------------------------------------------------
 # Each migration runs in a `set +e` subshell so one failure never aborts the
 # run. That same design otherwise swallows Ctrl+C: the in-flight sudo dies, the
-# subshell returns non-zero, and the loop happily starts the NEXT migration —
+# subshell returns non-zero, and the loop happily starts the NEXT migration --
 # which calls sudo again, re-prompts (timestamp never cached), and you get a
 # spam loop you can't escape. The trap sets a flag the loop checks after each
 # step; a second interrupt force-exits.
@@ -79,10 +79,10 @@ _abort_handler() {
   if (( _INTERRUPTED == 0 )); then
     _INTERRUPTED=1
     echo "" >&2
-    warn "interrupt received — stopping after the current step (Ctrl+C again to force-exit)" >&2
+    warn "interrupt received -- stopping after the current step (Ctrl+C again to force-exit)" >&2
   else
     echo "" >&2
-    fail "second interrupt — exiting immediately" >&2
+    fail "second interrupt -- exiting immediately" >&2
     exit 130
   fi
 }
@@ -108,7 +108,7 @@ for _migration in "$REPO_ROOT"/migrations/[0-9][0-9][0-9][0-9][0-9][0-9]-*.sh; d
   _results="$(mktemp)"
 
   # Run each migration in an isolated subshell with its own errexit so that a
-  # failure in ONE migration can never abort the whole run — the previous
+  # failure in ONE migration can never abort the whole run -- the previous
   # behaviour cascaded a single unguarded failure into every later migration
   # being skipped. Warnings/errors emitted inside the subshell are funnelled to
   # a results file (subshells cannot mutate the parent's arrays) and replayed
@@ -142,7 +142,7 @@ for _migration in "$REPO_ROOT"/migrations/[0-9][0-9][0-9][0-9][0-9][0-9]-*.sh; d
       _add_error "aborted by interrupt: $_name"
       break
     fi
-    fail "migration exited $_rc — continuing to next migration: $_name"
+    fail "migration exited $_rc -- continuing to next migration: $_name"
     _add_error "migration failed: $_name (exit $_rc)"
   fi
 done

@@ -1,4 +1,4 @@
-# 000082-auditd.sh — Linux audit daemon + hardening rules
+# 000082-auditd.sh -- Linux audit daemon + hardening rules
 # Installs: audit
 # Deploys: /etc/audit/rules.d/hardening.rules
 # Enables:  auditd.service

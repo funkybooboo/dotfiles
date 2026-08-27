@@ -1,8 +1,8 @@
-# 000523-proton-pass.sh — Proton Pass CLI + GUI + bash completions
+# 000523-proton-pass.sh -- Proton Pass CLI + GUI + bash completions
 # Nix:     .#proton-pass-cli (Proton's official release binary)
 # Flatpak: me.proton.Pass (GUI, officially maintained by Proton)
-# Links:   — (completions generated at runtime below)
-# Enables: —
+# Links:   -- (completions generated at runtime below)
+# Enables: --
 # Note: The CLI is installed from nix (via the local flake). The GUI comes
 #       from Flathub (me.proton.Pass), Proton's official Linux distribution.
 #       The interactive pass-cli LOGIN is deferred to setup.sh (needs a
@@ -13,10 +13,10 @@
 
 section "proton pass"
 
-# Proton Pass CLI — from nix flake (Proton's official release binary).
+# Proton Pass CLI -- from nix flake (Proton's official release binary).
 install_nix .#proton-pass-cli
 
-# Proton Pass GUI — official Flathub build.
+# Proton Pass GUI -- official Flathub build.
 install_flatpak me.proton.Pass
 
 # Bash completions for pass-cli (the active login shell during migration).

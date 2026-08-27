@@ -1,8 +1,8 @@
-# 000305-mpv.sh — mpv media player + config + lazymusic player
+# 000305-mpv.sh -- mpv media player + config + lazymusic player
 # Installs: mpv
 # Links:    ~/.config/mpv/input.conf,
 #           ~/.local/share/applications/lazymusic.desktop
-# Enables:  —
+# Enables:  --
 # Note: lazymusic.desktop launches the lazymusic mpv-based player, whose source
 #       lives in the dotfiles git submodule sources/lazymusic (initialized in
 #       preflight). The .desktop Exec path points at that submodule checkout.
@@ -25,6 +25,6 @@ LAZYMUSIC_DIR="$REPO_ROOT/sources/lazymusic"
 if [[ -e "$LAZYMUSIC_DIR/.git" ]]; then
   ok "lazymusic source (submodule sources/lazymusic)"
 else
-  warn "sources/lazymusic submodule not populated — .desktop will not launch"
+  warn "sources/lazymusic submodule not populated -- .desktop will not launch"
   _add_warning "sources/lazymusic submodule missing; run 'git -C ~/dotfiles submodule update --init sources/lazymusic'"
 fi

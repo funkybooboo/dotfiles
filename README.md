@@ -36,7 +36,7 @@ language-ecosystem packages (cargo, npm, pip, go, gem) are per-project only.
 ### nix usage
 
 Nix itself is installed by `000011-nix` via the **upstream Nix installer**
-(`releases.nixos.org`), NOT the Arch `extra/nix` pacman package — the Arch
+(`releases.nixos.org`), NOT the Arch `extra/nix` pacman package -- the Arch
 package links `libmimalloc` and crashes (SIGSEGV) on glibc ABI bumps. Update
 nix itself with `nix upgrade-nix`; update flake packages as below.
 
@@ -51,15 +51,15 @@ nix upgrade-nix               # upgrade nix itself (upstream installer)
 
 ```
 dotfiles/
-├── flake.nix         # nix packages (allowUnfree, pinned nixpkgs)
-├── flake.lock        # pinned nixpkgs revision
-├── migrate.sh        # preflight → run migrations in order → summary
-├── setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
-├── migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
-├── sources/          # git submodules built from source
-└── root/
-    ├── home/         # → $HOME (symlinked)
-    └── etc/          # → /etc (copied with sudo)
+|-- flake.nix         # nix packages (allowUnfree, pinned nixpkgs)
+|-- flake.lock        # pinned nixpkgs revision
+|-- migrate.sh        # preflight -> run migrations in order -> summary
+|-- setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
+|-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
+|-- sources/          # git submodules built from source
+\-- root/
+    |-- home/         # -> $HOME (symlinked)
+    \-- etc/          # -> /etc (copied with sudo)
 ```
 
 `migrations/_common.sh` provides helpers: `install_pacman`, `install_nix`,
@@ -70,7 +70,7 @@ guard-sources `_common.sh` so it can run standalone. Conflicts back up to
 
 ## migrate.sh vs setup.sh
 
-**`migrate.sh`** — generic software install + upgrade. Knows nothing about
+**`migrate.sh`** -- generic software install + upgrade. Knows nothing about
 your repos, secrets, or containers. First run installs everything; re-running
 upgrades all software to upstream-latest:
 
@@ -82,7 +82,7 @@ upgrades all software to upstream-latest:
 - `000600` roll-forward: mise upgrade, nix profile upgrade --all, pi update,
   tldr cache refresh
 
-**`setup.sh`** — personal/environment management. Run after reboot (needs
+**`setup.sh`** -- personal/environment management. Run after reboot (needs
 browser + network). First run: Proton Pass login, Tailscale auth, NAS rsync
 password, `secretmgr bootstrap`, SSH/GPG agent setup, GitHub SSH verification,
 clone personal repos into `~/Projects`. Re-running: updates `~/Projects` repos,
@@ -95,12 +95,12 @@ rebuilds them, refreshes running Podman container images.
 
 | Range | Concern |
 |-------|---------|
-| `000001`–`000082` | System, bootloader, kernels, nix, AppArmor, security |
-| `000100`–`000109` | Shell & editors |
-| `000200`–`000235` | Dev tools (one migration per package -- split from former 000210-cli-utilities grab-bag; 000231-texlive bundles the TeX Live scheme metapackages as one ecosystem; 000232-smb bundles gvfs-smb+smbclient+cifs-utils as one SMB ecosystem; 000233-exercism the exercism CLI for exercism.nvim; 000234-codecrafters the codecrafters CLI; 000235-yazi the terminal file manager) |
-| `000300`–`000322` | Desktop, Hyprland, browsers (firefox + chromium via pacman, brave via nix, librewolf + mullvad-browser via upstream release assets -- one migration per browser: 000303-firefox, 000309-chromium, 000313-brave, 000307-librewolf, 000308-mullvad-browser), audio, icon theme (000321 papirus-icon-theme), Hyprland hyprlang->Lua config migration (000322) |
-| `000400`–`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
-| `000500`–`000576` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI), Bottles (Wine/flatpak), OrcaSlicer (native-linux slicer, replaces Windows-only Creality Slicer), OpenSCAD (coded 3D CAD modeller, pairs with OrcaSlicer for design-then-slice), VS Code (Microsoft editor, nix flake), waybar (nix flake, patched with upstream PR #5013 so the hyprland/workspaces module click works under Hyprland's Lua config), mupdf (lightweight PDF/XPS/EPUB viewer; ships mupdf.desktop so the pre-existing application/epub+zip default resolves), opencode (SST terminal AI coding agent, nix flake; free models available via OpenRouter free tier / Google AI Studio, no API key required) + desktop apps split one-per-package from former 000530-desktop-apps grab-bag |
+| `000001`-`000082` | System, bootloader, kernels, nix, AppArmor, security |
+| `000100`-`000109` | Shell & editors |
+| `000200`-`000235` | Dev tools (one migration per package -- split from former 000210-cli-utilities grab-bag; 000231-texlive bundles the TeX Live scheme metapackages as one ecosystem; 000232-smb bundles gvfs-smb+smbclient+cifs-utils as one SMB ecosystem; 000233-exercism the exercism CLI for exercism.nvim; 000234-codecrafters the codecrafters CLI; 000235-yazi the terminal file manager) |
+| `000300`-`000322` | Desktop, Hyprland, browsers (firefox + chromium via pacman, brave via nix, librewolf + mullvad-browser via upstream release assets -- one migration per browser: 000303-firefox, 000309-chromium, 000313-brave, 000307-librewolf, 000308-mullvad-browser), audio, icon theme (000321 papirus-icon-theme), Hyprland hyprlang->Lua config migration (000322) |
+| `000400`-`000420` | System services: power, bluetooth, network, ssh, firewall, btrfs |
+| `000500`-`000576` | Apps: VPN, Tailscale, Proton Pass, Proton Drive, NAS sync, games, lazycsv, Ollama, caligula, Minecraft, rpi-imager, Discord, HandBrake, gcx (Grafana CLI), Bottles (Wine/flatpak), OrcaSlicer (native-linux slicer, replaces Windows-only Creality Slicer), OpenSCAD (coded 3D CAD modeller, pairs with OrcaSlicer for design-then-slice), VS Code (Microsoft editor, nix flake), waybar (nix flake, patched with upstream PR #5013 so the hyprland/workspaces module click works under Hyprland's Lua config), mupdf (lightweight PDF/XPS/EPUB viewer; ships mupdf.desktop so the pre-existing application/epub+zip default resolves), opencode (SST terminal AI coding agent, nix flake; free models available via OpenRouter free tier / Google AI Studio, no API key required) + desktop apps split one-per-package from former 000530-desktop-apps grab-bag |
 | `000600` | Runtime roll-forward: mise, nix, pi, tldr |
 
 `sudo` is a preflight prerequisite (not installed by a migration).
@@ -138,7 +138,7 @@ Btrfs subvolumes: `@` -> `/`, `@home` -> `/home`, `@log` -> `/var/log`,
 - **Kernels:** `linux-lts` + `linux-hardened` (or just `linux-lts`)
 - **Swap:** zram
 - **User:** `nate`, sudo, **shell = bash** (migration sets fish later)
-- **Profile:** minimal (not Hyprland — migration owns it)
+- **Profile:** minimal (not Hyprland -- migration owns it)
 - **Network:** iwd + systemd-networkd (not NetworkManager)
 - **Audio:** pipewire (migration installs it anyway)
 - **Locale:** `en_US.UTF-8`
@@ -151,14 +151,14 @@ grep '^HOOKS' /etc/mkinitcpio.conf        # must contain 'encrypt'
 grep cryptdevice /boot/limine/limine.conf  # must have cryptdevice=...:root
 ```
 
-`/etc/crypttab` is not required for root encryption — the initramfs `encrypt`
+`/etc/crypttab` is not required for root encryption -- the initramfs `encrypt`
 hook unlocks root via `cryptdevice=` in the kernel cmdline. `migrate.sh`
 enforces these checks; override with `DOTFILES_ALLOW_UNENCRYPTED=1` if needed.
 
 ### Reboot checklist
 
-- [ ] `systemctl is-enabled ufw greetd apparmor` — all `enabled`
-- [ ] `sudo grep apparmor=1 /boot/limine/limine.conf` — both kernels
+- [ ] `systemctl is-enabled ufw greetd apparmor` -- all `enabled`
+- [ ] `sudo grep apparmor=1 /boot/limine/limine.conf` -- both kernels
 - [ ] `./setup.sh` (after reboot)
 
 After reboot:
@@ -191,12 +191,12 @@ login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 
 Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
 
-- `update-firmware` — firmware updates (reboot-gated, intentionally outside
+- `update-firmware` -- firmware updates (reboot-gated, intentionally outside
   migrate.sh)
-- `clean-disk` — orphans, caches, unused flatpaks
-- `secretmgr` — Proton Pass wrapper
-- `sync-*` — NAS sync (documents, music, photos, audiobooks, books)
-- `vpn` — VPN management
+- `clean-disk` -- orphans, caches, unused flatpaks
+- `secretmgr` -- Proton Pass wrapper
+- `sync-*` -- NAS sync (documents, music, photos, audiobooks, books)
+- `vpn` -- VPN management
 
 Both `migrate.sh` and `setup.sh` mirror all output to `logs/` (gitignored):
 `migrate-YYYYMMDD-HHMMSS-PID.log` and `setup-YYYYMMDD-HHMMSS-PID.log`.
@@ -230,9 +230,9 @@ after a fresh install.
 
 ## Known issues
 
-- **rkhunter egrep spam** — cosmetic noise from a deprecated `/usr/bin/egrep`
+- **rkhunter egrep spam** -- cosmetic noise from a deprecated `/usr/bin/egrep`
   wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
 
 ## License
 
-GPL — see [LICENSE](LICENSE)
+GPL -- see [LICENSE](LICENSE)

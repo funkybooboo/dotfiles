@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# cleanup-audit — review security scan logs and recent auditd events
+# cleanup-audit -- review security scan logs and recent auditd events
 #
 set -uo pipefail
 
@@ -13,7 +13,7 @@ echo ""
 echo "[$(TS)] rkhunter last scan results:"
 RKHUNTER_LOG="/var/log/rkhunter.log"
 if [ ! -f "$RKHUNTER_LOG" ] || ! sudo grep -q "System checks summary" "$RKHUNTER_LOG" 2>/dev/null; then
-  echo "-> WARNING: no scan results found — timer has not run yet"
+  echo "-> WARNING: no scan results found -- timer has not run yet"
 else
   LAST_SCAN_LINE=$(sudo grep "Possible rootkits:" "$RKHUNTER_LOG" 2>/dev/null | tail -1)
   LAST_RUN=$(echo "$LAST_SCAN_LINE" | grep -oP '^\[\K\d{2}:\d{2}:\d{2}' || echo "unknown")

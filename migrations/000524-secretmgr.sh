@@ -1,9 +1,9 @@
-# 000524-secretmgr.sh — secretmgr tool + config
-# Installs: — (secretmgr is a personal script in ~/.local/bin)
+# 000524-secretmgr.sh -- secretmgr tool + config
+# Installs: -- (secretmgr is a personal script in ~/.local/bin)
 # Links:    ~/.local/bin/secretmgr, ~/.config/secretmgr/config.toml
-# Enables:  —
+# Enables:  --
 # Note: 'secretmgr bootstrap' (injects secrets into templated configs) is
-#       deferred to setup.sh — it requires proton-pass login first.
+#       deferred to setup.sh -- it requires proton-pass login first.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

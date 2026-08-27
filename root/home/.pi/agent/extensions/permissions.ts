@@ -2,7 +2,7 @@
  * Permissions Extension
  *
  * Enforces critical deny rules for read, edit, and bash operations.
- * Trimmed from OpenCode config — only essential protections.
+ * Trimmed from OpenCode config -- only essential protections.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";

@@ -1,9 +1,9 @@
 # 000552-handbrake.sh -- HandBrake video transcoder (via pacman)
-# Installs: handbrake (from extra/ — official Arch signed package)
+# Installs: handbrake (from extra/ -- official Arch signed package)
 # Links:    --
 # Enables:  --
 # Note: HandBrake is in Arch extra/ (official signed package). Previously
-#       built from source via a git submodule, then moved to nixpkgs — but
+#       built from source via a git submodule, then moved to nixpkgs -- but
 #       nixpkgs's ffmpeg-full build is currently broken (a patch hunk fails
 #       on the pinned nixpkgs revision). pacman's handbrake uses the Arch-
 #       maintained ffmpeg which builds fine. Switch to nix .#handbrake when

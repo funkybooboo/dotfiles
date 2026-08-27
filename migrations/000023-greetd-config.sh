@@ -1,11 +1,11 @@
-# 000023-greetd-config.sh — deploy greetd config (tuigreet -> uwsm Hyprland) + PAM
-# Installs: —
-# Links:    —
+# 000023-greetd-config.sh -- deploy greetd config (tuigreet -> uwsm Hyprland) + PAM
+# Installs: --
+# Links:    --
 # Deploys:  /etc/greetd/config.toml, /etc/pam.d/greetd
-# Enables:  —
+# Enables:  --
 #
 # 000022-greetd.sh installs greetd + greetd-tuigreet and enables the service,
-# but ships no config — without this migration /etc/greetd/config.toml stays
+# but ships no config -- without this migration /etc/greetd/config.toml stays
 # the stock `agreety --cmd /bin/sh` default, so on reboot greetd launches a
 # plain shell prompt instead of a graphical greeter, and Hyprland never
 # starts. This deploys a config pointing tuigreet at the uwsm-managed

@@ -1,4 +1,4 @@
-# 000403-ssh.sh — OpenSSH client + config + ssh-agent user service
+# 000403-ssh.sh -- OpenSSH client + config + ssh-agent user service
 # Installs: openssh
 # Links:    ~/.ssh/config, ~/.ssh/id_ed25519.pub, ~/.config/systemd/user/ssh-agent.service
 # Enables:  ssh-agent.service
@@ -20,7 +20,7 @@ mkdir -p "$HOME/.ssh"
 link_file "$DOTFILES_HOME/.ssh/config" "$HOME/.ssh/config"
 link_file "$DOTFILES_HOME/.ssh/id_ed25519.pub" "$HOME/.ssh/id_ed25519.pub"
 chmod 700 "$HOME/.ssh"
-ok "~/.ssh → 700"
+ok "~/.ssh -> 700"
 
 link_file "$DOTFILES_HOME/.config/systemd/user/ssh-agent.service" \
   "$HOME/.config/systemd/user/ssh-agent.service"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# hot-procs — detect high-CPU processes and print suggested kill commands
+# hot-procs -- detect high-CPU processes and print suggested kill commands
 #             Does NOT kill anything. Copy-paste commands to act.
 #
 # Usage: hot-procs [--threshold N] [--time N]

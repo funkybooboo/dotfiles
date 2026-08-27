@@ -1,7 +1,7 @@
-# 000314-swayosd.sh — swayosd (on-screen display for brightness/volume)
+# 000314-swayosd.sh -- swayosd (on-screen display for brightness/volume)
 # Installs: swayosd
 # Links:    ~/.config/swayosd/style.css
-# Enables:  —
+# Enables:  --
 # Note: Adds $USER to the `video` group (required to WRITE /sys/class/backlight/
 #       */brightness, which swayosd's udev rule 99-swayosd.rules chgrps to video --
 #       without this, brightness changes silently fail) and the `input` group

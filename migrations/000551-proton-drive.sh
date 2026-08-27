@@ -87,7 +87,7 @@ fi
 # rolling-forward mechanism: scrape Proton's stable manifest for the current
 # version + linux-x64 URL + upstream-published SHA-512, and if newer than what
 # is installed, download, verify against that SHA-512, and install. Non-fatal
-# on any failure (network, parse, checksum) — the pinned binary stays put.
+# on any failure (network, parse, checksum) -- the pinned binary stays put.
 # This makes the migration a true "install-pinned-if-absent, else roll-to-
 # upstream-latest" (idempotent on every migrate run).
 if [[ -x "$PD_BIN" ]]; then
@@ -104,7 +104,7 @@ if [[ -x "$PD_BIN" ]]; then
     pd_inst="$(cd / && "$PD_BIN" --version 2>/dev/null | head -1)"
     pd_inst="${pd_inst#*@}"; pd_inst="${pd_inst%%+*}"
     if [[ -z "$pd_url" || -z "$pd_sha512" || -z "$pd_upver" ]]; then
-      warn "could not parse Proton Drive manifest (page format changed?) — keeping $pd_inst"
+      warn "could not parse Proton Drive manifest (page format changed?) -- keeping $pd_inst"
       _add_warning "proton-drive: manifest parse failed (kept $pd_inst)"
     elif [[ -z "$pd_inst" || "$(vercmp "$pd_upver" "$pd_inst")" -gt 0 ]]; then
       info "proton-drive ${pd_inst:-<unknown>} -> $pd_upver"
@@ -117,19 +117,19 @@ if [[ -x "$PD_BIN" ]]; then
             _add_warning "proton-drive: roll-forward install failed (kept $pd_inst)"
           fi
         else
-          warn "proton-drive $pd_upver sha512 mismatch — not installing (kept $pd_inst)"
+          warn "proton-drive $pd_upver sha512 mismatch -- not installing (kept $pd_inst)"
           _add_warning "proton-drive: sha512 mismatch for $pd_upver (kept $pd_inst)"
         fi
       else
-        warn "proton-drive $pd_upver download failed — keeping $pd_inst"
+        warn "proton-drive $pd_upver download failed -- keeping $pd_inst"
         _add_warning "proton-drive: roll-forward download failed (kept $pd_inst)"
       fi
     else
       skip "proton-drive $pd_inst (upstream latest $pd_upver)"
     fi
   else
-    warn "could not fetch Proton Drive manifest — keeping installed version"
-    _add_warning "proton-drive: manifest fetch failed (offline?) — kept installed version"
+    warn "could not fetch Proton Drive manifest -- keeping installed version"
+    _add_warning "proton-drive: manifest fetch failed (offline?) -- kept installed version"
   fi
   rm -rf "$pd_tmp"
 fi

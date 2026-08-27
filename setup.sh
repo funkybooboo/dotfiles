@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# setup.sh — interactive post-reboot setup: secrets, SSH, sync, projects
+# setup.sh -- interactive post-reboot setup: secrets, SSH, sync, projects
 #
 # Run this AFTER ./migrate.sh has completed AND you have rebooted into your
 # Hyprland desktop (it needs a browser for logins and network for the NAS).
 #
 # What it does:
-#   1. Proton Pass (pass-cli) login — opens a browser
-#   2. Tailscale authentication — opens a browser
-#   3. NAS SMB credentials — pulled from Proton Pass, or prompted
-#   4. secretmgr bootstrap — deploys SSH/GPG keys, injects templated configs
+#   1. Proton Pass (pass-cli) login -- opens a browser
+#   2. Tailscale authentication -- opens a browser
+#   3. NAS SMB credentials -- pulled from Proton Pass, or prompted
+#   4. secretmgr bootstrap -- deploys SSH/GPG keys, injects templated configs
 #   5. Agents: load SSH key into agent + prime GPG agent (passphrase prompts)
 #   6. Switch dotfiles remote HTTPS -> SSH (so you can push)
 #   7. Clone personal repos into ~/Projects (from ~/.config/dotfiles/projects-repos.txt)
-#   8. NAS initial seed sync — documents, music, photos, audiobooks, books
+#   8. NAS initial seed sync -- documents, music, photos, audiobooks, books
 #   9. Enable NAS sync timers
 #
 # This script is intentionally separate from the migrations: migrations are
@@ -47,13 +47,13 @@ if command -v pass-cli &>/dev/null; then
   if pass-cli info &>/dev/null 2>&1; then
     skip "Proton Pass (already logged in)"
   else
-    info "Proton Pass login required — opening browser for authentication..."
+    info "Proton Pass login required -- opening browser for authentication..."
     echo -e "  ${DIM}Complete login in the browser, then return here.${NC}"
     pass-cli login
     ok "Proton Pass logged in"
   fi
 else
-  fail "pass-cli not found — run the proton-pass migration first"
+  fail "pass-cli not found -- run the proton-pass migration first"
   _add_error "pass-cli not installed"
 fi
 
@@ -65,13 +65,13 @@ if command -v tailscale &>/dev/null; then
   if tailscale status &>/dev/null; then
     skip "Tailscale (already authenticated and connected)"
   else
-    info "Tailscale login required — opening browser for authentication..."
+    info "Tailscale login required -- opening browser for authentication..."
     echo -e "  ${DIM}After completing login in the browser, press Enter to continue.${NC}"
     sudo tailscale up --accept-routes
     ok "Tailscale connected"
   fi
 else
-  warn "tailscale not found — run the tailscale migration first"
+  warn "tailscale not found -- run the tailscale migration first"
   _add_warning "tailscale not installed; run it manually after"
 fi
 
@@ -89,7 +89,7 @@ if [[ -f "$WAIT_ONLINE_OVERRIDE" ]] && tailscale status &>/dev/null; then
       sudo systemctl daemon-reload 2>/dev/null || true
       ok "wait-online override extended with tailscale0"
     else
-      warn "failed to add tailscale0 to wait-online override — restoring backup"
+      warn "failed to add tailscale0 to wait-online override -- restoring backup"
       sudo cp -a "${WAIT_ONLINE_OVERRIDE}.bak" "$WAIT_ONLINE_OVERRIDE" 2>/dev/null || true
       _add_warning "wait-online override not updated with tailscale0"
     fi
@@ -131,7 +131,7 @@ else
       chmod 600 "$CREDS_FILE"
       ok "NAS SMB credentials file created: $CREDS_FILE"
     else
-      warn "skipped SMB credentials — create it later:"
+      warn "skipped SMB credentials -- create it later:"
       echo -e "    ${DIM}printf 'username=nate\npassword=YOUR_PASS\ndomain=WORKGROUP\n' > $CREDS_FILE && chmod 600 $CREDS_FILE${NC}"
       _add_warning "NAS SMB credentials not set"
     fi
@@ -148,7 +148,7 @@ if [[ -x "$_SECRETMGR" ]]; then
   "$_SECRETMGR" bootstrap
   ok "Secrets bootstrapped"
 else
-  warn "secretmgr not found at $_SECRETMGR — run the secretmgr migration first"
+  warn "secretmgr not found at $_SECRETMGR -- run the secretmgr migration first"
   _add_warning "secretmgr not found; run '$_SECRETMGR bootstrap' manually"
 fi
 
@@ -169,27 +169,27 @@ fi
 SSH_KEY="$HOME/.ssh/id_ed25519"
 GITHUB_SSH_OK=false
 
-# ── 5a. GPG agent ──────────────────────────────────────────────────────────
+# -- 5a. GPG agent ----------------------------------------------------------
 # gpg-agent is socket-activated; ensure it is running, then prime the cache.
 if command -v gpgconf &>/dev/null; then
   if gpg-agent --version &>/dev/null; then
     if gpgconf --launch gpg-agent 2>/dev/null; then
       ok "gpg-agent running"
     else
-      # Already running is not an error — gpgconf returns nonzero in that case.
+      # Already running is not an error -- gpgconf returns nonzero in that case.
       if systemctl --user is-active gpg-agent.service &>/dev/null; then
         skip "gpg-agent (already running)"
       else
-        warn "could not launch gpg-agent — git signed commits will prompt on first use"
+        warn "could not launch gpg-agent -- git signed commits will prompt on first use"
         _add_warning "gpg-agent not launched; signing will prompt per-use"
       fi
     fi
   else
-    warn "gpg-agent not found — run the gnupg migration (000404) first"
+    warn "gpg-agent not found -- run the gnupg migration (000404) first"
     _add_warning "gpg-agent missing; git signing will prompt per-use"
   fi
 else
-  warn "gpgconf not found — run the gnupg migration (000404) first"
+  warn "gpgconf not found -- run the gnupg migration (000404) first"
   _add_warning "gpgconf missing; skipping GPG agent setup"
 fi
 
@@ -209,7 +209,7 @@ if gpg --list-secret-keys &>/dev/null; then
       if echo "prime" | gpg --batch --yes --detach-sign -o /dev/null 2>/dev/null; then
         ok "GPG agent passphrase cached (8h)"
       else
-        warn "GPG agent priming failed — git signed commits will prompt on first use"
+        warn "GPG agent priming failed -- git signed commits will prompt on first use"
         _add_warning "GPG passphrase not cached; signing will prompt per-use"
       fi
     fi
@@ -220,9 +220,9 @@ else
   skip "GPG agent priming (gnupg not installed)"
 fi
 
-# ── 5b. SSH agent ──────────────────────────────────────────────────────────
+# -- 5b. SSH agent ----------------------------------------------------------
 if [[ ! -f "$SSH_KEY" ]]; then
-  warn "no SSH key at $SSH_KEY — SSH-dependent steps will be skipped"
+  warn "no SSH key at $SSH_KEY -- SSH-dependent steps will be skipped"
   _add_warning "SSH key missing; dotfiles remote switch and SSH project clones skipped"
 else
   # Ensure the systemd ssh-agent socket is in SSH_AUTH_SOCK (it may not be set
@@ -244,7 +244,7 @@ else
     if ssh-add "$SSH_KEY" </dev/tty 2>/dev/null; then
       ok "SSH key loaded into agent"
     else
-      warn "could not load SSH key into agent — SSH-dependent steps will be skipped"
+      warn "could not load SSH key into agent -- SSH-dependent steps will be skipped"
       _add_warning "SSH key not loaded (passphrase required?); dotfiles remote switch and SSH project clones skipped"
     fi
   fi
@@ -259,7 +259,7 @@ else
     GITHUB_SSH_OK=true
     ok "GitHub SSH authentication working"
   else
-    warn "GitHub SSH auth failed — will use HTTPS for project clones"
+    warn "GitHub SSH auth failed -- will use HTTPS for project clones"
     _add_warning "GitHub SSH auth failed; dotfiles remote stays HTTPS"
   fi
 fi
@@ -274,7 +274,7 @@ if [[ "$GITHUB_SSH_OK" == "true" ]]; then
   if [[ "$_current_origin" == git@github.com:* ]]; then
     skip "dotfiles remote already SSH ($_current_origin)"
   elif [[ -z "$_current_origin" ]]; then
-    warn "dotfiles repo has no origin remote — skipping remote switch"
+    warn "dotfiles repo has no origin remote -- skipping remote switch"
   else
     _ssh_url="git@github.com:funkybooboo/dotfiles.git"
     if git -C "$REPO_ROOT" remote set-url origin "$_ssh_url"; then
@@ -292,7 +292,7 @@ fi
 # 7. Clone personal repos into ~/Projects
 # =============================================================================
 # Reads repo URLs from ~/.config/dotfiles/projects-repos.txt (symlinked from
-# the dotfiles repo). Repos are cloned idempotently — skipped if the target
+# the dotfiles repo). Repos are cloned idempotently -- skipped if the target
 # already has a .git dir. When GitHub SSH auth works, HTTPS URLs are rewritten
 # to SSH (git@github.com:...) so push works; otherwise they're cloned as-is.
 
@@ -315,7 +315,7 @@ _to_ssh_url() {
 }
 
 if [[ ! -f "$REPOS_FILE" ]]; then
-  warn "projects repo list not found at $REPOS_FILE — skipping project clones"
+  warn "projects repo list not found at $REPOS_FILE -- skipping project clones"
   _add_warning "projects-repos.txt missing; no repos cloned"
 else
   mkdir -p "$PROJECTS_DIR"
@@ -336,7 +336,7 @@ else
       _name="${_url##*/}"
       _name="${_name%.git}"
       if [[ -z "$_name" ]]; then
-        warn "could not parse repo name from: $_url — skipping"
+        warn "could not parse repo name from: $_url -- skipping"
         _add_warning "unparseable repo URL: $_url"
         continue
       fi
@@ -361,7 +361,7 @@ else
         if git clone --quiet "$_clone_url" "$_dest"; then
           ok "$_name cloned"
         else
-          warn "failed to clone $_name — continuing"
+          warn "failed to clone $_name -- continuing"
           _add_warning "project clone failed: $_name"
         fi
       fi
@@ -386,12 +386,12 @@ NAS_MODULES=(
 )
 
 if [[ ! -f "$CREDS_FILE" ]] || ! grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
-  warn "no NAS SMB credentials — skipping initial seed"
+  warn "no NAS SMB credentials -- skipping initial seed"
   _add_warning "NAS initial seed skipped (no SMB credentials)"
 else
   info "checking NAS connectivity (SMB 445 / Tailscale)..."
   if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
-    ok "TrueNAS reachable — running one-shot seed sync"
+    ok "TrueNAS reachable -- running one-shot seed sync"
     for entry in "${NAS_MODULES[@]}"; do
       module="${entry%%:*}"
       local_dir="${entry##*:}"
@@ -404,8 +404,8 @@ else
       fi
     done
   else
-    warn "TrueNAS not reachable — timers will seed on first successful run"
-    _add_warning "TrueNAS not reachable — initial seed skipped"
+    warn "TrueNAS not reachable -- timers will seed on first successful run"
+    _add_warning "TrueNAS not reachable -- initial seed skipped"
   fi
 fi
 
@@ -433,7 +433,7 @@ done
 #   10c. Refresh running-container images (Docker/Podman).
 # All idempotent and best-effort.
 
-# ── 10a. Sync GitHub forks with upstream ─────────────────────────────────────
+# -- 10a. Sync GitHub forks with upstream -------------------------------------
 if command -v gh >/dev/null 2>&1; then
   _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
   if [[ -z "$_forks" ]]; then
@@ -452,7 +452,7 @@ else
   skip "GitHub fork sync (gh not installed)"
 fi
 
-# ── 10b. Update + rebuild git submodule sources (sources/*) ───────────────
+# -- 10b. Update + rebuild git submodule sources (sources/*) ---------------
 # The built-from-source repos live as git submodules of the dotfiles repo
 # (sources/<name>), initialized by migrate.sh preflight. Roll them forward to
 # upstream-latest with `git submodule update --init --remote --merge`, then run
@@ -541,7 +541,7 @@ else
   skip "source submodule update (no .gitmodules present)"
 fi
 
-# ── 10c. Refresh running-container images (Docker/Podman) ────────────────────
+# -- 10c. Refresh running-container images (Docker/Podman) --------------------
 if command -v docker >/dev/null 2>&1 && sudo docker ps -q >/dev/null 2>&1; then
   info "Docker: pulling fresh images for running containers"
   for _ctr in $(sudo docker ps --format '{{.Names}}'); do

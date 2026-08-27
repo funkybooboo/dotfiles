@@ -1,8 +1,8 @@
-# 000304-pipewire.sh — PipeWire audio/video server + mixer + wiremix config
+# 000304-pipewire.sh -- PipeWire audio/video server + mixer + wiremix config
 # Installs: pipewire pipewire-alsa pipewire-jack pipewire-pulse wireplumber
 #           gst-plugin-pipewire libpulse pamixer playerctl wiremix sof-firmware
 # Links:    ~/.config/wiremix/wiremix.toml
-# Enables:  —
+# Enables:  --
 # Note: sof-firmware provides Sound Open Firmware for Intel audio hardware.
 # Note: pipewire-libcamera provides the libcamera SPA plugin
 #       (api.libcamera.enum.manager) that wireplumber loads at startup; without

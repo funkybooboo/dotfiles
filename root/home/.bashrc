@@ -113,7 +113,7 @@ if command -v fzf &>/dev/null; then
         source /usr/share/fzf/key-bindings.bash
     fi
 fi
-# nix — source the profile.d script (sets PATH, NIX_SSL_CERT_FILE,
+# nix -- source the profile.d script (sets PATH, NIX_SSL_CERT_FILE,
 # XDG_DATA_DIRS, NIX_PROFILES for nix-installed packages)
 if [ -f /etc/profile.d/nix-daemon.sh ]; then
     source /etc/profile.d/nix-daemon.sh

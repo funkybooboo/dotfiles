@@ -1,11 +1,11 @@
-# 000209-mermaid-cli.sh — Mermaid CLI (mmdc) for Snacks.image diagram rendering
-# Installs: mermaid-cli (via nix — .#mermaid-cli, provides mmdc)
-# Links:    — (env vars live in ~/.config/environment.d/apps.conf, deployed by
+# 000209-mermaid-cli.sh -- Mermaid CLI (mmdc) for Snacks.image diagram rendering
+# Installs: mermaid-cli (via nix -- .#mermaid-cli, provides mmdc)
+# Links:    -- (env vars live in ~/.config/environment.d/apps.conf, deployed by
 #            000319-xdg.sh)
-# Enables:  —
+# Enables:  --
 # Note: Snacks.image renders Mermaid code blocks in docs/markdown by shelling
 #       out to `mmdc`. Without it, :checkhealth snacks reports
-#       "❌ ERROR Tool not found: 'mmdc'".
+#       "[x] ERROR Tool not found: 'mmdc'".
 #
 #       mmdc drives puppeteer, which by default downloads its own ~150MB
 #       Chromium at install time. We skip that (PUPPETEER_SKIP_DOWNLOAD=1,
@@ -16,7 +16,7 @@
 #       finished, so the 000303-vs-000209 ordering does not matter.
 #
 #       Previously installed via npm global (npm install -g). Now installed
-#       via nix (.#mermaid-cli) — hermetic, sandboxed, no npm global
+#       via nix (.#mermaid-cli) -- hermetic, sandboxed, no npm global
 #       package install. The nix package puts mmdc in ~/.nix-profile/bin/.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# clean-memory — free up system memory by stopping containers, VMs, and
+# clean-memory -- free up system memory by stopping containers, VMs, and
 # clearing caches
 #
 set -euo pipefail

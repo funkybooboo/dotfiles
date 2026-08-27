@@ -1,7 +1,7 @@
-# 000520-proton-vpn.sh — Proton VPN CLI + GUI + vpn wrapper script
-# Installs: proton-vpn-cli proton-vpn-gtk-app (both in extra/ — official Arch)
+# 000520-proton-vpn.sh -- Proton VPN CLI + GUI + vpn wrapper script
+# Installs: proton-vpn-cli proton-vpn-gtk-app (both in extra/ -- official Arch)
 # Links:    ~/.local/bin/vpn
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

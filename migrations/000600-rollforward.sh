@@ -12,13 +12,13 @@
 #            composer). Language packages are per-project concerns managed
 #            by each project's tooling (Cargo.lock, package-lock.json,
 #            pyproject.toml, etc.).
-#            pi update (coding agent self-update) stays — it's a self-contained
+#            pi update (coding agent self-update) stays -- it's a self-contained
 #            tool, not a language-ecosystem package.
 # Note:      nix flake update bumps the nixpkgs pin in flake.lock to latest,
 #            then nix profile upgrade --all upgrades all nix-installed packages
 #            to that new revision. This makes nix consistent with pacman -Syu
 #            and flatpak update (always get upstream latest on each migrate run).
-#            The flake.lock bump shows as an uncommitted change — commit it to
+#            The flake.lock bump shows as an uncommitted change -- commit it to
 #            pin the new revision across machines (same pattern as setup.sh
 #            rolling forward sources/ submodules).
 #            Firmware stays a separate manual `update-firmware` (reboot-gated).
@@ -32,7 +32,7 @@ section "runtime roll-forward (update)"
 # mise manages ALL language runtimes. mise upgrade updates each to the version
 # pinned in ~/.config/mise/config.toml (global defaults) or the project's
 # .mise.toml (per-project overrides). mise itself is upgraded by pacman in
-# 000001. No separate rustup/go/npm/pip steps — those are per-project.
+# 000001. No separate rustup/go/npm/pip steps -- those are per-project.
 if command -v mise >/dev/null 2>&1; then
   info "mise-managed runtimes"
   if mise upgrade --yes 2>/dev/null; then ok "mise runtimes upgraded"; else warn "mise upgrade failed (non-fatal)"; fi

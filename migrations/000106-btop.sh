@@ -1,7 +1,7 @@
-# 000106-btop.sh — btop system monitor
+# 000106-btop.sh -- btop system monitor
 # Installs: btop
 # Links:    ~/.config/btop/**
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

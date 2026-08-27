@@ -1,7 +1,7 @@
-# 000206-pi-agent.sh — pi coding agent (via nix) + config
+# 000206-pi-agent.sh -- pi coding agent (via nix) + config
 # Nix:     .#pi-coding-agent (provides the `pi` binary, wraps ripgrep + fd)
 # Links:   ~/.pi/**
-# Enables: —
+# Enables: --
 # Note: pi is installed from nixpkgs (hermetic buildNpmPackage, MIT licensed).
 #       The nix package wraps `pi` with ripgrep + fd in PATH and sets
 #       PI_SKIP_VERSION_CHECK=1 + PI_TELEMETRY=0. Upgrades via

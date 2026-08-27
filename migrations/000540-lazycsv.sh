@@ -1,7 +1,7 @@
-# 000540-lazycsv.sh — lazycsv CSV viewer/editor (Rust TUI)
-# Installs: — (rust/cargo provided by mise, migration 000202)
-# Links:    —
-# Enables:  —
+# 000540-lazycsv.sh -- lazycsv CSV viewer/editor (Rust TUI)
+# Installs: -- (rust/cargo provided by mise, migration 000202)
+# Links:    --
+# Enables:  --
 # Note: lazycsv is a Rust TUI for CSV files (github.com/funkybooboo/lazycsv).
 #       Its source lives in the dotfiles git submodule sources/lazycsv
 #       (initialized in preflight); it is built in release mode with cargo and
@@ -15,7 +15,7 @@ section "lazycsv"
 
 # Cargo must be available (provisioned by the mise migration, 000202).
 if ! command -v cargo &>/dev/null; then
-  fail "cargo not found — run the mise migration (000202) first"
+  fail "cargo not found -- run the mise migration (000202) first"
   _add_error "cargo not installed; cannot build lazycsv"
   exit 1
 fi
@@ -40,7 +40,7 @@ else
   exit 1
 fi
 
-info "installing lazycsv → ~/.local/bin..."
+info "installing lazycsv -> ~/.local/bin..."
 if (cd "$LAZYCSV_DIR" && cargo install --path . --root "$HOME/.local" --force); then
   ok "lazycsv installed to ~/.local/bin/lazycsv"
 else

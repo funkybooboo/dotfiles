@@ -1,7 +1,7 @@
-# 000311-waybar.sh — Waybar status bar
+# 000311-waybar.sh -- Waybar status bar
 # Installs: waybar
 # Links:    ~/.config/waybar/**
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

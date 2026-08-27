@@ -1,7 +1,7 @@
-# 000104-tmux.sh — tmux terminal multiplexer
+# 000104-tmux.sh -- tmux terminal multiplexer
 # Installs: tmux
 # Links:    ~/.config/tmux/tmux.conf
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

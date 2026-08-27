@@ -1,11 +1,11 @@
-# 000542-ollama.sh — Ollama local LLM runtime + model pulls
+# 000542-ollama.sh -- Ollama local LLM runtime + model pulls
 # Installs: ollama (extra repo)
-# Links:    —
+# Links:    --
 # Enables:  ollama.service (system service, port 11434)
 # Note: Ollama runs as a system service on http://localhost:11434. Models are
 #       pulled idempotently (skipped if already present in ~/.ollama). The model
 #       list is sized for THIS machine: Intel Core Ultra 7 165H, 30 GB RAM, no
-#       discrete GPU (Intel Meteor Lake i915, shared RAM). CPU-only inference —
+#       discrete GPU (Intel Meteor Lake i915, shared RAM). CPU-only inference --
 #       7B/8B Q4 models (~5GB each) are the sweet spot; 27B+ would be too slow
 #       for interactive use. Embedding model included for RAG/search.
 #
@@ -38,13 +38,13 @@ for _i in $(seq 1 15); do
   sleep 1
 done
 if [[ "$_ready" != "true" ]]; then
-  fail "ollama daemon not reachable on :11434 after 15s — skipping model pulls"
+  fail "ollama daemon not reachable on :11434 after 15s -- skipping model pulls"
   _add_error "ollama daemon not reachable; models not pulled"
   exit 1
 fi
 ok "ollama daemon ready"
 
-# ── Model list ──────────────────────────────────────────────────────────────
+# -- Model list --------------------------------------------------------------
 # Sized for 30 GB RAM, CPU-only inference (no discrete GPU). All Q4_K_M-ish
 # quantizations shipped by the Ollama registry. Total disk ~22 GB.
 #
@@ -75,7 +75,7 @@ for _model in "${OLLAMA_MODELS[@]}"; do
     if ollama pull "$_model"; then
       ok "$_model pulled"
     else
-      warn "failed to pull $_model — continuing"
+      warn "failed to pull $_model -- continuing"
       _add_warning "ollama model pull failed: $_model"
     fi
   fi

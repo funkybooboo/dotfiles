@@ -1,7 +1,7 @@
-# 000543-caligula.sh — caligula disk imaging TUI
+# 000543-caligula.sh -- caligula disk imaging TUI
 # Installs: caligula (official extra repo)
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 # Note: caligula is a user-friendly, lightweight TUI for disk imaging,
 #       in the official Arch extra repository.
 

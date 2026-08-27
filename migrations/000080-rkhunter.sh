@@ -1,4 +1,4 @@
-# 000080-rkhunter.sh — rkhunter rootkit scanner + config + timers
+# 000080-rkhunter.sh -- rkhunter rootkit scanner + config + timers
 # Installs: rkhunter
 # Deploys: /etc/rkhunter.conf, /etc/pacman.d/hooks/rkhunter-propupd.hook,
 #          /etc/systemd/system/rkhunter-scan.{service,timer}

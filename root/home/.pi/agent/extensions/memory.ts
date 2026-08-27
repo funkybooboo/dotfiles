@@ -41,7 +41,7 @@ function saveStore(store: MemoryStore): void {
 }
 
 export default function (pi: ExtensionAPI) {
-  // Register `remember` tool — save a fact
+  // Register `remember` tool -- save a fact
   pi.registerTool({
     name: "remember",
     label: "Remember",
@@ -79,7 +79,7 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
-  // Register `recall` tool — search memories
+  // Register `recall` tool -- search memories
   pi.registerTool({
     name: "recall",
     label: "Recall",
@@ -92,7 +92,7 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({
       query: Type.Optional(
         Type.String({
-          description: "Search query — matches against memory text and tags",
+          description: "Search query -- matches against memory text and tags",
         })
       ),
       limit: Type.Optional(

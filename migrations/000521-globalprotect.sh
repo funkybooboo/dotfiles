@@ -1,7 +1,7 @@
-# 000521-globalprotect.sh — GlobalProtect OpenConnect VPN client
-# Installs: — (uninstalled; install_pacman line commented out)
-# Links:    —
-# Enables:  —
+# 000521-globalprotect.sh -- GlobalProtect OpenConnect VPN client
+# Installs: -- (uninstalled; install_pacman line commented out)
+# Links:    --
+# Enables:  --
 # Note: The official Arch repo package (extra/globalprotect-openconnect) is
 #       available. The install_pacman is COMMENTED OUT because the user has
 #       a license but isn't actively using it, and wants

@@ -1,7 +1,7 @@
-# 000102-starship.sh — Starship cross-shell prompt
+# 000102-starship.sh -- Starship cross-shell prompt
 # Installs: starship
 # Links:    ~/.config/starship.toml
-# Enables:  —
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

@@ -1,7 +1,7 @@
-# 000306-obs-studio.sh — OBS Studio (screen recording/streaming)
+# 000306-obs-studio.sh -- OBS Studio (screen recording/streaming)
 # Installs: obs-studio
-# Links:    —
-# Enables:  —
+# Links:    --
+# Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
