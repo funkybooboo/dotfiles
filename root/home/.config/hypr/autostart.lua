@@ -9,8 +9,16 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user import-environment $(env | cut -d= -f1 | tr '\\n' ' ')")
 end)
 hl.on("hyprland.start", function() hl.exec_cmd("xsettingsd &") end)
+-- libadwaita (GTK4) reads none of the gtk-3.0/gtk-4.0 settings.ini keys: it
+-- takes the color scheme from the portal's org.freedesktop.appearance, which
+-- xdg-desktop-portal-gtk backs with these GSettings keys. gtk-theme and
+-- icon-theme have to be set alongside color-scheme or they keep the
+-- gsettings-desktop-schemas default of 'Adwaita', contradicting
+-- gtk-3.0/settings.ini and xsettingsd.conf.
 hl.on("hyprland.start", function()
     hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
+    hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'")
+    hl.exec_cmd("gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'")
 end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")

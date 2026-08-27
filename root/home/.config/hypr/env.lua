@@ -22,6 +22,12 @@ hl.env("XDG_SESSION_DESKTOP", "Hyprland")
 hl.env("GTK_THEME", "Adwaita-dark")
 hl.env("GTK2_RC_FILES", "/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc")
 hl.env("GTK3_RC_FILES", "/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css")
+-- LibreOffice picks its VCL backend from XDG_CURRENT_DESKTOP, and "Hyprland"
+-- is not a name it recognises, so it can fall back to the generic X11 `gen`
+-- plugin, which draws its own light chrome and ignores every theme layer
+-- above. gtk3 is always present (a hard dependency of xdg-desktop-portal-gtk),
+-- so pinning the backend is safe.
+hl.env("SAL_USE_VCLPLUGIN", "gtk3")
 hl.env("XCOMPOSEFILE", "~/.XCompose")
 
 -- Ensure Hyprland's exec PATH includes ~/.local/bin. The systemd user session
