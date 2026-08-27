@@ -15,9 +15,9 @@
       packages = forAll (system:
         let pkgs = pkgsFor system; in {
           inherit (pkgs)
-            brave wayfreeze tdf timg nvimpager
+            brave librewolf wayfreeze tdf timg nvimpager
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
-            calcure mermaid-cli pi-coding-agent vscode
+            calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
             exercism codecrafters-cli opencode;
 
           # waybar 0.15.0 (nixpkgs) + PR #5013: Hyprland Lua-IPC dispatch fix so
