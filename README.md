@@ -24,9 +24,7 @@ provide it. Each install is recorded in the migration that owns it.
 | 2 | **upstream release assets** | Prebuilt binaries or source tarballs published by the project itself on its GitHub/GitLab/Codeberg/etc. release page. sha256-verified against an upstream-published checksum file, GPG-verified where a release key exists (e.g. Mullvad Browser, LibreWolf, gcx, HandBrake). |
 | 3 | **nix** | Local flake (`flake.nix`) wrapping nixpkgs with `allowUnfree = true`, pinned via `flake.lock`. Hermetic sandboxed builds, PR-reviewed, binary cache at cache.nixos.org. |
 | 4 | **from source** | Clone the repo (or download a source tarball from the releases page) and build it. Used when no prebuilt binary is published.
-| 5 | **flatpak** | Flathub (Proton Pass GUI -- Proton's official Linux dist). |
-| 6 | **AppImage** | Self-contained single-file executables from upstream releases. |
-| 7 | **snap** | Snap Store. |
+| 5 | **flatpak** | Flathub. Proton Pass GUI (Proton's official Linux dist), Bottles, OrcaSlicer. |
 
 **No AUR or yay.** Packages not in Arch official repos come from the
 upstream release assets, then nix, then from source. Language runtimes
@@ -56,6 +54,7 @@ dotfiles/
 |-- migrate.sh        # preflight -> run migrations in order -> summary
 |-- setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
 |-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
+|-- overlays/         # patches applied by flake.nix (e.g. waybar PR #5013)
 |-- sources/          # git submodules built from source
 \-- root/
     |-- home/         # -> $HOME (symlinked)
@@ -91,7 +90,7 @@ rebuilds them, refreshes running Podman container images.
 
 ## Migrations
 
-138 migrations grouped by concern. `ls migrations/` for the full list.
+137 migrations grouped by concern. `ls migrations/` for the full list.
 
 | Range | Concern |
 |-------|---------|
