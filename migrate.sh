@@ -9,7 +9,7 @@
 # After migrations finish and you reboot into Hyprland, run:
 #   ./setup.sh
 #
-# Usage: ./migrate.sh [-q|--quiet] [-h|--help]
+# Usage: ./migrate.sh [-q|--quiet] [--firmware] [-h|--help]
 #
 # Flags:
 #   -q, --quiet   Compact output for steady-state re-runs: collapses the
@@ -19,6 +19,11 @@
 #                  the final summary are unchanged. Also honors
 #                  DOTFILES_QUIET=1. First installs should run without --quiet
 #                  so you see full install output.
+#       --firmware Also apply device firmware updates (fwupd) after the
+#                  migrations finish, by running the update-firmware script.
+#                  Off by default: a firmware update can require a reboot, so
+#                  it stays opt-in. update-firmware prompts before rebooting
+#                  when run interactively.
 #   -h, --help    Show this help and exit.
 #
 # Environment:
@@ -38,27 +43,35 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 REPO_ROOT="$PWD"
 
 # --- argument parsing ---------------------------------------------------------
+# Prints this file's own header block, stopping at the first line that is not a
+# comment. Deliberately not a hardcoded line range: the help text IS the header,
+# so a fixed end line silently truncates --help (or spills into the code below
+# it) the moment a flag is documented.
 _usage() {
-  sed -n '2,33p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "${BASH_SOURCE[0]}"
 }
 
-case "${1:-}" in
-  -h|--help)
-    _usage
-    exit 0
-    ;;
-  -q|--quiet)
-    export _DOTFILES_QUIET=1
-    ;;
-  "")
-    : # default (verbose) run
-    ;;
-  *)
-    echo "migrate.sh: unknown argument: $1" >&2
-    echo "usage: ./migrate.sh [-q|--quiet] [-h|--help]" >&2
-    exit 2
-    ;;
-esac
+_RUN_FIRMWARE=0
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help)
+      _usage
+      exit 0
+      ;;
+    -q|--quiet)
+      export _DOTFILES_QUIET=1
+      ;;
+    --firmware)
+      _RUN_FIRMWARE=1
+      ;;
+    *)
+      echo "migrate.sh: unknown argument: $1" >&2
+      echo "usage: ./migrate.sh [-q|--quiet] [--firmware] [-h|--help]" >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
 # DOTFILES_QUIET=1 also enables quiet mode.
 [[ "${DOTFILES_QUIET:-}" == "1" ]] && export _DOTFILES_QUIET=1
 
@@ -162,5 +175,40 @@ snapshot_post_migration
 
 echo ""
 echo -e "  ${DIM}Ran $_total migration(s): $((_total - _failed)) ok, ${_failed} failed.${NC}"
+
+# --- firmware (--firmware only) -----------------------------------------------
+# Runs BEFORE print_summary so the summary is still the last thing printed --
+# print_summary exits 1 when any migration recorded an error, which would
+# otherwise skip this step entirely on an imperfect run.
+#
+# Invokes the repo copy, not ~/.local/bin/update-firmware: on a first run the
+# symlink 000420 deploys may not exist yet, and both paths are the same file.
+if (( _RUN_FIRMWARE )); then
+  # A firmware flash is the last thing an aborted run should start: the user
+  # asked it to stop, and update-firmware can prompt for a reboot.
+  if (( _INTERRUPTED )); then
+    warn "interrupted -- skipping firmware"
+    _add_warning "firmware skipped: run was interrupted"
+  else
+    section "firmware"
+    _fw="$DOTFILES_HOME/.local/bin/update-firmware"
+    if [[ ! -x "$_fw" ]]; then
+      warn "update-firmware not found or not executable: $_fw"
+      _add_warning "firmware skipped: $_fw missing"
+    # update-firmware refuses to run unless sudo is already non-interactive
+    # (it calls `sudo -n`). preflight cached the timestamp, but a long migration
+    # run can outlive the ~15 min window, so refresh it here rather than have
+    # the script abort with a misleading "configure NOPASSWD" message.
+    elif ! sudo -v 2>/dev/null; then
+      warn "sudo re-authentication failed -- skipping firmware"
+      _add_warning "firmware skipped: sudo could not be refreshed"
+    elif "$_fw"; then
+      ok "firmware step complete"
+    else
+      warn "update-firmware exited non-zero (see ~/.local/state/update-firmware.log)"
+      _add_warning "update-firmware failed; check ~/.local/state/update-firmware.log"
+    fi
+  fi
+fi
 
 print_summary

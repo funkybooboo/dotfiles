@@ -21,7 +21,9 @@
 #            The flake.lock bump shows as an uncommitted change -- commit it to
 #            pin the new revision across machines (same pattern as setup.sh
 #            rolling forward sources/ submodules).
-#            Firmware stays a separate manual `update-firmware` (reboot-gated).
+#            Firmware is opt-in via `./migrate.sh --firmware`, which runs
+#            update-firmware after the migrations (reboot-gated, so not part of
+#            a default run).
 #            Flatpak + Proton Drive updates are owned by 000301 and 000551.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"

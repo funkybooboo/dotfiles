@@ -8,9 +8,10 @@ migrations.
 ```bash
 git clone --recurse-submodules git@github.com:funkybooboo/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./migrate.sh        # install + configure everything
+./migrate.sh              # install + configure everything
+./migrate.sh --firmware   # also apply device firmware (fwupd); may reboot
 # reboot into Hyprland
-./setup.sh          # secrets, repos, NAS sync, project clone
+./setup.sh                # secrets, repos, NAS sync, project clone
 ```
 
 ## Install priority
@@ -260,8 +261,9 @@ login (`load_on_login = true` in `~/.config/secretmgr/config.toml`).
 
 Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
 
-- `update-firmware` -- firmware updates (reboot-gated, intentionally outside
-  migrate.sh)
+- `update-firmware` -- firmware updates via fwupd; opt-in through
+  `./migrate.sh --firmware` because it can require a reboot. Logs to
+  `~/.local/state/update-firmware.log`
 - `clean-disk` -- orphans, caches, unused flatpaks
 - `secretmgr` -- Proton Pass wrapper
 - `sync-*` -- NAS sync (documents, music, photos, audiobooks, books)
