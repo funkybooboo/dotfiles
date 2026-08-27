@@ -21,6 +21,11 @@
 #                  so you see full install output.
 #   -h, --help    Show this help and exit.
 #
+# Environment:
+#   DOTFILES_SKIP_SNAPSHOT=1   Skip the pre-migration snapper snapshot. The run
+#                              otherwise aborts when / is not btrfs, because
+#                              migrations rewrite the bootloader and kernel.
+#
 # Interrupts: Ctrl+C (SIGINT) / SIGTERM abort the run cleanly. The first
 # interrupt finishes the in-flight step and then stops; a second interrupt
 # exits immediately with status 130. (Without this, the non-fatal subshell
@@ -34,7 +39,7 @@ REPO_ROOT="$PWD"
 
 # --- argument parsing ---------------------------------------------------------
 _usage() {
-  sed -n '2,28p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '2,33p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
 }
 
 case "${1:-}" in
@@ -93,6 +98,8 @@ source "$REPO_ROOT/migrations/_common.sh"
 
 preflight
 
+snapshot_pre_migration
+
 section "Running Migrations"
 
 shopt -s nullglob
@@ -147,6 +154,11 @@ for _migration in "$REPO_ROOT"/migrations/[0-9][0-9][0-9][0-9][0-9][0-9]-*.sh; d
   fi
 done
 shopt -u nullglob
+
+# Close the pair even when migrations failed or were interrupted: a pre snapshot
+# with no post cannot be diffed with `snapper status`, which is the whole point
+# of taking it.
+snapshot_post_migration
 
 echo ""
 echo -e "  ${DIM}Ran $_total migration(s): $((_total - _failed)) ok, ${_failed} failed.${NC}"

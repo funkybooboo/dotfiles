@@ -475,6 +475,124 @@ deploy_etc_file() {
 }
 
 # =============================================================================
+# SNAPSHOT HELPERS (called by migrate.sh)
+# =============================================================================
+
+# Parallel arrays pairing each snapper config with the "pre" snapshot number
+# taken for it, so snapshot_post_migration can close the pair. Bash has no
+# nested arrays, so two indexed arrays is the idiom.
+_SNAP_CONFIGS=()
+_SNAP_PRE_NUMBERS=()
+
+# snapshot_pre_migration
+#   Open a snapper pre/post pair around the whole migration run.
+#
+#   Why fatal when the root filesystem is not btrfs: migrations rewrite the
+#   bootloader (000020), install kernels (000040) and edit the kernel cmdline
+#   (000051). A run that breaks boot leaves no way back, and the per-file
+#   <dest>.bak.N copies this repo makes cover neither /boot nor a kernel. Same
+#   shape as preflight's disk-encryption checks -- enforce, with one env escape.
+#
+#   Why NOT fatal when snapper is merely absent or unconfigured:
+#   000406-btrfs.sh is what installs and configures snapper, and it runs inside
+#   the very loop this function guards. On a fresh machine the first run
+#   therefore cannot snapshot -- and has nothing worth preserving. Later runs
+#   do, and get one. The warning is still recorded so a box where 000406
+#   actually failed does not look identical to a fresh one.
+#
+#   Override with DOTFILES_SKIP_SNAPSHOT=1.
+snapshot_pre_migration() {
+  section "Pre-Migration Snapshot"
+
+  if [[ "${DOTFILES_SKIP_SNAPSHOT:-0}" == "1" ]]; then
+    warn "DOTFILES_SKIP_SNAPSHOT=1 -- running with no restore point"
+    _add_warning "migrations ran without a pre-migration snapshot (DOTFILES_SKIP_SNAPSHOT=1)"
+    return 0
+  fi
+
+  local fstype
+  fstype="$(findmnt -n -o FSTYPE / 2>/dev/null || true)"
+  if [[ "$fstype" != "btrfs" ]]; then
+    fail "root filesystem is ${fstype:-unknown}, not btrfs -- cannot snapshot."
+    fail "migrations change the bootloader and kernel; refusing to run blind."
+    fail "on an intentionally non-btrfs machine, re-run with:"
+    fail "  DOTFILES_SKIP_SNAPSHOT=1 ./migrate.sh"
+    exit 1
+  fi
+  ok "root filesystem is btrfs"
+
+  if ! command -v snapper &>/dev/null; then
+    warn "snapper not installed yet -- no snapshot (000406-btrfs.sh installs it)"
+    _add_warning "no pre-migration snapshot: snapper not installed (expected on a first run)"
+    return 0
+  fi
+
+  local sha
+  sha="$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+
+  local cfg number
+  for cfg in root home; do
+    if [[ ! -f "/etc/snapper/configs/$cfg" ]]; then
+      skip "snapper config '$cfg' not created yet"
+      continue
+    fi
+    number="$(sudo snapper -c "$cfg" create --type pre \
+      --cleanup-algorithm number --print-number \
+      --description "pre-migrate $sha" 2>/dev/null || true)"
+    if [[ "$number" =~ ^[0-9]+$ ]]; then
+      _SNAP_CONFIGS+=("$cfg")
+      _SNAP_PRE_NUMBERS+=("$number")
+      ok "pre snapshot #$number ($cfg)"
+    else
+      warn "failed to create pre snapshot for '$cfg'"
+      _add_warning "snapper pre snapshot failed for config '$cfg'"
+    fi
+  done
+
+  if (( ${#_SNAP_CONFIGS[@]} == 0 )); then
+    warn "no snapshot taken -- snapper is installed but has no usable config"
+    _add_warning "no pre-migration snapshot: no snapper config found (run 000406-btrfs.sh)"
+  fi
+
+  return 0
+}
+
+# snapshot_post_migration
+#   Close each pair opened by snapshot_pre_migration.
+#
+#   Never fatal, and never returns non-zero: migrate.sh runs under `set -e`, so
+#   a failure here would skip print_summary and hide the run's own results. The
+#   run has already happened by this point, so a missing post snapshot costs the
+#   status/undochange diff and nothing more.
+snapshot_post_migration() {
+  (( ${#_SNAP_CONFIGS[@]} > 0 )) || return 0
+
+  section "Post-Migration Snapshot"
+
+  local sha
+  sha="$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+
+  local i cfg pre post
+  for i in "${!_SNAP_CONFIGS[@]}"; do
+    cfg="${_SNAP_CONFIGS[$i]}"
+    pre="${_SNAP_PRE_NUMBERS[$i]}"
+    post="$(sudo snapper -c "$cfg" create --type post --pre-number "$pre" \
+      --cleanup-algorithm number --print-number \
+      --description "post-migrate $sha" 2>/dev/null || true)"
+    if [[ "$post" =~ ^[0-9]+$ ]]; then
+      ok "post snapshot #$post ($cfg)"
+      info "review: sudo snapper -c $cfg status ${pre}..${post}"
+      info "revert: sudo snapper -c $cfg undochange ${pre}..${post}"
+    else
+      warn "failed to create post snapshot for '$cfg' (pre #$pre left unpaired)"
+      _add_warning "snapper post snapshot failed for config '$cfg'; pre #$pre has no pair"
+    fi
+  done
+
+  return 0
+}
+
+# =============================================================================
 # PREFLIGHT & SUMMARY (called by migrate.sh)
 # =============================================================================
 

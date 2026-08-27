@@ -65,7 +65,8 @@ dotfiles/
 `install_flatpak`, `remove_flatpak`, `remove_pkg`, `link_file`, `link_tree`,
 `link_dir`, `deploy_etc_file`, `enable_*_service`. Each migration
 guard-sources `_common.sh` so it can run standalone. Conflicts back up to
-`<dest>.bak.N`. No dry-run or restore mode.
+`<dest>.bak.N`. There is no dry-run mode; to undo a run, see
+[Snapshots and restore](#snapshots-and-restore).
 
 ## migrate.sh vs setup.sh
 
@@ -103,6 +104,75 @@ rebuilds them, refreshes running Podman container images.
 | `000600` | Runtime roll-forward: mise, nix, pi, tldr |
 
 `sudo` is a preflight prerequisite (not installed by a migration).
+
+### Snapshots and restore
+
+`migrate.sh` wraps the whole run in a snapper pre/post snapshot pair for `/` and
+`/home`, taken after preflight and before the first migration. It **aborts if `/`
+is not btrfs**: migrations rewrite the bootloader (`000020`), install kernels
+(`000040`) and edit the kernel cmdline (`000051`), and the per-file
+`<dest>.bak.N` copies cover none of that. Bypass with `DOTFILES_SKIP_SNAPSHOT=1`.
+
+`000406-btrfs.sh` creates the `root` and `home` snapper configs and enables
+`snapper-cleanup.timer` (without that timer, retention never runs). Retention is
+`NUMBER_LIMIT=20`, roughly ten runs' worth of pairs. Hourly timeline snapshots
+stay off -- these are on-demand snapshots, not a backup schedule.
+
+The first run on a fresh machine cannot snapshot, since `000406` is what installs
+snapper and it runs inside the loop being guarded. That run warns and continues;
+later runs snapshot normally.
+
+**See what a run changed**
+
+```bash
+sudo snapper -c root list                    # find the pre/post pair
+sudo snapper -c root status <pre>..<post>    # changed paths
+```
+
+**Undo a run, machine still boots**
+
+```bash
+sudo snapper -c root undochange <pre>..<post>
+```
+
+**Undo a run, machine does not boot**
+
+`snapper rollback` is not reliable here. It works by setting the btrfs default
+subvolume, but this machine mounts `subvol=@` explicitly, which ignores it. Swap
+the subvolume by hand:
+
+1. Boot a live USB, unlock the LUKS container.
+2. Mount the top level: `mount -o subvolid=5 /dev/mapper/<name> /mnt`
+3. `mv /mnt/@ /mnt/@.broken`
+4. Snapshot the good state back into place. The source path depends on where
+   `/.snapshots` lives: `/mnt/@snapshots/<n>/snapshot` if it is its own
+   subvolume, or `/mnt/@.broken/.snapshots/<n>/snapshot` if it is still a
+   directory inside `@`.
+   `btrfs subvolume snapshot <source> /mnt/@`
+5. Reboot. Delete `@.broken` only once the restored system is confirmed good.
+
+**Kernel or bootloader breakage**
+
+`/boot` is FAT32, so no btrfs snapshot covers it. A rolled-back `@` restores
+`/usr/lib/modules/*` while `/boot` keeps the newer UKI, and the two will not
+match. Downgrade the kernel from the retained pacman cache (`@pkg`) instead:
+
+```bash
+sudo pacman -U /var/cache/pacman/pkg/<kernel>-<oldver>.pkg.tar.zst
+```
+
+Then confirm the UKI in `/boot` was actually regenerated --
+`limine-mkinitcpio-hook` is deliberately not installed (see
+`000020-bootloader.sh`), so this may need doing by hand.
+
+**Prerequisite: `/.snapshots` should be its own subvolume**
+
+Otherwise snapshots sit inside `@`, the subvolume you would roll back, and a
+cleanup of `@.broken` takes them with it. `snapper create-config` normally
+creates it as a subvolume, but it refuses when `/.snapshots` already exists as a
+plain directory -- which is what the manual `btrfs-snapshot` script leaves
+behind. Fixing it needs an `/etc/fstab` entry, which is machine-specific and not
+deployed by migrations.
 
 ### Sources as git submodules
 
