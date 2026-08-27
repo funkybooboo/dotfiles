@@ -32,9 +32,9 @@ end)
 -- parallel, which makes all screens flash black on a loop.
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- mako") end)
 
--- swayosd-server is no longer autostarted: volume/brightness state is shown
--- live in the waybar pulseaudio/backlight modules (icon + percent) instead of
--- a floating OSD, and media-keys applies changes via wpctl/brightnessctl.
+-- swayosd is removed entirely (see 000400-power-management): volume/brightness
+-- state is shown live in the waybar pulseaudio/backlight modules (icon + percent)
+-- instead of a floating OSD, and media-keys applies changes via wpctl/brightnessctl.
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- /usr/lib/hyprpolkitagent/hyprpolkitagent")
