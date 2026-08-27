@@ -10,9 +10,7 @@ logs/
 # Machine-specific state
 root/home/.config/fish/fish_plugins/
 root/home/.config/fish/fish_variables
-root/home/.config/hypr/monitors.conf
 root/home/.config/hypr/monitors.lua
-root/home/.config/hypr/workspaces.conf
 
 # Application cache & state
 root/home/.config/discord/
