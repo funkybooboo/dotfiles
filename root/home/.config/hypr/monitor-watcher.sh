@@ -16,10 +16,14 @@ socket() {
 while true; do
     SOCK="$(socket)"
     [ -S "$SOCK" ] || { sleep 1; continue; }
+    # Debounce: docking/undocking fires several monitoradded/removed events
+    # in quick succession. Wait for a 1.5s quiet gap, then restart once instead
+    # of killall+restart on every single event (which races and flashes).
     socat -U - UNIX-CONNECT:"$SOCK" 2>/dev/null | while read -r line; do
         case "$line" in
             monitoradded\>*|monitorremoved\>*)
-                sleep 1
+                # Drain any further events for 1.5s before acting.
+                while read -r -t 1.5 _more; do :; done
                 "$WALLPAPER_SCRIPT"
                 ;;
         esac
