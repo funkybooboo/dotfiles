@@ -11,6 +11,7 @@ logs/
 root/home/.config/fish/fish_plugins/
 root/home/.config/fish/fish_variables
 root/home/.config/hypr/monitors.lua
+root/home/.config/hypr/hyprpaper.conf
 
 # Application cache & state
 root/home/.config/discord/
