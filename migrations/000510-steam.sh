@@ -25,5 +25,5 @@ else
 fi
 
 install_pacman \
-  steam vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
-ok "Steam + Vulkan drivers (Intel)"
+  vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
+ok "Vulkan drivers (Intel) — Steam itself now provided via nix (see flake.nix)"

@@ -18,7 +18,8 @@
             brave librewolf wayfreeze tdf timg nvimpager
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
             calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
-            exercism codecrafters-cli opencode;
+            exercism codecrafters-cli opencode
+            steam;
 
           # waybar 0.15.0 (nixpkgs) + PR #5013: Hyprland Lua-IPC dispatch fix so
           # the native hyprland/workspaces module's click works under Hyprland's
