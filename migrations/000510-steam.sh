@@ -1,29 +1,24 @@
-# 000510-steam.sh -- Steam + Vulkan drivers (Intel)
-# Installs: steam vulkan-intel lib32-vulkan-intel vulkan-icd-loader
-#           lib32-vulkan-icd-loader
+# 000510-steam.sh -- Steam (pacman)
+# Installs: steam
 # Links:    --
 # Enables:  --
-# Note: Enables the [multilib] repo in /etc/pacman.conf (required for steam +
-#       lib32 packages) before installing.
+# Note: Steam is installed from the Arch [multilib] repo via pacman. steam
+#       hard-Depends On lib32-vulkan-driver + lib32-vulkan-icd-loader (among
+#       many lib32-* packages), so pacman pulls the 32-bit Vulkan stack
+#       automatically; the 64-bit + 32-bit Vulkan ICD drivers themselves are
+#       installed explicitly in 000409-vulkan-drivers (which also enables
+#       [multilib] and runs before this migration). steam is NOT installed
+#       via nix -- the nix steam package is a buildFHSUserEnv wrapper that
+#       ships its own hermetic graphics stack, but we use the native pacman
+#       build so steam consumes the host Mesa/Vulkan stack (matching the
+#       standard Arch setup and the host GPU drivers from 000409).
+#
+#       Steam user data (games, Proton, prefixes, config) lives under
+#       ~/.local/share/Steam and ~/.steam -- not managed by this migration.
+#       For a fresh install, delete those dirs before launching steam.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "steam"
 
-# Enable multilib repo if commented out
-if grep -q '^#\[multilib\]' /etc/pacman.conf; then
-  info "enabling multilib repository in /etc/pacman.conf..."
-  if sudo sed -i '/^#\[multilib\]/,/^#Include/{s/^#//}' /etc/pacman.conf && \
-     sudo pacman -Sy --noconfirm; then
-    ok "multilib repository enabled"
-  else
-    warn "failed to enable multilib -- steam/lib32 packages may not install"
-    _add_warning "multilib repo enable failed; steam + lib32 packages may fail"
-  fi
-else
-  skip "multilib repository (already enabled)"
-fi
-
-install_pacman \
-  vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
-ok "Vulkan drivers (Intel) — Steam itself now provided via nix (see flake.nix)"
+install_pacman steam

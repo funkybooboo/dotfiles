@@ -1,8 +1,14 @@
 [Unit]
 Description=TrueNAS 'nate' SMB share over Tailscale (auto-mount on access)
 Documentation=man:systemd.automount(5)
-After=network-online.target
-Wants=network-online.target
+# NOTE: deliberately NO After=/Wants= network-online.target here. Arming an
+# autofs needs no network -- only the deferred .mount does (which carries its
+# own network-online deps). Putting network-online on the .automount creates a
+# boot ordering cycle (automount -> network-online -> network -> iwd -> basic
+# -> sockets -> systemd-bootctl.socket -> local-fs -> automount) that systemd
+# breaks by DELETING the automount's start job, so it never arms at boot and
+# every sync timer then fails with "mount not available". Keep network deps on
+# the .mount unit only.
 
 [Automount]
 Where=/mnt/truenas/nate
