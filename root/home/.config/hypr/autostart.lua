@@ -23,6 +23,15 @@ end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")
 end)
+-- Ensure the systemd user graphical session target + wallpaper service are up.
+-- uwsm normally activates graphical-session.target, but it is not 100% reliable
+-- (some boots it never reaches the target, so every WantedBy=graphical-session
+-- service -- hypr-wallpaper, xdg portals -- stays dead and the wallpaper never
+-- appears). Starting hypr-wallpaper.service here also pulls in the target via
+-- its BindsTo=, so the whole session stack comes up on every Hyprland start.
+hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user start hypr-wallpaper.service")
+end)
 -- Wallpaper + hyprpaper are owned by the systemd user service hypr-wallpaper.service
 -- (enabled by migration 000310). It runs monitor-watcher.sh, which calls
 -- set-wallpaper.sh at startup and on monitoradded/monitorremoved events, and
