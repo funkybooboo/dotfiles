@@ -1,0 +1,50 @@
+#!/bin/bash
+# keepawake-toggle -- flip the idle escalation off/on for waybar custom/keepawake.
+#
+# Kills hypridle to keep the machine awake, restarts it to restore normal timers.
+# hypridle is NOT a systemd unit here -- Hyprland starts it via
+# `uwsm app -- hypridle` (autostart.conf), so `systemctl --user stop hypridle` is
+# a silent no-op and its is-active check reports inactive while the process runs.
+#
+# Unlike the Super+Ctrl+I keybind this omits a leading dpms off/on blink: that
+# exists to wake dark displays, and clicking a visible bar icon means they are
+# already awake.
+
+# Must match "signal" in waybar's custom/keepawake module. waybar catches every
+# SIGRTMIN+n unconditionally, so a stale value here cannot kill the bar -- it
+# just stops the instant repaint, leaving the module's poll interval to catch up.
+readonly WAYBAR_SIGNAL=8
+
+# Blocks until hypridle's presence matches the target. The repaint below is only
+# correct once the new state is readable: signalling first has waybar re-run the
+# indicator while the OLD state is still true, painting the wrong icon until the
+# next poll. Measured transitions are ~30ms to die and ~110ms for uwsm to
+# register the scope, so the 1s ceiling is a safety net, not the expected wait.
+await_hypridle() {
+    local target="$1" i
+    for ((i = 0; i < 100; i++)); do
+        if [[ $target == running ]]; then
+            pgrep -x hypridle >/dev/null && return 0
+        else
+            pgrep -x hypridle >/dev/null || return 0
+        fi
+        sleep 0.01
+    done
+    return 1
+}
+
+if pgrep -x hypridle >/dev/null; then
+    pkill -u "$(whoami)" -x hypridle
+    await_hypridle gone
+    notify-send "Keep awake" "On -- screens stay on" -h string:x-canonical-private-synchronous:keepawake
+else
+    # Output is discarded because waybar is this script's parent on click:
+    # hypridle would otherwise log its whole startup into waybar's stream.
+    uwsm app -- hypridle >/dev/null 2>&1 &
+    await_hypridle running
+    notify-send "Keep awake" "Off -- normal idle timers" -h string:x-canonical-private-synchronous:keepawake
+fi
+
+# Repaint now rather than waiting out the module's poll interval. The interval is
+# still needed for changes made outside this script, i.e. the Super+Ctrl+I bind.
+pkill -RTMIN+"$WAYBAR_SIGNAL" waybar

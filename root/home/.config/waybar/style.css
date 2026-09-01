@@ -71,7 +71,8 @@
 #custom-search,
 #custom-power,
 #custom-display,
-#custom-nightmode {
+#custom-nightmode,
+#custom-keepawake {
     min-width: 12px;
     margin: 0 7.5px;
 }

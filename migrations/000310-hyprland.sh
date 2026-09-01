@@ -9,6 +9,7 @@
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,screenshot,screencast,recording-indicator,
 #             toggle-lock,nightmode-toggle,nightmode-indicator,theme-switch,
+#             keepawake-toggle,keepawake-indicator,
 #             clipboard-manager,
 #             power-mode-menu,hypr-float-apply,hypr-float-launch,
 #             hypr-float-toggle,hypr-window-switcher,
@@ -40,7 +41,8 @@ for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   toggle-lock nightmode-toggle nightmode-indicator theme-switch \
   clipboard-manager power-mode-menu hypr-float-apply hypr-float-launch \
   hypr-float-toggle hypr-window-switcher hypr-window-switcher-inner \
-  power-menu media-keys; do
+  power-menu media-keys \
+  keepawake-toggle keepawake-indicator; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done
 

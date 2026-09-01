@@ -1,0 +1,23 @@
+#!/bin/bash
+# keepawake-indicator -- waybar custom/keepawake module state output.
+#
+# Emits JSON for waybar (return-type json). Polls hypridle, which owns the whole
+# idle escalation -- dim at 300s, lock at 600s, suspend at 1800s (hypridle.conf).
+#
+# Note the inverted sense against nightmode-indicator: hypridle ABSENT is the
+# awake state, because keepawake-toggle suppresses idling by killing the daemon
+# rather than by holding an inhibitor lock.
+#
+# Reading process presence instead of tracking state internally is what keeps
+# this icon in agreement with the Super+Ctrl+I keybind, which toggles the same
+# daemon without going through this script.
+#
+# Icons (Nerd Font / Font Awesome): coffee when awake, bed when idling normally.
+# Both are BMP codepoints, so a single \u escape suffices -- a supplementary
+# plane glyph would need a JSON surrogate pair here.
+
+if pgrep -x hypridle >/dev/null; then
+  printf '{"text":"\\uf236","class":"idle","alt":"idle","tooltip":"Keep awake: Off\\nNormal idle timers: dim 5m, lock 10m, suspend 30m\\nClick to toggle  (Super+Ctrl+I)"}\n'
+else
+  printf '{"text":"\\uf0f4","class":"awake","alt":"awake","tooltip":"Keep awake: On\\nScreens stay on, no lock, no suspend\\nClick to toggle  (Super+Ctrl+I)"}\n'
+fi

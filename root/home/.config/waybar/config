@@ -25,6 +25,7 @@
         "custom/display",
         "backlight",
         "custom/nightmode",
+        "custom/keepawake",
         "battery",
         "custom/power"
     ],
@@ -258,6 +259,15 @@
         "interval": 2,
         "return-type": "json",
         "on-click": "~/.local/bin/nightmode-toggle",
+        "tooltip": true
+    },
+    "custom/keepawake": {
+        "exec": "~/.local/bin/keepawake-indicator",
+        "exec-if": "true",
+        "interval": 2,
+        "signal": 8,
+        "return-type": "json",
+        "on-click": "~/.local/bin/keepawake-toggle",
         "tooltip": true
     }
 }
