@@ -1,0 +1,21 @@
+# Deployed by migration 000325-espanso.sh -- do not edit by hand.
+#
+# Grants the `input` group access to /dev/uinput, which the kernel creates
+# root-only (crw------- root root). espanso's Wayland backend needs both halves
+# of the input path: it reads typed triggers from /dev/input/event* (already
+# 0660 root:input, so `input` group membership covers it) and injects the
+# expansion back through uinput, which nothing but root can open by default.
+#
+# Upstream instead documents `setcap cap_dac_override+p` on the espanso binary.
+# That is deliberately not used here: capabilities live on the inode, so any
+# upgrade silently drops them, and the nix-installed binary sits at a
+# /nix/store path that changes on every version bump. A udev rule outlives both.
+#
+# Without this, espanso starts cleanly and simply never expands anything -- the
+# failure is silent, which is why the permission is owned by the repo rather
+# than left to whatever the distro happens to ship.
+#
+# uinput is built into this kernel rather than a module, so the device node
+# always exists and no modules-load.d entry is needed.
+
+KERNEL=="uinput", SUBSYSTEM=="misc", GROUP="input", MODE="0660"

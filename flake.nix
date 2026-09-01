@@ -19,7 +19,13 @@
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
             calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
             exercism codecrafters-cli opencode
-            steam;
+            steam
+            # espanso-wayland: text expander, Wayland build. Not in Arch's
+            # official repos, and upstream's only Linux Wayland asset is a Debian
+            # .deb, so tier 2 cannot serve Arch at all. AUR does carry
+            # espanso-wayland 2.4.0, but AUR is excluded by policy, which leaves
+            # nix as the first tier able to provide it.
+            espanso-wayland;
 
           # waybar 0.15.0 (nixpkgs) + PR #5013: Hyprland Lua-IPC dispatch fix so
           # the native hyprland/workspaces module's click works under Hyprland's

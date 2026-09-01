@@ -1,0 +1,35 @@
+# espanso matches -- linked by migration 000325-espanso.sh.
+#
+# `trigger` is the typed text, `replace` what lands. Triggers are prefixed with
+# `:` so they cannot fire inside ordinary prose.
+#
+# App-specific matches (filter_class / filter_title) are NOT usable here:
+# espanso implements them only through kdotool, which is KDE-only, so under
+# Hyprland every match is global.
+
+matches:
+  - trigger: ":date"
+    replace: "{{today}}"
+    vars:
+      - name: today
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ":now"
+    replace: "{{stamp}}"
+    vars:
+      - name: stamp
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M"
+
+  # Jira keys are written DOMO-nnnnnn constantly; this expands to the browse
+  # URL prefix so only the number has to be typed.
+  - trigger: ":jira"
+    replace: "https://domoinc.atlassian.net/browse/DOMO-"
+
+  # Required trailer on anything a person reads as a message from Nate
+  # (Jira comments, PR review replies) -- see CLAUDE.md attribution rule.
+  - trigger: ":botsig"
+    replace: "-- By Nates Bot"

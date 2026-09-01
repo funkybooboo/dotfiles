@@ -31,8 +31,10 @@ remove_pkg swayosd
 # hypridle's dim-on-idle, and the kbd-backlight binds all shell out to
 # brightnessctl. So the membership lives here, with the migration that installs
 # brightnessctl. Requires a logout/login (or newgrp/reboot) to take effect.
-# The `input` group is deliberately NOT re-added: it existed only so swayosd's
-# LibInput backend could read /dev/input/event* directly.
+# The `input` group is not granted here. It existed only so swayosd's LibInput
+# backend could read /dev/input/event* directly, and was dropped with swayosd --
+# but it is granted again by 000325-espanso.sh, whose EVDEV backend reads typed
+# triggers from those same devices. This migration is not its owner.
 if groups "$USER" | grep -qw video; then
   skip "$USER already in video group"
 elif sudo usermod -aG video "$USER"; then

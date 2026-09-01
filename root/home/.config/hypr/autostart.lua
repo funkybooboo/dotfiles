@@ -51,3 +51,7 @@ end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- hypridle") end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- waybar") end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store") end)
+-- espanso: `daemon` (not `start`) runs in the foreground so the uwsm scope tracks
+-- it and it exits with the session. See migrations/000325-espanso.sh for why
+-- espanso's own `service register` is not used.
+hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- espanso daemon") end)

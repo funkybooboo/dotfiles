@@ -1,0 +1,9 @@
+# espanso default config -- linked by migration 000325-espanso.sh.
+#
+# keyboard_layout is set explicitly because espanso cannot read the layout from
+# the compositor on Wayland: it decodes raw evdev keycodes through its own xkb
+# state, so a mismatch with Hyprland silently yields wrong characters rather
+# than an error. These values mirror input.conf's kb_layout / kb_options.
+keyboard_layout:
+  layout: us
+  options: compose:caps
