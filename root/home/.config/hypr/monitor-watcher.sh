@@ -6,7 +6,7 @@
 WALLPAPER_SCRIPT="/home/nate/.config/hypr/set-wallpaper.sh"
 
 socket() {
-    /run/user/$(id -u)/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock
+    printf '%s\n' "/run/user/$(id -u)/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
 }
 
 # Set once at startup.
