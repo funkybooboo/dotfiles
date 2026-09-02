@@ -4,8 +4,8 @@
 
 set -gx EDITOR nvim
 set -gx VISUAL nvim
-set -gx PAGER less
-set -gx MANPAGER less
+set -gx PAGER nvimpager
+set -gx MANPAGER nvimpager
 set -gx SUDO_EDITOR nvim
 set -gx BAT_THEME "Catppuccin Mocha"
 set -gx MANROFFOPT -c

@@ -15,9 +15,9 @@ gui:
   authorColors:
     coAuthored: "#a6e3a1"
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --dark --paging=never
+      command: delta --dark --paging=never
   log:
     showWholeGraph: true
   autoFetch: true

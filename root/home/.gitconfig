@@ -49,10 +49,14 @@
 
 [core]
 	editor = nvim
-	pager = diffnav
+	pager = nvimpager
 
 [pager]
-	log = nvimpager
+	# Everything pages through nvimpager (core.pager) except plain `git
+	# diff`, which uses diffnav. Do NOT set core.pager to diffnav: it is a
+	# bubbletea TUI that queries terminal modes and, on short output (e.g.
+	# `git branch`), exits before reading the terminal's replies, leaking
+	# literal "^[[?2026;2$y^[[?2027;1$y" garbage into the shell.
 	diff = diffnav
 
 [diff]

@@ -2,8 +2,11 @@
 # Installs: git github-cli git-filter-repo git-lfs git-delta diffnav
 # Links:    ~/.gitconfig
 # Enables:  --
-# Note: git-delta (interactive.diffFilter) and diffnav (core.pager) are the diff
-#       pagers referenced in .gitconfig. git-lfs is referenced by [filter "lfs"].
+# Note: core.pager is nvimpager (installed by 000108-neovim.sh); diffnav is
+#       only pager.diff, and git-delta is interactive.diffFilter (git add -p).
+#       Do not promote diffnav to core.pager -- its bubbletea TUI leaks
+#       terminal query replies into the shell on short output. git-lfs is
+#       referenced by [filter "lfs"].
 #       Sets core.hooksPath to .githooks for pre-commit secret scanning.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
