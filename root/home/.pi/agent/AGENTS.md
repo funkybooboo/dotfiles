@@ -23,7 +23,8 @@
 - Follow project conventions and existing patterns
 - Single responsibility functions
 - Take time to understand before changing
-- ASCII only in code/docs (emojis allowed in data only)
+- ASCII only in all agent-written content: file content, docs, commit messages, and shell commands must be pure ASCII (0x00-0x7F) -- no emoji, smart quotes, em/en dashes, ellipsis, accented letters, or box-drawing characters. Use ASCII equivalents: " ' -- ... -> [OK] (x) WARNING. Never put emojis in responses either
+- Enforced by a pi hook (ascii-guard.ts) that blocks write/edit/bash/remember calls containing non-ASCII -- to grep/sed existing non-ASCII use Unicode escapes (\u{00E9}), and if a file genuinely needs non-ASCII text (i18n, fixtures), ask the user to add it manually
 
 ## Security & Safety
 
