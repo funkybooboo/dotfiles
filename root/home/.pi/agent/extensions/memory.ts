@@ -26,6 +26,7 @@ interface MemoryStore {
 
 const MEMORY_FILE = path.join(os.homedir(), ".pi", "agent", "memory.json");
 const MAX_AUTO_INJECT = 10; // Max recent memories to auto-inject
+const MAX_MEMORY_TEXT = 2000; // Distilled facts, not session narratives
 
 function loadStore(): MemoryStore {
   try {
@@ -51,6 +52,7 @@ export default function (pi: ExtensionAPI) {
     promptGuidelines: [
       "Use remember when the user shares a preference, decision, or fact worth retaining across sessions.",
       "Use tags to categorize memories for easier recall later.",
+      "Keep memories concise and distilled (under ~1500 chars): facts, traps, preferences, decisions, one-line outcomes with commit hashes. Do not store session narratives, test counts, or verification logs -- that detail belongs in commit messages and project docs.",
     ],
     parameters: Type.Object({
       text: Type.String({
@@ -64,6 +66,31 @@ export default function (pi: ExtensionAPI) {
     }),
     async execute(_toolCallId, params) {
       const store = loadStore();
+
+      // Dedupe: never save the same text twice
+      if (store.memories.some((m) => m.text === params.text)) {
+        return {
+          content: [{ type: "text", text: `Already remembered (identical memory exists); not saved again.` }],
+          details: { duplicate: true },
+        };
+      }
+
+      // Keep memories distilled -- the last 10 are injected into every prompt
+      if (params.text.length > MAX_MEMORY_TEXT) {
+        return {
+          content: [
+            {
+              type: "text",
+              text:
+                `Memory too long (${params.text.length} chars, max ${MAX_MEMORY_TEXT}). ` +
+                "Save distilled facts/traps/outcomes with commit refs, not session narratives -- " +
+                "detail belongs in commit messages and docs. Shorten or split it, then retry.",
+            },
+          ],
+          details: { tooLong: true },
+        };
+      }
+
       const memory: Memory = {
         text: params.text,
         timestamp: Date.now(),

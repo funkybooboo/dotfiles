@@ -106,6 +106,32 @@ rebuilds them, refreshes running Podman container images.
 
 `sudo` is a preflight prerequisite (not installed by a migration).
 
+### Writing a migration
+
+1. Create `migrations/NNNNNN-name.sh` -- next free number in the right concern
+   range (table above). Mind ordering: migrations run in lexicographic order,
+   so a migration may only depend on runtimes installed by lower-numbered ones.
+2. Guard-source the helpers as the first line:
+   `[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"`
+3. Use only the `_common.sh` helpers -- never call `pacman`/`sudo`/`ln` directly:
+   `install_pacman`, `install_nix`, `install_flatpak`, `remove_flatpak`,
+   `remove_pkg`, `link_file`, `link_tree`, `link_dir`, `deploy_etc_file`,
+   `enable_user_service`, `enable_system_service`, `enable_system_service_no_start`.
+4. Be **idempotent**: re-running must be safe (check before installing, skip
+   when already done). Conflicts are backup-only (`<dest>.bak.N`) -- no
+   `--force`/`--merge`/dry-run/restore.
+5. Be **non-fatal**: a single failure must not abort the run. Record problems
+   with `_add_warning` / `_add_error` so they surface in the final summary.
+   (`install_pacman`/`install_nix` already return 0 and warn on failure.)
+6. Header comment: `# NNNNNN-name.sh -- <one-line summary>` followed by
+   `# Installs:`, `# Links:`, `# Enables:`, `# Note:` lines, matching the
+   existing style.
+7. After writing: test it standalone (`bash migrations/NNNNNN-name.sh`)
+   including the idempotent re-run path and the missing-dependency path;
+   update the migration count in this README; `git add` + commit with a clear
+   message; remind the user to re-run `./migrate.sh` on other machines (or note
+   that the change replicates via the existing link helpers).
+
 ### Snapshots and restore
 
 `migrate.sh` wraps the whole run in a snapper pre/post snapshot pair for `/` and

@@ -95,35 +95,12 @@ scripts into `~/.local/bin/`.
   into the live `~/.config/` tree (or note that `migrate.sh` will do so on the
   next run) and commit it.
 
-**How to write a migration** (follow existing conventions exactly):
-
-1. Create `~/dotfiles/migrations/NNNNNN-name.sh`. Pick the next free number in
-   the right concern range (see the README migration table; e.g. dev tools
-   `000200`-`000210`, apps `000500`-`000542`). Re-run `./migrate.sh` to apply.
-2. Guard-source the helpers as the first line:
-   `[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"`
-3. Use the `_common.sh` helpers -- never call `pacman`/`sudo`/`ln` directly:
-   `install_pacman`, `install_nix`, `link_file`, `link_tree`, `link_dir`,
-   `deploy_etc_file`, `enable_user_service`, `enable_system_service`,
-   `enable_system_service_no_start`.
-4. Be **idempotent**: re-running must be safe (check before installing, skip
-   when already done). Conflicts are backup-only (`<dest>.bak.N`) -- no
-   `--force`/`--merge`/dry-run/restore.
-5. Be **non-fatal**: a single failure must not abort the run. Record problems
-   with `_add_warning` / `_add_error` so they surface in the final summary.
-   `install_pacman`/`install_nix` already return 0 and warn on failure.
-6. Mind **ordering**: migrations run in lexicographic order. If yours needs a
-   runtime from an earlier migration (e.g. node/npm from `000202-mise.sh`),
-   number it after that migration.
-7. Header comment: `# NNNNNN-name.sh -- <one-line summary>` then `# Installs:`,
-   `# Links:`, `# Enables:`, `# Note:` lines, matching the existing style.
-
-**After writing a migration:** test it standalone (`bash
-migrations/NNNNNN-name.sh`) including the idempotent re-run path and the
-missing-dependency path; update the migration count in `~/dotfiles/README.md`;
-`git add` + commit with a clear message; and remind the user to re-run
-`./migrate.sh` on other machines (or note that the change replicates via the
-existing link helpers).
+**How to write a migration:** follow `~/dotfiles/README.md` ("Writing a
+migration") and copy the conventions of existing migrations exactly --
+`_common.sh` helpers only (never raw `pacman`/`sudo`/`ln`), guard-source first
+line, idempotent re-runs, non-fatal failures via `_add_warning`/`_add_error`,
+lexicographic ordering, header comment style, standalone test incl. the
+re-run path, README migration-count update, commit.
 
 **Never** leave a fix applied only to the live system. If you ran a one-off
 command to fix something, ask: "how does the next machine get this?" -- if the

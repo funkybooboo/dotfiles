@@ -63,7 +63,7 @@ CHARACTER CONVERSIONS:
   Emojis:        Removed entirely
 
 For full documentation, see:
-  ~/.config/opencode/skills/ascii-convert/SKILL.md
+  ~/.pi/agent/skills/ascii-convert/SKILL.md
 EOF
 }
 
