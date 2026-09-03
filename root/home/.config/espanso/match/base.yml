@@ -33,3 +33,11 @@ matches:
   # (Jira comments, PR review replies) -- see CLAUDE.md attribution rule.
   - trigger: ":botsig"
     replace: "-- By Nates Bot"
+
+  # Steam launch options for Proton games (validated on AOE2DE 813780 and
+  # Civ V 8930 with GE-Proton11-6). Launch options do NOT sync between
+  # machines (steam-for-linux #10475), so type :steamopts into each game's
+  # Properties -> Launch Options on every new install. EVDEV backend means
+  # this also works inside Steam's own UI.
+  - trigger: ":steamopts"
+    replace: "gamescope -W 1920 -H 1080 -f -- gamemoderun %command%"
