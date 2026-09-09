@@ -1,6 +1,9 @@
 return {
   "funkybooboo/99",
-  dir = "/home/nate/dotfiles/sources/99", -- git submodule checkout of github.com/funkybooboo/99
+  -- vim.fn.expand rather than a literal /home/<user>: the submodule lives at the
+  -- same place relative to $HOME on every machine, and hardcoding the absolute
+  -- path breaks the moment the repo is cloned under a different user.
+  dir = vim.fn.expand("~/dotfiles/sources/99"), -- git submodule checkout of github.com/funkybooboo/99
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
