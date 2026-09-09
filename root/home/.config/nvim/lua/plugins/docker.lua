@@ -28,4 +28,16 @@ return {
       })
     end,
   },
+
+  -- hadolint has no LSP equivalent: dockerls does schema/completion, not
+  -- Dockerfile best-practice lint. mason already installed it above, but nothing
+  -- referenced it, so it never ran. Zero-config, so no gate needed.
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        dockerfile = { "hadolint" },
+      },
+    },
+  },
 }
