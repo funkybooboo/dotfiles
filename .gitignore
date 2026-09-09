@@ -12,6 +12,13 @@ root/home/.config/fish/fish_plugins/
 root/home/.config/fish/fish_variables
 root/home/.config/hypr/monitors.lua
 root/home/.config/hypr/hyprpaper.conf
+# mimeapps.list is rewritten by GIO / xdg-mime on any "set as default" action.
+# While it was tracked and symlinked, those writes landed inside this repo -- on
+# the work machine that silently repointed ~20 associations at a generated
+# userapp-Firefox-<random>.desktop that exists nowhere else. The curated set is
+# tracked as mimeapps.list.default and seeded by 000319-xdg.sh as a real file, so
+# the repo is no longer in the write path.
+root/home/.config/mimeapps.list
 
 # Application cache & state
 root/home/.config/discord/

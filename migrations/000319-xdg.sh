@@ -1,7 +1,8 @@
 # 000319-xdg.sh -- XDG user dirs + environment variables + mime apps
 # Installs: xdg-user-dirs
-# Links:    ~/.config/environment.d/apps.conf, ~/.config/user-dirs.dirs,
-#           ~/.config/mimeapps.list
+# Links:    ~/.config/environment.d/apps.conf, ~/.config/user-dirs.dirs
+# Seeds:    ~/.config/mimeapps.list (real file, from mimeapps.list.default,
+#           create-if-missing -- NOT a symlink; see the block below for why)
 # Creates: The XDG user directories declared in user-dirs.dirs
 # Enables:  --
 #
@@ -22,7 +23,25 @@ section "xdg"
 install_pacman xdg-user-dirs
 link_file "$DOTFILES_HOME/.config/environment.d/apps.conf" "$HOME/.config/environment.d/apps.conf"
 link_file "$DOTFILES_HOME/.config/user-dirs.dirs"          "$HOME/.config/user-dirs.dirs"
-link_file "$DOTFILES_HOME/.config/mimeapps.list"           "$HOME/.config/mimeapps.list"
+
+# mimeapps.list is SEEDED as a real file, not symlinked.
+#
+# GIO and xdg-mime rewrite this file on any "set as default" action. While it was
+# a symlink into the repo those writes landed in the repo -- on the work machine
+# that silently repointed about twenty associations at a generated
+# userapp-Firefox-<random>.desktop. Copying a tracked default instead keeps a
+# versioned canonical set while leaving the live file writable and disposable.
+#
+# Create-if-missing only, so a re-run never clobbers the user's own later choices.
+_mimeapps="$HOME/.config/mimeapps.list"
+if [[ -e "$_mimeapps" && ! -L "$_mimeapps" ]]; then
+  skip "mimeapps.list (present; left as-is so local choices survive)"
+else
+  # A symlink here is the old deployment; replace it with a real file.
+  [[ -L "$_mimeapps" ]] && rm -f "$_mimeapps"
+  install -m 644 "$DOTFILES_HOME/.config/mimeapps.list.default" "$_mimeapps"
+  ok "seeded mimeapps.list from mimeapps.list.default"
+fi
 
 # Create the directories declared in user-dirs.dirs. We source the config
 # (it's valid shell: XDG_xxx_DIR="$HOME/yyy") and mkdir -p each value. This
