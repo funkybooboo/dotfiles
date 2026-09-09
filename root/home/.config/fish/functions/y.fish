@@ -1,13 +1,14 @@
-# y -- yazi, changing the cwd to yazi's last dir on exit
+# y -- yazi wrapper that leaves the shell in the directory yazi exited from.
 #
-# Standard yazi cwd-switch wrapper: yazi writes its exit cwd to a temp file,
-# and we cd there if it differs from $PWD. The cached function in
-# share/fish/functions/yazi.fish from the yazi package does the same thing;
-# this copy keeps it under dotfiles control.
-function y --description 'yazi (cd to last dir on exit)'
+# yazi runs as a child process, so it cannot change this shell's cwd itself.
+# Instead it writes its final directory to the file named by --cwd-file, and
+# this wrapper cds there afterwards. Upstream's fish snippet, kept verbatim so
+# it does not drift from the yazi docs.
+
+function y --description 'yazi, leaving the shell in the directory it exited from'
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     command yazi $argv --cwd-file="$tmp"
-    if read -z cwd <"$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+    if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
         builtin cd -- "$cwd"
     end
     command rm -f -- "$tmp"

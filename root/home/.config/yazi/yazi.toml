@@ -1,6 +1,17 @@
-# yazi.toml -- Yazi terminal file manager config
-# Source: ~/.config/yazi/yazi.toml (symlinked here by migrations/000235-yazi.sh)
+# yazi.toml -- yazi terminal file manager
+#
+# Only keys that DIFFER from yazi's preset belong here. yazi merges this file
+# over yazi-config/preset/yazi-default.toml, so restating a default is dead
+# config that silently rots when upstream changes.
 
 [mgr]
-show_hidden  = true   # show dotfiles/hidden entries
-show_symlink  = true   # show the target path after symlink names
+# This repo installs itself as symlinks (migrate.sh links every tracked file),
+# and most of what it links is dotfiles. Browsing ~/.config with the default
+# show_hidden = false hides nearly all of it.
+show_hidden = true
+
+# Already yazi's default as of 26.8.15 -- pinned, not redundant. The " -> target"
+# suffix is the only cue distinguishing a repo-managed symlink from a stray real
+# file, so an upstream default flip would quietly remove the thing that makes
+# this tree readable.
+show_symlink = true
