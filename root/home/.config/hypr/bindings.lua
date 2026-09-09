@@ -40,7 +40,11 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 
 -- Window management
 hl.bind(mainMod .. " + W",               hl.dsp.window.close())
-hl.bind(mainMod .. " + CTRL + delete",   hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"))
+-- Close every window on the current workspace. On SHIFT+CTRL+delete rather than
+-- CTRL+delete so it does not collide with the laptop display toggle further down
+-- -- both were bound to CTRL+delete, so the display toggle (registered second)
+-- won and this bind was dead. Both machines now use the same split.
+hl.bind(mainMod .. " + SHIFT + CTRL + delete", hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"))
 hl.bind(mainMod .. " + F",               hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + CTRL + F",        hl.dsp.window.fullscreen({ mode = "maximized" }))
 hl.bind(mainMod .. " + ALT + F",         hl.dsp.window.fullscreen({ mode = "fullscreen" }))
