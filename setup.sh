@@ -394,7 +394,6 @@ else
     ok "TrueNAS reachable -- running one-shot seed sync"
     for entry in "${NAS_MODULES[@]}"; do
       module="${entry%%:*}"
-      local_dir="${entry##*:}"
       info "seeding $module (local -> NAS)"
       if "$HOME/.local/bin/sync-$module" 2>/dev/null; then
         ok "$module seed sync ran"

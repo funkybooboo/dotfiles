@@ -1,6 +1,6 @@
 #!/bin/bash
-WALLPAPER="/home/nate/Pictures/wallpapers/yellowstone.jpg"
-CONF="/home/nate/.config/hypr/hyprpaper.conf"
+WALLPAPER="$HOME/Pictures/wallpapers/yellowstone.jpg"
+CONF="$HOME/.config/hypr/hyprpaper.conf"
 
 # Wait for Hyprland IPC to return valid monitor JSON before writing the conf.
 # At graphical-session start the socket may answer before it can emit JSON,

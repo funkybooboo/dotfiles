@@ -3,7 +3,7 @@
 # Runs forever under hypr-wallpaper.service (Restart=always). Reconnects if the
 # Hyprland event socket drops (e.g. Hyprland restarts) instead of exiting 0,
 # which would leave the service dead under Restart=on-failure.
-WALLPAPER_SCRIPT="/home/nate/.config/hypr/set-wallpaper.sh"
+WALLPAPER_SCRIPT="$HOME/.config/hypr/set-wallpaper.sh"
 
 socket() {
     printf '%s\n' "/run/user/$(id -u)/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
