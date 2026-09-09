@@ -70,4 +70,19 @@ return {
       })
     end,
   },
+
+  -- gopls formats with gofmt; gofumpt is the stricter community default. Setting
+  -- gopls.gofumpt = true above only affects gopls' own formatting requests -- it
+  -- does NOT make gofumpt the format-on-save formatter, which is conform's job.
+  -- mason already installed gofumpt but nothing referenced it, so saves were
+  -- getting plain gofmt-equivalent output.
+  -- Imports are already handled by gopls organizeImports on save.
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        go = { "gofumpt" },
+      },
+    },
+  },
 }
