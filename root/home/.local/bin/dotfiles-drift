@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+#
+# dotfiles-drift -- report what has diverged between the two dotfiles repos.
+#
+# There are two sibling repos with the same layout: a work one and a personal one.
+# Most files are meant to be the same, some are legitimately per-machine, and
+# nothing enforced the difference -- so every fix had to be hand-ported and
+# hand-checked, and a file could sit diverged for months without anyone noticing.
+# This turns that audit into one command.
+#
+# It compares TRACKED files only (git ls-files in each repo), so machine-local
+# state that is gitignored on purpose -- monitors.conf, hyprpaper.conf,
+# mimeapps.list -- never shows up as drift.
+#
+# Each file present in both trees lands in one of three buckets:
+#
+#   same       byte-identical. Nothing to do.
+#   path-only  identical once the home directory is normalised. Usually means one
+#              side hardcodes /home/<user> where $HOME would do, which is worth
+#              fixing precisely because it makes the file a permanent hand-port
+#              for no benefit.
+#   differs    real content difference. The actionable list, and the only one
+#              printed by default.
+#
+# Files present in just one repo are counted separately: that is often correct
+# (Domo tooling here, NAS and gaming there), so they are reported, not judged.
+#
+# Not everything in "differs" is actionable, and the tool cannot tell which is
+# which. Known-permanent divergence, as of this being written:
+#   * identity     .gitconfig, .gnupg/gpg.conf, .ssh/config -- different keys,
+#                  emails and hosts by design
+#   * secrets      .local/bin/secretmgr -- Bitwarden here, Proton Pass there
+#   * hyprland     hypr/* and .local/bin/hypr-* -- this machine is on hyprlang
+#                  0.53.3, the other on Lua config; the dispatcher APIs differ
+#   * editor       nvim/lua/config/lazy.lua and the language files whose only
+#                  difference is inert mason ensure_installed entries
+#   * doctrine     .pi/agent/AGENTS.md -- work doctrine vs a generic version
+# Everything else in that list is worth a look.
+#
+# Exits 0 whether or not drift exists. This is a report, not a gate -- much of the
+# output is intended divergence, so a non-zero exit would cry wolf.
+
+set -euo pipefail
+
+for dep in git diff comm cmp; do
+  command -v "$dep" >/dev/null || { echo "dotfiles-drift: $dep is required" >&2; exit 1; }
+done
+
+usage() {
+  cat <<'USAGE'
+usage: dotfiles-drift [OTHER_REPO] [--all] [--one-line]
+
+  OTHER_REPO   path to the sibling dotfiles repo. Auto-detected when omitted.
+  --all        also list the only-in-one-repo and same buckets.
+  --one-line   counts only, no file lists.
+USAGE
+}
+
+other=""
+show_all=0
+one_line=0
+for arg in "$@"; do
+  case "$arg" in
+    --all)      show_all=1 ;;
+    --one-line) one_line=1 ;;
+    -h|--help)  usage; exit 0 ;;
+    -*)         echo "dotfiles-drift: unknown option $arg" >&2; usage >&2; exit 1 ;;
+    *)          other="$arg" ;;
+  esac
+done
+
+# Resolve this repo from the script's real location, so it works through the
+# symlink deployment as well as from a checkout.
+self="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
+here="$(git -C "$self" rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "$here" ] || { echo "dotfiles-drift: cannot locate this dotfiles repo from $self" >&2; exit 1; }
+
+# The sibling only exists where both repos are cloned, which is not guaranteed.
+# Say so plainly rather than failing obscurely.
+if [ -z "$other" ]; then
+  for candidate in "$HOME/Projects/personal/dotfiles" "$HOME/dotfiles" "$HOME/Projects/dotfiles"; do
+    [ "$candidate" = "$here" ] && continue
+    if [ -d "$candidate/.git" ] && [ -d "$candidate/root/home" ]; then
+      other="$candidate"
+      break
+    fi
+  done
+fi
+
+if [ -z "$other" ]; then
+  echo "dotfiles-drift: no sibling dotfiles repo found."
+  echo "  This repo: $here"
+  echo "  Both repos must be cloned on the same machine to compare them."
+  echo "  Pass the path explicitly: dotfiles-drift /path/to/other/dotfiles"
+  exit 0
+fi
+
+other="$(cd -- "$other" && git rev-parse --show-toplevel)"
+[ -d "$other/root/home" ] || { echo "dotfiles-drift: $other has no root/home tree" >&2; exit 1; }
+
+# Tracked files under root/home, relative to root/home.
+tracked() {
+  git -C "$1" ls-files -- root/home | sed 's|^root/home/||' | LC_ALL=C sort -u
+}
+
+a_list="$(mktemp)"; b_list="$(mktemp)"
+same="$(mktemp)"; pathonly="$(mktemp)"; differs="$(mktemp)"
+trap 'rm -f "$a_list" "$b_list" "$same" "$pathonly" "$differs"' EXIT
+
+tracked "$here"  > "$a_list"
+tracked "$other" > "$b_list"
+
+# Normalise any absolute home path, so a file differing ONLY by /home/<user> is
+# separated from one differing in substance.
+normalise() { sed -E 's|/home/[A-Za-z0-9._-]+/|/home/HOME/|g' "$1"; }
+
+while IFS= read -r rel; do
+  pa="$here/root/home/$rel"
+  pb="$other/root/home/$rel"
+  # A tracked path can be a symlink or missing from the worktree; skip anything
+  # that is not a regular file on both sides rather than guessing.
+  [ -f "$pa" ] && [ -f "$pb" ] || continue
+  if cmp -s "$pa" "$pb"; then
+    printf '%s\n' "$rel" >> "$same"
+  elif diff -q <(normalise "$pa") <(normalise "$pb") >/dev/null 2>&1; then
+    printf '%s\n' "$rel" >> "$pathonly"
+  else
+    printf '%s\n' "$rel" >> "$differs"
+  fi
+done < <(LC_ALL=C comm -12 "$a_list" "$b_list")
+
+count() { wc -l < "$1" | tr -d ' '; }
+only_a="$(LC_ALL=C comm -23 "$a_list" "$b_list" | wc -l | tr -d ' ')"
+only_b="$(LC_ALL=C comm -13 "$a_list" "$b_list" | wc -l | tr -d ' ')"
+
+echo "this repo:  $here"
+echo "other repo: $other"
+echo
+printf 'same %s   path-only %s   differs %s   only-here %s   only-there %s\n' \
+  "$(count "$same")" "$(count "$pathonly")" "$(count "$differs")" "$only_a" "$only_b"
+
+[ "$one_line" -eq 1 ] && exit 0
+
+if [ -s "$differs" ]; then
+  echo
+  echo "differs (real content differences):"
+  sed 's/^/  /' "$differs"
+fi
+
+if [ -s "$pathonly" ]; then
+  echo
+  # shellcheck disable=SC2016  # $HOME is meant to print literally, not expand
+  echo 'path-only (identical apart from the home directory -- candidates for $HOME):'
+  sed 's/^/  /' "$pathonly"
+fi
+
+if [ "$show_all" -eq 1 ]; then
+  echo
+  echo "only in this repo:"
+  LC_ALL=C comm -23 "$a_list" "$b_list" | sed 's/^/  /'
+  echo
+  echo "only in the other repo:"
+  LC_ALL=C comm -13 "$a_list" "$b_list" | sed 's/^/  /'
+  echo
+  echo "same:"
+  sed 's/^/  /' "$same"
+fi

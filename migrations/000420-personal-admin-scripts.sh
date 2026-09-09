@@ -14,6 +14,7 @@
 section "personal admin scripts"
 
 for _script in backup btrfs-snapshot update-firmware package-cleanup \
-  clean-disk clean-memory cleanup-audit cleanup-system hot-procs gg calendar-tui; do
+  clean-disk clean-memory cleanup-audit cleanup-system hot-procs gg calendar-tui \
+  dotfiles-drift; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done

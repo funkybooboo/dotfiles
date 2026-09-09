@@ -3,6 +3,26 @@
 Minimalist Arch Linux + Hyprland dotfiles, managed as ordered, idempotent
 migrations.
 
+## The sibling work repo
+
+There is a second dotfiles repo with the same layout for a work machine
+(`nate-stott_domo/dotfiles`, Ubuntu rather than Arch). Most files are meant to
+match; some are legitimately per-machine -- git and GPG identity, `.ssh/config`,
+the secrets backend, and Hyprland itself, since that machine is still on hyprlang
+`.conf` while this one uses the Lua config.
+
+Nothing enforces that split, so a fix landed on one side can sit unported
+indefinitely. `dotfiles-drift` reports where the two stand:
+
+```bash
+dotfiles-drift /path/to/work/dotfiles   # real content differences only
+dotfiles-drift --all                    # plus only-in-one-repo and identical
+```
+
+It compares tracked files only and separates "differs in substance" from "differs
+only by the home directory". It needs both clones on the same machine; where the
+sibling is missing it says so and exits cleanly, so it is harmless here.
+
 ## Quick start
 
 ```bash
