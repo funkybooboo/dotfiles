@@ -6,15 +6,32 @@
 Description=herdr agent multiplexer server
 Documentation=https://herdr.dev
 
+# Backstop against any respawn loop this unit can still get into: give up rather
+# than spawn forever. Without it a permanently-failing start retries at
+# RestartSec for as long as the session lives.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
 [Service]
 Type=simple
 # Absolute path: user units start with a minimal PATH that has no nix profile on
 # it. ~/.nix-profile is the stable indirection -- it repoints on upgrade, where a
 # /nix/store path would pin one version.
 ExecStart=%h/.nix-profile/bin/herdr server
-ExecStop=%h/.nix-profile/bin/herdr server stop
+
+# No ExecStop. `herdr server stop` acts on whatever server holds the API socket,
+# which is not necessarily the one this unit started -- stopping the unit would
+# then kill a client-spawned server and every agent pane in it. systemd already
+# signals its own MainPID, which is the correct scope.
+
 Restart=always
 RestartSec=2
+# herdr exits 1 and prints "herdr server is already running" when the socket is
+# held by another server, which happens whenever a client auto-started one first.
+# That is a refusal, not a crash: retrying cannot succeed, so respawning turns it
+# into an endless loop (observed: 38 restarts). A panic (101) or a signal death
+# still restarts.
+RestartPreventExitStatus=1
 
 [Install]
 WantedBy=default.target
