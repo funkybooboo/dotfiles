@@ -35,19 +35,59 @@ hl.config({
     },
 })
 
--- group / groupbar (catppuccin mocha -- matches the waybar theme)
+-- group / groupbar
+-- Dark tabs throughout, using Catppuccin's elevation ramp rather than a color
+-- cue: surface0 is its elevated surface and crust its deepest, so the active tab
+-- reads as raised and the rest as recessed. Readability comes from near-white
+-- titles on those fills -- text on surface0 is 8.69:1 and subtext0 on crust
+-- 8.43:1, against WCAG AA's 4.5:1 (the old white on mauve was 2.03:1). Locked
+-- groups keep peach as their signal, 5.15:1 on surface1. Mauve is deliberately
+-- absent; it already means "focused window" on the border, in waybar, and in
+-- hyprtoolkit.
+-- The col.border_* values repeat general{}'s on purpose: grouping is not a focus
+-- change, so it should not recolor the border. Left unset they fall back to
+-- Hyprland's translucent yellow (0x66ffff00) and olive (0x66777700).
 hl.config({
     group = {
+        col = {
+            border_active          = "rgba(cba6f7ff)",
+            border_inactive        = "rgba(45475aaa)",
+            border_locked_active   = "rgba(fab387ff)",
+            border_locked_inactive = "rgba(45475aaa)",
+        },
         groupbar = {
-            enabled    = true,
-            font_size  = 12,
-            gradients  = true,
+            enabled          = true,
+            -- Falls back to misc:font_family (unset, so "Sans") otherwise.
+            font_family      = "JetBrainsMono Nerd Font",
+            font_size        = 11,
+            height           = 18,
+            -- The tab fill is drawn ONLY inside the renderer's gradients branch:
+            -- the one unconditional rect is the indicator, while the texture
+            -- spanning `height` is gated on this. Off, each title renders as bare
+            -- text over the wallpaper. col.* hold a single stop each, so the fill
+            -- is flat; this is not a visible gradient.
+            gradients        = true,
+            -- Same split: the tab's shape comes from gradient_rounding, while
+            -- rounding/round_only_edges only reach the indicator rect.
+            gradient_rounding         = 4,
+            gradient_round_only_edges = false,
+            -- The indicator is filled with the tab's own color, so it only adds
+            -- height below each tab.
+            indicator_height = 0,
+            gaps_in          = 2,
+            gaps_out         = 3,
             col = {
-                active         = "rgba(cba6f7ff)",
-                inactive       = "rgba(45475aaa)",
-                locked_active   = "rgba(fab387ff)",
-                locked_inactive = "rgba(45475aaa)",
+                active          = "rgba(313244ff)",
+                inactive        = "rgba(11111bff)",
+                locked_active   = "rgba(45475aff)",
+                locked_inactive = "rgba(11111bff)",
             },
+            text_color                 = "rgba(cdd6f4ff)",
+            text_color_inactive        = "rgba(a6adc8ff)",
+            text_color_locked_active   = "rgba(fab387ff)",
+            text_color_locked_inactive = "rgba(a6adc8ff)",
+            font_weight_active         = "bold",
+            font_weight_inactive       = "normal",
         },
     },
 })
