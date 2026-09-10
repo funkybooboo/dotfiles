@@ -1,0 +1,20 @@
+[Unit]
+# herdr's server owns live agent panes. Left to itself the client daemonizes it
+# into the cgroup of whichever terminal surface happened to spawn it (observed:
+# app-ghostty-surface-transient-*.scope), which couples an agent-owning process
+# to the lifetime of an unrelated terminal window. Its own unit decouples the two.
+Description=herdr agent multiplexer server
+Documentation=https://herdr.dev
+
+[Service]
+Type=simple
+# Absolute path: user units start with a minimal PATH that has no nix profile on
+# it. ~/.nix-profile is the stable indirection -- it repoints on upgrade, where a
+# /nix/store path would pin one version.
+ExecStart=%h/.nix-profile/bin/herdr server
+ExecStop=%h/.nix-profile/bin/herdr server stop
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

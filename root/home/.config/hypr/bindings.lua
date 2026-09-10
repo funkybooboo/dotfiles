@@ -10,6 +10,10 @@ local mainMod = "SUPER"
 
 -- Applications
 hl.bind(mainMod .. " + Return",          hl.dsp.exec_cmd("uwsm app -- ghostty"))
+-- herdr attaches to its own persistent server, so this lands in the existing
+-- session rather than starting a fresh shell. Tiled like a plain ghostty, not
+-- floated: it is a workspace to work in, not a utility popup.
+hl.bind(mainMod .. " + CTRL + Return",   hl.dsp.exec_cmd("uwsm app -- ghostty -e herdr"))
 hl.bind(mainMod .. " + SHIFT + F",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- thunar"))
 hl.bind(mainMod .. " + SHIFT + N",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e nvim"))
 hl.bind(mainMod .. " + SHIFT + G",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- signal-desktop"))
