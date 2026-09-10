@@ -13,7 +13,7 @@ hl.config({
         border_size  = 1,
         col = {
             active_border   = "rgba(cba6f7ff)", -- THEME: active_border (catppuccin mauve)
-            inactive_border = "rgba(45475aaa)", -- THEME: inactive_border
+            inactive_border = "rgba(45475aff)", -- THEME: inactive_border
         },
         layout       = "dwindle",
         allow_tearing = false,
@@ -51,9 +51,9 @@ hl.config({
     group = {
         col = {
             border_active          = "rgba(cba6f7ff)",
-            border_inactive        = "rgba(45475aaa)",
+            border_inactive        = "rgba(45475aff)",
             border_locked_active   = "rgba(fab387ff)",
-            border_locked_inactive = "rgba(45475aaa)",
+            border_locked_inactive = "rgba(45475aff)",
         },
         groupbar = {
             enabled          = true,
