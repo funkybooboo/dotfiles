@@ -92,7 +92,7 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf0147)
       tooltip: "Clipboard history  (Super+Ctrl+V)"
-      onClicked: bar.floatingTerm([bar.bin + "clipboard-manager"])
+      onClicked: ClipboardState.toggle()
     }
 
     Audio {

@@ -30,7 +30,7 @@ hl.bind(mainMod .. " + C",               hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + CTRL + N",        hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"))
 
 -- Clipboard manager (floating)
-hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/clipboard-manager"))
+hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell clipboard"))
 
 -- Waybar actions (all floating via hypr-float-launch)
 hl.bind(mainMod .. " + SHIFT + A",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"))
