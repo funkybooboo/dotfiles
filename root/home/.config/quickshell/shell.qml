@@ -24,8 +24,6 @@ ShellRoot {
 
   NotificationLayer {}
 
-  OsdLayer {}
-
   // One process now owns what nine daemons used to, and none of the old probes
   // reach it: `pgrep mako`, `makoctl`, `brightnessctl -m` and friends said whether
   // each daemon was alive and what it thought. This is the replacement, and it is
@@ -73,22 +71,22 @@ ShellRoot {
     // Replaces the media-keys script. Steps are percent, signed, so one function
     // covers raise and lower; 0 means use the old script's 5% default.
     function volume(step: int): string {
-      Osd.stepVolume(step === 0 ? Osd.defaultStep : step);
-      return Math.round(Osd.volume * 100) + "%";
+      Media.stepVolume(step === 0 ? Media.defaultStep : step);
+      return Math.round(Media.volume * 100) + "%";
     }
 
     function mute(): string {
-      Osd.toggleMute();
-      return Osd.muted ? "muted" : "unmuted";
+      Media.toggleMute();
+      return Media.muted ? "muted" : "unmuted";
     }
 
     function micMute(): string {
-      Osd.toggleMicMute();
-      return Osd.micMuted ? "muted" : "unmuted";
+      Media.toggleMicMute();
+      return Media.micMuted ? "muted" : "unmuted";
     }
 
     function brightness(step: int): string {
-      Osd.stepBrightness(step === 0 ? Osd.defaultStep : step);
+      Media.stepBrightness(step === 0 ? Media.defaultStep : step);
       return "ok";
     }
 

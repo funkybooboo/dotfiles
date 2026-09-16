@@ -185,13 +185,16 @@ hl.bind(mainMod .. " + mouse:272",         hl.dsp.window.drag(),   { mouse = tru
 hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = true })
 
 -- Volume / brightness call the shell, which sets the volume on the Pipewire node
--- directly and drives brightnessctl for the backlight, then shows its own OSD.
--- IMPORTANT: the path must be explicit because Hyprland's exec PATH does NOT
--- include ~/.local/bin, so a bare command is silently not found and the key does
--- nothing. Steps are percent and signed: 5/-5 coarse, 1/-1 on ALT, and 100/-100
--- slam brightness to a rail. Volume is still capped at 150% for boost. swayosd
--- was never adopted -- it gets this backlight wrong (raise no-ops, lower raises)
--- while returning success.
+-- directly and drives brightnessctl for the backlight. IMPORTANT: the path must
+-- be explicit because Hyprland's exec PATH does NOT include ~/.local/bin, so a
+-- bare command is silently not found and the key does nothing. Steps are percent
+-- and signed: 5/-5 coarse, 1/-1 on ALT, and 100/-100 slam brightness to a rail.
+-- Volume is still capped at 150% for boost.
+--
+-- There is deliberately NO on-screen display: the bar's audio/backlight modules
+-- are the readout, which is why swayosd was removed here and never replaced (it
+-- also got this backlight wrong -- raise no-ops, lower raises -- while returning
+-- success).
 hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume 5"))
 hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume -5"))
 hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell mute"))

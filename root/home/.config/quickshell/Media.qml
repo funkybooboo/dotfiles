@@ -2,14 +2,13 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
-import QtQuick
 
-// Volume and brightness control, plus the popup state that shows the result.
-// This is new: media-keys applied changes silently and the bar was the only
-// readout, so there was never an on-screen display.
+// Volume and brightness control for the media keys. Deliberately silent: there is
+// no on-screen display, because the bar's audio and backlight modules are the
+// readout. swayosd was tried in this setup before and removed.
 //
-// Volume is written straight to the Pipewire node instead of shelling out to
-// wpctl, so the value the OSD draws is the value that was set. Brightness has no
+// Volume is written straight to the Pipewire node rather than shelling out to
+// wpctl, so the bar reads back the value that was actually set. Brightness has no
 // API and still needs brightnessctl.
 Singleton {
   id: root
@@ -18,9 +17,6 @@ Singleton {
   // the keys behave exactly as before.
   readonly property real volumeMax: 1.5
   readonly property int defaultStep: 5
-
-  // "volume", "brightness", or "" when nothing is showing.
-  property string kind: ""
 
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property var source: Pipewire.defaultAudioSource
@@ -34,44 +30,27 @@ Singleton {
     objects: [root.sink, root.source].filter(node => node)
   }
 
-  property Timer hideTimer: Timer {
-    interval: Theme.osdTimeout
-    onTriggered: root.kind = ""
-  }
-
-  function flash(kind) {
-    root.kind = kind;
-    root.hideTimer.restart();
-  }
-
   function stepVolume(percent) {
     if (!root.sink?.audio)
       return;
 
     const next = root.sink.audio.volume + percent / 100;
     root.sink.audio.volume = Math.max(0, Math.min(root.volumeMax, next));
-    root.flash("volume");
   }
 
   function toggleMute() {
-    if (!root.sink?.audio)
-      return;
-
-    root.sink.audio.muted = !root.sink.audio.muted;
-    root.flash("volume");
+    if (root.sink?.audio)
+      root.sink.audio.muted = !root.sink.audio.muted;
   }
 
   function toggleMicMute() {
-    if (!root.source?.audio)
-      return;
-
-    root.source.audio.muted = !root.source.audio.muted;
-    root.flash("volume");
+    if (root.source?.audio)
+      root.source.audio.muted = !root.source.audio.muted;
   }
 
   property Process brightnessProcess: Process {
     // brightnessctl clamps to the device range, so a large step lands on the rail
-    // rather than erroring -- which is what the old SHIFT bindings relied on.
+    // rather than erroring -- which is what the SHIFT bindings rely on.
     onExited: SystemMetrics.refreshBrightness()
   }
 
@@ -79,6 +58,5 @@ Singleton {
     const change = percent >= 0 ? "+" + percent + "%" : Math.abs(percent) + "%-";
     root.brightnessProcess.command = ["brightnessctl", "set", change];
     root.brightnessProcess.running = true;
-    root.flash("brightness");
   }
 }
