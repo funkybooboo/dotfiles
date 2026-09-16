@@ -3,8 +3,10 @@
 # Links:    --
 # Enables:  --
 # Note:     The icon-theme *name* is set in the already-tracked config files
-#           (gtk-3.0/settings.ini, gtk-4.0/settings.ini, xsettingsd.conf,
-#           hypr/hyprtoolkit.conf) -- editing those is enough, this migration
+#           (gtk-3.0/settings.ini, gtk-4.0/settings.ini, xsettingsd.conf, and
+#           the `pragma IconTheme` line in quickshell/shell.qml, which Qt needs
+#           because it has no platform theme here) -- editing those is enough,
+#           this migration
 #           only owns the package install. Papirus ships Papirus, Papirus-Dark
 #           and Papirus-Light; we use Papirus-Dark to match the catppuccin
 #           mocha dark aesthetic. It has far better app-icon coverage than

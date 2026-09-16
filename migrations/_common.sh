@@ -287,9 +287,17 @@ remove_nix() {
   nix_bin="$(_nix_bin)"
   [[ -n "$nix_bin" ]] || return 0
 
+  # Captured to a temp file rather than piped: `nix profile list` is
+  # non-deterministic under pipefail and intermittently yields partial or empty
+  # output when piped directly, which reads as "not installed" and silently skips
+  # the removal. install_nix already does this for the same reason.
+  local list_tmp
+  list_tmp=$(mktemp)
+  "$nix_bin" profile list >"$list_tmp" 2>/dev/null || true
+
   local pkg
   for pkg in "$@"; do
-    if ! "$nix_bin" profile list 2>/dev/null | grep -q "packages\\.x86_64-linux\\.$pkg"; then
+    if ! grep -q "packages\\.x86_64-linux\\.$pkg" "$list_tmp"; then
       skip "nix $pkg (not installed)"
       continue
     fi
@@ -301,6 +309,8 @@ remove_nix() {
       _add_warning "failed to remove nix package: $pkg"
     fi
   done
+
+  rm -f "$list_tmp"
 }
 
 # -----------------------------------------------------------------------------

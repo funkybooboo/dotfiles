@@ -1,10 +1,10 @@
 # 000310-hyprland.sh -- Hyprland compositor + Wayland ecosystem + config + scripts
 # Installs: hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper
-#           hyprpolkitagent hyprlauncher cliphist uwsm
+#           hyprpolkitagent cliphist uwsm
 #           xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 #           xdg-desktop-portal-wlr qt5-wayland qt6-wayland resvg
 # Nix:     .#wayfreeze
-# Links:    ~/.config/hypr/**, ~/.config/hyprlauncher/hyprlauncher.conf,
+# Links:    ~/.config/hypr/**,
 #           ~/.config/systemd/user/hypr-wallpaper.service,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,screenshot,screencast,recording-indicator,
@@ -22,7 +22,7 @@ section "hyprland"
 
 install_pacman \
   hyprland hypridle hyprlock hyprpicker hyprsunset hyprpaper \
-  hyprpolkitagent hyprlauncher cliphist uwsm \
+  hyprpolkitagent cliphist uwsm \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
   qt5-wayland qt6-wayland resvg
 # wayfreeze: installed from nixpkgs -- replaces the former pkgbuilds/ build.
@@ -45,9 +45,5 @@ for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   keepawake-toggle keepawake-indicator; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done
-
-# hyprlauncher (application launcher) config -- enlarged window for readability.
-link_file "$DOTFILES_HOME/.config/hyprlauncher/hyprlauncher.conf" \
-  "$HOME/.config/hyprlauncher/hyprlauncher.conf"
 
 enable_user_service "hypr-wallpaper.service"
