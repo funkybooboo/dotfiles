@@ -32,6 +32,17 @@ Singleton {
   readonly property int notificationPadding: 12
   readonly property int notificationTimeout: 5000
 
+  // Launcher metrics from hyprlauncher.conf and hyprtoolkit.conf, which it read:
+  // an 820x720 window, 15px results, and a row height of font_size * 2 + 4 with
+  // icons at 0.7 of the row.
+  readonly property int launcherWidth: 820
+  readonly property int launcherHeight: 720
+  readonly property int launcherFontSize: 15
+  readonly property int launcherRowHeight: 34
+  readonly property int launcherIconSize: 24
+  readonly property int roundingLarge: 10
+  readonly property int roundingSmall: 6
+
   readonly property int trayIconSize: 12
   readonly property int traySpacing: 17
 

@@ -45,7 +45,7 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf00a)
       tooltip: "Applications  (Super+Space)"
-      onClicked: Quickshell.execDetached([bar.bin + "hyprlauncher-wrap"])
+      onClicked: LauncherState.toggle()
     }
 
     BarButton {

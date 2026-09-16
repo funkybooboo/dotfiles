@@ -18,7 +18,7 @@ hl.bind(mainMod .. " + SHIFT + F",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + SHIFT + N",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e nvim"))
 hl.bind(mainMod .. " + SHIFT + G",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- signal-desktop"))
 hl.bind(mainMod .. " + SHIFT + M",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- mpv"))
-hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("hyprlauncher"))
+hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell launcher"))
 
 -- Window switcher (fzf across all windows, floating)
 hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("~/.local/bin/hypr-window-switcher"))

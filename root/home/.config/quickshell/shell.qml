@@ -24,6 +24,8 @@ ShellRoot {
 
   NotificationLayer {}
 
+  Launcher {}
+
   // One process now owns what nine daemons used to, and none of the old probes
   // reach it: `pgrep mako`, `makoctl`, `brightnessctl -m` and friends said whether
   // each daemon was alive and what it thought. This is the replacement, and it is
@@ -88,6 +90,11 @@ ShellRoot {
     function brightness(step: int): string {
       Media.stepBrightness(step === 0 ? Media.defaultStep : step);
       return "ok";
+    }
+
+    function launcher(): string {
+      LauncherState.toggle();
+      return LauncherState.open ? "opened" : "closed";
     }
 
     function dnd(): string {
