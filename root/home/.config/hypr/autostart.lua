@@ -39,17 +39,18 @@ end)
 -- multiplies the watchers and hyprpaper processes, so every monitor flap
 -- (e.g. a flaky external DP cable) fires killall+restart several times in
 -- parallel, which makes all screens flash black on a loop.
-hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- mako") end)
+-- quickshell is the whole shell: bar, notifications and tray in one process.
+-- It replaced waybar and mako, which used to be started separately from here.
+hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- quickshell") end)
 
 -- swayosd is removed entirely (see 000400-power-management): volume/brightness
--- state is shown live in the waybar pulseaudio/backlight modules (icon + percent)
+-- state is shown live in the quickshell bar's audio/backlight modules
 -- instead of a floating OSD, and media-keys applies changes via wpctl/brightnessctl.
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- /usr/lib/hyprpolkitagent/hyprpolkitagent")
 end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- hypridle") end)
-hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- waybar") end)
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store") end)
 -- espanso: `daemon` (not `start`) runs in the foreground so the uwsm scope tracks
 -- it and it exits with the session. See migrations/000325-espanso.sh for why

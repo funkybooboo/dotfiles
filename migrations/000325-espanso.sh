@@ -7,7 +7,7 @@
 # Note: espanso is started by Hyprland, not by its own service manager:
 #       autostart.lua runs `uwsm app -- espanso daemon`. `daemon` runs in the
 #       foreground so the uwsm scope actually tracks the process and it dies with
-#       the session, matching how hypridle/waybar/mako start.
+#       the session, matching how hypridle and quickshell start.
 #       `espanso service register` is deliberately NOT used -- it writes a systemd
 #       unit outside this repo, creating a second owner of espanso's lifecycle.
 #       hypridle shows why that hurts: uwsm names its scope

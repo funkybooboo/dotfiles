@@ -277,6 +277,32 @@ remove_pkg() {
   done
 }
 
+# -----------------------------------------------------------------------------
+# Drop packages from the nix profile after their flake attr is gone. Deleting the
+# attr stops a fresh install pulling it, but an existing profile keeps the old
+# closure installed and on PATH ahead of the pacman copy.
+# Usage: remove_nix <pkg1> [pkg2 ...]
+remove_nix() {
+  local nix_bin
+  nix_bin="$(_nix_bin)"
+  [[ -n "$nix_bin" ]] || return 0
+
+  local pkg
+  for pkg in "$@"; do
+    if ! "$nix_bin" profile list 2>/dev/null | grep -q "packages\\.x86_64-linux\\.$pkg"; then
+      skip "nix $pkg (not installed)"
+      continue
+    fi
+    info "removing superseded nix package: $pkg"
+    if "$nix_bin" profile remove "$pkg" >/dev/null 2>&1; then
+      ok "removed nix: $pkg"
+    else
+      warn "failed to remove nix $pkg"
+      _add_warning "failed to remove nix package: $pkg"
+    fi
+  done
+}
+
 # =============================================================================
 # SYSTEMD HELPERS
 # =============================================================================

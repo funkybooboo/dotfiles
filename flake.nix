@@ -25,15 +25,6 @@
             # espanso-wayland 2.4.0, but AUR is excluded by policy, which leaves
             # nix as the first tier able to provide it.
             espanso-wayland;
-
-          # waybar 0.15.0 (nixpkgs) + PR #5013: Hyprland Lua-IPC dispatch fix so
-          # the native hyprland/workspaces module's click works under Hyprland's
-          # Lua config. Upstream merged on master but no release tag ships it yet;
-          # nixpkgs still pins 0.15.0. Drop this override once nixpkgs waybar
-          # includes #5013. The PR's new tests are pure (no socket) and pass.
-          waybar = pkgs.waybar.overrideAttrs (prev: {
-            patches = (prev.patches or [ ]) ++ [ ./overlays/waybar-pr5013.patch ];
-          });
         });
     };
 }

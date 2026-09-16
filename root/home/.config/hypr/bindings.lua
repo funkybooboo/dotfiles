@@ -89,17 +89,17 @@ hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd(
     "hyprctl dispatch dpms off && hyprctl dispatch dpms on; pkill -u $(whoami) hypridle || uwsm app -- hypridle"))
 
 -- Notifications (mako)
-hl.bind(mainMod .. " + comma",            hl.dsp.exec_cmd("makoctl dismiss"))
-hl.bind(mainMod .. " + SHIFT + comma",    hl.dsp.exec_cmd("makoctl dismiss --all"))
-hl.bind(mainMod .. " + CTRL + comma",     hl.dsp.exec_cmd("makoctl restore"))
-hl.bind(mainMod .. " + ALT + comma",      hl.dsp.exec_cmd("makoctl restore && makoctl invoke"))
+hl.bind(mainMod .. " + comma",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell dismiss"))
+hl.bind(mainMod .. " + SHIFT + comma",    hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell dismissAll"))
+hl.bind(mainMod .. " + CTRL + comma",     hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell restore"))
+hl.bind(mainMod .. " + ALT + comma",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell restore && ~/.local/bin/quickshell ipc call shell invoke"))
 
 -- DND toggle
 hl.bind(mainMod .. " + CTRL + SHIFT + comma", hl.dsp.exec_cmd(
-    "makoctl set-mode dnd || makoctl set-mode default"))
+    "~/.local/bin/quickshell ipc call shell dnd"))
 
 -- Waybar toggle
-hl.bind(mainMod .. " + SHIFT + space",    hl.dsp.exec_cmd("pkill waybar || uwsm app -- waybar"))
+hl.bind(mainMod .. " + SHIFT + space",    hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"))
 
 -- Screenshots
 hl.bind(mainMod .. " + SHIFT + S",        hl.dsp.exec_cmd("~/.local/bin/screenshot region"))
@@ -177,7 +177,7 @@ hl.bind(mainMod .. " + mouse_up",          hl.dsp.focus({ workspace = "e-1" }))
 -- Touchpad gesture: 3-finger horizontal swipe switches workspaces (1:1 swipe,
 -- like GNOME/KDE). Native Hyprland gesture support -- no plugin required. This
 -- is the robust touchpad path: it bypasses both the SUPER+mouse mod-aggregation
--- regression and waybar's touchpad-emulated-scroll guard.
+-- regression and the bar's touchpad-emulated-scroll guard.
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 -- Mouse drag/resize (bindm -> { mouse = true })
@@ -188,7 +188,7 @@ hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = tru
 -- must be explicit (~/.local/bin/media-keys) because Hyprland's exec PATH does
 -- NOT include ~/.local/bin, so a bare "media-keys" is silently not found and
 -- the key does nothing. No on-screen display: the state is shown live in the
--- waybar pulseaudio/backlight modules (icon + percent). Volume uses wpctl
+-- quickshell bar's audio/backlight modules. Volume uses wpctl
 -- (capped at 150%); brightness uses brightnessctl directly (swayosd gets it
 -- wrong on this backlight -- raise no-ops, lower raises -- while returning
 -- success). See root/home/.local/bin/media-keys for details.

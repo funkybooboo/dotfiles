@@ -8,7 +8,7 @@
 # Note: Previously installed the entire Nerd Fonts collection (~70 packages,
 #       ~8.5 GiB). Trimmed to just JetBrainsMono Nerd Font + the symbols
 #       packages (which provide the Powerline/icons glyphs JetBrainsMono
-#       uses in terminal/waybar/hyprlock) + Noto base/CJK/emoji. Recovery:
+#       uses in terminal/bar/hyprlock) + Noto base/CJK/emoji. Recovery:
 #       ~8.3 GiB. The old 69 other nerd font packages can be removed live with:
 #       pacman -Qq | grep nerd | grep -v jetbrains | grep -v symbols | xargs sudo pacman -Rns --noconfirm
 

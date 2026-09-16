@@ -17,7 +17,7 @@ section "power management"
 
 install_pacman power-profiles-daemon brightnessctl upower
 
-# swayosd is superseded: volume and brightness state now render in the waybar
+# swayosd is superseded: volume and brightness state now render in the quickshell
 # pulseaudio/backlight modules instead of a floating OSD, and media-keys applies
 # changes through wpctl/brightnessctl (swayosd 0.3.2 got brightness wrong on this
 # backlight -- see media-keys). Removed here rather than in its own migration
@@ -69,7 +69,7 @@ link_file "$DOTFILES_HOME/.local/lib/battery-notify" \
 
 enable_system_service "power-profiles-daemon.service"
 # upower provides battery state over D-Bus (used by wireplumber for battery
-# percentage, waybar, and battery-notify). It can start via D-Bus activation,
+# percentage, the bar, and battery-notify). It can start via D-Bus activation,
 # but enabling it makes it reliably present at boot instead of depending on a
 # caller to activate it.
 enable_system_service "upower.service"
