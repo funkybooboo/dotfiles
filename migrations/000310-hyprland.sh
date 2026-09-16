@@ -6,9 +6,8 @@
 # Nix:     .#wayfreeze
 # Links:    ~/.config/hypr/**,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
-#             hypr-toggle-display,screenshot,screencast,recording-indicator,
-#             toggle-lock,nightmode-toggle,nightmode-indicator,theme-switch,
-#             keepawake-toggle,keepawake-indicator,
+#             hypr-toggle-display,screenshot,screencast,
+#             toggle-lock,nightmode-toggle,keepawake-toggle,
 #             power-mode-menu,hypr-float-apply,hypr-float-launch,
 #             hypr-float-toggle,power-menu}
 # Enables:  --
@@ -30,12 +29,12 @@ link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"
 
 # Hyprland helper scripts
 for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
-  hypr-toggle-display screenshot screencast recording-indicator \
-  toggle-lock nightmode-toggle nightmode-indicator theme-switch \
+  hypr-toggle-display screenshot screencast \
+  toggle-lock nightmode-toggle \
   power-mode-menu hypr-float-apply hypr-float-launch \
   hypr-float-toggle \
   power-menu \
-  keepawake-toggle keepawake-indicator; do
+  keepawake-toggle; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done
 

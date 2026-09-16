@@ -50,6 +50,10 @@ if command -v quickshell &>/dev/null; then
   unlink_stale \
     "$HOME/.local/bin/media-keys" \
     "$HOME/.local/bin/clipboard-manager" \
+    "$HOME/.local/bin/nightmode-indicator" \
+    "$HOME/.local/bin/keepawake-indicator" \
+    "$HOME/.local/bin/recording-indicator" \
+    "$HOME/.local/bin/theme-switch" \
     "$HOME/.local/bin/hypr-window-switcher" \
     "$HOME/.local/bin/hypr-window-switcher-inner" \
     "$HOME/.config/hyprlauncher/hyprlauncher.conf" \

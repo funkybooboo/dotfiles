@@ -1,7 +1,0 @@
-#!/bin/bash
-
-if pgrep -x wf-recorder >/dev/null; then
-    echo '{"text": "\u23fa", "class": "recording"}'
-else
-    echo '{"text": "", "class": "idle"}'
-fi
