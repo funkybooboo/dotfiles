@@ -3,8 +3,8 @@
 # Links:    ~/.config/quickshell/ (shell.qml is picked up as the "default"
 #           config, so autostart can call a bare `quickshell`)
 # Removes:  waybar (pacman and nix), mako, hyprlauncher, hyprpaper, swaybg,
-#           hypr-wallpaper.service, and the media-keys and clipboard-manager
-#           scripts -- superseded, see the note below
+#           hypr-wallpaper.service, and the media-keys, clipboard-manager and
+#           hypr-window-switcher scripts -- superseded, see the note below
 # Enables:  --
 #
 # Note: one process now owns the bar, tray, notifications and tooltips, replacing
@@ -50,6 +50,8 @@ if command -v quickshell &>/dev/null; then
   unlink_stale \
     "$HOME/.local/bin/media-keys" \
     "$HOME/.local/bin/clipboard-manager" \
+    "$HOME/.local/bin/hypr-window-switcher" \
+    "$HOME/.local/bin/hypr-window-switcher-inner" \
     "$HOME/.config/hyprlauncher/hyprlauncher.conf" \
     "$HOME/.config/hypr/hyprtoolkit.conf" \
     "$HOME/.config/hypr/set-wallpaper.sh" \

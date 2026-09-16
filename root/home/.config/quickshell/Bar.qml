@@ -51,7 +51,7 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf0349)
       tooltip: "Search windows  (Super+Slash)"
-      onClicked: bar.floatingTerm([bar.bin + "hypr-window-switcher-inner"])
+      onClicked: SwitcherState.toggle()
     }
 
     Workspaces {

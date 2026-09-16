@@ -34,6 +34,8 @@ ShellRoot {
 
   Clipboard {}
 
+  Switcher {}
+
   // One process now owns what nine daemons used to, and none of the old probes
   // reach it: `pgrep mako`, `makoctl`, `brightnessctl -m` and friends said whether
   // each daemon was alive and what it thought. This is the replacement, and it is
@@ -108,6 +110,11 @@ ShellRoot {
     function clipboard(): string {
       ClipboardState.toggle();
       return ClipboardState.open ? "opened" : "closed";
+    }
+
+    function switcher(): string {
+      SwitcherState.toggle();
+      return SwitcherState.open ? "opened" : "closed";
     }
 
     function dnd(): string {

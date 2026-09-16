@@ -10,8 +10,7 @@
 #             toggle-lock,nightmode-toggle,nightmode-indicator,theme-switch,
 #             keepawake-toggle,keepawake-indicator,
 #             power-mode-menu,hypr-float-apply,hypr-float-launch,
-#             hypr-float-toggle,hypr-window-switcher,
-#             hypr-window-switcher-inner,power-menu}
+#             hypr-float-toggle,power-menu}
 # Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
@@ -34,7 +33,7 @@ for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   hypr-toggle-display screenshot screencast recording-indicator \
   toggle-lock nightmode-toggle nightmode-indicator theme-switch \
   power-mode-menu hypr-float-apply hypr-float-launch \
-  hypr-float-toggle hypr-window-switcher hypr-window-switcher-inner \
+  hypr-float-toggle \
   power-menu \
   keepawake-toggle keepawake-indicator; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"

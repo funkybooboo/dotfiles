@@ -21,7 +21,7 @@ hl.bind(mainMod .. " + SHIFT + M",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell launcher"))
 
 -- Window switcher (fzf across all windows, floating)
-hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("~/.local/bin/hypr-window-switcher"))
+hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell switcher"))
 
 -- Cheatsheet (keybindings list, floating)
 hl.bind(mainMod .. " + C",               hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"))
