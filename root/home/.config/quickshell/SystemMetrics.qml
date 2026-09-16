@@ -15,6 +15,15 @@ Singleton {
 
   readonly property string diskPath: "/"
 
+  // Owned here rather than in the bar module because the OSD needs the same
+  // number, and two pollers would disagree. brightnessctl is the only source:
+  // quickshell has no brightness API.
+  property int brightnessPercent: 0
+
+  function refreshBrightness() {
+    brightnessProcess.running = true;
+  }
+
   // Formatted the way waybar's {bandwidthDownBits}/{bandwidthUpBits} read.
   property string downBits: "0b/s"
   property string upBits: "0b/s"
@@ -141,6 +150,22 @@ Singleton {
     onLoaded: root.readMemory(memoryFile.text())
   }
 
+  property Process brightnessProcess: Process {
+    command: ["brightnessctl", "-m"]
+
+    stdout: StdioCollector {
+      id: brightnessOutput
+
+      // brightnessctl -m prints one CSV line per device:
+      // name,class,current,percent%,max
+      onStreamFinished: {
+        const field = brightnessOutput.text.trim().split("\n")[0]?.split(",")[3];
+        if (field)
+          root.brightnessPercent = parseInt(field, 10);
+      }
+    }
+  }
+
   property Process diskProcess: Process {
     command: ["df", "-P", root.diskPath]
 
@@ -160,6 +185,7 @@ Singleton {
       statFile.reload();
       memoryFile.reload();
       netFile.reload();
+      root.refreshBrightness();
     }
   }
 

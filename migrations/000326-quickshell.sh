@@ -2,7 +2,8 @@
 # Installs: quickshell
 # Links:    ~/.config/quickshell/ (shell.qml is picked up as the "default"
 #           config, so autostart can call a bare `quickshell`)
-# Removes:  waybar (pacman and nix), mako -- superseded, see the note below
+# Removes:  waybar (pacman and nix), mako, and the media-keys script --
+#           superseded, see the note below
 # Enables:  --
 #
 # Note: one process now owns the bar, tray, notifications and tooltips, replacing
@@ -36,6 +37,10 @@ install_pacman quickshell
 if command -v quickshell &>/dev/null; then
   remove_pkg waybar mako
   remove_nix waybar
+
+  # media-keys is superseded by the shell's own volume/brightness handling; its
+  # link is left dangling once the script is deleted from the repo.
+  unlink_stale "$HOME/.local/bin/media-keys"
 
   # Hand over within this run rather than at next login. An already-running
   # waybar or mako keeps going from deleted files, and a machine that just

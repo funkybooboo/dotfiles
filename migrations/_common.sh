@@ -303,6 +303,23 @@ remove_nix() {
   done
 }
 
+# -----------------------------------------------------------------------------
+# Remove deployed symlinks whose repo source is gone. Deleting a file from
+# root/home/ stops a fresh machine ever getting it, but leaves a dangling link on
+# every machine that already ran the migration which created it -- and a dangling
+# link on PATH is worse than a missing one, because it resolves and then fails.
+# The test is exact: a symlink whose target does not exist, nothing else.
+# Usage: unlink_stale <path1> [path2 ...]
+unlink_stale() {
+  local path
+  for path in "$@"; do
+    if [[ -L "$path" && ! -e "$path" ]]; then
+      rm -f "$path"
+      ok "removed dangling link: $path"
+    fi
+  done
+}
+
 # =============================================================================
 # SYSTEMD HELPERS
 # =============================================================================

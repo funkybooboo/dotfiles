@@ -32,6 +32,11 @@ Singleton {
   readonly property int notificationPadding: 12
   readonly property int notificationTimeout: 5000
 
+  readonly property int osdWidth: 300
+  readonly property int osdHeight: 48
+  readonly property int osdMargin: 80
+  readonly property int osdTimeout: 1500
+
   readonly property int trayIconSize: 12
   readonly property int traySpacing: 17
 

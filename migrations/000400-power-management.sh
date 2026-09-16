@@ -18,16 +18,16 @@ section "power management"
 install_pacman power-profiles-daemon brightnessctl upower
 
 # swayosd is superseded: volume and brightness state now render in the quickshell
-# pulseaudio/backlight modules instead of a floating OSD, and media-keys applies
+# audio/backlight modules, and the shell applies
 # changes through wpctl/brightnessctl (swayosd 0.3.2 got brightness wrong on this
-# backlight -- see media-keys). Removed here rather than in its own migration
+# backlight). Removed here rather than in its own migration
 # because this migration owns what replaced it, matching how 000204-podman
 # removes docker.
 remove_pkg swayosd
 
 # `video` group membership is required to WRITE /sys/class/backlight/*/brightness;
 # without it brightness changes fail silently. It used to be granted by the
-# now-deleted 000314-swayosd, but brightness itself did not go away -- media-keys,
+# now-deleted 000314-swayosd, but brightness itself did not go away -- the shell,
 # hypridle's dim-on-idle, and the kbd-backlight binds all shell out to
 # brightnessctl. So the membership lives here, with the migration that installs
 # brightnessctl. Requires a logout/login (or newgrp/reboot) to take effect.

@@ -184,31 +184,31 @@ hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 hl.bind(mainMod .. " + mouse:272",         hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = true })
 
--- Volume / brightness go through the media-keys wrapper. IMPORTANT: the path
--- must be explicit (~/.local/bin/media-keys) because Hyprland's exec PATH does
--- NOT include ~/.local/bin, so a bare "media-keys" is silently not found and
--- the key does nothing. No on-screen display: the state is shown live in the
--- quickshell bar's audio/backlight modules. Volume uses wpctl
--- (capped at 150%); brightness uses brightnessctl directly (swayosd gets it
--- wrong on this backlight -- raise no-ops, lower raises -- while returning
--- success). See root/home/.local/bin/media-keys for details.
-hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume raise"))
-hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume lower"))
-hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume mute-toggle"))
-hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume raise 1"))
-hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("~/.local/bin/media-keys --output-volume lower 1"))
-hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("~/.local/bin/media-keys --input-volume mute-toggle"))
+-- Volume / brightness call the shell, which sets the volume on the Pipewire node
+-- directly and drives brightnessctl for the backlight, then shows its own OSD.
+-- IMPORTANT: the path must be explicit because Hyprland's exec PATH does NOT
+-- include ~/.local/bin, so a bare command is silently not found and the key does
+-- nothing. Steps are percent and signed: 5/-5 coarse, 1/-1 on ALT, and 100/-100
+-- slam brightness to a rail. Volume is still capped at 150% for boost. swayosd
+-- was never adopted -- it gets this backlight wrong (raise no-ops, lower raises)
+-- while returning success.
+hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume 5"))
+hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume -5"))
+hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell mute"))
+hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume 1"))
+hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume -1"))
+hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell micMute"))
 hl.bind("XF86AudioPlay",                   hl.dsp.exec_cmd("playerctl play-pause"))
 hl.bind("XF86AudioNext",                   hl.dsp.exec_cmd("playerctl next"))
 hl.bind("XF86AudioPrev",                   hl.dsp.exec_cmd("playerctl previous"))
 hl.bind(mainMod .. " + XF86AudioMute", hl.dsp.exec_cmd(
-    [[~/.local/bin/media-keys --output-volume mute-toggle && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
+    [[~/.local/bin/quickshell ipc call shell mute && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
 
--- Brightness (brightnessctl direct via media-keys)
-hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness raise"))
-hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness lower"))
-hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness raise 100"))
-hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("~/.local/bin/media-keys --brightness lower 100"))
+-- Brightness (brightnessctl, driven by the shell)
+hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness 5"))
+hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness -5"))
+hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness 100"))
+hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness -100"))
 
 -- Keyboard backlight
 hl.bind("XF86KbdBrightnessUp",             hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"))
