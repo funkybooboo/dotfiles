@@ -2,8 +2,9 @@
 # Installs: quickshell
 # Links:    ~/.config/quickshell/ (shell.qml is picked up as the "default"
 #           config, so autostart can call a bare `quickshell`)
-# Removes:  waybar (pacman and nix), mako, hyprlauncher, and the media-keys
-#           script -- superseded, see the note below
+# Removes:  waybar (pacman and nix), mako, hyprlauncher, hyprpaper, swaybg, the
+#           media-keys script, and hypr-wallpaper.service -- superseded, see the
+#           note below
 # Enables:  --
 #
 # Note: one process now owns the bar, tray, notifications and tooltips, replacing
@@ -35,8 +36,12 @@ install_pacman quickshell
 # Only sweep the old shell once the new one answers, so a converging run cannot
 # strand a machine between the two.
 if command -v quickshell &>/dev/null; then
-  remove_pkg waybar mako hyprlauncher
+  remove_pkg waybar mako hyprlauncher hyprpaper swaybg
   remove_nix waybar
+
+  # Restart=always means this one never stops on its own; the unit file being
+  # deleted from the repo does not disable the enabled symlink.
+  disable_user_service "hypr-wallpaper.service"
 
   # Superseded scripts and configs leave dangling links once their sources are
   # deleted from the repo: media-keys by the shell's volume/brightness handling,
@@ -45,7 +50,10 @@ if command -v quickshell &>/dev/null; then
   unlink_stale \
     "$HOME/.local/bin/media-keys" \
     "$HOME/.config/hyprlauncher/hyprlauncher.conf" \
-    "$HOME/.config/hypr/hyprtoolkit.conf"
+    "$HOME/.config/hypr/hyprtoolkit.conf" \
+    "$HOME/.config/hypr/set-wallpaper.sh" \
+    "$HOME/.config/hypr/monitor-watcher.sh" \
+    "$HOME/.config/systemd/user/hypr-wallpaper.service"
 
   # Hand over within this run rather than at next login. An already-running
   # waybar or mako keeps going from deleted files, and a machine that just

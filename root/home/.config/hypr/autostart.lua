@@ -23,22 +23,15 @@ end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")
 end)
--- Ensure the systemd user graphical session target + wallpaper service are up.
--- uwsm normally activates graphical-session.target, but it is not 100% reliable
--- (some boots it never reaches the target, so every WantedBy=graphical-session
--- service -- hypr-wallpaper, xdg portals -- stays dead and the wallpaper never
--- appears). Starting hypr-wallpaper.service here also pulls in the target via
--- its BindsTo=, so the whole session stack comes up on every Hyprland start.
+-- Ensure the systemd user graphical session target is up. uwsm normally activates
+-- graphical-session.target, but not reliably on every boot, and on the boots it
+-- misses every WantedBy=graphical-session unit stays dead -- hyprpolkitagent and
+-- the xdg portals among them. hypr-wallpaper.service used to pull the target in as
+-- a side effect of its BindsTo=; with the wallpaper now drawn by quickshell, the
+-- target is started outright instead.
 hl.on("hyprland.start", function()
-    hl.exec_cmd("systemctl --user start hypr-wallpaper.service")
+    hl.exec_cmd("systemctl --user start graphical-session.target")
 end)
--- Wallpaper + hyprpaper are owned by the systemd user service hypr-wallpaper.service
--- (enabled by migration 000310). It runs monitor-watcher.sh, which calls
--- set-wallpaper.sh at startup and on monitoradded/monitorremoved events, and
--- set-wallpaper.sh starts hyprpaper. Do NOT also spawn them here -- doing so
--- multiplies the watchers and hyprpaper processes, so every monitor flap
--- (e.g. a flaky external DP cable) fires killall+restart several times in
--- parallel, which makes all screens flash black on a loop.
 -- quickshell is the whole shell: bar, notifications and tray in one process.
 -- It replaced waybar and mako, which used to be started separately from here.
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- quickshell") end)

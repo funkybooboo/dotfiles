@@ -16,6 +16,15 @@ Singleton {
   readonly property color red: "#f38ba8"
   readonly property color peach: "#fab387"
 
+  // Wallpapers are not tracked in the repo (binary, copied per machine), so this
+  // is a path into $HOME rather than a repo-relative asset. hyprlock reads the
+  // same file for its blurred background.
+  //
+  // This is the one line of the quickshell tree that differs from the work repo:
+  // the two machines carry different wallpapers, exactly as hyprlock.conf already
+  // hardcodes a different filename in each.
+  readonly property string wallpaper: Quickshell.env("HOME") + "/Pictures/wallpapers/mountain-wallpaper.jpg"
+
   readonly property string fontFamily: "JetBrainsMono Nerd Font"
   readonly property int fontSize: 12
 

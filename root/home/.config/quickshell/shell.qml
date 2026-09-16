@@ -19,6 +19,12 @@ ShellRoot {
   Variants {
     model: Quickshell.screens
 
+    Background {}
+  }
+
+  Variants {
+    model: Quickshell.screens
+
     Bar {}
   }
 

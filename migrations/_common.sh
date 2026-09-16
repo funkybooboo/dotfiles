@@ -314,6 +314,33 @@ remove_nix() {
 }
 
 # -----------------------------------------------------------------------------
+# Stop and disable a user unit this repo no longer ships. The mirror of
+# enable_user_service, and needed for the same reason the package removers are:
+# deleting the unit file stops a fresh machine ever enabling it, but an existing
+# machine keeps the enabled symlink and keeps restarting the service -- which for
+# a unit with Restart=always means it never actually stops.
+# Usage: disable_user_service <unit>
+disable_user_service() {
+  local unit="$1"
+
+  if ! systemctl --user list-unit-files "$unit" &>/dev/null \
+     || ! systemctl --user is-enabled --quiet "$unit" 2>/dev/null \
+        && ! systemctl --user is-active --quiet "$unit" 2>/dev/null; then
+    skip "$unit (not enabled)"
+    return
+  fi
+
+  if systemctl --user disable --now "$unit" 2>/dev/null; then
+    ok "disabled: $unit"
+  else
+    warn "failed to disable $unit"
+    _add_warning "systemd user unit failed to disable: $unit"
+  fi
+
+  systemctl --user daemon-reload 2>/dev/null || true
+}
+
+# -----------------------------------------------------------------------------
 # Remove deployed symlinks whose repo source is gone. Deleting a file from
 # root/home/ stops a fresh machine ever getting it, but leaves a dangling link on
 # every machine that already ran the migration which created it -- and a dangling
