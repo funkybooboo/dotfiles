@@ -36,6 +36,23 @@ install_pacman quickshell
 if command -v quickshell &>/dev/null; then
   remove_pkg waybar mako
   remove_nix waybar
+
+  # Hand over within this run rather than at next login. An already-running
+  # waybar or mako keeps going from deleted files, and a machine that just
+  # uninstalled waybar would otherwise sit with no bar until it restarted.
+  # `.mako-wrapped` is mako's real process name once nix wraps the binary, so
+  # matching only `mako` silently misses it.
+  pkill -x waybar || true
+  pkill -x mako || true
+  pkill -x .mako-wrapped || true
+
+  if pgrep -x quickshell >/dev/null; then
+    skip "quickshell (already running)"
+  elif [[ -n "${WAYLAND_DISPLAY:-}" ]]; then
+    info "starting quickshell"
+    uwsm app -- quickshell >/dev/null 2>&1 &
+    disown
+  fi
 else
   warn "quickshell not on PATH -- leaving waybar/mako in place"
   _add_warning "quickshell missing; superseded waybar/mako not removed"
