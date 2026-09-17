@@ -18,10 +18,10 @@ hl.bind(mainMod .. " + SHIFT + F",       hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + SHIFT + N",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e nvim"))
 hl.bind(mainMod .. " + SHIFT + G",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- signal-desktop"))
 hl.bind(mainMod .. " + SHIFT + M",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- mpv"))
-hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell launcher"))
+hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("quickshell ipc call shell launcher"))
 
 -- Window switcher (fzf across all windows, floating)
-hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell switcher"))
+hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("quickshell ipc call shell switcher"))
 
 -- Cheatsheet (keybindings list, floating)
 hl.bind(mainMod .. " + C",               hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"))
@@ -30,7 +30,7 @@ hl.bind(mainMod .. " + C",               hl.dsp.exec_cmd("~/.local/bin/hypr-floa
 hl.bind(mainMod .. " + CTRL + N",        hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"))
 
 -- Clipboard manager (floating)
-hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell clipboard"))
+hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("quickshell ipc call shell clipboard"))
 
 -- Bar/panel actions (all floating via hypr-float-launch); the same TUIs the
 -- quickshell bar's matching icons open.
@@ -92,14 +92,14 @@ hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd(
     "hyprctl dispatch dpms off && hyprctl dispatch dpms on; pkill -u $(whoami) hypridle || uwsm app -- hypridle"))
 
 -- Notifications (mako)
-hl.bind(mainMod .. " + comma",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell dismiss"))
-hl.bind(mainMod .. " + SHIFT + comma",    hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell dismissAll"))
-hl.bind(mainMod .. " + CTRL + comma",     hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell restore"))
-hl.bind(mainMod .. " + ALT + comma",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell restore && ~/.local/bin/quickshell ipc call shell invoke"))
+hl.bind(mainMod .. " + comma",            hl.dsp.exec_cmd("quickshell ipc call shell dismiss"))
+hl.bind(mainMod .. " + SHIFT + comma",    hl.dsp.exec_cmd("quickshell ipc call shell dismissAll"))
+hl.bind(mainMod .. " + CTRL + comma",     hl.dsp.exec_cmd("quickshell ipc call shell restore"))
+hl.bind(mainMod .. " + ALT + comma",      hl.dsp.exec_cmd("quickshell ipc call shell restore && quickshell ipc call shell invoke"))
 
 -- DND toggle
 hl.bind(mainMod .. " + CTRL + SHIFT + comma", hl.dsp.exec_cmd(
-    "~/.local/bin/quickshell ipc call shell dnd"))
+    "quickshell ipc call shell dnd"))
 
 -- Waybar toggle
 hl.bind(mainMod .. " + SHIFT + space",    hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"))
@@ -200,23 +200,23 @@ hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = tru
 -- are the readout, which is why swayosd was removed here and never replaced (it
 -- also got this backlight wrong -- raise no-ops, lower raises -- while returning
 -- success).
-hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume 5"))
-hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume -5"))
-hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell mute"))
-hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume 1"))
-hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell volume -1"))
-hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell micMute"))
+hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("quickshell ipc call shell volume 5"))
+hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("quickshell ipc call shell volume -5"))
+hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("quickshell ipc call shell mute"))
+hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("quickshell ipc call shell volume 1"))
+hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("quickshell ipc call shell volume -1"))
+hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("quickshell ipc call shell micMute"))
 hl.bind("XF86AudioPlay",                   hl.dsp.exec_cmd("playerctl play-pause"))
 hl.bind("XF86AudioNext",                   hl.dsp.exec_cmd("playerctl next"))
 hl.bind("XF86AudioPrev",                   hl.dsp.exec_cmd("playerctl previous"))
 hl.bind(mainMod .. " + XF86AudioMute", hl.dsp.exec_cmd(
-    [[~/.local/bin/quickshell ipc call shell mute && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
+    [[quickshell ipc call shell mute && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
 
 -- Brightness (brightnessctl, driven by the shell)
-hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness 5"))
-hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness -5"))
-hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness 100"))
-hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell brightness -100"))
+hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("quickshell ipc call shell brightness 5"))
+hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("quickshell ipc call shell brightness -5"))
+hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("quickshell ipc call shell brightness 100"))
+hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("quickshell ipc call shell brightness -100"))
 
 -- Keyboard backlight
 hl.bind("XF86KbdBrightnessUp",             hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"))
