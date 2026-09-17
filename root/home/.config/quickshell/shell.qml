@@ -1,13 +1,26 @@
 //@ pragma IconTheme Papirus-Dark
+//@ pragma UseQApplication
+//@ pragma RespectSystemStyle
 
 import Quickshell
 import Quickshell.Io
 
-// The pragma above is load-bearing for the tray. Qt has no platform theme plugin
-// here, so icon lookup defaults to hicolor and six tray icons fail to resolve --
-// GTK, and therefore waybar, walked the theme inheritance chain instead.
-// Papirus-Dark is what 000321-icon-theme installs and what the GTK gsettings in
-// autostart already select, so the tray matches every other app.
+// All three pragmas above are load-bearing for the tray.
+//
+// IconTheme: Qt has no platform theme plugin here, so icon lookup defaults to
+// hicolor and six tray icons fail to resolve -- GTK, and therefore waybar,
+// walked the theme inheritance chain instead. Papirus-Dark is what
+// 000321-icon-theme installs and what the GTK gsettings in autostart already
+// select, so the tray matches every other app.
+//
+// UseQApplication: a tray item's own menu is a QtWidgets menu, so opening one
+// from a QGuiApplication is refused at runtime. Most items are menu-only, which
+// makes this the difference between an interactive tray and an inert one.
+//
+// RespectSystemStyle: quickshell otherwise unsets QT_STYLE_OVERRIDE, dropping
+// that menu to Fusion's light default. This keeps Kvantum's KvDark, so the menu
+// matches every other Qt app -- as waybar's tray menus followed the GTK theme.
+// It cannot affect the rest of the shell, which imports no QtQuick.Controls.
 
 // Entry point. It sits at ~/.config/quickshell/shell.qml, which quickshell
 // registers as the "default" config, so a bare `quickshell` runs it and
