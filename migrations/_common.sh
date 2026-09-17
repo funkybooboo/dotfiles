@@ -25,6 +25,7 @@ REPO_ROOT="$(cd "$MIGRATIONS_DIR/.." && pwd)"
 DOTFILES_ROOT="$REPO_ROOT/root"
 DOTFILES_ROOT_ETC="$DOTFILES_ROOT/etc"
 DOTFILES_HOME="$DOTFILES_ROOT/home"
+DOTFILES_SOURCES="$REPO_ROOT/sources"
 
 # =============================================================================
 # COLORS & OUTPUT
@@ -355,6 +356,27 @@ unlink_stale() {
       ok "removed dangling link: $path"
     fi
   done
+}
+
+# =============================================================================
+# BUILT-FROM-SOURCE HELPERS
+# =============================================================================
+
+# source_ready <name>
+#   True when sources/<name> is a populated submodule. Callers either report:
+#     if source_ready 99; then ok "..."; fi
+#   or short-circuit:
+#     source_ready lazycsv || { return 0 2>/dev/null || exit 0; }
+#   Tests `.git` with -e, NOT -d: a populated submodule's .git is a FILE holding
+#   a `gitdir:` pointer. The remediation hint uses $REPO_ROOT rather than a
+#   literal path, which matters here -- both repos are cloned on the same machine
+#   and a hardcoded ~/dotfiles names the sibling, not this one.
+source_ready() {
+  local name="$1"
+  [[ -e "$DOTFILES_SOURCES/$name/.git" ]] && return 0
+  warn "sources/$name not populated -- skipping build"
+  _add_warning "sources/$name missing; run 'git -C $REPO_ROOT submodule update --init sources/$name'"
+  return 1
 }
 
 # =============================================================================

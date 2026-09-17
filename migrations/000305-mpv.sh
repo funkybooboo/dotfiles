@@ -18,13 +18,8 @@ link_file "$DOTFILES_HOME/.config/mpv/input.conf" "$HOME/.config/mpv/input.conf"
 link_file "$DOTFILES_HOME/.local/share/applications/lazymusic.desktop" \
   "$HOME/.local/share/applications/lazymusic.desktop"
 
-# lazymusic source lives in the dotfiles git submodule sources/lazymusic
-# (initialized in preflight). Verify it is populated; warn if not.
-LAZYMUSIC_DIR="$REPO_ROOT/sources/lazymusic"
-# A submodule checkout has a `.git` FILE (gitlink), not a dir -- use -e.
-if [[ -e "$LAZYMUSIC_DIR/.git" ]]; then
+# lazymusic is loaded from the sources/lazymusic submodule (initialized in
+# preflight). Non-fatal, but the .desktop entry will not launch without it.
+if source_ready lazymusic; then
   ok "lazymusic source (submodule sources/lazymusic)"
-else
-  warn "sources/lazymusic submodule not populated -- .desktop will not launch"
-  _add_warning "sources/lazymusic submodule missing; run 'git -C ~/dotfiles submodule update --init sources/lazymusic'"
 fi
