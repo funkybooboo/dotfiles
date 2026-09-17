@@ -1,0 +1,14 @@
+#!/bin/sh
+# rkhunter's portable BRE patterns escape ordinary characters ('\-\-debug',
+# '^\+') and this grep build diagnoses every one as "stray \ before -/+".
+# The warnings are pure noise: grep drops the useless backslash and matches
+# literally, which is what the patterns mean. rkhunter has no GREP_CMD
+# setting, so this shim is reached via PATH (hook + scan service) and only
+# filters those warning lines from stderr -- real errors and the exit code
+# pass through untouched, so a genuine failure still surfaces.
+err=$(mktemp) || exec /usr/bin/grep "$@"
+/usr/bin/grep "$@" 2>"$err"
+rc=$?
+/usr/bin/grep -avF 'warning: stray \ before ' "$err" >&2
+rm -f "$err"
+exit $rc

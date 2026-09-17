@@ -1,6 +1,6 @@
 # 000080-rkhunter.sh -- rkhunter rootkit scanner + config + timers
 # Installs: rkhunter
-# Deploys: /usr/local/lib/rkhunter/bin/egrep, /etc/rkhunter.conf,
+# Deploys: /usr/local/lib/rkhunter/bin/{grep,egrep}, /etc/rkhunter.conf,
 #          /etc/pacman.d/hooks/rkhunter-propupd.hook,
 #          /etc/systemd/system/rkhunter-scan.{service,timer}
 # Enables:  rkhunter-scan.timer
@@ -11,8 +11,13 @@ section "rkhunter"
 
 install_pacman rkhunter
 
-# Deployed before the hook, which puts this dir on PATH to displace Arch's
-# warning-emitting /usr/bin/egrep for rkhunter's bare `egrep` calls.
+# The grep and egrep shims displace Arch's warning-emitting /usr/bin wrappers:
+# egrep because rkhunter exposes no EGREP_CMD setting, and grep because this
+# grep build warns about the stray backslashes in rkhunter's portable BRE
+# patterns on every call. Scoped to rkhunter via PATH (hook + scan service);
+# /usr/local/bin was rejected as it is inside rkhunter's scanned BINDIR.
+deploy_etc_file "$DOTFILES_ROOT/usr/local/lib/rkhunter/bin/grep" \
+  "/usr/local/lib/rkhunter/bin/grep" 755
 deploy_etc_file "$DOTFILES_ROOT/usr/local/lib/rkhunter/bin/egrep" \
   "/usr/local/lib/rkhunter/bin/egrep" 755
 

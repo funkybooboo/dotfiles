@@ -4,4 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
+# Prepend the shim dir so the scan uses the same filtered grep/egrep as the
+# propupd pacman hook; without it the weekly run spams the journal instead.
+Environment="PATH=/usr/local/lib/rkhunter/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 ExecStart=/usr/bin/rkhunter --check --cronjob --report-warnings-only
