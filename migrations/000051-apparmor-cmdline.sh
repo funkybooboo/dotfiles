@@ -1,19 +1,29 @@
-# 000051-apparmor-cmdline.sh -- add AppArmor LSM params to Limine cmdline
+# 000051-apparmor-cmdline.sh -- add AppArmor LSM params to the kernel cmdline
 # Installs: --
 # Links:    --
 # Enables:  --
-# Edits:    /boot/limine/limine.conf (appends to each `cmdline:` line)
+# Edits:    /boot/limine/limine.conf (appends to each `cmdline:` line), OR
+#           /etc/kernel/cmdline (UKI-based boots; appends the params and
+#           rebuilds the unified kernel images with `mkinitcpio -P`)
 #
 # AppArmor is enabled as a service by 000050-apparmor.sh, but the LSM is not
-# active unless the kernel is told to load it via the boot cmdline. This
-# migration appends:
+# active unless the kernel is told to load it via the boot cmdline. Two boot
+# layouts exist in this fleet:
+#
+#   1. limine.conf layout: /boot/limine/limine.conf with `cmdline:` entries
+#      (created at install time). Params are appended to each entry.
+#   2. UKI layout (e.g. debbie, fresh 2026-09 install): limine boots the
+#      newest UKI with its built-in defaults and NO limine.conf exists; the
+#      cmdline is baked into the UKI at build time from /etc/kernel/cmdline.
+#      Params are appended there and `mkinitcpio -P` rebuilds the UKIs.
+#
+# In both cases this migration appends:
 #
 #     apparmor=1 lsm=landlock,lockdown,yama,integrity,apparmor,bpf
 #
-# to every `cmdline:` entry in /boot/limine/limine.conf. It is idempotent:
-# entries that already contain `apparmor=1` are left untouched, so re-runs and
-# hand-edited entries are never duplicated or clobbered. A reboot is required
-# for the new cmdline to take effect.
+# and it is idempotent: targets that already contain `apparmor=1` are left
+# untouched, so re-runs and hand-edited entries are never duplicated or
+# clobbered. A reboot is required for the new cmdline to take effect.
 #
 # Safety design (boot config is high-value -- a broken limine.conf = no boot):
 #   * Refuse unless /boot is a mounted, writable filesystem (findmnt).
@@ -43,6 +53,7 @@
 section "AppArmor cmdline (Limine)"
 
 LIMINE_CONF="/boot/limine/limine.conf"
+UKI_CMDLINE="/etc/kernel/cmdline"
 APPARMOR_PARAMS="apparmor=1 lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
 
 # Temp paths held in globals so the EXIT trap can clean them up from any
@@ -85,6 +96,38 @@ fi
 # the real path must go through sudo. `sudo test` avoids any shell builtin
 # confusion and lets set -e be tamed per-call.
 if ! sudo test -e "$LIMINE_CONF"; then
+  # --- UKI layout fallback: no limine.conf; if /etc/kernel/cmdline exists,
+  # this machine boots unified kernel images and the cmdline is baked into
+  # them at build time. Append there and rebuild the UKIs instead.
+  if [[ -f "$UKI_CMDLINE" ]]; then
+    if grep -q 'apparmor=1' "$UKI_CMDLINE" 2>/dev/null; then
+      skip "$UKI_CMDLINE (already has apparmor=1)"
+      exit 0
+    fi
+    info "no $LIMINE_CONF -- UKI boot detected; editing $UKI_CMDLINE"
+    sudo cp -a "$UKI_CMDLINE" "${UKI_CMDLINE}.bak.$(date +%s)"
+    # Rewrite as a single line: command substitution strips any trailing
+    # newline so the params land on the cmdline, never on a second line.
+    _new_cmdline="$(cat "$UKI_CMDLINE") $APPARMOR_PARAMS"
+    if printf '%s\n' "$_new_cmdline" | sudo tee "$UKI_CMDLINE" >/dev/null && \
+       grep -q 'apparmor=1' "$UKI_CMDLINE"; then
+      info "rebuilding UKIs with the new cmdline (mkinitcpio -P)"
+      if sudo mkinitcpio -P; then
+        ok "appended AppArmor params to $UKI_CMDLINE; UKIs rebuilt"
+        warn "reboot required for AppArmor LSM to become active"
+        _add_warning "AppArmor params added to $UKI_CMDLINE -- reboot to activate"
+        exit 0
+      else
+        fail "mkinitcpio -P failed -- UKIs not rebuilt; reboot would use the old cmdline"
+        _add_error "mkinitcpio -P failed after $UKI_CMDLINE edit; re-run this migration"
+        exit 1
+      fi
+    else
+      fail "could not append AppArmor params to $UKI_CMDLINE"
+      _add_error "could not edit $UKI_CMDLINE; AppArmor params not applied"
+      exit 1
+    fi
+  fi
   warn "$LIMINE_CONF not found -- skipping (no Limine config to edit)"
   _add_warning "$LIMINE_CONF not found; AppArmor cmdline params not applied"
   exit 0

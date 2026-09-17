@@ -16,11 +16,31 @@
 #   --modify-window=1  tolerate SMB 1-2s timestamp quantisation (stops re-copy loops)
 #   --inplace           avoid temp-file rename on cifs (rename-over-existing is not atomic)
 #   -u                  skip files that are newer on the receiver (bidirectional guard)
-#   --delete            remove files absent on the sender (mirror)
+#   --delete            remove files absent on the sender (mirror) -- ALWAYS via
+#                       --backup/--backup-dir so deletions land in dated trash
+#                       dirs instead of being destroyed.
 #
-# First-run seed: if the remote subdir is empty/absent, upload local->NAS
-# WITHOUT --delete, so an empty share can never wipe local files. The remote
-# subdir is created on demand. Subsequent runs are bidirectional with --delete.
+# SAFETY (added after the 2026-09-15 incident: a fresh install's empty home
+# dirs, pushed with --delete, wiped Documents/Music/Photos/Audiobooks/Books
+# on the NAS, and the hourly timers then re-wiped two manual restores):
+#   1. Seed-from-the-populated-side: if exactly one side has no files, the
+#      empty side is seeded from the populated one WITHOUT --delete. A fresh
+#      install therefore PULLS from the NAS; it can never push an empty tree
+#      over a populated one (in either direction).
+#   2. Trash instead of destruction: every --delete in the bidirectional
+#      phase moves receiver files into a dated trash dir (NAS side:
+#      /mnt/truenas/nate/.sync-trash/<subdir>/, local side:
+#      ~/.cache/nas-sync-trash/<subdir>/), pruned after 14 days. A mistake
+#      (wrong-side edit, half-deleted tree) is always reversible.
+#
+# NEVER sync this share over SSH/rsync-remote: TrueNAS stores names with
+# SMB-illegal characters as CATIA-style private-use code points (':' ->
+# U+F022, '*' -> U+F02A, '?' -> U+F03F). The CIFS mount presents the
+# translated names; raw ZFS (the SSH view) presents the private-use bytes.
+# rsync over SSH therefore sees "different" files (e.g. "Editors: Issues"
+# vs "Editors<U+F022> Issues") and every affected file gets duplicated and
+# then spuriously deleted by the next mount-based sync. All paths go
+# through /mnt/truenas/nate.
 
 set -euo pipefail
 
@@ -35,6 +55,10 @@ NAS_SUBDIR="$2"
 
 MOUNT_ROOT="/mnt/truenas/nate"
 REMOTE_DIR="$MOUNT_ROOT/$NAS_SUBDIR"
+
+TRASH_KEEP_DAYS=14
+REMOTE_TRASH="$MOUNT_ROOT/.sync-trash/${NAS_SUBDIR//\//_}"
+LOCAL_TRASH="$HOME/.cache/nas-sync-trash/${NAS_SUBDIR//\//_}"
 
 # Per-subdir lock so concurrent invocations (manual run + systemd timer, or two
 # timer fires) don't race: rsync --delete treats another session's temp file as
@@ -69,6 +93,11 @@ if [ ! -d "$REMOTE_DIR" ]; then
     exit 1
 fi
 
+# File counts drive the seed decisions. Counting files (not dirs) so an
+# empty-but-structured side still counts as empty.
+LOCAL_COUNT=$(find "$LOCAL_DIR" -type f 2>/dev/null | wc -l)
+REMOTE_COUNT=$(find "$REMOTE_DIR" -type f 2>/dev/null | wc -l)
+
 RSYNC_OPTS=(
     -rlt
     --no-perms --no-owner --no-group
@@ -80,24 +109,47 @@ RSYNC_OPTS=(
 
 echo "=== Syncing $LOCAL_DIR <-> $REMOTE_DIR ==="
 
-# Seed path: empty/missing remote -> one-way upload, no --delete.
-if [ -z "$(ls -A "$REMOTE_DIR" 2>/dev/null)" ]; then
-    echo "--- First-run seed: uploading local -> NAS (no --delete) ---"
-    if ! rsync "${RSYNC_OPTS[@]}" "$LOCAL_DIR/" "$REMOTE_DIR/"; then
-        echo "Error seeding $NAS_SUBDIR"
-        exit 1
+# --- Seed path: exactly one side has no files -> fill it from the other,
+# without --delete. Covers both directions: fresh install (empty local, full
+# NAS -> download) and a wiped NAS with a populated local (-> upload).
+if [ "$LOCAL_COUNT" -eq 0 ] || [ "$REMOTE_COUNT" -eq 0 ]; then
+    if [ "$LOCAL_COUNT" -eq 0 ] && [ "$REMOTE_COUNT" -eq 0 ]; then
+        echo "Both sides empty -- nothing to do."
+        exit 0
+    elif [ "$REMOTE_COUNT" -eq 0 ]; then
+        echo "--- Seed: uploading local -> NAS (no --delete) ---"
+        if ! rsync "${RSYNC_OPTS[@]}" "$LOCAL_DIR/" "$REMOTE_DIR/"; then
+            echo "Error seeding $NAS_SUBDIR"
+            exit 1
+        fi
+    else
+        echo "--- Seed: downloading NAS -> local (no --delete) ---"
+        if ! rsync "${RSYNC_OPTS[@]}" "$REMOTE_DIR/" "$LOCAL_DIR/"; then
+            echo "Error seeding $NAS_SUBDIR"
+            exit 1
+        fi
     fi
     echo "=== Seed complete for $NAS_SUBDIR ==="
     exit 0
 fi
 
-# Normal bidirectional sync (upload then download), both with --delete.
-RSYNC_OPTS+=( --delete )
+# --- Normal bidirectional sync (upload then download). Both directions use
+# --delete, but always with --backup so receiver-side deletions land in a
+# dated trash dir instead of being destroyed.
+STAMP="$(date +%Y%m%d-%H%M%S)"
 
 echo "--- Uploading local changes to NAS ---"
-rsync "${RSYNC_OPTS[@]}" "$LOCAL_DIR/" "$REMOTE_DIR/"
+rsync "${RSYNC_OPTS[@]}" --delete --backup --backup-dir="$REMOTE_TRASH/$STAMP" \
+    "$LOCAL_DIR/" "$REMOTE_DIR/"
 
 echo "--- Downloading NAS changes to local ---"
-rsync "${RSYNC_OPTS[@]}" "$REMOTE_DIR/" "$LOCAL_DIR/"
+rsync "${RSYNC_OPTS[@]}" --delete --backup --backup-dir="$LOCAL_TRASH/$STAMP" \
+    "$REMOTE_DIR/" "$LOCAL_DIR/"
 
 echo "=== Sync complete for $NAS_SUBDIR ==="
+
+# --- Prune trash dirs older than TRASH_KEEP_DAYS (best-effort).
+find "$REMOTE_TRASH" -mindepth 1 -maxdepth 1 -type d -mtime +"$TRASH_KEEP_DAYS" \
+    -exec rm -rf {} + 2>/dev/null || true
+find "$LOCAL_TRASH" -mindepth 1 -maxdepth 1 -type d -mtime +"$TRASH_KEEP_DAYS" \
+    -exec rm -rf {} + 2>/dev/null || true

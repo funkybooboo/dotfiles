@@ -44,17 +44,17 @@ section "Post-Install Setup"
 # =============================================================================
 
 if command -v pass-cli &>/dev/null; then
-  if pass-cli info &>/dev/null 2>&1; then
-    skip "Proton Pass (already logged in)"
-  else
-    info "Proton Pass login required -- opening browser for authentication..."
-    echo -e "  ${DIM}Complete login in the browser, then return here.${NC}"
-    pass-cli login
-    ok "Proton Pass logged in"
-  fi
+    if pass-cli info &>/dev/null 2>&1; then
+        skip "Proton Pass (already logged in)"
+    else
+        info "Proton Pass login required -- opening browser for authentication..."
+        echo -e "  ${DIM}Complete login in the browser, then return here.${NC}"
+        pass-cli login
+        ok "Proton Pass logged in"
+    fi
 else
-  fail "pass-cli not found -- run the proton-pass migration first"
-  _add_error "pass-cli not installed"
+    fail "pass-cli not found -- run the proton-pass migration first"
+    _add_error "pass-cli not installed"
 fi
 
 # =============================================================================
@@ -62,17 +62,17 @@ fi
 # =============================================================================
 
 if command -v tailscale &>/dev/null; then
-  if tailscale status &>/dev/null; then
-    skip "Tailscale (already authenticated and connected)"
-  else
-    info "Tailscale login required -- opening browser for authentication..."
-    echo -e "  ${DIM}After completing login in the browser, press Enter to continue.${NC}"
-    sudo tailscale up --accept-routes
-    ok "Tailscale connected"
-  fi
+    if tailscale status &>/dev/null; then
+        skip "Tailscale (already authenticated and connected)"
+    else
+        info "Tailscale login required -- opening browser for authentication..."
+        echo -e "  ${DIM}After completing login in the browser, press Enter to continue.${NC}"
+        sudo tailscale up --accept-routes
+        ok "Tailscale connected"
+    fi
 else
-  warn "tailscale not found -- run the tailscale migration first"
-  _add_warning "tailscale not installed; run it manually after"
+    warn "tailscale not found -- run the tailscale migration first"
+    _add_warning "tailscale not installed; run it manually after"
 fi
 
 # Extend networkd-wait-online to also wait for tailscale0. Done here (not in a
@@ -81,19 +81,19 @@ fi
 # exist yet. Now that Tailscale is up, tailscale0 exists and is safe to wait on.
 WAIT_ONLINE_OVERRIDE="/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf"
 if [[ -f "$WAIT_ONLINE_OVERRIDE" ]] && tailscale status &>/dev/null; then
-  if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE" 2>/dev/null; then
-    skip "wait-online override already includes tailscale0"
-  else
-    sudo sed -i.bak 's/\(--interface=wlan0\)[[:space:]]*$/\1 --interface=tailscale0/' "$WAIT_ONLINE_OVERRIDE"
-    if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE"; then
-      sudo systemctl daemon-reload 2>/dev/null || true
-      ok "wait-online override extended with tailscale0"
+    if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE" 2>/dev/null; then
+        skip "wait-online override already includes tailscale0"
     else
-      warn "failed to add tailscale0 to wait-online override -- restoring backup"
-      sudo cp -a "${WAIT_ONLINE_OVERRIDE}.bak" "$WAIT_ONLINE_OVERRIDE" 2>/dev/null || true
-      _add_warning "wait-online override not updated with tailscale0"
+        sudo sed -i.bak 's/\(--interface=wlan0\)[[:space:]]*$/\1 --interface=tailscale0/' "$WAIT_ONLINE_OVERRIDE"
+        if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE"; then
+            sudo systemctl daemon-reload 2>/dev/null || true
+            ok "wait-online override extended with tailscale0"
+        else
+            warn "failed to add tailscale0 to wait-online override -- restoring backup"
+            sudo cp -a "${WAIT_ONLINE_OVERRIDE}.bak" "$WAIT_ONLINE_OVERRIDE" 2>/dev/null || true
+            _add_warning "wait-online override not updated with tailscale0"
+        fi
     fi
-  fi
 fi
 
 # =============================================================================
@@ -109,33 +109,33 @@ mkdir -p "$(dirname "$CREDS_FILE")"
 
 # If a credentials file already exists with a non-empty password, keep it.
 if [[ -f "$CREDS_FILE" ]] && grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
-  skip "NAS SMB credentials file already exists ($CREDS_FILE)"
+    skip "NAS SMB credentials file already exists ($CREDS_FILE)"
 else
-  NAS_SMB_USER="nate"
-  NAS_SMB_PASS=""
-  if command -v pass-cli &>/dev/null && pass-cli info &>/dev/null 2>&1; then
-    NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title smb --field password 2>/dev/null || true)
-  fi
-
-  if [[ -n "$NAS_SMB_PASS" ]]; then
-    printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$NAS_SMB_PASS" > "$CREDS_FILE"
-    chmod 600 "$CREDS_FILE"
-    ok "NAS SMB credentials written from Proton Pass ($CREDS_FILE)"
-  else
-    echo ""
-    echo -e "  ${BOLD}NAS SMB password${NC} for user 'nate' (press Enter to skip):"
-    read -r -s -p "  Password: " nas_password
-    echo ""
-    if [[ -n "$nas_password" ]]; then
-      printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$nas_password" > "$CREDS_FILE"
-      chmod 600 "$CREDS_FILE"
-      ok "NAS SMB credentials file created: $CREDS_FILE"
-    else
-      warn "skipped SMB credentials -- create it later:"
-      echo -e "    ${DIM}printf 'username=nate\npassword=YOUR_PASS\ndomain=WORKGROUP\n' > $CREDS_FILE && chmod 600 $CREDS_FILE${NC}"
-      _add_warning "NAS SMB credentials not set"
+    NAS_SMB_USER="nate"
+    NAS_SMB_PASS=""
+    if command -v pass-cli &>/dev/null && pass-cli info &>/dev/null 2>&1; then
+        NAS_SMB_PASS=$(pass-cli item view --vault-name NAS --item-title smb --field password 2>/dev/null || true)
     fi
-  fi
+
+    if [[ -n "$NAS_SMB_PASS" ]]; then
+        printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$NAS_SMB_PASS" >"$CREDS_FILE"
+        chmod 600 "$CREDS_FILE"
+        ok "NAS SMB credentials written from Proton Pass ($CREDS_FILE)"
+    else
+        echo ""
+        echo -e "  ${BOLD}NAS SMB password${NC} for user 'nate' (press Enter to skip):"
+        read -r -s -p "  Password: " nas_password
+        echo ""
+        if [[ -n "$nas_password" ]]; then
+            printf 'username=%s\npassword=%s\ndomain=WORKGROUP\n' "$NAS_SMB_USER" "$nas_password" >"$CREDS_FILE"
+            chmod 600 "$CREDS_FILE"
+            ok "NAS SMB credentials file created: $CREDS_FILE"
+        else
+            warn "skipped SMB credentials -- create it later:"
+            echo -e "    ${DIM}printf 'username=nate\npassword=YOUR_PASS\ndomain=WORKGROUP\n' > $CREDS_FILE && chmod 600 $CREDS_FILE${NC}"
+            _add_warning "NAS SMB credentials not set"
+        fi
+    fi
 fi
 
 # =============================================================================
@@ -144,12 +144,12 @@ fi
 
 _SECRETMGR="$HOME/.local/bin/secretmgr"
 if [[ -x "$_SECRETMGR" ]]; then
-  info "Bootstrapping secrets with secretmgr..."
-  "$_SECRETMGR" bootstrap
-  ok "Secrets bootstrapped"
+    info "Bootstrapping secrets with secretmgr..."
+    "$_SECRETMGR" bootstrap
+    ok "Secrets bootstrapped"
 else
-  warn "secretmgr not found at $_SECRETMGR -- run the secretmgr migration first"
-  _add_warning "secretmgr not found; run '$_SECRETMGR bootstrap' manually"
+    warn "secretmgr not found at $_SECRETMGR -- run the secretmgr migration first"
+    _add_warning "secretmgr not found; run '$_SECRETMGR bootstrap' manually"
 fi
 
 # =============================================================================
@@ -172,96 +172,101 @@ GITHUB_SSH_OK=false
 # -- 5a. GPG agent ----------------------------------------------------------
 # gpg-agent is socket-activated; ensure it is running, then prime the cache.
 if command -v gpgconf &>/dev/null; then
-  if gpg-agent --version &>/dev/null; then
-    if gpgconf --launch gpg-agent 2>/dev/null; then
-      ok "gpg-agent running"
+    if gpg-agent --version &>/dev/null; then
+        if gpgconf --launch gpg-agent 2>/dev/null; then
+            ok "gpg-agent running"
+        else
+            # Already running is not an error -- gpgconf returns nonzero in that case.
+            if systemctl --user is-active gpg-agent.service &>/dev/null; then
+                skip "gpg-agent (already running)"
+            else
+                warn "could not launch gpg-agent -- git signed commits will prompt on first use"
+                _add_warning "gpg-agent not launched; signing will prompt per-use"
+            fi
+        fi
     else
-      # Already running is not an error -- gpgconf returns nonzero in that case.
-      if systemctl --user is-active gpg-agent.service &>/dev/null; then
-        skip "gpg-agent (already running)"
-      else
-        warn "could not launch gpg-agent -- git signed commits will prompt on first use"
-        _add_warning "gpg-agent not launched; signing will prompt per-use"
-      fi
+        warn "gpg-agent not found -- run the gnupg migration (000404) first"
+        _add_warning "gpg-agent missing; git signing will prompt per-use"
     fi
-  else
-    warn "gpg-agent not found -- run the gnupg migration (000404) first"
-    _add_warning "gpg-agent missing; git signing will prompt per-use"
-  fi
 else
-  warn "gpgconf not found -- run the gnupg migration (000404) first"
-  _add_warning "gpgconf missing; skipping GPG agent setup"
+    warn "gpgconf not found -- run the gnupg migration (000404) first"
+    _add_warning "gpgconf missing; skipping GPG agent setup"
 fi
 
 # Prime the GPG passphrase cache: sign a throwaway blob. This triggers
 # pinentry-qt (GUI dialog) for the GPG passphrase, which gpg-agent then caches
 # for default-cache-ttl (8h). Skip if no secret key is available.
 if gpg --list-secret-keys &>/dev/null; then
-  if gpg --list-secret-keys &>/dev/null 2>&1 \
-     && [[ -n "$(gpg --list-secret-keys --with-colons 2>/dev/null | grep '^sec')" ]]; then
-    info "Priming GPG agent cache (enter GPG passphrase in the pinentry dialog)..."
-    if echo "prime" | gpg --batch --yes --detach-sign --pinentry-mode loopback \
-         -o /dev/null 2>/dev/null; then
-      ok "GPG agent passphrase cached (8h)"
+    if gpg --list-secret-keys &>/dev/null 2>&1 &&
+        [[ -n "$(gpg --list-secret-keys --with-colons 2>/dev/null | grep '^sec')" ]]; then
+        info "Priming GPG agent cache (enter GPG passphrase in the pinentry dialog)..."
+        if echo "prime" | gpg --batch --yes --detach-sign --pinentry-mode loopback \
+            -o /dev/null 2>/dev/null; then
+            ok "GPG agent passphrase cached (8h)"
+        else
+            # Fall back to a pinentry-qt GUI prompt (not loopback) which is the
+            # normal interactive path. This pops a dialog in Hyprland.
+            if echo "prime" | gpg --batch --yes --detach-sign -o /dev/null 2>/dev/null; then
+                ok "GPG agent passphrase cached (8h)"
+            else
+                warn "GPG agent priming failed -- git signed commits will prompt on first use"
+                _add_warning "GPG passphrase not cached; signing will prompt per-use"
+            fi
+        fi
     else
-      # Fall back to a pinentry-qt GUI prompt (not loopback) which is the
-      # normal interactive path. This pops a dialog in Hyprland.
-      if echo "prime" | gpg --batch --yes --detach-sign -o /dev/null 2>/dev/null; then
-        ok "GPG agent passphrase cached (8h)"
-      else
-        warn "GPG agent priming failed -- git signed commits will prompt on first use"
-        _add_warning "GPG passphrase not cached; signing will prompt per-use"
-      fi
+        skip "GPG agent priming (no secret key imported)"
     fi
-  else
-    skip "GPG agent priming (no secret key imported)"
-  fi
 else
-  skip "GPG agent priming (gnupg not installed)"
+    skip "GPG agent priming (gnupg not installed)"
 fi
 
 # -- 5b. SSH agent ----------------------------------------------------------
 if [[ ! -f "$SSH_KEY" ]]; then
-  warn "no SSH key at $SSH_KEY -- SSH-dependent steps will be skipped"
-  _add_warning "SSH key missing; dotfiles remote switch and SSH project clones skipped"
+    warn "no SSH key at $SSH_KEY -- SSH-dependent steps will be skipped"
+    _add_warning "SSH key missing; dotfiles remote switch and SSH project clones skipped"
 else
-  # Ensure the systemd ssh-agent socket is in SSH_AUTH_SOCK (it may not be set
-  # in this shell if the session was started before the agent service).
-  if [[ -z "${SSH_AUTH_SOCK:-}" ]] || [[ ! -S "${SSH_AUTH_SOCK:-}" ]]; then
-    # The ssh-agent.service uses $XDG_RUNTIME_DIR; try the common path.
-    for cand in "/run/user/$(id -u)/ssh-agent.socket" "$HOME/.ssh/ssh-agent.sock"; do
-      if [[ -S "$cand" ]]; then
-        export SSH_AUTH_SOCK="$cand"
-        break
-      fi
-    done
-  fi
-
-  if ssh-add -l 2>/dev/null | grep -q 'ed25519'; then
-    skip "SSH key already in agent"
-  else
-    info "Loading SSH key into agent (enter passphrase if prompted)..."
-    if ssh-add "$SSH_KEY" </dev/tty 2>/dev/null; then
-      ok "SSH key loaded into agent"
-    else
-      warn "could not load SSH key into agent -- SSH-dependent steps will be skipped"
-      _add_warning "SSH key not loaded (passphrase required?); dotfiles remote switch and SSH project clones skipped"
+    # Ensure the systemd ssh-agent socket is in SSH_AUTH_SOCK (it may not be set
+    # in this shell if the session was started before the agent service).
+    if [[ -z "${SSH_AUTH_SOCK:-}" ]] || [[ ! -S "${SSH_AUTH_SOCK:-}" ]]; then
+        # The ssh-agent.service uses $XDG_RUNTIME_DIR; try the common path.
+        for cand in "/run/user/$(id -u)/ssh-agent.socket" "$HOME/.ssh/ssh-agent.sock"; do
+            if [[ -S "$cand" ]]; then
+                export SSH_AUTH_SOCK="$cand"
+                break
+            fi
+        done
     fi
-  fi
 
-  # Verify GitHub SSH auth. `ssh -T git@github.com` always exits non-zero
-  # (no shell access), so we check stderr for the success message.
-  # StrictHostKeyChecking=accept-new auto-records github.com's host key on
-  # first contact so BatchMode=yes doesn't fail on a fresh known_hosts.
-  if ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
-         -o ConnectTimeout=10 -T git@github.com 2>&1 \
-      | grep -q 'successfully authenticated'; then
-    GITHUB_SSH_OK=true
-    ok "GitHub SSH authentication working"
-  else
-    warn "GitHub SSH auth failed -- will use HTTPS for project clones"
-    _add_warning "GitHub SSH auth failed; dotfiles remote stays HTTPS"
-  fi
+    if ssh-add -l 2>/dev/null | grep -q 'ed25519'; then
+        skip "SSH key already in agent"
+    else
+        info "Loading SSH key into agent (enter passphrase if prompted)..."
+        if ssh-add "$SSH_KEY" </dev/tty 2>/dev/null; then
+            ok "SSH key loaded into agent"
+        else
+            warn "could not load SSH key into agent -- SSH-dependent steps will be skipped"
+            _add_warning "SSH key not loaded (passphrase required?); dotfiles remote switch and SSH project clones skipped"
+        fi
+    fi
+
+    # Verify GitHub SSH auth. `ssh -T git@github.com` always exits non-zero
+    # (no shell access), so we check stderr for the success message.
+    # StrictHostKeyChecking=accept-new auto-records github.com's host key on
+    # first contact so BatchMode=yes doesn't fail on a fresh known_hosts.
+    # One retry: on a fresh boot the check can fail transiently (agent socket
+    # or DNS not settled yet) even though the key is fine.
+    _github_ssh_check() {
+        ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+            -o ConnectTimeout=10 -T git@github.com 2>&1 |
+            grep -q 'successfully authenticated'
+    }
+    if _github_ssh_check || { sleep 5; _github_ssh_check; }; then
+        GITHUB_SSH_OK=true
+        ok "GitHub SSH authentication working"
+    else
+        warn "GitHub SSH auth failed -- will use HTTPS for project clones"
+        _add_warning "GitHub SSH auth failed; dotfiles remote stays HTTPS"
+    fi
 fi
 
 # =============================================================================
@@ -270,22 +275,22 @@ fi
 # So you can push changes to the dotfiles repo without HTTPS credentials.
 
 if [[ "$GITHUB_SSH_OK" == "true" ]]; then
-  _current_origin=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || echo "")
-  if [[ "$_current_origin" == git@github.com:* ]]; then
-    skip "dotfiles remote already SSH ($_current_origin)"
-  elif [[ -z "$_current_origin" ]]; then
-    warn "dotfiles repo has no origin remote -- skipping remote switch"
-  else
-    _ssh_url="git@github.com:funkybooboo/dotfiles.git"
-    if git -C "$REPO_ROOT" remote set-url origin "$_ssh_url"; then
-      ok "dotfiles remote switched to SSH: $_ssh_url"
+    _current_origin=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || echo "")
+    if [[ "$_current_origin" == git@github.com:* ]]; then
+        skip "dotfiles remote already SSH ($_current_origin)"
+    elif [[ -z "$_current_origin" ]]; then
+        warn "dotfiles repo has no origin remote -- skipping remote switch"
     else
-      warn "failed to switch dotfiles remote to SSH"
-      _add_warning "dotfiles remote switch failed; run: git -C ~/dotfiles remote set-url origin $_ssh_url"
+        _ssh_url="git@github.com:funkybooboo/dotfiles.git"
+        if git -C "$REPO_ROOT" remote set-url origin "$_ssh_url"; then
+            ok "dotfiles remote switched to SSH: $_ssh_url"
+        else
+            warn "failed to switch dotfiles remote to SSH"
+            _add_warning "dotfiles remote switch failed; run: git -C ~/dotfiles remote set-url origin $_ssh_url"
+        fi
     fi
-  fi
 else
-  skip "dotfiles remote switch (SSH not ready)"
+    skip "dotfiles remote switch (SSH not ready)"
 fi
 
 # =============================================================================
@@ -304,108 +309,116 @@ link_file "$DOTFILES_HOME/.config/dotfiles/projects-repos.txt" "$REPOS_FILE"
 
 # Rewrite a GitHub HTTPS URL to SSH. Other URLs are returned unchanged.
 _to_ssh_url() {
-  local url="$1"
-  if [[ "$url" == https://github.com/* ]]; then
-    local rest="${url#https://github.com/}"
-    rest="${rest%.git}"
-    printf 'git@github.com:%s.git\n' "$rest"
-  else
-    printf '%s\n' "$url"
-  fi
+    local url="$1"
+    if [[ "$url" == https://github.com/* ]]; then
+        local rest="${url#https://github.com/}"
+        rest="${rest%.git}"
+        printf 'git@github.com:%s.git\n' "$rest"
+    else
+        printf '%s\n' "$url"
+    fi
 }
 
 if [[ ! -f "$REPOS_FILE" ]]; then
-  warn "projects repo list not found at $REPOS_FILE -- skipping project clones"
-  _add_warning "projects-repos.txt missing; no repos cloned"
+    warn "projects repo list not found at $REPOS_FILE -- skipping project clones"
+    _add_warning "projects-repos.txt missing; no repos cloned"
 else
-  mkdir -p "$PROJECTS_DIR"
-  # Read non-comment, non-blank lines.
-  mapfile -t _repo_urls < <(grep -vE '^\s*(#|$)' "$REPOS_FILE")
+    mkdir -p "$PROJECTS_DIR"
+    # Read non-comment, non-blank lines.
+    mapfile -t _repo_urls < <(grep -vE '^\s*(#|$)' "$REPOS_FILE")
 
-  if [[ ${#_repo_urls[@]} -eq 0 ]]; then
-    skip "projects clone (no repos listed in $REPOS_FILE)"
-  else
-    info "${#_repo_urls[@]} repos configured in $REPOS_FILE"
-    for _url in "${_repo_urls[@]}"; do
-      # Trim surrounding whitespace.
-      _url="${_url#"${_url%%[![:space:]]*}"}"
-      _url="${_url%"${_url##*[![:space:]]}"}"
-      [[ -z "$_url" ]] && continue
+    if [[ ${#_repo_urls[@]} -eq 0 ]]; then
+        skip "projects clone (no repos listed in $REPOS_FILE)"
+    else
+        info "${#_repo_urls[@]} repos configured in $REPOS_FILE"
+        for _url in "${_repo_urls[@]}"; do
+            # Trim surrounding whitespace.
+            _url="${_url#"${_url%%[![:space:]]*}"}"
+            _url="${_url%"${_url##*[![:space:]]}"}"
+            [[ -z "$_url" ]] && continue
 
-      # Derive directory name from the URL (last path segment, no .git).
-      _name="${_url##*/}"
-      _name="${_name%.git}"
-      if [[ -z "$_name" ]]; then
-        warn "could not parse repo name from: $_url -- skipping"
-        _add_warning "unparseable repo URL: $_url"
-        continue
-      fi
+            # Derive directory name from the URL (last path segment, no .git).
+            _name="${_url##*/}"
+            _name="${_name%.git}"
+            if [[ -z "$_name" ]]; then
+                warn "could not parse repo name from: $_url -- skipping"
+                _add_warning "unparseable repo URL: $_url"
+                continue
+            fi
 
-      _dest="$PROJECTS_DIR/$_name"
-      if [[ -d "$_dest/.git" ]]; then
-        # Second (and later) runs: refresh the cloned repo instead of skipping,
-        # so re-running setup.sh keeps ~/Projects current (--ff-only is safe and
-        # non-destructive; repos needing rebase are left alone and reported).
-        if git -C "$_dest" pull --ff-only --quiet 2>/dev/null; then
-          ok "$_name (updated)"
-        else
-          skip "$_name (diverged or up-to-date; left as-is)"
-        fi
-      else
-        if [[ "$GITHUB_SSH_OK" == "true" ]]; then
-          _clone_url=$(_to_ssh_url "$_url")
-        else
-          _clone_url="$_url"
-        fi
-        info "cloning $_name -> ~/Projects/$_name..."
-        if git clone --quiet "$_clone_url" "$_dest"; then
-          ok "$_name cloned"
-        else
-          warn "failed to clone $_name -- continuing"
-          _add_warning "project clone failed: $_name"
-        fi
-      fi
-    done
-  fi
+            _dest="$PROJECTS_DIR/$_name"
+            if [[ -d "$_dest/.git" ]]; then
+                # Second (and later) runs: refresh the cloned repo instead of skipping,
+                # so re-running setup.sh keeps ~/Projects current (--ff-only is safe and
+                # non-destructive; repos needing rebase are left alone and reported).
+                if git -C "$_dest" pull --ff-only --quiet 2>/dev/null; then
+                    ok "$_name (updated)"
+                else
+                    skip "$_name (diverged or up-to-date; left as-is)"
+                fi
+            else
+                if [[ "$GITHUB_SSH_OK" == "true" ]]; then
+                    _clone_url=$(_to_ssh_url "$_url")
+                else
+                    _clone_url="$_url"
+                fi
+                info "cloning $_name -> ~/Projects/$_name..."
+                if git clone --quiet "$_clone_url" "$_dest"; then
+                    ok "$_name cloned"
+                else
+                    warn "failed to clone $_name -- continuing"
+                    _add_warning "project clone failed: $_name"
+                fi
+            fi
+        done
+    fi
 fi
 
 # =============================================================================
-# 8. NAS initial seed sync
+# 8. NAS initial sync
 # =============================================================================
-# The share is empty on first use; the sync-to-nas helper detects an empty
-# remote subdir and uploads local -> NAS WITHOUT --delete (so an empty share
-# never wipes local files). Triggering each sync service once here seeds all
-# five trees. Re-running is safe (the helper seeds only empty remotes).
+# Runs the same per-module sync scripts the hourly timers use, once each, so
+# a fresh install seeds from the NAS immediately. sync-to-nas (rewritten
+# after the 2026-09-15 NAS wipe) seeds whichever side is empty from the
+# populated one and routes every --delete through dated trash dirs, so an
+# empty local home can never wipe the NAS again.
+#
+# NOTE: never pull these dirs with rsync over SSH. TrueNAS stores names with
+# SMB-illegal characters (':' '*' '?') as CATIA private-use code points; the
+# CIFS mount shows the translated name, raw ZFS (SSH) shows the private-use
+# bytes. rsync over SSH therefore duplicates every affected file, and the
+# next mount-based sync deletes the duplicates. All syncs go through
+# /mnt/truenas/nate (the sync scripts handle this).
 
 NAS_MODULES=(
-  "documents:Documents"
-  "music:Music"
-  "photos:Photos"
-  "audiobooks:Audiobooks"
-  "books:Books"
+    "documents:Documents"
+    "music:Music"
+    "photos:Photos"
+    "audiobooks:Audiobooks"
+    "books:Books"
 )
 
 if [[ ! -f "$CREDS_FILE" ]] || ! grep -qE '^password=[^[:space:]]' "$CREDS_FILE" 2>/dev/null; then
-  warn "no NAS SMB credentials -- skipping initial seed"
-  _add_warning "NAS initial seed skipped (no SMB credentials)"
+    warn "no NAS SMB credentials -- skipping initial sync"
+    _add_warning "NAS initial sync skipped (no SMB credentials)"
 else
-  info "checking NAS connectivity (SMB 445 / Tailscale)..."
-  if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
-    ok "TrueNAS reachable -- running one-shot seed sync"
-    for entry in "${NAS_MODULES[@]}"; do
-      module="${entry%%:*}"
-      info "seeding $module (local -> NAS)"
-      if "$HOME/.local/bin/sync-$module" 2>/dev/null; then
-        ok "$module seed sync ran"
-      else
-        warn "seed sync $module reported an error (non-fatal; timer will retry)"
-        _add_warning "NAS initial seed failed for: $module"
-      fi
-    done
-  else
-    warn "TrueNAS not reachable -- timers will seed on first successful run"
-    _add_warning "TrueNAS not reachable -- initial seed skipped"
-  fi
+    info "checking NAS connectivity (SMB 445 / Tailscale)..."
+    if "$HOME/.local/lib/check-nas-connection" 2>/dev/null; then
+        ok "TrueNAS reachable -- running one-shot sync"
+        for entry in "${NAS_MODULES[@]}"; do
+            module="${entry%%:*}"
+            info "syncing $module (local <-> NAS)"
+            if "$HOME/.local/bin/sync-$module"; then
+                ok "$module sync ran"
+            else
+                warn "sync $module reported an error (non-fatal; timer will retry)"
+                _add_warning "NAS initial sync failed for: $module"
+            fi
+        done
+    else
+        warn "TrueNAS not reachable -- timers will seed on first successful run"
+        _add_warning "TrueNAS not reachable -- initial sync skipped"
+    fi
 fi
 
 # =============================================================================
@@ -414,8 +427,8 @@ fi
 
 info "ensuring NAS sync timers are enabled..."
 for entry in "${NAS_MODULES[@]}"; do
-  module="${entry%%:*}"
-  enable_user_service "nas-sync-${module}.timer"
+    module="${entry%%:*}"
+    enable_user_service "nas-sync-${module}.timer"
 done
 
 # =============================================================================
@@ -434,21 +447,21 @@ done
 
 # -- 10a. Sync GitHub forks with upstream -------------------------------------
 if command -v gh >/dev/null 2>&1; then
-  _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
-  if [[ -z "$_forks" ]]; then
-    skip "GitHub fork sync (no forks found)"
-  else
-    info "syncing ${#_forks[@]} GitHub fork(s) with upstream"
-    while IFS= read -r _repo; do
-      if gh repo sync "$_repo" 2>/dev/null; then
-        ok "fork synced: $_repo"
-      else
-        warn "could not sync fork: $_repo (non-fatal)"
-      fi
-    done <<< "$_forks"
-  fi
+    _forks=$(gh repo list --fork --limit 50 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null || true)
+    if [[ -z "$_forks" ]]; then
+        skip "GitHub fork sync (no forks found)"
+    else
+        info "syncing ${#_forks[@]} GitHub fork(s) with upstream"
+        while IFS= read -r _repo; do
+            if gh repo sync "$_repo" 2>/dev/null; then
+                ok "fork synced: $_repo"
+            else
+                warn "could not sync fork: $_repo (non-fatal)"
+            fi
+        done <<<"$_forks"
+    fi
 else
-  skip "GitHub fork sync (gh not installed)"
+    skip "GitHub fork sync (gh not installed)"
 fi
 
 # -- 10b. Update + rebuild git submodule sources (sources/*) ---------------
@@ -463,99 +476,187 @@ fi
 # SHAs as an uncommitted change). Commit those pointer bumps in ~/dotfiles to
 # pin the new versions across machines.
 _setup_build_repo() {
-  local repo="$1" name
-  name=$(basename "$repo")
+    local repo="$1" name
+    name=$(basename "$repo")
 
-  local ninja_dir=""
-  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-    [[ -f "$d/build.ninja" ]] && { ninja_dir="$d"; break; }
-  done
-  if [[ -n "$ninja_dir" ]]; then
-    if ninja -C "$ninja_dir" 2>/dev/null; then ok "$name (ninja)"; return 0; else warn "$name (ninja) failed"; return 1; fi
-  fi
-
-  local cmake_make_dir=""
-  for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-    [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && { cmake_make_dir="$d"; break; }
-  done
-  if [[ -n "$cmake_make_dir" ]]; then
-    if make -C "$cmake_make_dir" 2>/dev/null; then ok "$name (cmake+make)"; return 0; else warn "$name (cmake+make) failed"; return 1; fi
-  fi
-
-  if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-    if [[ ! -f "$repo/build/Makefile" ]]; then
-      info "$name (configure: bootstrapping build/Makefile)"
-      ( cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch ) >/dev/null 2>&1 || true
+    local ninja_dir=""
+    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+        [[ -f "$d/build.ninja" ]] && {
+            ninja_dir="$d"
+            break
+        }
+    done
+    if [[ -n "$ninja_dir" ]]; then
+        if ninja -C "$ninja_dir" 2>/dev/null; then
+            ok "$name (ninja)"
+            return 0
+        else
+            warn "$name (ninja) failed"
+            return 1
+        fi
     fi
-    if [[ -f "$repo/build/Makefile" ]]; then
-      # WARNING: sudo make install runs arbitrary install targets from source repos.
-      if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
-        ok "$name (make -C build)"; return 0
-      else
-        warn "$name (make -C build) failed"; return 1
-      fi
+
+    local cmake_make_dir=""
+    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
+        [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && {
+            cmake_make_dir="$d"
+            break
+        }
+    done
+    if [[ -n "$cmake_make_dir" ]]; then
+        if make -C "$cmake_make_dir" 2>/dev/null; then
+            ok "$name (cmake+make)"
+            return 0
+        else
+            warn "$name (cmake+make) failed"
+            return 1
+        fi
     fi
-  fi
 
-  if [[ -f "$repo/go.mod" ]]; then
-    if (cd "$repo" && go install ./... 2>/dev/null); then ok "$name (go install)"; return 0; else warn "$name (go install) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Cargo.toml" ]]; then
-    if (cd "$repo" && cargo build --release 2>/dev/null); then ok "$name (cargo build)"; return 0; else warn "$name (cargo build) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/meson.build" ]]; then
-    if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then ok "$name (meson+ninja)"; return 0; else warn "$name (meson+ninja) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-    if make -C "$repo" 2>/dev/null && sudo make -C "$repo" install 2>/dev/null; then ok "$name (make)"; return 0; else warn "$name (make) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/Gemfile" ]]; then
-    if (cd "$repo" && bundle install 2>/dev/null); then ok "$name (bundle)"; return 0; else warn "$name (bundle) failed"; return 1; fi
-  fi
-  if [[ -f "$repo/package.json" ]]; then
-    if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then ok "$name (npm)"; return 0; else warn "$name (npm) failed"; return 1; fi
-  fi
+    if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+        if [[ ! -f "$repo/build/Makefile" ]]; then
+            info "$name (configure: bootstrapping build/Makefile)"
+            (cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch) >/dev/null 2>&1 || true
+        fi
+        if [[ -f "$repo/build/Makefile" ]]; then
+            # WARNING: sudo make install runs arbitrary install targets from source repos.
+            if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
+                ok "$name (make -C build)"
+                return 0
+            else
+                warn "$name (make -C build) failed"
+                return 1
+            fi
+        fi
+    fi
 
-  return 2
+    if [[ -f "$repo/go.mod" ]]; then
+        if (cd "$repo" && go install ./... 2>/dev/null); then
+            ok "$name (go install)"
+            return 0
+        else
+            warn "$name (go install) failed"
+            return 1
+        fi
+    fi
+    if [[ -f "$repo/Cargo.toml" ]]; then
+        if (cd "$repo" && cargo build --release 2>/dev/null); then
+            ok "$name (cargo build)"
+            return 0
+        else
+            warn "$name (cargo build) failed"
+            return 1
+        fi
+    fi
+    if [[ -f "$repo/meson.build" ]]; then
+        if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then
+            ok "$name (meson+ninja)"
+            return 0
+        else
+            warn "$name (meson+ninja) failed"
+            return 1
+        fi
+    fi
+    if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
+        # Two Makefile shapes need special handling (stderr is NOT swallowed
+        # here -- seeing the actual make error beats a bare "failed"):
+        #   1. No `install` target (e.g. 99: only lint/format/test targets) --
+        #      nothing to install, and running the default target would only
+        #      MUTATE the checkout (stylua format). Skip with a note instead.
+        #   2. Install-only Makefile (e.g. lazymusic: the default target IS
+        #      install) -- a user-level `make` fails on /usr/local, so the
+        #      whole thing must run under sudo.
+        if ! make -C "$repo" -n install >/dev/null 2>&1; then
+            skip "$name (make; no install target)"
+            return 0
+        fi
+        # Tamed against set -e: a failing dry-run (or head closing the pipe)
+        # must not abort setup; the branch below just falls through to the
+        # build+install path when detection is inconclusive.
+        _default_first_cmd=$(make -C "$repo" -n 2>/dev/null | head -1 || true)
+        if [[ "${_default_first_cmd#install }" != "${_default_first_cmd}" ]]; then
+            if sudo make -C "$repo" install; then
+                ok "$name (make install)"
+                return 0
+            else
+                warn "$name (make install) failed"
+                return 1
+            fi
+        fi
+        if make -C "$repo" && sudo make -C "$repo" install; then
+            ok "$name (make)"
+            return 0
+        else
+            warn "$name (make) failed"
+            return 1
+        fi
+    fi
+    if [[ -f "$repo/Gemfile" ]]; then
+        if (cd "$repo" && bundle install 2>/dev/null); then
+            ok "$name (bundle)"
+            return 0
+        else
+            warn "$name (bundle) failed"
+            return 1
+        fi
+    fi
+    if [[ -f "$repo/package.json" ]]; then
+        if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then
+            ok "$name (npm)"
+            return 0
+        else
+            warn "$name (npm) failed"
+            return 1
+        fi
+    fi
+
+    return 2
 }
 
 if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
-  info "Updating git submodule sources (sources/*) to upstream-latest"
-  if git -C "$REPO_ROOT" submodule update --init --remote --merge 2>/dev/null; then
-    ok "submodule sources rolled forward"
-  else
-    warn "submodule update reported an error (non-fatal; some sources may be stale)"
-    _add_warning "git submodule update --remote failed; one or more sources/* not rolled forward"
-  fi
+    info "Updating git submodule sources (sources/*) to upstream-latest"
+    if git -C "$REPO_ROOT" submodule update --init --remote --merge 2>/dev/null; then
+        ok "submodule sources rolled forward"
+    else
+        warn "submodule update reported an error (non-fatal; some sources may be stale)"
+        _add_warning "git submodule update --remote failed; one or more sources/* not rolled forward"
+    fi
 
-  info "Rebuilding source submodule trees"
-  for _repo in "$REPO_ROOT"/sources/*/; do
-    # Submodule checkouts have a `.git` FILE (gitlink), not a dir -- use -e.
-    [[ -e "$_repo/.git" ]] || continue
-    _rc=0
-    _setup_build_repo "$_repo" || _rc=$?
-    (( _rc == 2 )) && skip "$(basename "$_repo") (no recognized build system)"
-  done
+    info "Rebuilding source submodule trees"
+    # Some sources install to /usr/local via `sudo make install`. Prime sudo
+    # here so the password prompt (if any) appears with context instead of
+    # mid-build.
+    if ! sudo -n true 2>/dev/null; then
+        info "sources may install via 'sudo make install' -- sudo password may be prompted"
+    fi
+    sudo -v || true
+    for _repo in "$REPO_ROOT"/sources/*/; do
+        # Submodule checkouts have a `.git` FILE (gitlink), not a dir -- use -e.
+        [[ -e "$_repo/.git" ]] || continue
+        _rc=0
+        _setup_build_repo "$_repo" || _rc=$?
+        ((_rc == 2)) && skip "$(basename "$_repo") (no recognized build system)"
+    done
 else
-  skip "source submodule update (no .gitmodules present)"
+    skip "source submodule update (no .gitmodules present)"
 fi
 
 # -- 10c. Refresh running-container images (Docker/Podman) --------------------
 if command -v docker >/dev/null 2>&1 && sudo docker ps -q >/dev/null 2>&1; then
-  info "Docker: pulling fresh images for running containers"
-  for _ctr in $(sudo docker ps --format '{{.Names}}'); do
-    _img=$(sudo docker inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
-    [[ -n "$_img" ]] || continue
-    if sudo docker pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
-  done
+    info "Docker: pulling fresh images for running containers"
+    for _ctr in $(sudo docker ps --format '{{.Names}}'); do
+        _img=$(sudo docker inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+        [[ -n "$_img" ]] || continue
+        if sudo docker pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+    done
 fi
 if command -v podman >/dev/null 2>&1 && podman ps -q >/dev/null 2>&1; then
-  info "Podman: pulling fresh images for running containers"
-  for _ctr in $(podman ps --format '{{.Names}}'); do
-    _img=$(podman inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
-    [[ -n "$_img" ]] || continue
-    if podman pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
-  done
+    info "Podman: pulling fresh images for running containers"
+    for _ctr in $(podman ps --format '{{.Names}}'); do
+        _img=$(podman inspect --format='{{.Config.Image}}' "$_ctr" 2>/dev/null || true)
+        [[ -n "$_img" ]] || continue
+        if podman pull "$_img" 2>/dev/null; then ok "$_img ($_ctr)"; else warn "could not pull $_img (non-fatal)"; fi
+    done
 fi
 
 print_summary "secrets"

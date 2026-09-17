@@ -43,7 +43,10 @@ LW_REL="https://codeberg.org/${LW_REPO}/releases/download/${LW_VERSION}"
 LW_ARCH="x86_64"   # only x86_64 profiled here (workstation). arm64 exists upstream.
 
 # LibreWolf release signing key (GPG). Imported once into the user keyring so
-# `gpg --verify` works. Primary fingerprint from librewolf.net/docs.
+# `gpg --verify` works. Primary fingerprint from librewolf.net/docs. The key
+# gained NEW signing SUBKEYS in 2026-04 (EDDSA 0x915585A1C36690B1 et al) --
+# a stale copy of the primary without those subkeys fails --verify with
+# "No public key", so the import helper refreshes even when already present.
 LW_GPG_KEY="662E3CDD6FE329002D0CA5BB4039DD82B12EF16"
 LW_GPG_KEYSERVER="hkps://keys.openpgp.org"
 
@@ -58,19 +61,24 @@ DL_DIR="$HOME/.cache/dotfiles-downloads"
 # --- helper: import the release signing key (idempotent, non-fatal) ----------
 # Best-effort: modern gpg auto-retrieves the key during --verify, so an import
 # failure here does NOT block verification -- the verify step reports for real.
+# Always (re-)fetches from the keyserver: `recv-keys` on an already-imported
+# key UPDATES it, picking up new signing subkeys (see the 2026-04 rotation
+# note above) instead of trusting a possibly-stale local copy.
 _lw_import_key() {
-  if gpg --list-keys "$LW_GPG_KEY" >/dev/null 2>&1; then
-    return 0
-  fi
-  info "importing LibreWolf release GPG key ${LW_GPG_KEY:0:16}..."
   local ks
+  if ! gpg --list-keys "$LW_GPG_KEY" >/dev/null 2>&1; then
+    info "importing LibreWolf release GPG key ${LW_GPG_KEY:0:16}..."
+  fi
   for ks in "$LW_GPG_KEYSERVER" hkps://keyserver.ubuntu.com; do
-    if gpg --keyserver "$ks" --recv-keys "$LW_GPG_KEY" 2>/dev/null; then
-      ok "LibreWolf GPG key imported (via $ks)"
+    if gpg --keyserver "$ks" --recv-keys "$LW_GPG_KEY" >/dev/null 2>&1; then
+      ok "LibreWolf GPG key present and refreshed (via $ks)"
       return 0
     fi
   done
-  return 0  # auto-key-retrieve fetches at verify time if still missing
+  # Not fatal: gpg auto-key-retrieve may fetch it at verify time; the verify
+  # step reports for real.
+  warn "could not refresh LibreWolf GPG key -- verify step will report"
+  return 0
 }
 
 # --- helper: fetch + sha256-verify + GPG-verify a release asset --------------
