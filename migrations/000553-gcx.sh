@@ -59,7 +59,10 @@ esac
 # Skip if an executable is already present AND reports the pinned version.
 already=false
 if [[ -x "$GCX_BIN" ]]; then
-  ver_out="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1)"
+# `|| true` inside each probe: gcx --version exiting nonzero (a broken or
+# not-yet-configured binary) must take the mismatch path, not abort the whole
+# migration silently under pipefail.
+  ver_out="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1 || true)"
   if [[ "$ver_out" == *"$GCX_VERSION "* ]]; then
     skip "gcx ($GCX_VERSION, installed at ${GCX_BIN/$HOME/\~})"
     already=true
@@ -150,7 +153,15 @@ if [[ -x "$GCX_BIN" ]]; then
   # exit-23 failure seen in migrate logs). Capturing to a file first breaks
   # the pipe so curl runs to completion, matching the install_nix fix.
   _gcx_latest_json="$(mktemp)"
-  curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${GCX_REPO}/releases/latest" >"$_gcx_latest_json" 2>/dev/null || true
+  # gh api is authenticated (5000 req/hr) where raw api.github.com curl is not
+  # (60/hr per IP -- shared with every unauth client behind this address; the
+  # 2026-09-17 run hit it and this migration died on the rate-limit body). gh is
+  # installed at 000200, long before this runs. Falls back to unauth curl when
+  # gh is missing or logged out, so a minimal machine still converges -- just
+  # less reliably.
+  if ! gh api "repos/${GCX_REPO}/releases/latest" >"$_gcx_latest_json" 2>/dev/null; then
+    curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${GCX_REPO}/releases/latest" >"$_gcx_latest_json" 2>/dev/null || true
+  fi
   # `|| true` inside the substitution is load-bearing, not hygiene: a
   # rate-limited response body has no tag_name, grep -m1 then exits 1, and
   # under set -o pipefail that aborts the whole migration SILENTLY (the
@@ -159,7 +170,7 @@ if [[ -x "$GCX_BIN" ]]; then
   latest="$(grep -m1 '"tag_name"' "$_gcx_latest_json" | sed 's/.*"tag_name": *"//;s/".*//' || true)"
   rm -f "$_gcx_latest_json"
   latest="${latest#v}"
-  inst="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1)"
+  inst="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1 || true)"
   inst="${inst#*version }"; inst="${inst%% *}"
   if [[ -z "$latest" ]]; then
     warn "could not fetch gcx latest release (offline/rate-limit?) -- keeping $inst"

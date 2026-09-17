@@ -104,7 +104,10 @@ mkdir -p "$APPS_DIR"
 _rendered=0
 for _tmpl in "$WEBAPPS_SRC"/*.desktop.tmpl; do
     _base="${_tmpl##*/}"
-    _uuid=$(grep -m1 '^# *uuid:' "$_tmpl" 2>/dev/null | sed 's/^# *uuid: *//' | tr -d '[:space:]')
+    # `|| true` is load-bearing: a template without the header makes grep -m1
+    # exit 1, and under pipefail that aborts the migration before the graceful
+    # empty-uuid skip below can handle it (same class as the gcx tag_name trap).
+    _uuid=$(grep -m1 '^# *uuid:' "$_tmpl" 2>/dev/null | sed 's/^# *uuid: *//' | tr -d '[:space:]' || true)
     if [[ -z "$_uuid" ]]; then
         warn "template $_base has no '# uuid:' line -- skipping"
         _add_warning "librewolf webapp template missing uuid: $_base"

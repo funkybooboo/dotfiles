@@ -85,8 +85,14 @@ esac
 # under pipefail (grep -m closes early -> curl gets SIGPIPE -> exit 23 aborts
 # the migration). Same fix as the gcx roll-forward block in 000553.
 json="$(mktemp)"
-curl -fsSL --connect-timeout 15 \
-  "https://api.github.com/repos/${PGEC_REPO}/releases/latest" >"$json" 2>/dev/null || true
+# gh api first, authenticated (5000 req/hr): the unauth api.github.com curl
+# behind it is limited to 60/hr per IP and the 2026-09-17 run hit that (same
+# rate limit gcx died on). gh installs at 000200; the curl fallback keeps
+# minimal machines converging when gh is absent or logged out.
+if ! gh api "repos/${PGEC_REPO}/releases/latest" >"$json" 2>/dev/null; then
+  curl -fsSL --connect-timeout 15 \
+    "https://api.github.com/repos/${PGEC_REPO}/releases/latest" >"$json" 2>/dev/null || true
+fi
 if ! grep -q '"tag_name"' "$json" 2>/dev/null; then
   warn "could not fetch latest GE-Proton release (offline/rate-limit?) -- skipping"
   _add_warning "proton-ge-custom: latest-release fetch failed (skipped)"
