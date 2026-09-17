@@ -1,0 +1,29 @@
+[Unit]
+# Keeps graphical-session.target alive. The stock target ships with
+# StopWhenUnneeded=yes and RefuseManualStart=yes:
+#   - it stops the moment no running unit requires it, and
+#   - `systemctl --user start graphical-session.target` is refused outright
+#     (verified live: "Operation refused, unit graphical-session.target may be
+#     requested by dependency only"), so the target can only be brought up as a
+#     dependency of a requiring unit.
+# This unit is that requiring unit, started explicitly by autostart.lua on every
+# Hyprland boot. hypr-wallpaper.service used to hold the target up exactly this
+# way (its BindsTo= pulled the target in as a side effect); retiring it without
+# a replacement let the target go "unneeded" at the next daemon-reload, which
+# stopped the whole graphical session mid-migrate -- bar, notifications,
+# portals, and the terminal running migrate.sh included.
+#
+# Started by 000012-graphical-session-keeper.sh, which runs BEFORE any
+# migration that triggers a `systemctl --user daemon-reload`, so no later
+# retirement of a session-holding unit can tear the session down again.
+Description=Graphical session target keeper
+BindsTo=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical-session.target

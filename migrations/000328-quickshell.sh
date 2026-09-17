@@ -46,7 +46,9 @@ if command -v quickshell &>/dev/null; then
   # Superseded scripts and configs leave dangling links once their sources are
   # deleted from the repo: media-keys by the shell's volume/brightness handling,
   # hyprlauncher.conf by the native launcher, and hyprtoolkit.conf because
-  # hyprlauncher was the only thing that read it.
+  # hyprlauncher was the only thing that read it. The waybar and mako configs
+  # were deleted from the repo by the same handover (11284e2) -- machines that
+  # ran the pre-quickshell migrations keep dangling links to them here.
   unlink_stale \
     "$HOME/.local/bin/media-keys" \
     "$HOME/.local/bin/clipboard-manager" \
@@ -60,7 +62,10 @@ if command -v quickshell &>/dev/null; then
     "$HOME/.config/hypr/hyprtoolkit.conf" \
     "$HOME/.config/hypr/set-wallpaper.sh" \
     "$HOME/.config/hypr/monitor-watcher.sh" \
-    "$HOME/.config/systemd/user/hypr-wallpaper.service"
+    "$HOME/.config/systemd/user/hypr-wallpaper.service" \
+    "$HOME/.config/waybar/config" \
+    "$HOME/.config/waybar/style.css" \
+    "$HOME/.config/mako/config"
 
   # Hand over within this run rather than at next login. An already-running
   # waybar or mako keeps going from deleted files, and a machine that just

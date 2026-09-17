@@ -26,11 +26,14 @@ end)
 -- Ensure the systemd user graphical session target is up. uwsm normally activates
 -- graphical-session.target, but not reliably on every boot, and on the boots it
 -- misses every WantedBy=graphical-session unit stays dead -- hyprpolkitagent and
--- the xdg portals among them. hypr-wallpaper.service used to pull the target in as
--- a side effect of its BindsTo=; with the wallpaper now drawn by quickshell, the
--- target is started outright instead.
+-- the xdg portals among them. hypr-wallpaper.service used to pull the target in
+-- as a side effect of its BindsTo=; the keeper unit is that same mechanism
+-- without the wallpaper. The target itself is started THROUGH the keeper
+-- because systemd refuses a direct `systemctl --user start
+-- graphical-session.target` (RefuseManualStart=yes -- verified live: "Operation
+-- refused, unit graphical-session.target may be requested by dependency only").
 hl.on("hyprland.start", function()
-    hl.exec_cmd("systemctl --user start graphical-session.target")
+    hl.exec_cmd("systemctl --user start graphical-session-keeper.service")
 end)
 -- quickshell is the whole shell: bar, notifications and tray in one process.
 -- It replaced waybar and mako, which used to be started separately from here.
