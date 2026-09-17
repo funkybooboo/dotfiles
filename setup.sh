@@ -454,14 +454,16 @@ fi
 # -- 10b. Update + rebuild git submodule sources (sources/*) ---------------
 # The built-from-source repos live as git submodules of the dotfiles repo
 # (sources/<name>), initialized by migrate.sh preflight. Roll them forward to
-# upstream-latest with `git submodule update --init --remote --merge`, then run
+# upstream-latest with `git submodule update --init --remote`, then run
 # an incremental build in each working tree (ninja/cmake/go/cargo/meson/
 # make/autotools). `sudo make install` re-runs for the install-target branches.
-# NOTE: --remote advances each submodule to its remote-tracking branch tip and
-# merges into the local branch, which updates the submodule pointer recorded in
-# the dotfiles repo (so `git status` in ~/dotfiles will show updated submodule
-# SHAs as an uncommitted change). Commit those pointer bumps in ~/dotfiles to
-# pin the new versions across machines.
+# NOTE: --remote checks each submodule out at its remote-tracking branch tip,
+# which updates the submodule pointer recorded in the dotfiles repo (so
+# `git status` in ~/dotfiles will show updated submodule SHAs as an uncommitted
+# change). Commit those pointer bumps in ~/dotfiles to pin the new versions
+# across machines. No --merge: preflight clones these --depth 1 with a detached
+# HEAD, and --merge needs a branch to merge into. --quiet rather than a stderr
+# redirect, so a failure still says why.
 _setup_build_repo() {
     local repo="$1" name
     name=$(basename "$repo")
@@ -604,7 +606,7 @@ _setup_build_repo() {
 
 if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
     info "Updating git submodule sources (sources/*) to upstream-latest"
-    if git -C "$REPO_ROOT" submodule update --init --remote --merge 2>/dev/null; then
+    if git -C "$REPO_ROOT" submodule update --init --remote --quiet; then
         ok "submodule sources rolled forward"
     else
         warn "submodule update reported an error (non-fatal; some sources may be stale)"
