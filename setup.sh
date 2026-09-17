@@ -451,8 +451,12 @@ if command -v gh >/dev/null 2>&1; then
     if [[ -z "$_forks" ]]; then
         skip "GitHub fork sync (no forks found)"
     else
-        info "syncing ${#_forks[@]} GitHub fork(s) with upstream"
+        # _forks is a multi-line STRING (gh --jq output), not an array --
+        # ${#_forks[@]} is invalid on a scalar and aborts under `set -u`
+        # (bash 5.2+). Count non-empty lines instead.
+        info "syncing $(grep -c . <<<"$_forks") GitHub fork(s) with upstream"
         while IFS= read -r _repo; do
+            [[ -z "$_repo" ]] && continue
             if gh repo sync "$_repo" 2>/dev/null; then
                 ok "fork synced: $_repo"
             else
@@ -571,9 +575,11 @@ _setup_build_repo() {
             return 0
         fi
         # Tamed against set -e: a failing dry-run (or head closing the pipe)
-        # must not abort setup; the branch below just falls through to the
-        # build+install path when detection is inconclusive.
-        _default_first_cmd=$(make -C "$repo" -n 2>/dev/null | head -1 || true)
+        # must not abort setup. --no-print-directory is REQUIRED: make -C
+        # auto-prints an "Entering directory" banner that would otherwise be
+        # captured as the first line and break the install-only detection
+        # below.
+        _default_first_cmd=$(make -C "$repo" -n --no-print-directory 2>/dev/null | head -1 || true)
         if [[ "${_default_first_cmd#install }" != "${_default_first_cmd}" ]]; then
             if sudo make -C "$repo" install; then
                 ok "$name (make install)"
