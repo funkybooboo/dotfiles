@@ -40,8 +40,8 @@ root/home/.config/lazygit/+
 root/home/.config/gh/
 root/home/.config/h/
 
-# Auto-generated documentation (AI working notes)
-docs/
+# Agent scratch output. docs/ is NOT here: it holds the repo's own
+# documentation, which the README links to and which has to be tracked.
 plan/
 START_HERE.md
 
