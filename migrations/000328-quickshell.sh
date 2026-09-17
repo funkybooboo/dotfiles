@@ -1,4 +1,4 @@
-# 000326-quickshell.sh -- quickshell desktop shell (QtQuick/QML)
+# 000328-quickshell.sh -- quickshell desktop shell (QtQuick/QML)
 # Installs: quickshell
 # Links:    ~/.config/quickshell/ (shell.qml is picked up as the "default"
 #           config, so autostart can call a bare `quickshell`)
