@@ -42,8 +42,37 @@ description: >
   hl.dsp.workspace.toggle_special("name"); hl.dsp.layout("togglesplit");
   hl.dsp.exec_cmd(str).
 - `hyprctl dispatch '<lua-expr>'` wraps as hl.dispatch(<lua-expr>) -- the arg
-  MUST be a Lua expression. `hyprctl eval '<lua>'` for top-level (hl.monitor
-  etc.). `hyprctl keyword` is GONE in Lua mode.
+  MUST be a Lua expression. `hyprctl dispatch workspace 4` (legacy multi-word
+  args) is DEAD: wraps as hl.dispatch(workspace 4), a Lua syntax error, and
+  errors are easy to miss because every caller silences output. Workspace
+  switch: `hyprctl dispatch 'hl.dsp.focus({workspace=N})'`. `hyprctl eval
+  '<lua>'` for top-level (hl.monitor etc.). `hyprctl keyword` is GONE in Lua
+  mode.
+- Quickshell 0.3.1's Hyprland.dispatch sends the dead legacy frame too --
+  Workspaces.qml's click therefore shells out via
+  Quickshell.execDetached(["hyprctl","dispatch","hl.dsp.focus({workspace=N})"])
+  (same convention as the hypr-* scripts); when a Lua-IPC-speaking quickshell
+  lands in pacman, Hyprland.dispatch can come back. The singleton's
+  usingLua/requestSocketPath/eventSocketPath properties are live probes
+  (verified: event socket + workspaces model work; only the request frame is
+  wrong).
+
+## Quickshell IPC + hot-reload
+
+- Keybind side: bare `quickshell ipc call shell <fn>` works (Hyprland's exec
+  PATH has /usr/bin; only ~/.local/bin needs absolute paths).
+- QML-side debugging trick: restart with stderr captured via
+  `uwsm app -- sh -c "exec quickshell 2>>~/.cache/qs-debug.log"` (plain
+  `uwsm app -- quickshell` sends stderr nowhere findable; the journal has
+  nothing).
+- HOT-RELOAD DOES NOT FIRE on link_tree'd QML files replaced by sed -i / editors
+  that rename-replace (the watcher holds the replaced inode; verified live:
+  edits sat unapplied through three reload attempts). After editing the repo's
+  QML: `pkill -x quickshell && uwsm app -- quickshell` from a session terminal
+  (uwsm app from agent bash lands in a proper app-graphical.slice scope).
+- Debug probes: temp IpcHandler function in shell.qml callable via
+  `quickshell ipc call shell <name>` gives a fully remote test loop (state +
+  dispatch + returns) without touching the mouse.
 - Window selectors need the "address:" prefix (hyprctl reports bare 0x..;
   the bare form does not resolve). Key names are case-insensitive.
 - hl.monitor fields: output, mode ("2256x1504@60.0" | "preferred"), position,
