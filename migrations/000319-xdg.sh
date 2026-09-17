@@ -1,6 +1,7 @@
 # 000319-xdg.sh -- XDG user dirs + environment variables + mime apps
 # Installs: xdg-user-dirs
-# Links:    ~/.config/environment.d/apps.conf, ~/.config/user-dirs.dirs
+# Links:    ~/.config/environment.d/apps.conf, ~/.config/user-dirs.dirs,
+#           ~/.local/share/applications/Neovim.desktop
 # Seeds:    ~/.config/mimeapps.list (real file, from mimeapps.list.default,
 #           create-if-missing -- NOT a symlink; see the block below for why)
 # Creates: The XDG user directories declared in user-dirs.dirs
@@ -23,6 +24,14 @@ section "xdg"
 install_pacman xdg-user-dirs
 link_file "$DOTFILES_HOME/.config/environment.d/apps.conf" "$HOME/.config/environment.d/apps.conf"
 link_file "$DOTFILES_HOME/.config/user-dirs.dirs"          "$HOME/.config/user-dirs.dirs"
+
+# Neovim.desktop is hand-written, not packaged: Exec is `ghostty -e nvim %F` with
+# Terminal=false, so it opens in a real terminal without depending on the
+# xdg-terminal-exec chain that the packaged nvim.desktop (Terminal=true) needs.
+# ~/.local/share/applications precedes /usr/share, so this wins. mimeapps.list
+# points 45 mime types at it.
+link_file "$DOTFILES_HOME/.local/share/applications/Neovim.desktop" \
+  "$HOME/.local/share/applications/Neovim.desktop"
 
 # mimeapps.list is SEEDED as a real file, not symlinked.
 #
