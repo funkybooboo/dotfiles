@@ -8,10 +8,18 @@
 # Enables:  --
 #
 # Note: one process now owns the bar, tray, notifications and tooltips, replacing
-#       waybar and mako. The QML tree is byte-identical to the work repo's: it is
-#       machine- and distro-independent, so only this migration differs (pacman
-#       here, a source build there because quickshell is absent from apt and the
-#       nixpkgs build cannot reach Ubuntu's Mesa).
+#       waybar and mako. The QML tree is byte-identical to the work repo's apart
+#       from two exceptions: the wallpaper filename, and Network.qml -- the work
+#       repo's machine runs NetworkManager, so its copy reads
+#       Quickshell.Networking and opens nmtui, while this fleet runs iwd +
+#       systemd-networkd (000402): quickshell's Networking backend is
+#       NetworkManager-only (quickshell.network.networkmanager), so this tree's
+#       Network.qml reads the wifi-status helper that 000402 links and opens
+#       iwctl, as does the Super+Shift+W keybinding. The rest stays byte-identical
+#       so changes keep porting cleanly in both directions; the other difference
+#       remains only this migration itself (pacman here, a source build there
+#       because quickshell is absent from apt and the nixpkgs build cannot reach
+#       Ubuntu's Mesa).
 #
 # Note: CONVERGENCE. Deleting the old waybar and mako migrations stops a fresh
 #       machine ever installing them, but does nothing to a machine that already

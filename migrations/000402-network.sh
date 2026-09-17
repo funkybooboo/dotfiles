@@ -3,6 +3,7 @@
 # Deploys: /etc/systemd/network/{20-ethernet,20-wlan,20-wwan}.network,
 #          /etc/conf.d/wireless-regdom,
 #          /etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf
+# Links:   ~/.local/bin/wifi-status
 # Enables: iwd.service, systemd-networkd.service
 #
 # This is a pure iwd + systemd-networkd setup -- NO NetworkManager. iwd handles
@@ -48,6 +49,12 @@ deploy_etc_file \
 
 # The override changes ExecStart, so reload systemd to pick it up
 sudo systemctl daemon-reload 2>/dev/null || true
+
+# The quickshell bar's network module reads state through this helper:
+# quickshell's Networking singleton speaks only NetworkManager
+# (quickshell.network.networkmanager), and against this iwd stack it always
+# reads "Disconnected". wifi-status parses iwctl instead.
+link_file "$DOTFILES_HOME/.local/bin/wifi-status" "$HOME/.local/bin/wifi-status"
 
 # Enable iwd (wifi auth) and systemd-networkd (IP config). Both are safe to
 # start now and essential to start on a fresh install (archinstall may have

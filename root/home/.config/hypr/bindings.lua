@@ -32,10 +32,13 @@ hl.bind(mainMod .. " + CTRL + N",        hl.dsp.exec_cmd("~/.local/bin/nightmode
 -- Clipboard manager (floating)
 hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("~/.local/bin/quickshell ipc call shell clipboard"))
 
--- Waybar actions (all floating via hypr-float-launch)
+-- Bar/panel actions (all floating via hypr-float-launch); the same TUIs the
+-- quickshell bar's matching icons open.
 hl.bind(mainMod .. " + SHIFT + A",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"))
 hl.bind(mainMod .. " + SHIFT + B",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e bluetui"))
-hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e impala"))
+-- iwctl, not impala: the fleet's wifi is iwd + systemd-networkd (000402), and
+-- impala speaks only NetworkManager, which this stack does not run.
+hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e iwctl"))
 hl.bind(mainMod .. " + SHIFT + V",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e wiremix"))
 hl.bind(mainMod .. " + SHIFT + T",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e btop"))
 hl.bind(mainMod .. " + SHIFT + Y",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e fish -c y"))  -- yazi (fish `y` wrapper)

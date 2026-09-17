@@ -103,8 +103,11 @@ PanelWindow {
       onClicked: bar.floatingTerm(["bluetui"])
     }
 
+    // iwctl, not nmtui (nor impala on the keybinding): this fleet's wifi is iwd
+    // + systemd-networkd (000402); the NetworkManager TUIs speak to a daemon
+    // this stack does not run -- nmtui is not even installed.
     Network {
-      onClicked: bar.floatingTerm(["nmtui"])
+      onClicked: bar.floatingTerm(["iwctl"])
     }
 
     BarButton {
