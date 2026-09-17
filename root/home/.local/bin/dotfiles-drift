@@ -2,38 +2,71 @@
 #
 # dotfiles-drift -- report what has diverged between the two dotfiles repos.
 #
-# There are two sibling repos with the same layout: a work one and a personal one.
-# Most files are meant to be the same, some are legitimately per-machine, and
-# nothing enforced the difference -- so every fix had to be hand-ported and
-# hand-checked, and a file could sit diverged for months without anyone noticing.
-# This turns that audit into one command.
+# There are two sibling repos with the same layout: a work one (Ubuntu) and a
+# personal one (Arch). Most files are meant to be the same, some are legitimately
+# per-machine, and nothing enforced the difference -- so every fix had to be
+# hand-ported and hand-checked, and a file could sit diverged for months without
+# anyone noticing. This turns that audit into one command.
 #
 # It compares TRACKED files only (git ls-files in each repo), so machine-local
 # state that is gitignored on purpose -- monitors.conf, hyprpaper.conf,
 # mimeapps.list -- never shows up as drift.
 #
-# Each file present in both trees lands in one of three buckets:
+# SCOPES compared, and how a file's cross-repo identity is decided:
+#   home:  root/home/**   keyed on the path below root/home
+#   mig:   migrations/**  keyed on the SLUG, with the 6-digit prefix stripped.
+#          The number is a per-repo sort key, not an identifier: yazi is 000570
+#          here and 000235 there, and 000235 means domo-tools on one side and
+#          yazi on the other. Keying on the number would report every shared
+#          migration as one-sided.
+#   lib:   _common.sh, wherever it lives -- repo root here, migrations/ there.
+#          Same file, different home; the location is not drift.
+#   etc:   root/etc/**    keyed on the path below root/etc
+#   top:   flake.nix, README.md, migrate.sh
+# flake.lock is deliberately NOT compared: each repo bumps its own nixpkgs pin on
+# its own schedule, so a difference there is expected and can only cry wolf.
 #
-#   same       byte-identical. Nothing to do.
-#   path-only  identical once the home directory is normalised. Usually means one
-#              side hardcodes /home/<user> where $HOME would do, which is worth
-#              fixing precisely because it makes the file a permanent hand-port
-#              for no benefit.
-#   differs    real content difference. The actionable list, and the only one
-#              printed by default.
+# Each file present in both trees lands in one of four buckets:
+#
+#   same        byte-identical. Nothing to do.
+#   path-only   identical once the home directory is normalised. Usually means one
+#               side hardcodes /home/<user> where $HOME would do, which is worth
+#               fixing precisely because it makes the file a permanent hand-port
+#               for no benefit.
+#   guard-only  identical once the per-scope structural differences are also
+#               normalised: the `source .../_common.sh` path, the
+#               `if is_debian; then install_apt X; else install_pacman X; fi`
+#               guard collapsed to its pacman branch, indentation, and the
+#               migration number quoted in a root/etc header comment. All of
+#               these are load-bearing where they stand -- work is dual-distro
+#               and personal is pacman-only -- so this bucket is "correctly
+#               different", not a to-do list.
+#   differs     real content difference. The actionable list, and the only one
+#               printed by default.
 #
 # Files present in just one repo are counted separately: that is often correct
-# (Domo tooling here, NAS and gaming there), so they are reported, not judged.
+# (Domo tooling on work, NAS and gaming on personal), so they are reported, not
+# judged.
 #
 # Not everything in "differs" is actionable, and the tool cannot tell which is
 # which. Known-permanent divergence, as of this being written:
 #   * identity     .gitconfig, .gnupg/gpg.conf, .ssh/config -- different keys,
 #                  emails and hosts by design
-#   * secrets      .local/bin/secretmgr -- Bitwarden here, Proton Pass there
-#   * hyprland     hypr/* and .local/bin/hypr-* -- this machine is on hyprlang
-#                  0.53.3, the other on Lua config; the dispatcher APIs differ
-#   * editor       nvim/lua/config/lazy.lua and the language files whose only
-#                  difference is inert mason ensure_installed entries
+#   * secrets      .local/bin/secretmgr -- Bitwarden on work, Proton Pass on
+#                  personal. personal's has no TOTP support, so totp-copy and
+#                  its migration stay work-only until that changes
+#   * hyprland     hypr/* and .local/bin/hypr-* -- work is on hyprlang 0.53.3,
+#                  personal on Lua config; the dispatcher APIs differ, which is
+#                  also why quickshell/Workspaces.qml diverges (Quickshell's
+#                  built-in Hyprland.dispatch emits a frame personal's Lua IPC
+#                  evaluator rejects)
+#   * editor       nvim/lua/config/lazy.lua is a deliberate extras split, and the
+#                  language files whose only difference is inert mason
+#                  ensure_installed entries follow from it. java.lua differs in
+#                  substance for the same reason -- it tracks the lazy.lua
+#                  extras, not just mason
+#   * network      quickshell/Bar.qml opens nmtui on work and impala on personal,
+#                  because each machine runs a different network daemon
 #   * doctrine     .pi/agent/AGENTS.md -- work doctrine vs a generic version
 # Everything else in that list is worth a look.
 #
@@ -42,30 +75,42 @@
 
 set -euo pipefail
 
-for dep in git diff comm cmp; do
+for dep in git diff comm cmp awk; do
   command -v "$dep" >/dev/null || { echo "dotfiles-drift: $dep is required" >&2; exit 1; }
 done
 
+ALL_SCOPES="home mig lib etc top"
+
 usage() {
   cat <<'USAGE'
-usage: dotfiles-drift [OTHER_REPO] [--all] [--one-line]
+usage: dotfiles-drift [OTHER_REPO] [--all] [--one-line] [--scope=LIST]
 
-  OTHER_REPO   path to the sibling dotfiles repo. Auto-detected when omitted.
-  --all        also list the only-in-one-repo and same buckets.
-  --one-line   counts only, no file lists.
+  OTHER_REPO    path to the sibling dotfiles repo. Auto-detected when omitted.
+  --all         also list the only-in-one-repo, guard-only and same buckets.
+  --one-line    counts only, no file lists.
+  --scope=LIST  comma-separated subset of: home,mig,lib,etc,top (default: all).
 USAGE
 }
 
 other=""
 show_all=0
 one_line=0
+scopes="$ALL_SCOPES"
 for arg in "$@"; do
   case "$arg" in
     --all)      show_all=1 ;;
     --one-line) one_line=1 ;;
+    --scope=*)  scopes="$(printf '%s' "${arg#--scope=}" | tr ',' ' ')" ;;
     -h|--help)  usage; exit 0 ;;
     -*)         echo "dotfiles-drift: unknown option $arg" >&2; usage >&2; exit 1 ;;
     *)          other="$arg" ;;
+  esac
+done
+
+for s in $scopes; do
+  case " $ALL_SCOPES " in
+    *" $s "*) ;;
+    *) echo "dotfiles-drift: unknown scope '$s' (want: ${ALL_SCOPES// /,})" >&2; exit 1 ;;
   esac
 done
 
@@ -98,46 +143,113 @@ fi
 other="$(cd -- "$other" && git rev-parse --show-toplevel)"
 [ -d "$other/root/home" ] || { echo "dotfiles-drift: $other has no root/home tree" >&2; exit 1; }
 
-# Tracked files under root/home, relative to root/home.
-tracked() {
-  git -C "$1" ls-files -- root/home | sed 's|^root/home/||' | LC_ALL=C sort -u
+scope_wanted() {
+  case " $scopes " in *" $1 "*) return 0 ;; *) return 1 ;; esac
 }
 
-a_list="$(mktemp)"; b_list="$(mktemp)"
-same="$(mktemp)"; pathonly="$(mktemp)"; differs="$(mktemp)"
-trap 'rm -f "$a_list" "$b_list" "$same" "$pathonly" "$differs"' EXIT
+# "<scope>:<identity>\t<repo-relative path>" for every tracked file in scope.
+# The identity, not the path, is what makes two files the same file across repos.
+keyed() {
+  git -C "$1" ls-files -- root/home migrations root/etc flake.nix README.md \
+      migrate.sh _common.sh 2>/dev/null |
+  while IFS= read -r p; do
+    case "$p" in
+      flake.lock) continue ;;
+      _common.sh|migrations/_common.sh)
+        scope_wanted lib && printf 'lib:_common.sh\t%s\n' "$p" ;;
+      root/home/*)
+        scope_wanted home && printf 'home:%s\t%s\n' "${p#root/home/}" "$p" ;;
+      root/etc/*)
+        scope_wanted etc && printf 'etc:%s\t%s\n' "${p#root/etc/}" "$p" ;;
+      migrations/*)
+        scope_wanted mig && printf 'mig:%s\t%s\n' \
+          "$(printf '%s' "${p#migrations/}" | sed -E 's/^[0-9]{6}-//')" "$p" ;;
+      *)
+        scope_wanted top && printf 'top:%s\t%s\n' "$p" "$p" ;;
+    esac
+  done | LC_ALL=C sort -u
+}
 
-tracked "$here"  > "$a_list"
-tracked "$other" > "$b_list"
+a_map="$(mktemp)"; b_map="$(mktemp)"
+a_keys="$(mktemp)"; b_keys="$(mktemp)"
+same="$(mktemp)"; pathonly="$(mktemp)"; guardonly="$(mktemp)"; differs="$(mktemp)"
+trap 'rm -f "$a_map" "$b_map" "$a_keys" "$b_keys" "$same" "$pathonly" "$guardonly" "$differs"' EXIT
+
+keyed "$here"  > "$a_map"
+keyed "$other" > "$b_map"
+cut -f1 "$a_map" | LC_ALL=C sort -u > "$a_keys"
+cut -f1 "$b_map" | LC_ALL=C sort -u > "$b_keys"
+
+path_for() { awk -F'\t' -v k="$2" '$1 == k { print $2; exit }' "$1"; }
 
 # Normalise any absolute home path, so a file differing ONLY by /home/<user> is
 # separated from one differing in substance.
 normalise() { sed -E 's|/home/[A-Za-z0-9._-]+/|/home/HOME/|g' "$1"; }
 
-while IFS= read -r rel; do
-  pa="$here/root/home/$rel"
-  pb="$other/root/home/$rel"
+# Additionally normalise the structural differences that are correct where they
+# stand, so they stop masking real drift. Migrations lose their indentation, the
+# _common.sh source path, and the dual-distro guard (keeping the pacman branch,
+# the one both repos share); root/etc headers lose the migration number they
+# quote, which is a per-repo sort key like any other.
+structural() {
+  case "$1" in
+    mig:*|lib:*)
+      # The sourced path embeds its own quotes ("${BASH_SOURCE[0]}"), so match to
+      # the end of the line rather than to the next quote.
+      sed -E -e 's/^[[:space:]]+//' \
+             -e 's#source ".*/_common\.sh"#source "_common.sh"#' |
+      awk '
+        # The guard is written both ways: the branch command on the same line as
+        # `then`/`else`, or on its own line under it. Drop the apt branch and
+        # unwrap the pacman one, so what is left is the call personal also makes.
+        /^if is_debian; then/ { inguard = 1; apt = 1; next }
+        inguard && /^else/    { apt = 0; sub(/^else[[:space:]]*/, "")
+                                if ($0 != "") print
+                                next }
+        inguard && /^fi$/     { inguard = 0; next }
+        inguard && apt        { next }
+        { print }
+      '
+      ;;
+    etc:*)
+      sed -E 's/(deployed by migration )[0-9]{6}-/\1/'
+      ;;
+    *)
+      cat
+      ;;
+  esac
+}
+
+full_norm() { normalise "$2" | structural "$1"; }
+
+while IFS= read -r key; do
+  pa="$here/$(path_for "$a_map" "$key")"
+  pb="$other/$(path_for "$b_map" "$key")"
   # A tracked path can be a symlink or missing from the worktree; skip anything
   # that is not a regular file on both sides rather than guessing.
   [ -f "$pa" ] && [ -f "$pb" ] || continue
   if cmp -s "$pa" "$pb"; then
-    printf '%s\n' "$rel" >> "$same"
+    printf '%s\n' "$key" >> "$same"
   elif diff -q <(normalise "$pa") <(normalise "$pb") >/dev/null 2>&1; then
-    printf '%s\n' "$rel" >> "$pathonly"
+    printf '%s\n' "$key" >> "$pathonly"
+  elif diff -q <(full_norm "$key" "$pa") <(full_norm "$key" "$pb") >/dev/null 2>&1; then
+    printf '%s\n' "$key" >> "$guardonly"
   else
-    printf '%s\n' "$rel" >> "$differs"
+    printf '%s\n' "$key" >> "$differs"
   fi
-done < <(LC_ALL=C comm -12 "$a_list" "$b_list")
+done < <(LC_ALL=C comm -12 "$a_keys" "$b_keys")
 
 count() { wc -l < "$1" | tr -d ' '; }
-only_a="$(LC_ALL=C comm -23 "$a_list" "$b_list" | wc -l | tr -d ' ')"
-only_b="$(LC_ALL=C comm -13 "$a_list" "$b_list" | wc -l | tr -d ' ')"
+only_a="$(LC_ALL=C comm -23 "$a_keys" "$b_keys" | wc -l | tr -d ' ')"
+only_b="$(LC_ALL=C comm -13 "$a_keys" "$b_keys" | wc -l | tr -d ' ')"
 
 echo "this repo:  $here"
 echo "other repo: $other"
+[ "$scopes" = "$ALL_SCOPES" ] || echo "scopes:     ${scopes// /,}"
 echo
-printf 'same %s   path-only %s   differs %s   only-here %s   only-there %s\n' \
-  "$(count "$same")" "$(count "$pathonly")" "$(count "$differs")" "$only_a" "$only_b"
+printf 'same %s   path-only %s   guard-only %s   differs %s   only-here %s   only-there %s\n' \
+  "$(count "$same")" "$(count "$pathonly")" "$(count "$guardonly")" \
+  "$(count "$differs")" "$only_a" "$only_b"
 
 [ "$one_line" -eq 1 ] && exit 0
 
@@ -155,12 +267,17 @@ if [ -s "$pathonly" ]; then
 fi
 
 if [ "$show_all" -eq 1 ]; then
+  if [ -s "$guardonly" ]; then
+    echo
+    echo "guard-only (identical apart from correct structural differences):"
+    sed 's/^/  /' "$guardonly"
+  fi
   echo
   echo "only in this repo:"
-  LC_ALL=C comm -23 "$a_list" "$b_list" | sed 's/^/  /'
+  LC_ALL=C comm -23 "$a_keys" "$b_keys" | sed 's/^/  /'
   echo
   echo "only in the other repo:"
-  LC_ALL=C comm -13 "$a_list" "$b_list" | sed 's/^/  /'
+  LC_ALL=C comm -13 "$a_keys" "$b_keys" | sed 's/^/  /'
   echo
   echo "same:"
   sed 's/^/  /' "$same"
