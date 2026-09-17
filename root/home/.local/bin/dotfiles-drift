@@ -64,7 +64,13 @@
 #                  language files whose only difference is inert mason
 #                  ensure_installed entries follow from it. java.lua differs in
 #                  substance for the same reason -- it tracks the lazy.lua
-#                  extras, not just mason
+#                  extras, not just mason. javascript-typescript.lua now shares
+#                  its biome wiring and differs only by a comment naming a repo
+#                  that exists on one machine, plus one inert mason entry
+#   * ai tooling   split on purpose, not drift: pi and ollama belong to the
+#                  personal machine, claude-code to the work one, whatever is
+#                  installed where. So .pi/* and .claude/* diverge by design, and
+#                  a real improvement to one does not travel
 #   * network      quickshell/Bar.qml opens nmtui on work and impala on personal,
 #                  because each machine runs a different network daemon
 #   * doctrine     .pi/agent/AGENTS.md -- work doctrine vs a generic version
