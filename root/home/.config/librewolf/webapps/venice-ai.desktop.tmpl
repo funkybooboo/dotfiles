@@ -1,0 +1,16 @@
+# LibreWolf taskbar-tab webapp launcher template (Venice.ai).
+# Rendered by migrations/000327-librewolf-webapps.sh into
+# ~/.local/share/applications/librewolf.webapp-<uuid>.desktop with
+# @PROFILE_DIR@ replaced by this machine's active LibreWolf profile dir
+# (profile names contain a machine-random prefix, so the path cannot be
+# tracked verbatim).
+# LibreWolf rewrites the rendered file when the webapp changes in-browser
+# (rename, re-pin); the next ./migrate.sh re-asserts this template. To keep a
+# change, edit it HERE.
+# uuid: d1a77b84-d4df-404c-9bfc-8e1f1bd1711d
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Venice.ai
+Icon=@PROFILE_DIR@/taskbartabs/icons/d1a77b84-d4df-404c-9bfc-8e1f1bd1711d.png
+Exec="librewolf" "-taskbar-tab" "d1a77b84-d4df-404c-9bfc-8e1f1bd1711d" "-new-window" "https://venice.ai/chat" "-profile" "@PROFILE_DIR@" "-container" "0"
