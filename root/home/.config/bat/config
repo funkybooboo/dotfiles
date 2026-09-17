@@ -1,3 +1,11 @@
+# bat's own config, and the SINGLE place the theme is set.
+#
+# BAT_THEME used to be exported from three places as well -- .bashrc,
+# environment.d/apps.conf and conf.d/00-env.fish -- and they disagreed: bash got
+# "Catppuccin Mocha" while fish got "ansi". The env var wins over this file, so
+# fish sessions rendered flat 4-bit ANSI while the repo shipped and tracked a
+# Catppuccin theme nobody saw. Those exports are gone; bat reads this file
+# natively, so there is nothing left to drift against.
 --theme="Catppuccin Mocha"
 --style="full"
 --paging="auto"

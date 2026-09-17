@@ -8,7 +8,6 @@ export PAGER=nvimpager
 export MANPAGER=nvimpager
 export BROWSER=librewolf
 export SUDO_EDITOR="$EDITOR"
-export BAT_THEME="Catppuccin Mocha"
 export MANROFFOPT="-c"
 export LESSHISTFILE=-
 export PYTHONSTARTUP="${XDG_CONFIG_HOME:-$HOME/.config}/python/pythonrc"

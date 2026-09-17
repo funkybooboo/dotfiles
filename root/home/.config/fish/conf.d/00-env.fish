@@ -7,7 +7,6 @@ set -gx VISUAL nvim
 set -gx PAGER nvimpager
 set -gx MANPAGER nvimpager
 set -gx SUDO_EDITOR nvim
-set -gx BAT_THEME "Catppuccin Mocha"
 set -gx MANROFFOPT -c
 set -gx LESSHISTFILE -
 set -gx PYTHONSTARTUP $HOME/.config/python/pythonrc
