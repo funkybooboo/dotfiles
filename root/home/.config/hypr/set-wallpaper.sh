@@ -1,5 +1,5 @@
 #!/bin/bash
-WALLPAPER="$HOME/Pictures/wallpapers/yellowstone.jpg"
+WALLPAPER="$HOME/Pictures/wallpapers/mountain-wallpaper.jpg"
 CONF="$HOME/.config/hypr/hyprpaper.conf"
 
 # Wait for Hyprland IPC to return valid monitor JSON before writing the conf.
