@@ -1,6 +1,7 @@
 # 000080-rkhunter.sh -- rkhunter rootkit scanner + config + timers
 # Installs: rkhunter
-# Deploys: /etc/rkhunter.conf, /etc/pacman.d/hooks/rkhunter-propupd.hook,
+# Deploys: /usr/local/lib/rkhunter/bin/egrep, /etc/rkhunter.conf,
+#          /etc/pacman.d/hooks/rkhunter-propupd.hook,
 #          /etc/systemd/system/rkhunter-scan.{service,timer}
 # Enables:  rkhunter-scan.timer
 
@@ -9,6 +10,11 @@
 section "rkhunter"
 
 install_pacman rkhunter
+
+# Deployed before the hook, which puts this dir on PATH to displace Arch's
+# warning-emitting /usr/bin/egrep for rkhunter's bare `egrep` calls.
+deploy_etc_file "$DOTFILES_ROOT/usr/local/lib/rkhunter/bin/egrep" \
+  "/usr/local/lib/rkhunter/bin/egrep" 755
 
 deploy_etc_file "$DOTFILES_ROOT_ETC/rkhunter.conf" "/etc/rkhunter.conf" 640
 deploy_etc_file "$DOTFILES_ROOT_ETC/pacman.d/hooks/rkhunter-propupd.hook" \

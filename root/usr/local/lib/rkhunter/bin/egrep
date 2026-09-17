@@ -1,0 +1,4 @@
+#!/bin/sh
+# rkhunter calls bare `egrep` and exposes no EGREP_CMD setting, so Arch's
+# warning-emitting /usr/bin/egrep is displaced via PATH rather than configured.
+exec grep -E "$@"

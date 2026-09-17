@@ -8,4 +8,4 @@ Target = *
 [Action]
 Description = Updating rkhunter file properties database...
 When = PostTransaction
-Exec = /usr/bin/rkhunter --propupd
+Exec = /bin/sh -c 'PATH=/usr/local/lib/rkhunter/bin:$PATH /usr/bin/rkhunter --propupd'

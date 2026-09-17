@@ -14,7 +14,8 @@ dotfiles/
 |-- sources/          # git submodules built from source
 \-- root/
     |-- home/         # -> $HOME (symlinked)
-    \-- etc/          # -> /etc (copied with sudo)
+    |-- etc/          # -> /etc (copied with sudo)
+    \-- usr/          # -> /usr (copied with sudo)
 ```
 
 `migrations/_common.sh` provides helpers: `install_pacman`, `install_nix`,

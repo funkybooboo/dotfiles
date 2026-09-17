@@ -36,11 +36,6 @@ project repos, NAS sync.
 - [NAS and gaming](docs/nas_and_gaming.md) -- sync timers, Steam and Proton
 - [Sibling repo](docs/sibling_repo.md) -- the work machine, what diverges on purpose, and `dotfiles-drift`
 
-## Known issues
-
-- **rkhunter egrep spam** -- cosmetic noise from a deprecated `/usr/bin/egrep`
-  wrapper in a pacman hook. Harmless, not fixable without patching rkhunter.
-
 ## License
 
 GPL -- see [LICENSE](LICENSE)
