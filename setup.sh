@@ -249,16 +249,20 @@ else
         fi
     fi
 
-    # Verify GitHub SSH auth. `ssh -T git@github.com` always exits non-zero
-    # (no shell access), so we check stderr for the success message.
+    # Verify GitHub SSH auth. `ssh -T git@github.com` ALWAYS exits non-zero
+    # ("does not provide shell access"), and setup.sh runs with pipefail --
+    # a `ssh | grep` pipeline would return non-zero EVEN ON MATCH, making the
+    # check fail on every run despite working SSH. Capture the output and
+    # match on the string instead of piping.
     # StrictHostKeyChecking=accept-new auto-records github.com's host key on
     # first contact so BatchMode=yes doesn't fail on a fresh known_hosts.
     # One retry: on a fresh boot the check can fail transiently (agent socket
     # or DNS not settled yet) even though the key is fine.
     _github_ssh_check() {
-        ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
-            -o ConnectTimeout=10 -T git@github.com 2>&1 |
-            grep -q 'successfully authenticated'
+        local _out=""
+        _out=$(ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+            -o ConnectTimeout=10 -T git@github.com 2>&1) || true
+        [[ "$_out" == *"successfully authenticated"* ]]
     }
     if _github_ssh_check || { sleep 5; _github_ssh_check; }; then
         GITHUB_SSH_OK=true
