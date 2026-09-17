@@ -7,7 +7,7 @@
 # Links:    ~/.config/hypr/**,
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,hypr-ocr,screenshot,screencast,
-#             toggle-lock,nightmode-toggle,keepawake-toggle,
+#             toggle-lock,toggle-touchpad,nightmode-toggle,keepawake-toggle,
 #             power-mode-menu,hypr-float-apply,hypr-float-launch,
 #             hypr-float-toggle,power-menu}
 # Enables:  --
@@ -30,7 +30,7 @@ link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"
 # Hyprland helper scripts
 for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   hypr-toggle-display hypr-ocr screenshot screencast \
-  toggle-lock nightmode-toggle \
+  toggle-lock toggle-touchpad nightmode-toggle \
   power-mode-menu hypr-float-apply hypr-float-launch \
   hypr-float-toggle \
   power-menu \
