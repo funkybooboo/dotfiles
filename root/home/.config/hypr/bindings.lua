@@ -106,6 +106,8 @@ hl.bind(mainMod .. " + SHIFT + S",        hl.dsp.exec_cmd("~/.local/bin/screensh
 hl.bind("Print",                          hl.dsp.exec_cmd("~/.local/bin/screenshot full"))
 hl.bind(mainMod .. " + Print",            hl.dsp.exec_cmd("~/.local/bin/screenshot window"))
 
+hl.bind(mainMod .. " + SHIFT + O",        hl.dsp.exec_cmd("~/.local/bin/hypr-ocr"), { description = "Region OCR to clipboard" })
+
 -- Screen recording
 hl.bind(mainMod .. " + SHIFT + R",        hl.dsp.exec_cmd("~/.local/bin/screencast"))
 
