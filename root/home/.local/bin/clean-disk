@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# clean-disk -- clean system caches on Arch Linux
+# clean-disk -- clean system caches on Arch or Debian/Ubuntu
 #
-# Cleans: pacman cache, flatpak runtimes, podman images, systemd journal,
-# /tmp, nix store garbage, mise caches, trash. Launches ncdu at the end.
+# Cleans: package manager cache, flatpak runtimes, podman images, systemd
+# journal, /tmp, nix store garbage, mise caches, trash. Launches ncdu at the end.
 #
 set -euo pipefail
 
@@ -11,23 +11,28 @@ TS() { date '+%F %T'; }
 echo "[$(TS)] === Starting system cleanup ==="
 echo ""
 
-# --- Detect distro ---
-DISTRO=""
-if [ -f /etc/os-release ]; then
+# --- Detect distro family ---
+# Standalone script: it is linked into ~/.local/bin and run by hand, so it does
+# NOT source _common.sh. The detection below mirrors _common.sh's OS_FAMILY.
+OS_FAMILY="unknown"
+if [ -r /etc/os-release ]; then
     . /etc/os-release
-    case "$ID" in
-        arch|manjaro|endeavouros)
-            DISTRO="Arch Linux"
-            ;;
+    case " ${ID:-} ${ID_LIKE:-} " in
+        *" arch "*)                OS_FAMILY="arch" ;;
+        *" debian "*|*" ubuntu "*) OS_FAMILY="debian" ;;
+    esac
+    case "${ID:-}" in
+        arch|manjaro|endeavouros)                OS_FAMILY="arch" ;;
+        debian|ubuntu|pop|linuxmint|elementary)  OS_FAMILY="debian" ;;
     esac
 fi
 
-if [ -z "$DISTRO" ]; then
-    echo "[$(TS)] ERROR: Unsupported distribution. This script only supports Arch Linux."
+if [ "$OS_FAMILY" = "unknown" ]; then
+    echo "[$(TS)] ERROR: Unsupported distribution -- Arch or Debian/Ubuntu required."
     exit 1
 fi
 
-echo "[$(TS)] Detected distro: $DISTRO"
+echo "[$(TS)] Detected OS family: $OS_FAMILY (${ID:-unknown})"
 echo ""
 
 # 1) Flatpak cleanup
@@ -59,9 +64,19 @@ sudo find /tmp -mindepth 1 -mtime +7 -print -exec sudo rm -rf {} \; || echo "Fai
 echo "-> /tmp cleaned."
 echo ""
 
-# 5) Arch package cache cleanup
-echo "[$(TS)] Cleaning pacman package cache..."
-sudo pacman -Sc --noconfirm
+# 5) Package manager cache cleanup
+echo "[$(TS)] Cleaning package manager cache..."
+case "$OS_FAMILY" in
+    arch)
+        sudo pacman -Sc --noconfirm
+        ;;
+    debian)
+        # clean drops the whole .deb archive; autoremove --purge sweeps
+        # orphaned dependencies and their config.
+        sudo apt-get clean
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -y autoremove --purge
+        ;;
+esac
 echo "-> Package cache cleaned."
 echo ""
 
