@@ -379,6 +379,29 @@ source_ready() {
   return 1
 }
 
+_SOURCES_STAMP_DIR="$HOME/.cache/dotfiles-sources"
+
+# source_built_current <name> <bin>
+#   True when <bin> resolves AND was built from the commit sources/<name> is
+#   currently at, meaning the build can be skipped. A missing binary rebuilds even
+#   when the stamp matches, so deleting the binary is a valid way to force one.
+source_built_current() {
+  local name="$1" bin="$2" head stamp
+  command -v "$bin" &>/dev/null || return 1
+  head="$(git -C "$DOTFILES_SOURCES/$name" rev-parse HEAD 2>/dev/null)" || return 1
+  stamp="$(cat "$_SOURCES_STAMP_DIR/$name" 2>/dev/null)" || return 1
+  [[ -n "$head" && "$head" == "$stamp" ]]
+}
+
+# source_mark_built <name>
+#   Record the commit just built. Call only after a successful build AND install.
+source_mark_built() {
+  local name="$1" head
+  head="$(git -C "$DOTFILES_SOURCES/$name" rev-parse HEAD 2>/dev/null)" || return 0
+  mkdir -p "$_SOURCES_STAMP_DIR"
+  printf '%s\n' "$head" >"$_SOURCES_STAMP_DIR/$name"
+}
+
 # =============================================================================
 # SYSTEMD HELPERS
 # =============================================================================
