@@ -62,6 +62,16 @@ deploy_etc_file "$DOTFILES_ROOT_ETC/conf.d/wireless-regdom" \
 disable_system_service "systemd-networkd-wait-online.service"
 disable_system_service "systemd-networkd.service"
 
+# The .service disable alone is not enough: networkd's socket units re-trigger
+# it after it is disabled. On the first live run (2026-09-17) NM's DNS change
+# poked resolved, the resolve-hook socket fired, and networkd was running
+# again 90 seconds later -- disabled, preset-enabled sockets and all. Stop and
+# disable every socket the service can be triggered by.
+disable_system_service "systemd-networkd.socket"
+disable_system_service "systemd-networkd-varlink.socket"
+disable_system_service "systemd-networkd-varlink-metrics.socket"
+disable_system_service "systemd-networkd-resolve-hook.socket"
+
 # iwd first (NM's wifi daemon; already enabled on converged machines), then
 # NetworkManager against the deployed conf.
 enable_system_service "iwd.service"

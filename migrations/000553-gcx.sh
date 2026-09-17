@@ -151,7 +151,12 @@ if [[ -x "$GCX_BIN" ]]; then
   # the pipe so curl runs to completion, matching the install_nix fix.
   _gcx_latest_json="$(mktemp)"
   curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${GCX_REPO}/releases/latest" >"$_gcx_latest_json" 2>/dev/null || true
-  latest="$(grep -m1 '"tag_name"' "$_gcx_latest_json" | sed 's/.*"tag_name": *"//;s/".*//')"
+  # `|| true` inside the substitution is load-bearing, not hygiene: a
+  # rate-limited response body has no tag_name, grep -m1 then exits 1, and
+  # under set -o pipefail that aborts the whole migration SILENTLY (the
+  # unexplained 000553 exit-1 in the 2026-09-17 09:44 run). The empty-value
+  # branch below is where that case belongs.
+  latest="$(grep -m1 '"tag_name"' "$_gcx_latest_json" | sed 's/.*"tag_name": *"//;s/".*//' || true)"
   rm -f "$_gcx_latest_json"
   latest="${latest#v}"
   inst="$(cd / && "$GCX_BIN" --version 2>/dev/null | head -1)"
@@ -168,7 +173,7 @@ if [[ -x "$GCX_BIN" ]]; then
     info "gcx ${inst:-<unknown>} -> $latest ($arch)"
     if curl -fsSL --connect-timeout 30 "$up_url" -o "$tmp/$up_archive" 2>/dev/null \
        && curl -fsSL --connect-timeout 15 "$up_sums_url" -o "$tmp/checksums.txt" 2>/dev/null; then
-      up_expected="$(grep "${up_archive}" "$tmp/checksums.txt" | awk '{print $1}')"
+      up_expected="$(grep "${up_archive}" "$tmp/checksums.txt" | awk '{print $1}' || true)"
       up_actual="$(sha256sum "$tmp/$up_archive" | awk '{print $1}')"
       if [[ -z "$up_expected" ]]; then
         warn "gcx $latest: $up_archive not in checksums.txt -- not installing (kept $inst)"

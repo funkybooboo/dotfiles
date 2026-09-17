@@ -63,12 +63,25 @@ if ! command -v herdr &>/dev/null; then
 # and the name appears in it either way.
 elif herdr plugin list 2>/dev/null | grep -q "herdr-nvim"; then
   skip "herdr-nvim (present)"
-elif run_cmd herdr plugin install "ChmaraX/herdr-nvim" \
-  --ref "v$_HERDR_NVIM_VERSION" -y; then
+elif _herdr_nv_out="$(herdr plugin install "ChmaraX/herdr-nvim" \
+    --ref "v$_HERDR_NVIM_VERSION" -y 2>&1)"; then
   ok "herdr-nvim $_HERDR_NVIM_VERSION"
 else
-  fail "herdr plugin install failed"
-  _add_error "herdr-nvim not installed; check that herdr.service is running"
+  # The common cause is a herdr server that predates its CLI: 000600 rolls the
+  # binary forward, herdr.service keeps the old one in memory, and the client
+  # refuses with "protocol_mismatch" (observed: client protocol 22 newer than
+  # server protocol 20 after the 2026-09-17 roll-forward). Restarting the
+  # server kills every pane in it -- a user decision, not something a
+  # migration should do -- so surface the exact remedy instead.
+  if [[ "$_herdr_nv_out" == *protocol_mismatch* ]]; then
+    fail "herdr server predates the CLI -- restart it, then re-run this migration"
+    info "  systemctl --user restart herdr.service   # exits running pane processes"
+    _add_error "herdr-nvim: stale herdr server (protocol_mismatch); restart herdr.service and re-run"
+  else
+    fail "herdr plugin install failed"
+    info "  output: ${_herdr_nv_out:-(none)}"
+    _add_error "herdr-nvim not installed; check that herdr.service is running"
+  fi
 fi
 
 # Warned rather than fatal: the annotation half works fine below 0.9.0, so
