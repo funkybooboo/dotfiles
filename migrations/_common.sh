@@ -427,6 +427,30 @@ enable_system_service_no_start() {
   fi
 }
 
+# Disable a systemd SYSTEM service idempotently (sudo). Disables and stops it,
+# then reloads so the unit drop-in dirs and dependencies settle. The mirror of
+# enable_system_service, for retiring a service a migration used to enable:
+# deleting the enabling call only stops fresh machines from enabling it.
+# Usage: disable_system_service "foo.service"
+disable_system_service() {
+  local unit="$1"
+
+  if ! sudo systemctl is-enabled --quiet "$unit" 2>/dev/null \
+     && ! sudo systemctl is-active --quiet "$unit" 2>/dev/null; then
+    skip "$unit (not enabled)"
+    return
+  fi
+
+  if sudo systemctl disable --now "$unit" 2>/dev/null; then
+    ok "disabled: $unit"
+  else
+    warn "failed to disable $unit"
+    _add_warning "systemd system unit failed to disable: $unit"
+  fi
+
+  sudo systemctl daemon-reload 2>/dev/null || true
+}
+
 # =============================================================================
 # SYMLINK HELPERS (HOME tree)
 # =============================================================================
@@ -552,6 +576,27 @@ deploy_etc_file() {
   sudo chown root:root "$dest"
   sudo chmod "$mode" "$dest"
   ok "deployed: $dest"
+}
+
+# Remove an /etc file that an earlier run of a migration deployed.
+# deploy_etc_file's inverse, for retiring /etc artifacts: the repo file is
+# deleted too, otherwise the next run would just redeploy it. No backup is
+# taken -- unlike a conflicting replacement, a retired file is dead config.
+# Usage: remove_etc_file <path>
+remove_etc_file() {
+  local path="$1"
+
+  if [[ ! -f "$path" && ! -L "$path" ]]; then
+    skip "$path (absent)"
+    return
+  fi
+
+  if sudo rm -f "$path" 2>/dev/null; then
+    ok "removed: $path"
+  else
+    warn "failed to remove $path"
+    _add_warning "failed to remove $path"
+  fi
 }
 
 # =============================================================================

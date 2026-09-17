@@ -75,27 +75,6 @@ else
     _add_warning "tailscale not installed; run it manually after"
 fi
 
-# Extend networkd-wait-online to also wait for tailscale0. Done here (not in a
-# migration) because referencing tailscale0 before `tailscale up` has run would
-# make systemd-networkd-wait-online block at boot on an interface that doesn't
-# exist yet. Now that Tailscale is up, tailscale0 exists and is safe to wait on.
-WAIT_ONLINE_OVERRIDE="/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf"
-if [[ -f "$WAIT_ONLINE_OVERRIDE" ]] && tailscale status &>/dev/null; then
-    if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE" 2>/dev/null; then
-        skip "wait-online override already includes tailscale0"
-    else
-        sudo sed -i.bak 's/\(--interface=wlan0\)[[:space:]]*$/\1 --interface=tailscale0/' "$WAIT_ONLINE_OVERRIDE"
-        if grep -q -- '--interface=tailscale0' "$WAIT_ONLINE_OVERRIDE"; then
-            sudo systemctl daemon-reload 2>/dev/null || true
-            ok "wait-online override extended with tailscale0"
-        else
-            warn "failed to add tailscale0 to wait-online override -- restoring backup"
-            sudo cp -a "${WAIT_ONLINE_OVERRIDE}.bak" "$WAIT_ONLINE_OVERRIDE" 2>/dev/null || true
-            _add_warning "wait-online override not updated with tailscale0"
-        fi
-    fi
-fi
-
 # =============================================================================
 # 3. NAS SMB credentials
 # =============================================================================

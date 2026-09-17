@@ -36,9 +36,9 @@ hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("~/.local/bin/quickshel
 -- quickshell bar's matching icons open.
 hl.bind(mainMod .. " + SHIFT + A",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"))
 hl.bind(mainMod .. " + SHIFT + B",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e bluetui"))
--- iwctl, not impala: the fleet's wifi is iwd + systemd-networkd (000402), and
--- impala speaks only NetworkManager, which this stack does not run.
-hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e iwctl"))
+-- impala manages wifi through NetworkManager (000402 runs NM with the iwd
+-- backend, so saved networks in /var/lib/iwd keep connecting).
+hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e impala"))
 hl.bind(mainMod .. " + SHIFT + V",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e wiremix"))
 hl.bind(mainMod .. " + SHIFT + T",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e btop"))
 hl.bind(mainMod .. " + SHIFT + Y",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e fish -c y"))  -- yazi (fish `y` wrapper)
