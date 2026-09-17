@@ -28,13 +28,8 @@ install_pacman fuse-overlayfs
 # (`docker-compose config` -> `podman config`, wrong) and would shadow this
 # real binary via ~/.local/bin being ahead of /usr/bin on PATH.
 install_pacman docker-compose
-# Remove the standalone Docker runtime in favor of Podman (the docker wrapper
-# linked below makes `docker` forward to podman). Docker was installed
-# previously but is disabled; removing it frees ~150 MiB and eliminates the
-# duplicated container-runtime service.
-remove_pkg docker containerd
-
-# storage.conf + 01-overlay.conf drop-in: driver=overlay routed through
+# --- container storage: overlay via fuse-overlayfs ------------------------------
+# storage.conf + the 01-overlay.conf drop-in set driver=overlay routed through
 # fuse-overlayfs (mount_program). The drop-in overrides the Arch package
 # drop-in (/usr/share/containers/storage.conf.d/00-storage-arch.conf) that
 # sets driver=overlay with NO mount_program (which would try kernel overlay
@@ -43,10 +38,6 @@ link_file "$DOTFILES_HOME/.config/containers/storage.conf" \
   "$HOME/.config/containers/storage.conf"
 link_file "$DOTFILES_HOME/.config/containers/storage.conf.d/01-overlay.conf" \
   "$HOME/.config/containers/storage.conf.d/01-overlay.conf"
-# Remove a drop-in from a prior version of this migration (was 01-vfs.conf).
-# Idempotent: a dangling symlink is ignored by podman's merge anyway, but
-# removing it keeps the .d dir clean.
-[[ -L "$HOME/.config/containers/storage.conf.d/01-vfs.conf" ]] && rm -f "$HOME/.config/containers/storage.conf.d/01-vfs.conf"
 # If the existing on-disk store was initialized for a DIFFERENT driver
 # (vfs from a prior run of this migration, or overlay-without-mount_program),
 # podman refuses to start with a "graph driver does not match" / overlay-over-

@@ -1,6 +1,5 @@
 # 000400-power-management.sh -- power-profiles-daemon + brightnessctl + udev rule + battery notify
 # Installs: power-profiles-daemon brightnessctl upower
-# Removes:  swayosd (superseded -- see the group-membership note below)
 # Links:    ~/.config/systemd/user/power-profile-switch.service,
 #           ~/.config/systemd/user/battery-notify.service,
 #           ~/.config/systemd/user/battery-notify.timer,
@@ -16,14 +15,6 @@
 section "power management"
 
 install_pacman power-profiles-daemon brightnessctl upower
-
-# swayosd is superseded: volume and brightness state now render in the quickshell
-# audio/backlight modules, and the shell applies
-# changes through wpctl/brightnessctl (swayosd 0.3.2 got brightness wrong on this
-# backlight). Removed here rather than in its own migration
-# because this migration owns what replaced it, matching how 000204-podman
-# removes docker.
-remove_pkg swayosd
 
 # `video` group membership is required to WRITE /sys/class/backlight/*/brightness;
 # without it brightness changes fail silently. It used to be granted by the
