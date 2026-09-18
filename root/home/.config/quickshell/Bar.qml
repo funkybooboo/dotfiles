@@ -119,11 +119,10 @@ PanelWindow {
       onClicked: bar.floatingTerm(["impala"])
     }
 
-    // These three carry their value inline like Audio, Backlight and Battery do.
-    // Glyph-only left the number reachable solely by hover, so a full disk looked
-    // exactly like an empty one.
+    // Glyph only, with the number in the tooltip. The colour carries the state
+    // instead, so a filling disk is visible without adding text to the bar.
     BarButton {
-      text: String.fromCodePoint(0xf2db) + " " + SystemMetrics.cpuPercent + "%"
+      text: String.fromCodePoint(0xf2db)
       textColor: bar.loadColor(SystemMetrics.cpuPercent, Theme.cpuWarnPercent, Theme.cpuCriticalPercent)
       tooltip: "CPU: " + SystemMetrics.cpuPercent + "%<br>"
         + "Click: open system monitor"
@@ -131,7 +130,7 @@ PanelWindow {
     }
 
     BarButton {
-      text: String.fromCodePoint(0xefc5) + " " + SystemMetrics.memoryPercent + "%"
+      text: String.fromCodePoint(0xefc5)
       textColor: bar.loadColor(SystemMetrics.memoryPercent, Theme.cpuWarnPercent, Theme.cpuCriticalPercent)
       tooltip: "RAM: " + SystemMetrics.memoryPercent + "%<br>"
         + "Click: open system monitor"
@@ -139,7 +138,7 @@ PanelWindow {
     }
 
     BarButton {
-      text: String.fromCodePoint(0xf02ca) + " " + SystemMetrics.diskPercent + "%"
+      text: String.fromCodePoint(0xf02ca)
       textColor: bar.loadColor(SystemMetrics.diskPercent, Theme.diskWarnPercent, Theme.diskCriticalPercent)
       tooltip: "Disk: " + SystemMetrics.diskPath + " " + SystemMetrics.diskPercent + "%<br>"
         + "Click: open disk usage"
