@@ -1,9 +1,9 @@
 -- Key bindings.
 --
 -- Every bind passes { description = ... } so it carries a label. That
--- description is the ONLY place a keybinding is explained: the Super+C
--- cheatsheet and docs/keybindings.md are both rendered from it, so a rebind
--- cannot leave a stale label behind. The "Category:" prefix is what groups them.
+-- description is the ONLY place a keybinding is explained: the cheatsheet overlay
+-- and docs/keybindings.md are both rendered from it, so a rebind cannot leave a
+-- stale label behind. The "Category:" prefix is what groups them.
 --
 -- One key carries one idea, and every binding for that idea uses that key. So S is
 -- the scratchpad and nothing else, C is screen capture, G is tab groups, Tab is
@@ -73,8 +73,7 @@ hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("quickshell ipc call shell clipboard"
     { description = "Shell: Clipboard history" })
 -- On SUPER+? because that is the help key everywhere else. It shares `slash` with
 -- the switcher on purpose: one finds windows, the other finds keys.
-hl.bind(mainMod .. " + SHIFT + slash",
-    hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"),
+hl.bind(mainMod .. " + SHIFT + slash", hl.dsp.exec_cmd("quickshell ipc call shell cheatsheet"),
     { description = "Shell: Keybinding cheatsheet" })
 
 -- Notifications

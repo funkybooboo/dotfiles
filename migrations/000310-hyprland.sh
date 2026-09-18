@@ -5,7 +5,7 @@
 #           xdg-desktop-portal-wlr qt5-wayland qt6-wayland resvg
 # Nix:     .#wayfreeze
 # Links:    ~/.config/hypr/**,
-#           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
+#           ~/.local/bin/{hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,hypr-ocr,screenshot,screencast,
 #             toggle-lock,toggle-touchpad,nightmode-toggle,keepawake-toggle,
 #             hypr-float-apply,hypr-float-launch,hypr-float-toggle}
@@ -27,7 +27,7 @@ ok "Hyprland ecosystem"
 link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"
 
 # Hyprland helper scripts
-for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
+for _script in hypr-kill-workspace hypr-lid-switch \
   hypr-toggle-display hypr-ocr screenshot screencast \
   toggle-lock toggle-touchpad nightmode-toggle \
   hypr-float-apply hypr-float-launch hypr-float-toggle \

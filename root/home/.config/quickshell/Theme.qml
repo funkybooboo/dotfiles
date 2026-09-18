@@ -55,6 +55,10 @@ Singleton {
   // The power menu sizes its own height from its row count, so only width is fixed.
   readonly property int menuWidth: 320
 
+  // Wide enough for the longest chord in the binds, 29 characters
+  // ("Shift + XF86MonBrightnessDown"), plus headroom at pickerFontSize.
+  readonly property int cheatsheetComboWidth: 280
+
   readonly property int trayIconSize: 12
   readonly property int traySpacing: 17
 

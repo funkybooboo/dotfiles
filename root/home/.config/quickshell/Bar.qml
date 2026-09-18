@@ -86,7 +86,7 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf059)
       tooltip: "Keybindings"
-      onClicked: bar.floatingTerm([bar.bin + "hypr-keybinds"])
+      onClicked: CheatsheetState.toggle()
     }
 
     BarButton {
