@@ -11,7 +11,12 @@ cd ~/dotfiles
 ./migrate.sh --firmware   # also apply device firmware (fwupd); may reboot
 # reboot into Hyprland
 ./setup.sh                # secrets, repos, NAS sync, project clone
+hypr-keybindings-doc      # write docs/keybindings.md (needs Hyprland running)
 ```
+
+`docs/keybindings.md` is generated rather than tracked: it is rendered from
+`hyprctl binds -j`, so it has to be produced on the machine whose binds it
+describes.
 
 ## Fresh install (archinstall)
 
