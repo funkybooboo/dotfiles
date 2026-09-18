@@ -147,13 +147,13 @@ PanelWindow {
     }
 
     Battery {
-      onClicked: bar.floating([bar.bin + "power-mode-menu"])
+      onClicked: PowerModeMenuState.toggle()
     }
 
     BarButton {
       text: String.fromCodePoint(0x23fb)
-      tooltip: "Power menu  (lock / logout / restart / shutdown)"
-      onClicked: Quickshell.execDetached([bar.bin + "power-menu"])
+      tooltip: "Power menu  (lock / suspend / logout / restart / shutdown)"
+      onClicked: PowerMenuState.toggle()
     }
   }
 }

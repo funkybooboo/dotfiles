@@ -3,7 +3,6 @@
 # Links:    ~/.config/systemd/user/power-profile-switch.service,
 #           ~/.config/systemd/user/battery-notify.service,
 #           ~/.config/systemd/user/battery-notify.timer,
-#           ~/.local/bin/power-mode-menu,
 #           ~/.local/lib/power-profile-switch,
 #           ~/.local/lib/battery-notify
 # Deploys: /etc/udev/rules.d/99-power-profile.rules
@@ -51,8 +50,6 @@ link_file "$DOTFILES_HOME/.config/systemd/user/battery-notify.service" \
   "$HOME/.config/systemd/user/battery-notify.service"
 link_file "$DOTFILES_HOME/.config/systemd/user/battery-notify.timer" \
   "$HOME/.config/systemd/user/battery-notify.timer"
-link_file "$DOTFILES_HOME/.local/bin/power-mode-menu" \
-  "$HOME/.local/bin/power-mode-menu"
 link_file "$DOTFILES_HOME/.local/lib/power-profile-switch" \
   "$HOME/.local/lib/power-profile-switch"
 link_file "$DOTFILES_HOME/.local/lib/battery-notify" \

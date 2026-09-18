@@ -52,6 +52,9 @@ Singleton {
   readonly property int roundingLarge: 10
   readonly property int roundingSmall: 6
 
+  // The power menu sizes its own height from its row count, so only width is fixed.
+  readonly property int menuWidth: 320
+
   readonly property int trayIconSize: 12
   readonly property int traySpacing: 17
 

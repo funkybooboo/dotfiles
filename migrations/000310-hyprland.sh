@@ -8,8 +8,7 @@
 #           ~/.local/bin/{hypr-keybinds,hypr-kill-workspace,hypr-lid-switch,
 #             hypr-toggle-display,hypr-ocr,screenshot,screencast,
 #             toggle-lock,toggle-touchpad,nightmode-toggle,keepawake-toggle,
-#             power-mode-menu,hypr-float-apply,hypr-float-launch,
-#             hypr-float-toggle,power-menu}
+#             hypr-float-apply,hypr-float-launch,hypr-float-toggle}
 # Enables:  --
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
@@ -31,9 +30,7 @@ link_tree "$DOTFILES_HOME/.config/hypr" "$HOME/.config/hypr"
 for _script in hypr-keybinds hypr-kill-workspace hypr-lid-switch \
   hypr-toggle-display hypr-ocr screenshot screencast \
   toggle-lock toggle-touchpad nightmode-toggle \
-  power-mode-menu hypr-float-apply hypr-float-launch \
-  hypr-float-toggle \
-  power-menu \
+  hypr-float-apply hypr-float-launch hypr-float-toggle \
   keepawake-toggle; do
   link_file "$DOTFILES_HOME/.local/bin/$_script" "$HOME/.local/bin/$_script"
 done

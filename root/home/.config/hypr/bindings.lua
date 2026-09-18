@@ -61,8 +61,8 @@ hl.bind(mainMod .. " + CTRL + T", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launc
     { description = "Apps: System monitor" })
 hl.bind(mainMod .. " + CTRL + D", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ncdu /"),
     { description = "Apps: Disk usage" })
-hl.bind(mainMod .. " + CTRL + P", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu"),
-    { description = "Apps: Power profile menu" })
+-- Power profile lives with the rest of Escape's session-and-power family rather
+-- than in the apps namespace: it is a shell surface now, not a launched program.
 
 -- Shell surfaces
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("quickshell ipc call shell launcher"),
@@ -145,8 +145,10 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("uwsm app -- hyprlock"),
     { description = "System: Lock the screen" })
 -- Deliberately the old log-out chord: habit now lands on a menu that prompts
 -- rather than ending the session outright.
-hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("~/.local/bin/power-menu"),
+hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("quickshell ipc call shell powerMenu"),
     { description = "System: Power menu" })
+hl.bind(mainMod .. " + ALT + Escape", hl.dsp.exec_cmd("quickshell ipc call shell powerMode"),
+    { description = "System: Power profile menu" })
 hl.bind(mainMod .. " + CTRL + SHIFT + Escape", hl.dsp.exec_cmd("uwsm stop"),
     { description = "System: Log out" })
 hl.bind(mainMod .. " + CTRL + SHIFT + N", hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"),
