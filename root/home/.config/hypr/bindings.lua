@@ -5,17 +5,21 @@
 -- cheatsheet and docs/keybindings.md are both rendered from it, so a rebind
 -- cannot leave a stale label behind. The "Category:" prefix is what groups them.
 --
--- The grammar is per key group, not per modifier -- these binds do not fit one
--- meaning per modifier without going modal:
+-- One key carries one idea, and every binding for that idea uses that key. So S is
+-- the scratchpad and nothing else, C is screen capture, G is tab groups, Tab is
+-- workspace navigation, Escape is session and power.
 --
---   letters      SUPER act on the focused window, +SHIFT move it, +ALT geometry,
---                +CTRL launch an app, +CTRL+SHIFT session and system
---   hjkl         SUPER focus, +SHIFT move window, +ALT resize, +ALT+SHIFT far
---   arrows       mirror hjkl, and +ALT+SHIFT moves the whole workspace to a monitor
---   numbers      SUPER go to workspace, +SHIFT move window there, +ALT+SHIFT move
---                it there without following
---   dedicated    Return, space, slash, comma, Tab, Print, BackSpace and the zoom
---                cluster each own one feature; modifiers pick the variant
+-- SUPER + CTRL + <letter> is reserved entirely for launching apps. That is what
+-- lets C mean capture while SUPER+CTRL+C stays free for an app: the namespace is
+-- separate, so the two never compete. Nothing else may live there.
+--
+-- Three groups carry a family rather than a single action, deliberately. hjkl is
+-- one directional idea escalating by modifier (SUPER focus, +SHIFT move, +ALT
+-- resize, +ALT+SHIFT resize far). The arrows escalate by scope instead (SUPER
+-- focus, +SHIFT the window, +SHIFT+ALT the whole workspace onto that monitor).
+-- BackSpace holds the runtime appearance toggles.
+--
+-- No binding may depend on a key this keyboard lacks, which rules out Print.
 --
 -- Key names are case-insensitive (xkb_keysym_from_name XKB_KEYSYM_CASE_INSENSITIVE).
 -- Modifier order in the string does not matter; we use SUPER, then SHIFT, CTRL,
@@ -67,7 +71,10 @@ hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("quickshell ipc call shell switch
     { description = "Shell: Window switcher" })
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("quickshell ipc call shell clipboard"),
     { description = "Shell: Clipboard history" })
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"),
+-- On SUPER+? because that is the help key everywhere else. It shares `slash` with
+-- the switcher on purpose: one finds windows, the other finds keys.
+hl.bind(mainMod .. " + SHIFT + slash",
+    hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"),
     { description = "Shell: Keybinding cheatsheet" })
 
 -- Notifications
@@ -75,7 +82,7 @@ hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd("quickshell ipc call shell dismis
     { description = "Shell: Dismiss the newest notification" })
 hl.bind(mainMod .. " + SHIFT + comma", hl.dsp.exec_cmd("quickshell ipc call shell dismissAll"),
     { description = "Shell: Dismiss all notifications" })
-hl.bind(mainMod .. " + CTRL + comma", hl.dsp.exec_cmd("quickshell ipc call shell restore"),
+hl.bind(mainMod .. " + SHIFT + ALT + comma", hl.dsp.exec_cmd("quickshell ipc call shell restore"),
     { description = "Shell: Restore the last notification" })
 hl.bind(mainMod .. " + ALT + comma",
     hl.dsp.exec_cmd("quickshell ipc call shell restore && quickshell ipc call shell invoke"),
@@ -109,9 +116,9 @@ hl.bind(mainMod .. " + G", hl.dsp.group.toggle(),
     { description = "Window: Toggle tab group" })
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ out_of_group = true }),
     { description = "Window: Move out of the tab group" })
-hl.bind(mainMod .. " + ALT + Tab", hl.dsp.group.next(),
+hl.bind(mainMod .. " + ALT + G", hl.dsp.group.next(),
     { description = "Window: Next tab in the group" })
-hl.bind(mainMod .. " + ALT + SHIFT + Tab", hl.dsp.group.prev(),
+hl.bind(mainMod .. " + ALT + SHIFT + G", hl.dsp.group.prev(),
     { description = "Window: Previous tab in the group" })
 
 -- These three still shell out to `hyprctl keyword`, which does not exist in Lua
@@ -136,6 +143,10 @@ hl.bind(mainMod .. " + SHIFT + ALT + S",
 -- Session and system
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("uwsm app -- hyprlock"),
     { description = "System: Lock the screen" })
+-- Deliberately the old log-out chord: habit now lands on a menu that prompts
+-- rather than ending the session outright.
+hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("~/.local/bin/power-menu"),
+    { description = "System: Power menu" })
 hl.bind(mainMod .. " + CTRL + SHIFT + Escape", hl.dsp.exec_cmd("uwsm stop"),
     { description = "System: Log out" })
 hl.bind(mainMod .. " + CTRL + SHIFT + N", hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"),
@@ -146,34 +157,33 @@ hl.bind(mainMod .. " + CTRL + SHIFT + D", hl.dsp.exec_cmd("~/.local/bin/hypr-tog
     { description = "System: Toggle the laptop display" })
 hl.bind(mainMod .. " + CTRL + SHIFT + delete", hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"),
     { description = "System: Close every window on this workspace" })
-hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"),
+hl.bind(mainMod .. " + CTRL + SHIFT + Q", hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"),
     { description = "System: Restart the shell" })
 hl.bind("XF86TouchpadToggle", hl.dsp.exec_cmd("~/.local/bin/toggle-touchpad"),
     { description = "System: Toggle the touchpad" })
 
--- Cursor magnifier. On the equal/minus/0 cluster because that is what every
--- browser and editor uses for zoom. Same Lua-mode caveat as the two toggles
--- above: `hyprctl keyword` is inert here.
+-- Cursor magnifier, on the zoom cluster every browser and editor uses. No reset
+-- bind: 0 belongs to workspace 10, and repeated zoom-out reaches 1.0 anyway. Same
+-- Lua-mode caveat as the two toggles above: `hyprctl keyword` is inert here.
 hl.bind(mainMod .. " + ALT + equal", hl.dsp.exec_cmd(
     [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') + 0.1" | bc)]]),
     { description = "Resize: Zoom the cursor in", repeating = true })
 hl.bind(mainMod .. " + ALT + minus", hl.dsp.exec_cmd(
     [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') - 0.1" | bc)]]),
     { description = "Resize: Zoom the cursor out", repeating = true })
-hl.bind(mainMod .. " + ALT + 0", hl.dsp.exec_cmd("hyprctl keyword cursor:zoom_factor 1.0"),
-    { description = "Resize: Reset the cursor zoom" })
 
--- Capture. Everything that turns the screen into a file or the clipboard lives
--- on Print: region bare, then window, whole output, text, and video.
-hl.bind("Print", hl.dsp.exec_cmd("~/.local/bin/screenshot region"),
+-- Capture. On C rather than Print because this keyboard has no Print key. Region
+-- takes the bare chord since it is the common case.
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("~/.local/bin/screenshot region"),
     { description = "Capture: Screenshot a region" })
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot window"),
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("~/.local/bin/screenshot window"),
     { description = "Capture: Screenshot the active window" })
-hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot full"),
+hl.bind(mainMod .. " + ALT + C", hl.dsp.exec_cmd("~/.local/bin/screenshot full"),
     { description = "Capture: Screenshot the whole output" })
-hl.bind(mainMod .. " + CTRL + Print", hl.dsp.exec_cmd("~/.local/bin/hypr-ocr"),
+hl.bind(mainMod .. " + CTRL + SHIFT + C", hl.dsp.exec_cmd("~/.local/bin/hypr-ocr"),
     { description = "Capture: Region OCR to the clipboard" })
-hl.bind(mainMod .. " + ALT + Print", hl.dsp.exec_cmd("~/.local/bin/screencast"),
+-- Video gets its own key: a recording is a toggle with a duration, not a still.
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("~/.local/bin/screencast"),
     { description = "Capture: Toggle screen recording" })
 
 -- Focus
@@ -218,7 +228,7 @@ hl.bind(mainMod .. " + SHIFT + ALT + J", hl.dsp.window.resize({ x = 0, y = 60, r
 -- Workspace navigation
 hl.bind(mainMod .. " + Tab", hl.dsp.focus({ workspace = "e+1" }), { description = "Workspace: Next" })
 hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.focus({ workspace = "e-1" }), { description = "Workspace: Previous" })
-hl.bind(mainMod .. " + CTRL + Tab", hl.dsp.focus({ workspace = "previous" }), { description = "Workspace: Last used" })
+hl.bind(mainMod .. " + ALT + Tab", hl.dsp.focus({ workspace = "previous" }), { description = "Workspace: Last used" })
 
 -- Workspaces 1..10 (10 -> key 0)
 for i = 1, 10 do
