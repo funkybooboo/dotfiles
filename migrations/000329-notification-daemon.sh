@@ -32,7 +32,7 @@
 #       Arch has no such package, so everything here is a no-op on the personal
 #       machine -- kept in both repos so the two do not diverge on intent.
 
-[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/../_common.sh"
+[[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "notification-daemon"
 

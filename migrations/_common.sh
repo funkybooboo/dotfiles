@@ -279,6 +279,34 @@ remove_pkg() {
 }
 
 # -----------------------------------------------------------------------------
+# Remove one or more apt packages idempotently (non-fatal). The apt mirror of
+# remove_pkg. No-op when apt is absent: migrations shared verbatim with the
+# work (Debian) repo call this unconditionally so the two files stay identical,
+# and on this Arch machine apt does not exist -- the package is simply not
+# installed, which is what the caller wants asserted anyway.
+# Usage: remove_apt <pkg1> [pkg2 ...]
+remove_apt() {
+  if ! command -v apt-get &>/dev/null; then
+    skip "$* (not installed; no apt on this machine)"
+    return 0
+  fi
+  local pkg
+  for pkg in "$@"; do
+    if ! dpkg -s "$pkg" &>/dev/null; then
+      skip "$pkg (not installed)"
+      continue
+    fi
+    info "removing package: $pkg"
+    if sudo apt-get remove --purge -y "$pkg" >/dev/null 2>&1; then
+      ok "removed: $pkg"
+    else
+      warn "failed to remove $pkg"
+      _add_warning "failed to remove: $pkg"
+    fi
+  done
+}
+
+# -----------------------------------------------------------------------------
 # Drop packages from the nix profile after their flake attr is gone. Deleting the
 # attr stops a fresh install pulling it, but an existing profile keeps the old
 # closure installed and on PATH ahead of the pacman copy.
