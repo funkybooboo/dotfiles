@@ -47,11 +47,13 @@ Singleton {
         name => cls === name || cls.includes(name) || name.includes(cls)));
 
       if (hit) {
-        // Window selectors need the "address:" prefix -- hyprctl reports a bare
-        // 0x..., which does not resolve on its own.
+        // Two separate prefix traps. HyprlandToplevel.address is
+        // QString::number(addr, 16) -- bare hex, no 0x -- and a Hyprland window
+        // selector needs the "address:" prefix on top of that. Missing either one
+        // makes the match succeed and nothing move.
         Quickshell.execDetached([
           "hyprctl", "dispatch",
-          'hl.dsp.focus({window="address:' + toplevel.address + '"})'
+          'hl.dsp.focus({window="address:0x' + toplevel.address + '"})'
         ]);
         return true;
       }
