@@ -8,21 +8,43 @@ import QtQuick
 // live-reloads QML on save, so a separate palette file would add a layer
 // without adding an ability.
 Singleton {
-  readonly property color base: "#1e1e2e"
+  // Surfaces, darkest to lightest. crust sits under base for edges and shadows;
+  // surface0-2 are the only tones available for a raised element or a divider, and
+  // their absence is why the bar had no way to draw a separator or a card edge.
+  readonly property color crust: "#11111b"
   readonly property color mantle: "#181825"
+  readonly property color base: "#1e1e2e"
+  readonly property color surface0: "#313244"
+  readonly property color surface1: "#45475a"
+  readonly property color surface2: "#585b70"
+
+  // Foregrounds, brightest to dimmest.
   readonly property color text: "#cdd6f4"
+  readonly property color subtext1: "#bac2de"
+  readonly property color subtext0: "#a6adc8"
+  readonly property color overlay2: "#9399b2"
+  readonly property color overlay1: "#7f849c"
+  readonly property color overlay0: "#6c7086"
+
+  // Accents. mauve is reserved for "highlighted or interactive" and must not be
+  // used as a state colour; green/yellow/red are the three state tiers, and peach
+  // sits between yellow and red where a fourth step reads better than a jump.
   readonly property color mauve: "#cba6f7"
-  readonly property color blue: "#89b4fa"
-  readonly property color red: "#f38ba8"
+  readonly property color green: "#a6e3a1"
+  readonly property color yellow: "#f9e2af"
   readonly property color peach: "#fab387"
+  readonly property color red: "#f38ba8"
+  readonly property color blue: "#89b4fa"
+
+  // The dimmed convention, previously a raw 0.5 hand-copied into six files.
+  readonly property real dimmedOpacity: 0.5
 
   // Wallpapers are not tracked in the repo (binary, copied per machine), so this
   // is a path into $HOME rather than a repo-relative asset. hyprlock reads the
   // same file for its blurred background.
   //
   // One of three deliberate differences from the work repo's copy of this tree,
-  // alongside Bar.qml's wifi client and Workspaces.qml's Lua dispatch. Every
-  // colour, font and metric below is identical in both.
+  // alongside Bar.qml's wifi client and Compositor.qml's dispatch dialect.
   readonly property string wallpaper: Quickshell.env("HOME") + "/Pictures/wallpapers/mountain-wallpaper.jpg"
 
   readonly property string fontFamily: "JetBrainsMono Nerd Font"
@@ -30,16 +52,39 @@ Singleton {
 
   readonly property int barHeight: 26
   readonly property int barEdgeMargin: 8
-  readonly property real moduleMargin: 7.5
+  // Per-module padding. Reduced from 7.5 now that the group and cluster spacings
+  // below carry the separation, so overall density is unchanged rather than wider.
+  readonly property real moduleMargin: 4
   readonly property int moduleMinWidth: 12
+
+  // Two spacing scales are what turn fourteen equal items into five groups: tight
+  // inside a cluster, wider either side of a separator.
+  readonly property int groupSpacing: 2
+  readonly property int clusterSpacing: 10
+  readonly property int separatorWidth: 1
+  readonly property real separatorOpacity: 0.4
 
   readonly property int tooltipPadding: 6
 
+  // Thresholds live here so the colour and the number that triggers it are not
+  // three lines apart in different files.
+  readonly property int batteryCriticalPercent: 10
+  readonly property int batteryLowPercent: 20
+  readonly property int diskCriticalPercent: 90
+  readonly property int diskWarnPercent: 80
+  readonly property int cpuCriticalPercent: 90
+  readonly property int cpuWarnPercent: 70
+
   readonly property int notificationWidth: 350
-  readonly property int notificationHeight: 110
+  // A floor only for near-empty cards, not a size: anything with a body or an icon
+  // is taller than this and grows with its content.
+  readonly property int notificationMinHeight: 56
   readonly property int notificationMargin: 10
   readonly property int notificationPadding: 12
   readonly property int notificationTimeout: 5000
+  readonly property int notificationIconSize: 48
+  readonly property int notificationTextSpacing: 2
+  readonly property int notificationMaxVisible: 5
 
   // Shared metrics for the summoned pickers, taken from hyprlauncher.conf and the
   // hyprtoolkit.conf palette it read: an 820x720 window, 15px rows, and a row

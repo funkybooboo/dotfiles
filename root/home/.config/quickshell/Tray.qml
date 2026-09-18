@@ -32,7 +32,7 @@ Row {
   BarButton {
     anchors.verticalCenter: parent.verticalCenter
     text: String.fromCodePoint(0xf053)
-    opacity: root.expanded ? 1.0 : 0.5
+    opacity: root.expanded ? 1.0 : Theme.dimmedOpacity
   }
 
   Item {

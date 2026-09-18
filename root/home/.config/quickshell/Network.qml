@@ -24,6 +24,11 @@ BarButton {
     return String.fromCodePoint(0xf092e);
   }
 
+  // Disconnected is the only network state worth colouring. A connected link is
+  // the normal case and colouring it green would put a permanent accent in the bar
+  // for information the glyph already carries.
+  textColor: root.device === null ? Theme.red : Theme.text
+
   // Arrows are codepoints so the file stays ASCII, as with the Nerd Font glyphs.
   readonly property string throughput: String.fromCodePoint(0x2193) + " " + SystemMetrics.downBits
     + "  " + String.fromCodePoint(0x2191) + " " + SystemMetrics.upBits

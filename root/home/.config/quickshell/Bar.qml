@@ -35,6 +35,16 @@ PanelWindow {
     bar.floating(["ghostty", "-e"].concat(argv));
   }
 
+  // Shared so CPU, RAM and disk agree on what "getting full" looks like. Ordered
+  // critical-first for the same reason Battery is: the worse state must win.
+  function loadColor(percent, warnAt, criticalAt) {
+    if (percent >= criticalAt)
+      return Theme.red;
+    if (percent >= warnAt)
+      return Theme.yellow;
+    return Theme.text;
+  }
+
   Row {
     anchors {
       left: parent.left
@@ -109,22 +119,28 @@ PanelWindow {
       onClicked: bar.floatingTerm(["impala"])
     }
 
+    // These three carry their value inline like Audio, Backlight and Battery do.
+    // Glyph-only left the number reachable solely by hover, so a full disk looked
+    // exactly like an empty one.
     BarButton {
-      text: String.fromCodePoint(0xf2db)
+      text: String.fromCodePoint(0xf2db) + " " + SystemMetrics.cpuPercent + "%"
+      textColor: bar.loadColor(SystemMetrics.cpuPercent, Theme.cpuWarnPercent, Theme.cpuCriticalPercent)
       tooltip: "CPU: " + SystemMetrics.cpuPercent + "%<br>"
         + "Click: open system monitor"
       onClicked: bar.floatingTerm(["btop"])
     }
 
     BarButton {
-      text: String.fromCodePoint(0xefc5)
+      text: String.fromCodePoint(0xefc5) + " " + SystemMetrics.memoryPercent + "%"
+      textColor: bar.loadColor(SystemMetrics.memoryPercent, Theme.cpuWarnPercent, Theme.cpuCriticalPercent)
       tooltip: "RAM: " + SystemMetrics.memoryPercent + "%<br>"
         + "Click: open system monitor"
       onClicked: bar.floatingTerm(["btop"])
     }
 
     BarButton {
-      text: String.fromCodePoint(0xf02ca)
+      text: String.fromCodePoint(0xf02ca) + " " + SystemMetrics.diskPercent + "%"
+      textColor: bar.loadColor(SystemMetrics.diskPercent, Theme.diskWarnPercent, Theme.diskCriticalPercent)
       tooltip: "Disk: " + SystemMetrics.diskPath + " " + SystemMetrics.diskPercent + "%<br>"
         + "Click: open disk usage"
       onClicked: bar.floatingTerm(["ncdu", "/"])

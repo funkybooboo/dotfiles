@@ -37,13 +37,15 @@ BarButton {
     return root.percent + "%<br>" + action;
   }
 
+  // Low charge outranks charging: a laptop at 3% is still in trouble while the
+  // charger negotiates, and testing `charging` first made that case render white.
   textColor: {
-    if (root.charging || root.full)
-      return Theme.text;
-    if (root.percent <= 10)
+    if (root.percent <= Theme.batteryCriticalPercent)
       return Theme.red;
-    if (root.percent <= 20)
+    if (root.percent <= Theme.batteryLowPercent)
       return Theme.peach;
+    if (root.charging)
+      return Theme.green;
     return Theme.text;
   }
 }

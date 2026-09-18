@@ -88,7 +88,7 @@ Overlay {
         visible: search.text === ""
         text: "Search applications"
         color: Theme.text
-        opacity: 0.5
+        opacity: Theme.dimmedOpacity
         font.family: Theme.fontFamily
         font.pixelSize: Theme.pickerFontSize
       }
@@ -98,7 +98,7 @@ Overlay {
       width: parent.width
       height: 1
       color: Theme.mauve
-      opacity: 0.4
+      opacity: Theme.separatorOpacity
     }
 
     ListView {

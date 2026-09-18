@@ -32,7 +32,7 @@ Row {
       implicitHeight: Theme.barHeight
 
       // waybar dimmed workspaces with nothing on them via `button.empty`.
-      opacity: button.occupied || button.active ? 1.0 : 0.5
+      opacity: button.occupied || button.active ? 1.0 : Theme.dimmedOpacity
 
       Rectangle {
         anchors.fill: parent
@@ -60,19 +60,7 @@ Row {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        // The compositor runs the Lua config (000322), whose IPC socket
-        // evaluates requests as Lua expressions. Quickshell.Hyprland.dispatch
-        // still sends the dead legacy `dispatch workspace N` frame, which
-        // silently no-ops under the Lua IPC (the same bug class stock waybar's
-        // hyprland/workspaces module had, fixed there by nix overlay PR #5013),
-        // so the click shells out to hyprctl with the Lua dispatcher expression
-        // instead -- the exact `hyprctl dispatch 'hl.dsp...'` form every
-        // hypr-* script in ~/.local/bin already uses.
-        onClicked: Quickshell.execDetached([
-          "hyprctl",
-          "dispatch",
-          "hl.dsp.focus({workspace=" + button.workspaceId + "})"
-        ])
+        onClicked: Compositor.focusWorkspace(button.workspaceId)
       }
     }
   }
