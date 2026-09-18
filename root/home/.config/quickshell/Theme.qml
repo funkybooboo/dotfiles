@@ -20,9 +20,9 @@ Singleton {
   // is a path into $HOME rather than a repo-relative asset. hyprlock reads the
   // same file for its blurred background.
   //
-  // This is the one line of the quickshell tree that differs from the work repo:
-  // the two machines carry different wallpapers, exactly as hyprlock.conf already
-  // hardcodes a different filename in each.
+  // One of three deliberate differences from the work repo's copy of this tree,
+  // alongside Bar.qml's wifi client and Workspaces.qml's Lua dispatch. Every
+  // colour, font and metric below is identical in both.
   readonly property string wallpaper: Quickshell.env("HOME") + "/Pictures/wallpapers/mountain-wallpaper.jpg"
 
   readonly property string fontFamily: "JetBrainsMono Nerd Font"
