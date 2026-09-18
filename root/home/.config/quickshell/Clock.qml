@@ -21,7 +21,7 @@ BarButton {
 
   tooltip: "<big>" + Qt.formatDateTime(clock.date, "yyyy MMMM") + "</big><br>"
     + root.monthGrid(clock.date) + "<br>"
-    + "Click: open calendar  (Super+Shift+A)"
+    + "Click: open calendar"
 
   function monthGrid(date) {
     const year = date.getFullYear();

@@ -44,13 +44,13 @@ PanelWindow {
 
     BarButton {
       text: String.fromCodePoint(0xf00a)
-      tooltip: "Applications  (Super+Space)"
+      tooltip: "Applications"
       onClicked: LauncherState.toggle()
     }
 
     BarButton {
       text: String.fromCodePoint(0xf0349)
-      tooltip: "Search windows  (Super+Slash)"
+      tooltip: "Search windows"
       onClicked: SwitcherState.toggle()
     }
 
@@ -85,13 +85,13 @@ PanelWindow {
 
     BarButton {
       text: String.fromCodePoint(0xf059)
-      tooltip: "Keybindings  (Super+C)"
+      tooltip: "Keybindings"
       onClicked: bar.floatingTerm([bar.bin + "hypr-keybinds"])
     }
 
     BarButton {
       text: String.fromCodePoint(0xf0147)
-      tooltip: "Clipboard history  (Super+Ctrl+V)"
+      tooltip: "Clipboard history"
       onClicked: ClipboardState.toggle()
     }
 
@@ -112,27 +112,27 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf2db)
       tooltip: "CPU: " + SystemMetrics.cpuPercent + "%<br>"
-        + "Click: open system monitor  (Super+Shift+T)"
+        + "Click: open system monitor"
       onClicked: bar.floatingTerm(["btop"])
     }
 
     BarButton {
       text: String.fromCodePoint(0xefc5)
       tooltip: "RAM: " + SystemMetrics.memoryPercent + "%<br>"
-        + "Click: open system monitor  (Super+Shift+T)"
+        + "Click: open system monitor"
       onClicked: bar.floatingTerm(["btop"])
     }
 
     BarButton {
       text: String.fromCodePoint(0xf02ca)
       tooltip: "Disk: " + SystemMetrics.diskPath + " " + SystemMetrics.diskPercent + "%<br>"
-        + "Click: open disk usage  (Super+Shift+D)"
+        + "Click: open disk usage"
       onClicked: bar.floatingTerm(["ncdu", "/"])
     }
 
     BarButton {
       text: String.fromCodePoint(0xf0379)
-      tooltip: "Display settings  (Super+D)"
+      tooltip: "Display settings"
       onClicked: bar.floating(["nwg-displays"])
     }
 

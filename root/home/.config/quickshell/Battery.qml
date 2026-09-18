@@ -30,7 +30,7 @@ BarButton {
   // waybar prefixed the charging and discharging tooltips with draw in watts and
   // left the idle/full one as capacity alone.
   tooltip: {
-    const action = "Click: power mode menu  (Super+Shift+P)";
+    const action = "Click: power mode menu";
     const watts = Math.round(root.device?.changeRate ?? 0);
     if (root.charging || root.discharging)
       return watts + "W " + root.percent + "%<br>" + action;

@@ -10,7 +10,7 @@ BarButton {
 
   text: String.fromCodePoint(root.idleRunning ? 0xf236 : 0xf0f4)
   tooltip: (root.idleRunning ? "Idle: normal" : "Staying awake") + "<br>"
-    + "Click to toggle  (Super+Ctrl+I)"
+    + "Click to toggle"
 
   PidProbe {
     id: probe

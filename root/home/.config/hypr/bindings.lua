@@ -1,232 +1,311 @@
 -- Key bindings.
--- Translated from bindings.conf (138 binds). Verified against the official
--- example/hyprland.lua, the Hyprland wiki, and the Lua dispatcher source
--- (src/config/lua/bindings/LuaBindingsDispatchers.cpp) on the main branch.
+--
+-- Every bind passes { description = ... } so it carries a label. That
+-- description is the ONLY place a keybinding is explained: the Super+C
+-- cheatsheet and docs/keybindings.md are both rendered from it, so a rebind
+-- cannot leave a stale label behind. The "Category:" prefix is what groups them.
+--
+-- The grammar is per key group, not per modifier -- these binds do not fit one
+-- meaning per modifier without going modal:
+--
+--   letters      SUPER act on the focused window, +SHIFT move it, +ALT geometry,
+--                +CTRL launch an app, +CTRL+SHIFT session and system
+--   hjkl         SUPER focus, +SHIFT move window, +ALT resize, +ALT+SHIFT far
+--   arrows       mirror hjkl, and +ALT+SHIFT moves the whole workspace to a monitor
+--   numbers      SUPER go to workspace, +SHIFT move window there, +ALT+SHIFT move
+--                it there without following
+--   dedicated    Return, space, slash, comma, Tab, Print, BackSpace and the zoom
+--                cluster each own one feature; modifiers pick the variant
+--
 -- Key names are case-insensitive (xkb_keysym_from_name XKB_KEYSYM_CASE_INSENSITIVE).
--- Modifier order in the string does not matter; we use SUPER, then SHIFT,
--- CTRL, ALT, then the key, joined by " + ".
+-- Modifier order in the string does not matter; we use SUPER, then SHIFT, CTRL,
+-- ALT, then the key, joined by " + ".
 
 local mainMod = "SUPER"
 
--- Applications
-hl.bind(mainMod .. " + Return",          hl.dsp.exec_cmd("uwsm app -- ghostty"))
+-- Applications. Utility windows go through hypr-float-launch, which floats and
+-- centres them at 85%x90% of the focused monitor; for ghostty it sets a
+-- hypr-float-<pid> title so the windows.lua rule floats them at creation.
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("uwsm app -- ghostty"),
+    { description = "Apps: Terminal" })
 -- herdr attaches to its own persistent server, so this lands in the existing
 -- session rather than starting a fresh shell. Tiled like a plain ghostty, not
 -- floated: it is a workspace to work in, not a utility popup.
-hl.bind(mainMod .. " + CTRL + Return",   hl.dsp.exec_cmd("uwsm app -- ghostty -e herdr"))
-hl.bind(mainMod .. " + SHIFT + F",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- thunar"))
-hl.bind(mainMod .. " + SHIFT + N",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e nvim"))
-hl.bind(mainMod .. " + SHIFT + G",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- signal-desktop"))
-hl.bind(mainMod .. " + SHIFT + M",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- mpv"))
-hl.bind(mainMod .. " + space",           hl.dsp.exec_cmd("quickshell ipc call shell launcher"))
-
--- Window switcher (fzf across all windows, floating)
-hl.bind(mainMod .. " + slash",           hl.dsp.exec_cmd("quickshell ipc call shell switcher"))
-
--- Cheatsheet (keybindings list, floating)
-hl.bind(mainMod .. " + C",               hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"))
-
--- Night mode toggle
-hl.bind(mainMod .. " + CTRL + N",        hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"))
-
--- Clipboard manager (floating)
-hl.bind(mainMod .. " + CTRL + V",        hl.dsp.exec_cmd("quickshell ipc call shell clipboard"))
-
--- Bar/panel actions (all floating via hypr-float-launch); the same TUIs the
--- quickshell bar's matching icons open.
-hl.bind(mainMod .. " + SHIFT + A",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"))
-hl.bind(mainMod .. " + SHIFT + B",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e bluetui"))
+hl.bind(mainMod .. " + CTRL + Return", hl.dsp.exec_cmd("uwsm app -- ghostty -e herdr"),
+    { description = "Apps: Terminal running herdr" })
+hl.bind(mainMod .. " + CTRL + F", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- thunar"),
+    { description = "Apps: File manager" })
+hl.bind(mainMod .. " + CTRL + Y", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e fish -c y"),
+    { description = "Apps: File manager in a terminal" })
+hl.bind(mainMod .. " + CTRL + N", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e nvim"),
+    { description = "Apps: Editor" })
+hl.bind(mainMod .. " + CTRL + M", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- mpv"),
+    { description = "Apps: Media player" })
+hl.bind(mainMod .. " + CTRL + G", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch uwsm app -- signal-desktop"),
+    { description = "Apps: Signal" })
+hl.bind(mainMod .. " + CTRL + A", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/calendar-tui"),
+    { description = "Apps: Calendar" })
+hl.bind(mainMod .. " + CTRL + B", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e bluetui"),
+    { description = "Apps: Bluetooth manager" })
 -- impala manages wifi through NetworkManager (000402 runs NM with the iwd
 -- backend, so saved networks in /var/lib/iwd keep connecting).
-hl.bind(mainMod .. " + SHIFT + W",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e impala"))
-hl.bind(mainMod .. " + SHIFT + V",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e wiremix"))
-hl.bind(mainMod .. " + SHIFT + T",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e btop"))
-hl.bind(mainMod .. " + SHIFT + Y",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e fish -c y"))  -- yazi (fish `y` wrapper)
-hl.bind(mainMod .. " + SHIFT + D",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ncdu /"))
-hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu"))
+hl.bind(mainMod .. " + CTRL + W", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e impala"),
+    { description = "Apps: Wi-Fi manager" })
+hl.bind(mainMod .. " + CTRL + V", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e wiremix"),
+    { description = "Apps: Audio mixer" })
+hl.bind(mainMod .. " + CTRL + T", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e btop"),
+    { description = "Apps: System monitor" })
+hl.bind(mainMod .. " + CTRL + D", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ncdu /"),
+    { description = "Apps: Disk usage" })
+hl.bind(mainMod .. " + CTRL + P", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ~/.local/bin/power-mode-menu"),
+    { description = "Apps: Power profile menu" })
+
+-- Shell surfaces
+hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("quickshell ipc call shell launcher"),
+    { description = "Shell: Application launcher" })
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("quickshell ipc call shell switcher"),
+    { description = "Shell: Window switcher" })
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("quickshell ipc call shell clipboard"),
+    { description = "Shell: Clipboard history" })
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("~/.local/bin/hypr-float-launch ghostty -e ~/.local/bin/hypr-keybinds"),
+    { description = "Shell: Keybinding cheatsheet" })
+
+-- Notifications
+hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd("quickshell ipc call shell dismiss"),
+    { description = "Shell: Dismiss the newest notification" })
+hl.bind(mainMod .. " + SHIFT + comma", hl.dsp.exec_cmd("quickshell ipc call shell dismissAll"),
+    { description = "Shell: Dismiss all notifications" })
+hl.bind(mainMod .. " + CTRL + comma", hl.dsp.exec_cmd("quickshell ipc call shell restore"),
+    { description = "Shell: Restore the last notification" })
+hl.bind(mainMod .. " + ALT + comma",
+    hl.dsp.exec_cmd("quickshell ipc call shell restore && quickshell ipc call shell invoke"),
+    { description = "Shell: Restore and activate the last notification" })
+hl.bind(mainMod .. " + CTRL + SHIFT + comma", hl.dsp.exec_cmd("quickshell ipc call shell dnd"),
+    { description = "Shell: Toggle do not disturb" })
 
 -- Window management
-hl.bind(mainMod .. " + W",               hl.dsp.window.close())
--- Close every window on the current workspace. On SHIFT+CTRL+delete rather than
--- CTRL+delete so it does not collide with the laptop display toggle further down
--- -- both were bound to CTRL+delete, so the display toggle (registered second)
--- won and this bind was dead. Both machines now use the same split.
-hl.bind(mainMod .. " + SHIFT + CTRL + delete", hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"))
-hl.bind(mainMod .. " + F",               hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + CTRL + F",        hl.dsp.window.fullscreen({ mode = "maximized" }))
-hl.bind(mainMod .. " + ALT + F",         hl.dsp.window.fullscreen({ mode = "fullscreen" }))
--- Super+T: toggle floating on the active window, applying the consistent
--- centered size (85%x90% of the focused monitor) when floating it.
-hl.bind(mainMod .. " + T",               hl.dsp.exec_cmd("~/.local/bin/hypr-float-toggle"))
--- Super+E: toggle split direction (dwindle). Super+Shift+E: swap the two
--- halves of the current split.
-hl.bind(mainMod .. " + E",               hl.dsp.layout("togglesplit"))
-hl.bind(mainMod .. " + SHIFT + E",       hl.dsp.layout("swapsplit"))
-hl.bind(mainMod .. " + P",               hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + O",               hl.dsp.window.pin())
-hl.bind(mainMod .. " + G",               hl.dsp.group.toggle())
-hl.bind(mainMod .. " + ALT + G",         hl.dsp.window.move({ out_of_group = true }))
-hl.bind(mainMod .. " + ALT + Tab",       hl.dsp.group.next())
-hl.bind(mainMod .. " + ALT + SHIFT + Tab", hl.dsp.group.prev())
-hl.bind(mainMod .. " + S",               hl.dsp.workspace.toggle_special("scratchpad"))
-hl.bind(mainMod .. " + ALT + S",         hl.dsp.window.move({ workspace = "special:scratchpad" }))
-hl.bind(mainMod .. " + SHIFT + ALT + S", hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }))
-hl.bind(mainMod .. " + CTRL + L",        hl.dsp.exec_cmd("uwsm app -- hyprlock"))
-hl.bind(mainMod .. " + SHIFT + Escape",  hl.dsp.exec_cmd("uwsm stop"))
+hl.bind(mainMod .. " + W", hl.dsp.window.close(),
+    { description = "Window: Close" })
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(),
+    { description = "Window: Toggle fullscreen" })
+hl.bind(mainMod .. " + ALT + F", hl.dsp.window.fullscreen({ mode = "maximized" }),
+    { description = "Window: Toggle maximize" })
+-- Toggles floating via the script rather than the dispatcher, so a floated
+-- window gets the same 85%x90% centred geometry as one launched floating.
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("~/.local/bin/hypr-float-toggle"),
+    { description = "Window: Toggle floating" })
+-- Without these the layout tree cannot be steered at all: looknfeel.lua sets
+-- force_split = 2, so every new window lands right/below regardless of cursor
+-- position, and preserve_split = true makes that orientation stick.
+hl.bind(mainMod .. " + E", hl.dsp.layout("togglesplit"),
+    { description = "Window: Flip the split direction" })
+hl.bind(mainMod .. " + SHIFT + E", hl.dsp.layout("swapsplit"),
+    { description = "Window: Swap the two halves of the split" })
+hl.bind(mainMod .. " + P", hl.dsp.window.pseudo(),
+    { description = "Window: Toggle pseudotiling" })
+hl.bind(mainMod .. " + O", hl.dsp.window.pin(),
+    { description = "Window: Pin above all workspaces" })
+hl.bind(mainMod .. " + G", hl.dsp.group.toggle(),
+    { description = "Window: Toggle tab group" })
+hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.move({ out_of_group = true }),
+    { description = "Window: Move out of the tab group" })
+hl.bind(mainMod .. " + ALT + Tab", hl.dsp.group.next(),
+    { description = "Window: Next tab in the group" })
+hl.bind(mainMod .. " + ALT + SHIFT + Tab", hl.dsp.group.prev(),
+    { description = "Window: Previous tab in the group" })
 
--- Toggle transparency
+-- These three still shell out to `hyprctl keyword`, which does not exist in Lua
+-- config mode -- they are inert here until rewritten against the Lua config API
+-- and verified on this machine.
 hl.bind(mainMod .. " + BackSpace", hl.dsp.exec_cmd(
-    "hyprctl getoption decoration:active_opacity | grep -q '1.0' && hyprctl keyword decoration:active_opacity 0.97 && hyprctl keyword decoration:inactive_opacity 0.9 || hyprctl keyword decoration:active_opacity 1.0 && hyprctl keyword decoration:inactive_opacity 0.95"))
+    "hyprctl getoption decoration:active_opacity | grep -q '1.0' && hyprctl keyword decoration:active_opacity 0.97 && hyprctl keyword decoration:inactive_opacity 0.9 || hyprctl keyword decoration:active_opacity 1.0 && hyprctl keyword decoration:inactive_opacity 0.95"),
+    { description = "Window: Toggle transparency" })
+hl.bind(mainMod .. " + ALT + BackSpace", hl.dsp.exec_cmd(
+    "hyprctl getoption general:gaps_in | grep -q '3' && hyprctl keyword general:gaps_in 0 && hyprctl keyword general:gaps_out 0 || hyprctl keyword general:gaps_in 3 && hyprctl keyword general:gaps_out 5"),
+    { description = "Window: Toggle gaps" })
 
--- Toggle gaps
-hl.bind(mainMod .. " + SHIFT + BackSpace", hl.dsp.exec_cmd(
-    "hyprctl getoption general:gaps_in | grep -q '3' && hyprctl keyword general:gaps_in 0 && hyprctl keyword general:gaps_out 0 || hyprctl keyword general:gaps_in 3 && hyprctl keyword general:gaps_out 5"))
+-- Scratchpad
+hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("scratchpad"),
+    { description = "Workspace: Toggle the scratchpad" })
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:scratchpad" }),
+    { description = "Workspace: Move window to the scratchpad" })
+hl.bind(mainMod .. " + SHIFT + ALT + S",
+    hl.dsp.window.move({ workspace = "special:scratchpad", follow = false }),
+    { description = "Workspace: Move window to the scratchpad without following" })
 
--- Cursor zoom
-hl.bind(mainMod .. " + CTRL + Z", hl.dsp.exec_cmd(
-    [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') + 0.1" | bc)]]))
-hl.bind(mainMod .. " + CTRL + ALT + Z", hl.dsp.exec_cmd("hyprctl keyword cursor:zoom_factor 1.0"))
+-- Session and system
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("uwsm app -- hyprlock"),
+    { description = "System: Lock the screen" })
+hl.bind(mainMod .. " + CTRL + SHIFT + Escape", hl.dsp.exec_cmd("uwsm stop"),
+    { description = "System: Log out" })
+hl.bind(mainMod .. " + CTRL + SHIFT + N", hl.dsp.exec_cmd("~/.local/bin/nightmode-toggle"),
+    { description = "System: Toggle night mode" })
+hl.bind(mainMod .. " + CTRL + SHIFT + I", hl.dsp.exec_cmd("~/.local/bin/keepawake-toggle --wake"),
+    { description = "System: Toggle keep-awake and wake the displays" })
+hl.bind(mainMod .. " + CTRL + SHIFT + D", hl.dsp.exec_cmd("~/.local/bin/hypr-toggle-display"),
+    { description = "System: Toggle the laptop display" })
+hl.bind(mainMod .. " + CTRL + SHIFT + delete", hl.dsp.exec_cmd("~/.local/bin/hypr-kill-workspace"),
+    { description = "System: Close every window on this workspace" })
+hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"),
+    { description = "System: Restart the shell" })
+hl.bind("XF86TouchpadToggle", hl.dsp.exec_cmd("~/.local/bin/toggle-touchpad"),
+    { description = "System: Toggle the touchpad" })
 
--- Toggles (idle, night mode)
-hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd(
-    "hyprctl dispatch dpms off && hyprctl dispatch dpms on; pkill -u $(whoami) hypridle || uwsm app -- hypridle"))
+-- Cursor magnifier. On the equal/minus/0 cluster because that is what every
+-- browser and editor uses for zoom. Same Lua-mode caveat as the two toggles
+-- above: `hyprctl keyword` is inert here.
+hl.bind(mainMod .. " + ALT + equal", hl.dsp.exec_cmd(
+    [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') + 0.1" | bc)]]),
+    { description = "Resize: Zoom the cursor in", repeating = true })
+hl.bind(mainMod .. " + ALT + minus", hl.dsp.exec_cmd(
+    [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') - 0.1" | bc)]]),
+    { description = "Resize: Zoom the cursor out", repeating = true })
+hl.bind(mainMod .. " + ALT + 0", hl.dsp.exec_cmd("hyprctl keyword cursor:zoom_factor 1.0"),
+    { description = "Resize: Reset the cursor zoom" })
 
--- Notifications (mako)
-hl.bind(mainMod .. " + comma",            hl.dsp.exec_cmd("quickshell ipc call shell dismiss"))
-hl.bind(mainMod .. " + SHIFT + comma",    hl.dsp.exec_cmd("quickshell ipc call shell dismissAll"))
-hl.bind(mainMod .. " + CTRL + comma",     hl.dsp.exec_cmd("quickshell ipc call shell restore"))
-hl.bind(mainMod .. " + ALT + comma",      hl.dsp.exec_cmd("quickshell ipc call shell restore && quickshell ipc call shell invoke"))
+-- Capture. Everything that turns the screen into a file or the clipboard lives
+-- on Print: region bare, then window, whole output, text, and video.
+hl.bind("Print", hl.dsp.exec_cmd("~/.local/bin/screenshot region"),
+    { description = "Capture: Screenshot a region" })
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot window"),
+    { description = "Capture: Screenshot the active window" })
+hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot full"),
+    { description = "Capture: Screenshot the whole output" })
+hl.bind(mainMod .. " + CTRL + Print", hl.dsp.exec_cmd("~/.local/bin/hypr-ocr"),
+    { description = "Capture: Region OCR to the clipboard" })
+hl.bind(mainMod .. " + ALT + Print", hl.dsp.exec_cmd("~/.local/bin/screencast"),
+    { description = "Capture: Toggle screen recording" })
 
--- DND toggle
-hl.bind(mainMod .. " + CTRL + SHIFT + comma", hl.dsp.exec_cmd(
-    "quickshell ipc call shell dnd"))
+-- Focus
+hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }), { description = "Focus: Left" })
+hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }), { description = "Focus: Right" })
+hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }), { description = "Focus: Up" })
+hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }), { description = "Focus: Down" })
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }), { description = "Focus: Left" })
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }), { description = "Focus: Right" })
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }), { description = "Focus: Up" })
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }), { description = "Focus: Down" })
 
--- Waybar toggle
-hl.bind(mainMod .. " + SHIFT + space",    hl.dsp.exec_cmd("pkill -x quickshell; uwsm app -- quickshell"))
+-- Move the window
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }), { description = "Window: Move left" })
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }), { description = "Window: Move right" })
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }), { description = "Window: Move up" })
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }), { description = "Window: Move down" })
+hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "left" }), { description = "Window: Move left" })
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }), { description = "Window: Move right" })
+hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }), { description = "Window: Move up" })
+hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }), { description = "Window: Move down" })
 
--- Screenshots
-hl.bind(mainMod .. " + SHIFT + S",        hl.dsp.exec_cmd("~/.local/bin/screenshot region"))
-hl.bind("Print",                          hl.dsp.exec_cmd("~/.local/bin/screenshot full"))
-hl.bind(mainMod .. " + Print",            hl.dsp.exec_cmd("~/.local/bin/screenshot window"))
-
-hl.bind(mainMod .. " + SHIFT + O",        hl.dsp.exec_cmd("~/.local/bin/hypr-ocr"), { description = "Region OCR to clipboard" })
-
--- Screen recording
-hl.bind(mainMod .. " + SHIFT + R",        hl.dsp.exec_cmd("~/.local/bin/screencast"))
-
--- Focus (hjkl + arrows)
-hl.bind(mainMod .. " + H",                hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L",                hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K",                hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J",                hl.dsp.focus({ direction = "down" }))
-hl.bind(mainMod .. " + left",             hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right",            hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",               hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down",             hl.dsp.focus({ direction = "down" }))
-
--- Move windows
-hl.bind(mainMod .. " + SHIFT + H",        hl.dsp.window.move({ direction = "left" }))
-hl.bind(mainMod .. " + SHIFT + L",        hl.dsp.window.move({ direction = "right" }))
-hl.bind(mainMod .. " + SHIFT + K",        hl.dsp.window.move({ direction = "up" }))
-hl.bind(mainMod .. " + SHIFT + J",        hl.dsp.window.move({ direction = "down" }))
-hl.bind(mainMod .. " + SHIFT + left",     hl.dsp.window.move({ direction = "left" }))
-hl.bind(mainMod .. " + SHIFT + right",    hl.dsp.window.move({ direction = "right" }))
-hl.bind(mainMod .. " + SHIFT + up",       hl.dsp.window.move({ direction = "up" }))
-hl.bind(mainMod .. " + SHIFT + down",     hl.dsp.window.move({ direction = "down" }))
-
--- Resize (default) -- binde -> { repeating = true }
-hl.bind(mainMod .. " + ALT + H",          hl.dsp.window.resize({ x = -20, y = 0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + ALT + L",          hl.dsp.window.resize({ x = 20,  y = 0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + ALT + K",          hl.dsp.window.resize({ x = 0,  y = -20, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + ALT + J",          hl.dsp.window.resize({ x = 0,  y = 20,  relative = true }), { repeating = true })
-
--- Resize (fine)
-hl.bind(mainMod .. " + CTRL + ALT + H",   hl.dsp.window.resize({ x = -5, y = 0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + ALT + L",   hl.dsp.window.resize({ x = 5,  y = 0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + ALT + K",   hl.dsp.window.resize({ x = 0,  y = -5, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + ALT + J",   hl.dsp.window.resize({ x = 0,  y = 5,  relative = true }), { repeating = true })
-
--- Resize (coarse)
-hl.bind(mainMod .. " + SHIFT + ALT + H",  hl.dsp.window.resize({ x = -60, y = 0,  relative = true }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + ALT + L",  hl.dsp.window.resize({ x = 60,  y = 0,  relative = true }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + ALT + K",  hl.dsp.window.resize({ x = 0,   y = -60, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + SHIFT + ALT + J",  hl.dsp.window.resize({ x = 0,   y = 60,  relative = true }), { repeating = true })
+-- Resize. Two steps rather than three: the old 5px tier sat on its own modifier
+-- and never earned it.
+hl.bind(mainMod .. " + ALT + H", hl.dsp.window.resize({ x = -20, y = 0, relative = true }),
+    { description = "Resize: Shrink horizontally", repeating = true })
+hl.bind(mainMod .. " + ALT + L", hl.dsp.window.resize({ x = 20, y = 0, relative = true }),
+    { description = "Resize: Grow horizontally", repeating = true })
+hl.bind(mainMod .. " + ALT + K", hl.dsp.window.resize({ x = 0, y = -20, relative = true }),
+    { description = "Resize: Shrink vertically", repeating = true })
+hl.bind(mainMod .. " + ALT + J", hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
+    { description = "Resize: Grow vertically", repeating = true })
+hl.bind(mainMod .. " + SHIFT + ALT + H", hl.dsp.window.resize({ x = -60, y = 0, relative = true }),
+    { description = "Resize: Shrink horizontally by a lot", repeating = true })
+hl.bind(mainMod .. " + SHIFT + ALT + L", hl.dsp.window.resize({ x = 60, y = 0, relative = true }),
+    { description = "Resize: Grow horizontally by a lot", repeating = true })
+hl.bind(mainMod .. " + SHIFT + ALT + K", hl.dsp.window.resize({ x = 0, y = -60, relative = true }),
+    { description = "Resize: Shrink vertically by a lot", repeating = true })
+hl.bind(mainMod .. " + SHIFT + ALT + J", hl.dsp.window.resize({ x = 0, y = 60, relative = true }),
+    { description = "Resize: Grow vertically by a lot", repeating = true })
 
 -- Workspace navigation
-hl.bind(mainMod .. " + Tab",              hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + SHIFT + Tab",      hl.dsp.focus({ workspace = "e-1" }))
-hl.bind(mainMod .. " + CTRL + Tab",       hl.dsp.focus({ workspace = "previous" }))
+hl.bind(mainMod .. " + Tab", hl.dsp.focus({ workspace = "e+1" }), { description = "Workspace: Next" })
+hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.focus({ workspace = "e-1" }), { description = "Workspace: Previous" })
+hl.bind(mainMod .. " + CTRL + Tab", hl.dsp.focus({ workspace = "previous" }), { description = "Workspace: Last used" })
 
 -- Workspaces 1..10 (10 -> key 0)
 for i = 1, 10 do
     local key = i % 10
-    hl.bind(mainMod .. " + " .. key,                 hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. key,         hl.dsp.window.move({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + ALT + " .. key,   hl.dsp.window.move({ workspace = i, follow = false }))
+    hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }),
+        { description = "Workspace: Go to " .. i })
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }),
+        { description = "Workspace: Move window to " .. i })
+    hl.bind(mainMod .. " + SHIFT + ALT + " .. key, hl.dsp.window.move({ workspace = i, follow = false }),
+        { description = "Workspace: Move window to " .. i .. " without following" })
 end
 
--- Move workspace to monitor
-hl.bind(mainMod .. " + SHIFT + ALT + left",  hl.dsp.workspace.move({ monitor = "l" }))
-hl.bind(mainMod .. " + SHIFT + ALT + right", hl.dsp.workspace.move({ monitor = "r" }))
-hl.bind(mainMod .. " + SHIFT + ALT + up",    hl.dsp.workspace.move({ monitor = "u" }))
-hl.bind(mainMod .. " + SHIFT + ALT + down",  hl.dsp.workspace.move({ monitor = "d" }))
+-- Move the whole workspace to another monitor
+hl.bind(mainMod .. " + SHIFT + ALT + left", hl.dsp.workspace.move({ monitor = "l" }),
+    { description = "Workspace: Move to the monitor left" })
+hl.bind(mainMod .. " + SHIFT + ALT + right", hl.dsp.workspace.move({ monitor = "r" }),
+    { description = "Workspace: Move to the monitor right" })
+hl.bind(mainMod .. " + SHIFT + ALT + up", hl.dsp.workspace.move({ monitor = "u" }),
+    { description = "Workspace: Move to the monitor above" })
+hl.bind(mainMod .. " + SHIFT + ALT + down", hl.dsp.workspace.move({ monitor = "d" }),
+    { description = "Workspace: Move to the monitor below" })
 
--- Scroll workspaces (mouse wheel; NOT a mouse drag bind, so no { mouse = true })
+-- Scroll workspaces (mouse wheel; NOT a mouse drag bind, so no { mouse = true }).
 -- NOTE: SUPER+mouse binds are broken by a Hyprland 0.55+ regression (PR #14633
--- aggregates modifier state across all keyboard devices on focus-enter, so
--- SUPER held on the real keyboard is overwritten by empty-mod devices). Use
--- the 3-finger touchpad swipe below as the primary mouse/touch path instead.
-hl.bind(mainMod .. " + mouse_down",        hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",          hl.dsp.focus({ workspace = "e-1" }))
+-- aggregates modifier state across all keyboard devices on focus-enter, so SUPER
+-- held on the real keyboard is overwritten by empty-mod devices). The 3-finger
+-- touchpad swipe below is the primary mouse/touch path instead.
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }), { description = "Workspace: Next" })
+hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }), { description = "Workspace: Previous" })
 
--- Touchpad gesture: 3-finger horizontal swipe switches workspaces (1:1 swipe,
--- like GNOME/KDE). Native Hyprland gesture support -- no plugin required. This
--- is the robust touchpad path: it bypasses both the SUPER+mouse mod-aggregation
--- regression and the bar's touchpad-emulated-scroll guard.
+-- 1:1 swipe like GNOME/KDE. Native, no plugin. This is the robust touchpad path:
+-- it bypasses both the SUPER+mouse mod-aggregation regression and the bar's
+-- touchpad-emulated-scroll guard.
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
--- Mouse drag/resize (bindm -> { mouse = true })
-hl.bind(mainMod .. " + mouse:272",         hl.dsp.window.drag(),   { mouse = true })
-hl.bind(mainMod .. " + mouse:273",         hl.dsp.window.resize(), { mouse = true })
+-- Mouse drag/resize
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),
+    { description = "Window: Drag to move", mouse = true })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(),
+    { description = "Window: Drag to resize", mouse = true })
 
--- Volume / brightness call the shell, which sets the volume on the Pipewire node
--- directly and drives brightnessctl for the backlight. IMPORTANT: the path must
--- be explicit because Hyprland's exec PATH does NOT include ~/.local/bin, so a
--- bare command is silently not found and the key does nothing. Steps are percent
--- and signed: 5/-5 coarse, 1/-1 on ALT, and 100/-100 slam brightness to a rail.
--- Volume is still capped at 150% for boost.
+-- Volume and brightness call the shell, which sets the volume on the Pipewire
+-- node directly and drives brightnessctl for the backlight. IMPORTANT: the path
+-- must be explicit because Hyprland's exec PATH does NOT include ~/.local/bin,
+-- so a bare command is silently not found and the key does nothing. Steps are
+-- percent and signed: 5/-5 coarse, 1/-1 on ALT, and 100/-100 slam brightness to
+-- a rail. Volume is still capped at 150% for boost.
 --
 -- There is deliberately NO on-screen display: the bar's audio/backlight modules
 -- are the readout, which is why swayosd was removed here and never replaced (it
 -- also got this backlight wrong -- raise no-ops, lower raises -- while returning
 -- success).
-hl.bind("XF86AudioRaiseVolume",            hl.dsp.exec_cmd("quickshell ipc call shell volume 5"))
-hl.bind("XF86AudioLowerVolume",            hl.dsp.exec_cmd("quickshell ipc call shell volume -5"))
-hl.bind("XF86AudioMute",                   hl.dsp.exec_cmd("quickshell ipc call shell mute"))
-hl.bind("ALT + XF86AudioRaiseVolume",      hl.dsp.exec_cmd("quickshell ipc call shell volume 1"))
-hl.bind("ALT + XF86AudioLowerVolume",      hl.dsp.exec_cmd("quickshell ipc call shell volume -1"))
-hl.bind("XF86AudioMicMute",                hl.dsp.exec_cmd("quickshell ipc call shell micMute"))
-hl.bind("XF86AudioPlay",                   hl.dsp.exec_cmd("playerctl play-pause"))
-hl.bind("XF86AudioNext",                   hl.dsp.exec_cmd("playerctl next"))
-hl.bind("XF86AudioPrev",                   hl.dsp.exec_cmd("playerctl previous"))
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("quickshell ipc call shell volume 5"),
+    { description = "Media: Volume up" })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("quickshell ipc call shell volume -5"),
+    { description = "Media: Volume down" })
+hl.bind("ALT + XF86AudioRaiseVolume", hl.dsp.exec_cmd("quickshell ipc call shell volume 1"),
+    { description = "Media: Volume up a little" })
+hl.bind("ALT + XF86AudioLowerVolume", hl.dsp.exec_cmd("quickshell ipc call shell volume -1"),
+    { description = "Media: Volume down a little" })
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("quickshell ipc call shell mute"),
+    { description = "Media: Mute output" })
+-- Also cycles the default sink, which the plain mute key does not.
 hl.bind(mainMod .. " + XF86AudioMute", hl.dsp.exec_cmd(
-    [[quickshell ipc call shell mute && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]))
+    [[quickshell ipc call shell mute && sleep 0.3 && pactl set-default-sink $(pactl list short sinks | grep -v "Monitor" | awk '{print $1}' |head -1)]]),
+    { description = "Media: Mute output and switch sink" })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("quickshell ipc call shell micMute"),
+    { description = "Media: Mute the microphone" })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"),
+    { description = "Media: Play or pause" })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"),
+    { description = "Media: Next track" })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"),
+    { description = "Media: Previous track" })
 
--- Brightness (brightnessctl, driven by the shell)
-hl.bind("XF86MonBrightnessUp",             hl.dsp.exec_cmd("quickshell ipc call shell brightness 5"))
-hl.bind("XF86MonBrightnessDown",           hl.dsp.exec_cmd("quickshell ipc call shell brightness -5"))
-hl.bind("SHIFT + XF86MonBrightnessUp",     hl.dsp.exec_cmd("quickshell ipc call shell brightness 100"))
-hl.bind("SHIFT + XF86MonBrightnessDown",   hl.dsp.exec_cmd("quickshell ipc call shell brightness -100"))
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("quickshell ipc call shell brightness 5"),
+    { description = "Media: Brightness up" })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("quickshell ipc call shell brightness -5"),
+    { description = "Media: Brightness down" })
+hl.bind("SHIFT + XF86MonBrightnessUp", hl.dsp.exec_cmd("quickshell ipc call shell brightness 100"),
+    { description = "Media: Brightness to full" })
+hl.bind("SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd("quickshell ipc call shell brightness -100"),
+    { description = "Media: Brightness to minimum" })
 
--- Keyboard backlight
-hl.bind("XF86KbdBrightnessUp",             hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"))
-hl.bind("XF86KbdBrightnessDown",           hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set 10%-"))
+hl.bind("XF86KbdBrightnessUp", hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"),
+    { description = "Media: Keyboard backlight up" })
+hl.bind("XF86KbdBrightnessDown", hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set 10%-"),
+    { description = "Media: Keyboard backlight down" })
 
--- Touchpad toggle
-hl.bind("XF86TouchpadToggle", hl.dsp.exec_cmd(
-    "~/.local/bin/toggle-touchpad || hyprctl keyword input:touchpad:enabled $(hyprctl getoption input:touchpad:enabled | awk '{print $2}') | grep -q true && hyprctl keyword input:touchpad:enabled false || hyprctl keyword input:touchpad:enabled true"))
-
--- Laptop lid close/open is handled by hypridle - see hypridle.conf
-
--- Laptop display toggle
-hl.bind(mainMod .. " + CTRL + delete",     hl.dsp.exec_cmd("~/.local/bin/hypr-toggle-display"))
+-- Laptop lid close/open is handled by hypridle -- see hypridle.conf.

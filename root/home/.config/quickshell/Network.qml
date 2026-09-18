@@ -29,7 +29,7 @@ BarButton {
     + "  " + String.fromCodePoint(0x2191) + " " + SystemMetrics.upBits
 
   tooltip: {
-    const action = "Click: open Wi-Fi manager  (Super+Shift+W)";
+    const action = "Click: open Wi-Fi manager";
     if (root.wired)
       return "Connected<br>" + root.throughput + "<br>" + action;
     if (root.wifi)

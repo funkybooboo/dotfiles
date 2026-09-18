@@ -22,5 +22,5 @@ BarButton {
   }
 
   tooltip: "Bluetooth: " + root.connected.length + " connected<br>"
-    + "Click: open Bluetooth manager  (Super+Shift+B)"
+    + "Click: open Bluetooth manager"
 }

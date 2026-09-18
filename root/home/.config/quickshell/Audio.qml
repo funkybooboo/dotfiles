@@ -34,7 +34,7 @@ BarButton {
 
   text: String.fromCodePoint(root.muted ? 0xf075f : root.glyph) + " " + root.percent + "%"
   tooltip: "Volume " + root.percent + "%<br>"
-    + "Click: open volume mixer  (Super+Shift+V)  |  Right-click: mute"
+    + "Click: open volume mixer  |  Right-click: mute"
 
   onRightClicked: {
     if (root.sink?.audio)

@@ -8,7 +8,7 @@ BarButton {
 
   text: String.fromCodePoint(root.on ? 0xf186 : 0xf185)
   tooltip: "Night mode: " + (root.on ? "On" : "Off") + "<br>"
-    + "Click to toggle  (Super+Ctrl+N)"
+    + "Click to toggle"
 
   PidProbe {
     id: probe
