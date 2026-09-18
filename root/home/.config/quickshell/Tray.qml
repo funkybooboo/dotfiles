@@ -1,10 +1,11 @@
+pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import QtQuick
 
 // Ports waybar's group/tray-expander: a chevron, dimmed while collapsed, that
-// reveals the tray items over 600ms.
+// reveals the tray items.
 //
 // The items are interactive, as they were in waybar: left click activates, middle
 // click is the secondary action, and right click opens the application's own menu.

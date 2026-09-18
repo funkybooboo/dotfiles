@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 
 // A short list of named actions in a centred overlay, driven by the keyboard.
