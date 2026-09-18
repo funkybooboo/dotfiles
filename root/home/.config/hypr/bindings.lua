@@ -120,14 +120,9 @@ hl.bind(mainMod .. " + ALT + G", hl.dsp.group.next(),
 hl.bind(mainMod .. " + ALT + SHIFT + G", hl.dsp.group.prev(),
     { description = "Window: Previous tab in the group" })
 
--- These three still shell out to `hyprctl keyword`, which does not exist in Lua
--- config mode -- they are inert here until rewritten against the Lua config API
--- and verified on this machine.
-hl.bind(mainMod .. " + BackSpace", hl.dsp.exec_cmd(
-    "hyprctl getoption decoration:active_opacity | grep -q '1.0' && hyprctl keyword decoration:active_opacity 0.97 && hyprctl keyword decoration:inactive_opacity 0.9 || hyprctl keyword decoration:active_opacity 1.0 && hyprctl keyword decoration:inactive_opacity 0.95"),
+hl.bind(mainMod .. " + BackSpace", hl.dsp.exec_cmd("~/.local/bin/hypr-opacity-toggle"),
     { description = "Window: Toggle transparency" })
-hl.bind(mainMod .. " + ALT + BackSpace", hl.dsp.exec_cmd(
-    "hyprctl getoption general:gaps_in | grep -q '3' && hyprctl keyword general:gaps_in 0 && hyprctl keyword general:gaps_out 0 || hyprctl keyword general:gaps_in 3 && hyprctl keyword general:gaps_out 5"),
+hl.bind(mainMod .. " + ALT + BackSpace", hl.dsp.exec_cmd("~/.local/bin/hypr-gaps-toggle"),
     { description = "Window: Toggle gaps" })
 
 -- Scratchpad
@@ -164,13 +159,11 @@ hl.bind("XF86TouchpadToggle", hl.dsp.exec_cmd("~/.local/bin/toggle-touchpad"),
     { description = "System: Toggle the touchpad" })
 
 -- Cursor magnifier, on the zoom cluster every browser and editor uses. No reset
--- bind: 0 belongs to workspace 10, and repeated zoom-out reaches 1.0 anyway. Same
--- Lua-mode caveat as the two toggles above: `hyprctl keyword` is inert here.
-hl.bind(mainMod .. " + ALT + equal", hl.dsp.exec_cmd(
-    [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') + 0.1" | bc)]]),
+-- bind: 0 belongs to workspace 10, and hypr-zoom clamps at 1.0 so holding the
+-- zoom-out key already gets back to normal.
+hl.bind(mainMod .. " + ALT + equal", hl.dsp.exec_cmd("~/.local/bin/hypr-zoom in"),
     { description = "Resize: Zoom the cursor in", repeating = true })
-hl.bind(mainMod .. " + ALT + minus", hl.dsp.exec_cmd(
-    [[hyprctl keyword cursor:zoom_factor $(echo "$(hyprctl getoption cursor:zoom_factor | head -1 | awk '{print $2}') - 0.1" | bc)]]),
+hl.bind(mainMod .. " + ALT + minus", hl.dsp.exec_cmd("~/.local/bin/hypr-zoom out"),
     { description = "Resize: Zoom the cursor out", repeating = true })
 
 -- Capture. On C rather than Print because this keyboard has no Print key. Region

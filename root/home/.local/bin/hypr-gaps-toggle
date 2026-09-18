@@ -1,0 +1,24 @@
+#!/bin/bash
+# hypr-gaps-toggle -- flip window gaps between the configured pair and zero.
+# Bound to Super+Alt+BackSpace.
+#
+# The restore values have to live here as well as in looknfeel.lua: collapsing to
+# zero destroys the only copy Hyprland holds, so there is nothing to read back.
+# Keep them in step with the general block there.
+#
+# `hyprctl keyword` is refused under the Lua config ("keyword can't work with
+# non-legacy parsers. Use eval."), so this goes through `hyprctl eval`, which runs
+# in the same persistent Lua state as hyprland.lua.
+#
+# gaps_in is a CSS-gap type, so hl.get_config hands back a per-edge table rather
+# than a number -- comparing it directly would error. Read .top.
+set -euo pipefail
+
+hyprctl eval '
+  local gaps = hl.get_config("general:gaps_in")
+  if gaps.top > 0 then
+    hl.config{ general = { gaps_in = 0, gaps_out = 0 } }
+  else
+    hl.config{ general = { gaps_in = 3, gaps_out = 5 } }
+  end
+' >/dev/null

@@ -1,0 +1,37 @@
+#!/bin/bash
+# hypr-zoom -- step the cursor magnifier in or out, or reset it.
+# Bound to Super+Alt+equal / Super+Alt+minus.
+#
+# Clamped at both ends: below 1.0 Hyprland renders a zoomed-OUT desktop with the
+# cursor adrift, and there is no upper stop, so a held key would otherwise magnify
+# until nothing is identifiable.
+#
+# There is no zoom dispatcher -- cursor:zoom_factor is config-only -- and
+# `hyprctl keyword` is refused under the Lua config ("keyword can't work with
+# non-legacy parsers. Use eval."), so `hyprctl eval` is the only route. Read and
+# clamp happen inside that one call so a held key cannot race its own read.
+set -euo pipefail
+
+readonly STEP=0.1
+readonly MIN=1.0
+readonly MAX=3.0
+
+usage() {
+  printf 'usage: %s in|out|reset\n' "${0##*/}" >&2
+  exit 2
+}
+
+[[ $# -eq 1 ]] || usage
+
+case "$1" in
+  in)    delta=$STEP ;;
+  out)   delta=-$STEP ;;
+  reset) hyprctl eval "hl.config{ cursor = { zoom_factor = $MIN } }" >/dev/null; exit 0 ;;
+  *)     usage ;;
+esac
+
+hyprctl eval "
+  local zoom = hl.get_config(\"cursor:zoom_factor\") or $MIN
+  local target = math.min($MAX, math.max($MIN, zoom + ($delta)))
+  hl.config{ cursor = { zoom_factor = target } }
+" >/dev/null

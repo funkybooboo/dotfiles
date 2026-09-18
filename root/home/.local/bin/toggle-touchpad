@@ -1,6 +1,14 @@
 #!/bin/sh
 # Toggle libinput touchpad on/off via hyprctl
-# State is tracked in a file since getoption input:touchpad:enabled is unavailable
+#
+# State is tracked in a file because a device's `enabled` is write-only: it is a
+# per-device property, and getoption answers "no such option" for it on either
+# parser. That is unrelated to the Lua config -- the work machine tracks state the
+# same way.
+#
+# The write goes through `hyprctl eval 'hl.device(...)'`; `hyprctl keyword` is
+# refused under the Lua config ("keyword can't work with non-legacy parsers"),
+# which left this toggle inert.
 #
 # hyprctl lists touchpads under .mice[], not .touchpads[] (empty on tested
 # hardware), so DEVICE is resolved by name instead of hardcoded per-host.
@@ -14,9 +22,9 @@ fi
 
 # Default to enabled if no state file
 if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" = "0" ]; then
-    hyprctl keyword "device[$DEVICE]:enabled" true
+    hyprctl eval "hl.device({ name = \"$DEVICE\", enabled = true })" >/dev/null
     echo 1 > "$STATE_FILE"
 else
-    hyprctl keyword "device[$DEVICE]:enabled" false
+    hyprctl eval "hl.device({ name = \"$DEVICE\", enabled = false })" >/dev/null
     echo 0 > "$STATE_FILE"
 fi

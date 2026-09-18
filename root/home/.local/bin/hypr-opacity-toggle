@@ -1,0 +1,25 @@
+#!/bin/bash
+# hypr-opacity-toggle -- flip window transparency on and off.
+# Bound to Super+BackSpace.
+#
+# The transparent pair matches the +default-opacity window rule in windows.lua, so
+# toggling on looks the same as the rules that ship enabled.
+#
+# `hyprctl keyword` is refused under the Lua config ("keyword can't work with
+# non-legacy parsers. Use eval."), so this goes through `hyprctl eval`, which runs
+# in the same persistent Lua state as hyprland.lua. Read and decide happen inside
+# that one call so the toggle cannot race its own read.
+#
+# The work machine's copy is the same logic against hyprlang's keyword/getoption.
+set -euo pipefail
+
+# 0.985 rather than == 1.0 because the value is a float read back from the
+# compositor, not the literal that was written.
+hyprctl eval '
+  local opacity = hl.get_config("decoration:active_opacity")
+  if opacity > 0.985 then
+    hl.config{ decoration = { active_opacity = 0.97, inactive_opacity = 0.9 } }
+  else
+    hl.config{ decoration = { active_opacity = 1.0, inactive_opacity = 0.95 } }
+  end
+' >/dev/null
