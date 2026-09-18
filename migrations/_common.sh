@@ -564,6 +564,19 @@ link_tree() {
     local rel="${src#"${src_root}/"}"
     link_file "$src" "$dest_root/$rel"
   done < <("${find_args[@]}")
+
+  # Deleting a file from the repo used to leave its symlink behind forever, since
+  # this function only ever walked the source. A stale link is not inert: quickshell
+  # scans its whole config directory, so a link to a removed .qml breaks any tool
+  # that globs the tree. Only links pointing INTO this source root are pruned, and
+  # only when the target is gone -- real files, and links elsewhere, are not ours.
+  local link target
+  while IFS= read -r -d '' link; do
+    target="$(readlink "$link")"
+    case "$target" in
+      "$src_root"/*) [[ -e "$target" ]] || rm -f "$link" ;;
+    esac
+  done < <(find "$dest_root" -type l -print0)
 }
 
 # link_dir <src> <dest>

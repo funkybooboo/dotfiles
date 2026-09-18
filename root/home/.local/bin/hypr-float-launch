@@ -2,7 +2,7 @@
 # hypr-float-launch -- launch an application and open it in "super+t mode":
 # floating, consistent centered size (see hypr-float-apply).
 #
-# Used for app-launch hotkeys and waybar icon clicks so every app opened via
+# Used for app-launch hotkeys and bar icon clicks so every app opened via
 # keybind or the bar comes up in the same floating centered state.
 #
 # Usage: hypr-float-launch <command...>
