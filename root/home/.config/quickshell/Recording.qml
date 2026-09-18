@@ -21,23 +21,4 @@ BarButton {
 
     processName: "wf-recorder"
   }
-
-  // waybar blinked the glyph by animating its colour to the bar background once
-  // a second; fading it reads the same and does not need a colour animation.
-  SequentialAnimation on opacity {
-    running: root.recording
-    loops: Animation.Infinite
-
-    NumberAnimation {
-      from: 1.0
-      to: 0.0
-      duration: 500
-    }
-
-    NumberAnimation {
-      from: 0.0
-      to: 1.0
-      duration: 500
-    }
-  }
 }

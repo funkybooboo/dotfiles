@@ -113,27 +113,18 @@ hl.config({
     },
 })
 
--- animations (enabled flag, then curves + animation calls)
+-- animations
 hl.config({
     animations = {
-        enabled = true,
+        enabled = false,
+    },
+    render = {
+        -- Defaults to 2 ("auto"), which animates on everything but Nvidia -- so
+        -- the hyprsunset colour shift would still fade here despite animations
+        -- being off.
+        ctm_animation = 0,
     },
 })
-
-hl.curve("easeOutQuint", {
-    type   = "bezier",
-    points = { { 0.23, 1 }, { 0.32, 1 } },
-})
-hl.curve("easeInOutCubic", {
-    type   = "bezier",
-    points = { { 0.65, 0 }, { 0.35, 1 } },
-})
-
-hl.animation({ leaf = "windows",    enabled = true, speed = 2,   bezier = "easeOutQuint",   style = "popin 87%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 1,   bezier = "easeInOutCubic", style = "popin 80%" })
-hl.animation({ leaf = "border",     enabled = true, speed = 2,   bezier = "easeOutQuint" })
-hl.animation({ leaf = "fade",       enabled = true, speed = 2,   bezier = "easeInOutCubic" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 2,   bezier = "easeOutQuint" })
 
 -- cursor
 hl.config({

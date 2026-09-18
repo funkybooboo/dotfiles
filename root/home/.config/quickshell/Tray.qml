@@ -34,10 +34,6 @@ Row {
     opacity: root.expanded ? 1.0 : 0.5
   }
 
-  // waybar's drawer was a GTK revealer, which animates width so the children
-  // slide out. Animating opacity instead snaps the layout to full width on the
-  // first frame while the icons fade in, which is what did not look smooth.
-  // Clipping is what turns a width animation into a reveal.
   Item {
     id: drawer
 
@@ -46,14 +42,9 @@ Row {
     implicitHeight: Theme.barHeight
     implicitWidth: content.implicitWidth + Theme.traySpacing
     width: root.expanded ? drawer.implicitWidth : 0
+    // The Row keeps its own implicit width, so without clipping the icons would
+    // still paint while the drawer is collapsed to zero width.
     clip: true
-
-    Behavior on width {
-      NumberAnimation {
-        duration: 600
-        easing.type: Easing.InOutCubic
-      }
-    }
 
     Row {
       id: content
