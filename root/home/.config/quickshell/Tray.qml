@@ -43,8 +43,16 @@ Row {
     implicitWidth: content.implicitWidth + Theme.traySpacing
     width: root.expanded ? drawer.implicitWidth : 0
     // The Row keeps its own implicit width, so without clipping the icons would
-    // still paint while the drawer is collapsed to zero width.
+    // still paint while the drawer is collapsed to zero width. Clipping is also
+    // what turns the width animation below into a reveal rather than a squeeze.
     clip: true
+
+    Behavior on width {
+      NumberAnimation {
+        duration: 150
+        easing.type: Easing.OutQuint
+      }
+    }
 
     Row {
       id: content

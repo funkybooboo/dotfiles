@@ -116,15 +116,30 @@ hl.config({
 -- animations
 hl.config({
     animations = {
-        enabled = false,
+        enabled = true,
     },
     render = {
-        -- Defaults to 2 ("auto"), which animates on everything but Nvidia -- so
-        -- the hyprsunset colour shift would still fade here despite animations
-        -- being off.
+        -- Defaults to 2 ("auto"), which animates on everything but Nvidia, so the
+        -- hyprsunset colour shift fades even though no other animation here does.
         ctm_animation = 0,
     },
 })
+
+hl.curve("snappy", {
+    type   = "bezier",
+    points = { { 0.23, 1 }, { 0.32, 1 } },
+})
+
+-- Speed is in units of 100ms. Leaves inherit, so "windows" also drives
+-- windowsIn/Out/Move -- Move is what makes a keyboard resize glide rather than
+-- jump, and is the whole reason animations are on at all.
+hl.animation({ leaf = "windows",     enabled = true,  speed = 1.5, bezier = "snappy", style = "popin 90%" })
+hl.animation({ leaf = "workspaces",  enabled = true,  speed = 2,   bezier = "snappy" })
+hl.animation({ leaf = "fade",        enabled = true,  speed = 1.5, bezier = "snappy" })
+-- Focus feedback has to be instant: fading the border delays the only cue for
+-- where typing will land.
+hl.animation({ leaf = "border",      enabled = false })
+hl.animation({ leaf = "borderangle", enabled = false })
 
 -- cursor
 hl.config({
@@ -138,6 +153,10 @@ hl.config({
 hl.config({
     binds = {
         hide_special_on_workspace_change = true,
+        -- Debounce on scroll-triggered binds. The 300ms default swallows fast
+        -- wheel flicks; 0 lets one flick skip several workspaces at once. Moot
+        -- while the 0.55+ Super+mouse regression stands, correct regardless.
+        scroll_event_delay = 50,
     },
 })
 
