@@ -2,12 +2,12 @@ import Quickshell.Services.Notifications
 import Quickshell.Widgets
 import QtQuick
 
-// One toast. Height follows its content rather than the fixed 110px it inherited
-// from mako's config -- a body-less notification was rendering as a two-thirds
-// empty box.
+// One toast, geometry straight from the mako config this replaced: 350 wide, square
+// corners, no border, and 2px red at critical urgency.
 //
-// Every toast carries a visible edge. Only critical urgency used to, which left a
-// normal toast as base-on-base: invisible as a card against any dark window.
+// Height follows its content, which the fixed 110px did not. mako's `height` was a
+// MAXIMUM -- notifications shrank to fit -- so a hardcoded height was the
+// infidelity, and a body-less notification rendered as a two-thirds empty box.
 Rectangle {
   id: root
 
@@ -21,12 +21,11 @@ Rectangle {
   implicitHeight: Math.max(Theme.notificationMinHeight,
     content.implicitHeight + Theme.notificationPadding * 2)
 
-  color: Theme.mantle
-  radius: Theme.roundingLarge
-  border.width: Theme.separatorWidth
-  border.color: root.urgent ? Theme.red : Theme.surface1
+  color: Theme.base
+  border.width: root.urgent ? Theme.notificationUrgentBorder : 0
+  border.color: Theme.red
   // The fixed height used to guarantee the fit; now that it flexes, clipping is
-  // what keeps a long body inside the rounded corners.
+  // what keeps a long body inside the card.
   clip: true
 
   // mako ran ignore-timeout=0, so an app's own requested timeout wins and its

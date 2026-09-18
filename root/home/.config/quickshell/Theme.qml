@@ -52,16 +52,13 @@ Singleton {
 
   readonly property int barHeight: 26
   readonly property int barEdgeMargin: 8
-  // Per-module padding. Reduced from 7.5 now that the group and cluster spacings
-  // below carry the separation, so overall density is unchanged rather than wider.
-  readonly property real moduleMargin: 4
+  // Matches waybar's `#custom-expand-icon { margin: 0 7.5px }`, which every module
+  // inherited -- the bar's spacing is deliberately its spacing.
+  readonly property real moduleMargin: 7.5
   readonly property int moduleMinWidth: 12
 
-  // Two spacing scales are what turn fourteen equal items into five groups: tight
-  // inside a cluster, wider either side of a separator.
-  readonly property int groupSpacing: 2
-  readonly property int clusterSpacing: 10
-  readonly property int separatorWidth: 1
+  // The divider convention under the pickers' search boxes, previously a raw 0.4
+  // hand-copied into four files.
   readonly property real separatorOpacity: 0.4
 
   readonly property int tooltipPadding: 6
@@ -82,6 +79,8 @@ Singleton {
   readonly property int notificationMargin: 10
   readonly property int notificationPadding: 12
   readonly property int notificationTimeout: 5000
+  // mako drew 2px red at urgency=high and nothing otherwise.
+  readonly property int notificationUrgentBorder: 2
   readonly property int notificationIconSize: 48
   readonly property int notificationTextSpacing: 2
   readonly property int notificationMaxVisible: 5

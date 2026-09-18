@@ -69,7 +69,10 @@ Singleton {
   property NotificationServer server: NotificationServer {
     // A notification is discarded unless something claims it, and the popup
     // needs it to outlive the D-Bus call that delivered it.
-    onNotification: notification => notification.tracked = true
+    onNotification: notification => {
+      notification.tracked = true;
+      CodeExtractor.scan(notification);
+    }
 
     bodySupported: true
     bodyMarkupSupported: true

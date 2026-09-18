@@ -40,12 +40,42 @@ PanelWindow {
     spacing: Theme.notificationMargin
 
     Repeater {
-      model: Notifications.visible
+      // Capped at mako's max-visible default. Nothing enforced it before:
+      // retainedLimit bounds only the closed-list bookkeeping, and critical urgency
+      // never auto-expires, so a burst of them grew this Column off the bottom of
+      // the screen with no way to see how many were hidden.
+      model: Notifications.visible.slice(0, Theme.notificationMaxVisible)
 
       NotificationPopup {
         required property var modelData
 
         notification: modelData
+      }
+    }
+
+    Rectangle {
+      readonly property int hidden:
+        Notifications.visible.length - Theme.notificationMaxVisible
+
+      implicitWidth: Theme.notificationWidth
+      implicitHeight: overflowLabel.implicitHeight + Theme.notificationPadding
+      visible: hidden > 0
+      color: Theme.base
+
+      Text {
+        id: overflowLabel
+
+        anchors.centerIn: parent
+        text: parent.hidden + " more"
+        color: Theme.subtext0
+        font.family: Theme.fontFamily
+        font.pixelSize: Theme.fontSize - 1
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: Notifications.closeAll()
       }
     }
   }

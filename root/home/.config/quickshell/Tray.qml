@@ -5,7 +5,7 @@ import Quickshell.Widgets
 import QtQuick
 
 // Ports waybar's group/tray-expander: a chevron, dimmed while collapsed, that
-// reveals the tray items.
+// reveals the tray items over 600ms.
 //
 // The items are interactive, as they were in waybar: left click activates, middle
 // click is the secondary action, and right click opens the application's own menu.
@@ -35,6 +35,10 @@ Row {
     opacity: root.expanded ? 1.0 : Theme.dimmedOpacity
   }
 
+  // waybar's drawer was a GTK revealer, which animates width so the children
+  // slide out. Animating opacity instead snaps the layout to full width on the
+  // first frame while the icons fade in, which is what did not look smooth.
+  // Clipping is what turns a width animation into a reveal.
   Item {
     id: drawer
 
@@ -43,15 +47,12 @@ Row {
     implicitHeight: Theme.barHeight
     implicitWidth: content.implicitWidth + Theme.traySpacing
     width: root.expanded ? drawer.implicitWidth : 0
-    // The Row keeps its own implicit width, so without clipping the icons would
-    // still paint while the drawer is collapsed to zero width. Clipping is also
-    // what turns the width animation below into a reveal rather than a squeeze.
     clip: true
 
     Behavior on width {
       NumberAnimation {
-        duration: 150
-        easing.type: Easing.OutQuint
+        duration: 600
+        easing.type: Easing.InOutCubic
       }
     }
 
