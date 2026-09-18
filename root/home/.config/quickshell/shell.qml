@@ -122,33 +122,33 @@ ShellRoot {
     }
 
     function launcher(): string {
-      LauncherState.toggle();
-      return LauncherState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.launcher);
+      return Overlays.current === Overlays.launcher ? "opened" : "closed";
     }
 
     function clipboard(): string {
-      ClipboardState.toggle();
-      return ClipboardState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.clipboard);
+      return Overlays.current === Overlays.clipboard ? "opened" : "closed";
     }
 
     function switcher(): string {
-      SwitcherState.toggle();
-      return SwitcherState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.switcher);
+      return Overlays.current === Overlays.switcher ? "opened" : "closed";
     }
 
     function powerMenu(): string {
-      PowerMenuState.toggle();
-      return PowerMenuState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.powerMenu);
+      return Overlays.current === Overlays.powerMenu ? "opened" : "closed";
     }
 
     function powerMode(): string {
-      PowerModeMenuState.toggle();
-      return PowerModeMenuState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.powerMode);
+      return Overlays.current === Overlays.powerMode ? "opened" : "closed";
     }
 
     function cheatsheet(): string {
-      CheatsheetState.toggle();
-      return CheatsheetState.open ? "opened" : "closed";
+      Overlays.toggle(Overlays.cheatsheet);
+      return Overlays.current === Overlays.cheatsheet ? "opened" : "closed";
     }
 
     function dnd(): string {

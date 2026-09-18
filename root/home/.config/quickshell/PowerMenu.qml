@@ -24,14 +24,14 @@ ActionMenu {
     { label: "Shut down", destructive: true }
   ]
 
-  visible: PowerMenuState.open
-  onDismissed: PowerMenuState.open = false
+  visible: Overlays.current === Overlays.powerMenu
+  onDismissed: Overlays.close()
 
   onActivated: index => {
-    PowerMenuState.open = false;
+    Overlays.close();
 
     if (menu.commands[index].length === 0) {
-      PowerModeMenuState.open = true;
+      Overlays.current = Overlays.powerMode;
       return;
     }
 

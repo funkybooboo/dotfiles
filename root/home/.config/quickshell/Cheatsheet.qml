@@ -29,8 +29,8 @@ Overlay {
       || r.action.toLowerCase().includes(needle));
   }
 
-  visible: CheatsheetState.open
-  onDismissed: CheatsheetState.open = false
+  visible: Overlays.current === Overlays.cheatsheet
+  onDismissed: Overlays.close()
 
   onVisibleChanged: {
     if (!visible)
@@ -110,7 +110,7 @@ Overlay {
       clip: true
       focus: true
 
-      Keys.onEscapePressed: CheatsheetState.open = false
+      Keys.onEscapePressed: Overlays.close()
       Keys.onDownPressed: list.contentY += Theme.pickerRowHeight
       Keys.onUpPressed: list.contentY -= Theme.pickerRowHeight
 

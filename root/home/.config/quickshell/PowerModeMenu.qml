@@ -13,15 +13,15 @@ ActionMenu {
     { label: "power-saver" }
   ]
 
-  visible: PowerModeMenuState.open
-  onDismissed: PowerModeMenuState.open = false
+  visible: Overlays.current === Overlays.powerMode
+  onDismissed: Overlays.close()
 
   // Re-read on open rather than polling: the profile only changes through this
   // menu or a deliberate CLI call, and a stale mark is worse than a late one.
   onVisibleChanged: if (visible) probe.running = true
 
   onActivated: index => {
-    PowerModeMenuState.open = false;
+    Overlays.close();
     setter.command = ["powerprofilesctl", "set", menu.actions[index].label];
     setter.running = true;
   }

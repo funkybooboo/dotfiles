@@ -45,13 +45,13 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf00a)
       tooltip: "Applications"
-      onClicked: LauncherState.toggle()
+      onClicked: Overlays.toggle(Overlays.launcher)
     }
 
     BarButton {
       text: String.fromCodePoint(0xf0349)
       tooltip: "Search windows"
-      onClicked: SwitcherState.toggle()
+      onClicked: Overlays.toggle(Overlays.switcher)
     }
 
     Workspaces {
@@ -86,13 +86,13 @@ PanelWindow {
     BarButton {
       text: String.fromCodePoint(0xf059)
       tooltip: "Keybindings"
-      onClicked: CheatsheetState.toggle()
+      onClicked: Overlays.toggle(Overlays.cheatsheet)
     }
 
     BarButton {
       text: String.fromCodePoint(0xf0147)
       tooltip: "Clipboard history"
-      onClicked: ClipboardState.toggle()
+      onClicked: Overlays.toggle(Overlays.clipboard)
     }
 
     Audio {
@@ -147,13 +147,13 @@ PanelWindow {
     }
 
     Battery {
-      onClicked: PowerModeMenuState.toggle()
+      onClicked: Overlays.toggle(Overlays.powerMode)
     }
 
     BarButton {
       text: String.fromCodePoint(0x23fb)
       tooltip: "Power menu  (lock / suspend / logout / restart / shutdown)"
-      onClicked: PowerMenuState.toggle()
+      onClicked: Overlays.toggle(Overlays.powerMenu)
     }
   }
 }

@@ -12,8 +12,8 @@ Overlay {
   panelWidth: Theme.pickerWidth
   panelHeight: Theme.pickerHeight
 
-  visible: ClipboardState.open
-  onDismissed: ClipboardState.open = false
+  visible: Overlays.current === Overlays.clipboard
+  onDismissed: Overlays.close()
 
   // Each `cliphist list` line is "<id>\t<single-line preview>".
   property var entries: []
@@ -75,7 +75,7 @@ Overlay {
     copier.command = ["sh", "-c", "cliphist decode " + entry.id + " | wl-copy"];
     copier.running = true;
 
-    ClipboardState.open = false;
+    Overlays.close();
   }
 
   Column {
@@ -99,7 +99,7 @@ Overlay {
       clip: true
       focus: true
 
-      Keys.onEscapePressed: ClipboardState.open = false
+      Keys.onEscapePressed: Overlays.close()
       Keys.onReturnPressed: clipboard.copy()
       Keys.onEnterPressed: clipboard.copy()
       Keys.onDownPressed: list.currentIndex = Math.min(list.count - 1, list.currentIndex + 1)

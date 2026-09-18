@@ -16,8 +16,8 @@ Overlay {
   panelWidth: Theme.pickerWidth
   panelHeight: Theme.pickerHeight
 
-  visible: SwitcherState.open
-  onDismissed: SwitcherState.open = false
+  visible: Overlays.current === Overlays.switcher
+  onDismissed: Overlays.close()
 
   readonly property var windows: {
     const query = search.text.trim().toLowerCase();
@@ -44,7 +44,7 @@ Overlay {
       return;
 
     window.activate();
-    SwitcherState.open = false;
+    Overlays.close();
   }
 
   Column {
@@ -68,7 +68,7 @@ Overlay {
       clip: true
       focus: true
 
-      Keys.onEscapePressed: SwitcherState.open = false
+      Keys.onEscapePressed: Overlays.close()
       Keys.onReturnPressed: switcher.focusSelected()
       Keys.onEnterPressed: switcher.focusSelected()
       Keys.onDownPressed: list.currentIndex = Math.min(list.count - 1, list.currentIndex + 1)

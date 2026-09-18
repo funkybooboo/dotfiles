@@ -11,8 +11,8 @@ Overlay {
   panelWidth: Theme.pickerWidth
   panelHeight: Theme.pickerHeight
 
-  visible: LauncherState.open
-  onDismissed: LauncherState.open = false
+  visible: Overlays.current === Overlays.launcher
+  onDismissed: Overlays.close()
 
   readonly property var entries: {
     const query = search.text.trim().toLowerCase();
@@ -47,7 +47,7 @@ Overlay {
       return;
 
     entry.execute();
-    LauncherState.open = false;
+    Overlays.close();
   }
 
   Column {
@@ -72,7 +72,7 @@ Overlay {
       focus: true
 
       // Single-line TextInput ignores Up/Down, so they are free for the list.
-      Keys.onEscapePressed: LauncherState.open = false
+      Keys.onEscapePressed: Overlays.close()
       Keys.onReturnPressed: launcher.launch()
       Keys.onEnterPressed: launcher.launch()
       Keys.onDownPressed: list.currentIndex = Math.min(list.count - 1, list.currentIndex + 1)
