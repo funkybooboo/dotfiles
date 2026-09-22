@@ -5,7 +5,14 @@ import Quickshell.Networking
 BarButton {
   id: root
 
-  readonly property var device: Networking.devices.values.find(d => d.connected) ?? null
+  // Waybar's module reflects the default-route interface. The USB phone
+  // tether (usb0) is also connected alongside wifi and NM lists it first,
+  // so a plain find() lands on it and the bar shows the wired glyph even
+  // though wifi carries the default route. Wifi always wins the default route
+  // here, so prefer it and fall back to any other connected device.
+  readonly property var device:
+    Networking.devices.values.find(d => d.connected && d.type === DeviceType.Wifi)
+    ?? Networking.devices.values.find(d => d.connected) ?? null
   readonly property bool wifi: root.device?.type === DeviceType.Wifi
   readonly property bool wired: root.device?.type === DeviceType.Wired
   readonly property var network: root.device?.networks?.values.find(n => n.connected) ?? null
