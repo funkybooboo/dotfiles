@@ -4,17 +4,30 @@
 #          /etc/conf.d/wireless-regdom
 # Enables:  NetworkManager.service, NetworkManager-wait-online.service,
 #           iwd.service
-# Note: WHY NetworkManager. The fleet's wifi manager is impala (000562), a
-#       NetworkManager TUI -- it speaks only org.freedesktop.NetworkManager and
-#       cannot manage anything else. The previous shape of this migration was
-#       raw iwd + systemd-networkd, which worked, but left impala with nothing
-#       to talk to (the manager UI could open and never manage) and iwctl as
-#       the only option. NetworkManager is therefore the manager here; iwd
-#       stays the wifi daemon via wifi.backend=iwd.
+# Note: WHY NetworkManager. The fleet's wifi manager is impala (000562),
+#       which drives iwd directly over net.connman.iwd (it has no
+#       NetworkManager strings at all). NetworkManager is the manager here
+#       for everything else around it: DHCP/DNS via systemd-resolved, the
+#       usb0/ethernet links, wait-online for the NAS mount -- and as the iwd
+#       backend it just assumes and configures IP on whatever iwd joins, so
+#       impala keeps working unchanged. iwd stays the wifi daemon via
+#       wifi.backend=iwd.
 # Note: THE BACKEND KEEPS SAVED NETWORKS. Networks live in /var/lib/iwd/*.psk
 #       (machine-specific, never tracked here); with iwd as the backend those
 #       keep connecting across the switch with no re-entry. New networks are
 #       joined through impala, which lands them in the same store.
+#       BOOT AUTOCONNECT IS IWD'S JOB, AND NM MUST NOT TOUCH THAT STORE:
+#       wifi.iwd.autoconnect defaults to true, meaning NetworkManager never
+#       initiates wifi connections itself, and every NM wifi profile it holds
+#       is assumed-from-iwd, which lands in /run/NetworkManager/system-connections
+#       (tmpfs -- gone at every reboot). iwd's /var/lib/iwd psks are therefore
+#       the only persistent autoconnect state. NM's default iwd-config-path=auto
+#       conversion rewrites those psk files with NM-converted profiles "without
+#       preserving their contents" (man 5 NetworkManager.conf) and corrupts
+#       them, which made every reboot need a manual reconnect (fixed
+#       2026-09-19: the deployed conf sets iwd-config-path= empty to disable
+#       the conversion; found via the AP's deauth-reason-15 wrong-psk rejections
+#       and /etc/NetworkManager/system-connections never having been written).
 # Note: DNS stays with systemd-resolved (enabled at install, and
 #       /etc/resolv.conf points at its stub). The NM conf pins
 #       dns=systemd-resolved so NetworkManager, tailscale's CorpDNS and
