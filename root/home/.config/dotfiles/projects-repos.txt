@@ -16,7 +16,7 @@ https://github.com/funkybooboo/template
 https://github.com/funkybooboo/lazycsv
 https://github.com/funkybooboo/ideas
 https://github.com/funkybooboo/lazymusic
-https://github.com/funkybooboo/alle
+https://github.com/funkybooboo/erledigen
 https://github.com/funkybooboo/resume
 https://github.com/funkybooboo/funkybooboo
 https://github.com/funkybooboo/funkybooboo.github.io
@@ -34,3 +34,9 @@ https://github.com/funkybooboo/wrestling_tournament
 https://github.com/funkybooboo/enigma
 https://github.com/funkybooboo/cupid_code
 https://github.com/funkybooboo/vim-be-good
+https://github.com/funkybooboo/khem
+https://github.com/funkybooboo/pmos-toolkit
+https://github.com/funkybooboo/ripper
+https://github.com/funkybooboo/codecrafters-git-python
+https://github.com/funkybooboo/neetcode-gpt
+https://github.com/funkybooboo/basic-practice
