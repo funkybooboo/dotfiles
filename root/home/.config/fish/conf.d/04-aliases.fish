@@ -76,3 +76,13 @@ end
 # tools
 alias d='docker'
 alias t='tmux attach || tmux new -s Work'
+
+# desktop
+#
+# `open` is macOS muscle memory; xdg-open is the Linux equivalent and resolves
+# the handler via xdg-mime (PDFs -> tdf, links -> the browser, etc.). Guarded
+# like the eza aliases: an alias pointing at a missing binary fails only when
+# used, which is a confusing way to discover a half-provisioned machine.
+if type -q xdg-open
+    alias open='xdg-open'
+end
