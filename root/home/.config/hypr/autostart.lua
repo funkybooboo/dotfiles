@@ -23,6 +23,22 @@ end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")
 end)
+-- The import-environment/dbus-update handlers above only add or overwrite
+-- keys -- they can never remove keys an earlier session left behind, and the
+-- user manager plus dbus activation envs live for the whole boot. uwsm
+-- launches apps as user units, so they inherit the manager env, not
+-- Hyprland's. Before env.lua dropped the fake-KDE pair (KDE_FULL_SESSION /
+-- KDE_SESSION_VERSION), every login had imported them, and even after the
+-- fix landed the stale keys kept making xdg-open's detectDE (no Hyprland
+-- case) take the KDE branch and run missing kde-open5 -- a silent no-op for
+-- every "open" from yazi, VS Code links, etc. Scrub the pair on every
+-- session start so the manager env can never drift from env.lua's intent.
+hl.on("hyprland.start", function()
+    -- dbus activation env can only be updated, not unset: empty the keys
+    -- there, then remove them from the user manager env entirely.
+    hl.exec_cmd("dbus-update-activation-environment --systemd KDE_FULL_SESSION= KDE_SESSION_VERSION=")
+    hl.exec_cmd("systemctl --user unset-environment KDE_FULL_SESSION KDE_SESSION_VERSION")
+end)
 -- Ensure the systemd user graphical session target is up. uwsm normally activates
 -- graphical-session.target, but not reliably on every boot, and on the boots it
 -- misses every WantedBy=graphical-session unit stays dead -- hyprpolkitagent and
