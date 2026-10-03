@@ -9,8 +9,11 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("QT_QPA_PLATFORM", "wayland;xcb")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 hl.env("QT_STYLE_OVERRIDE", "kvantum")
-hl.env("KDE_SESSION_VERSION", "5")
-hl.env("KDE_FULL_SESSION", "true")
+-- KDE_SESSION_VERSION/KDE_FULL_SESSION were removed on purpose: they made
+-- xdg-utils misdetect the session as KDE (xdg-open's detectDE has no Hyprland
+-- case and falls back to the KDE_FULL_SESSION heuristic), so every "open in
+-- browser" from VS Code, GitHub auth, etc. ran kde-open5 (missing) and failed
+-- with exit 4. Nothing else uses these vars (no KDE apps, no kdialog).
 hl.env("GDK_BACKEND", "wayland,x11,*")
 hl.env("SDL_VIDEODRIVER", "wayland")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
