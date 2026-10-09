@@ -436,15 +436,24 @@ source_mark_built() {
 
 # Enable a systemd USER service idempotently. Runs daemon-reload first so newly
 # linked unit files are picked up. Starts the unit if not already active.
+# Accepts dotfiles-shipped units AND package-provided units.
 # Usage: enable_user_service "foo.service"
 enable_user_service() {
   local unit="$1"
-  local unit_file="$HOME/.config/systemd/user/$unit"
-  if [[ ! -f "$unit_file" ]]; then
-    skip "$unit (unit file not found)"
+  # daemon-reload BEFORE the existence check, so a unit file linked moments
+  # ago in this migration is visible to it.
+  systemctl --user daemon-reload 2>/dev/null || true
+  # Resolve the unit through systemd, never a filesystem path: dotfiles
+  # units live in ~/.config/systemd/user/ after link_file, but package-
+  # provided units (podman.socket, ...) only exist under /usr/lib/systemd/user.
+  # The old $HOME/.config path check silently skipped package units, so a
+  # migration's declared enable never actually happened for them -- the
+  # user podman.socket was disabled on a machine whose 000204-podman
+  # migration claimed to enable it, and the docker-API clients died with it.
+  if ! systemctl --user cat "$unit" >/dev/null 2>&1; then
+    skip "$unit (unit not known to systemd)"
     return
   fi
-  systemctl --user daemon-reload 2>/dev/null || true
   if systemctl --user is-enabled --quiet "$unit" 2>/dev/null; then
     systemctl --user start "$unit" 2>/dev/null || true
     skip "$unit (already enabled)"
