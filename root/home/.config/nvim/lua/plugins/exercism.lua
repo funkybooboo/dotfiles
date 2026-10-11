@@ -1,7 +1,11 @@
 -- exercism.nvim -- browse/test/submit Exercism exercises from inside Neovim.
 -- Requires the external `exercism` CLI (installed via the 000233-exercism
 -- migration, `nix profile install .#exercism`). Run `exercism configure` once
--- to set the token + workspace before first use.
+-- to set the token before first use; the migration enforces the CLI workspace
+-- (via `exercism configure --workspace`) to match exercism_workspace below,
+-- since the plugin checks/opens exercises HERE but the CLI downloads into
+-- ITS configured workspace -- a mismatch means downloads land where the
+-- plugin can never find them.
 return {
   "2kabhishek/exercism.nvim",
   cmd = { "Exercism" },
