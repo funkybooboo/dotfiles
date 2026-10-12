@@ -16,7 +16,7 @@
         let pkgs = pkgsFor system; in {
           inherit (pkgs)
             brave librewolf wayfreeze tdf timg nvimpager
-            proton-pass-cli losslesscut localsend cliamp lazyjournal lazysql
+            proton-pass-cli losslesscut cliamp lazyjournal lazysql
             calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
             exercism codecrafters-cli opencode herdr
             # espanso-wayland: text expander, Wayland build. Not in Arch's
