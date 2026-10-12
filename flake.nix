@@ -19,6 +19,9 @@
             proton-pass-cli losslesscut cliamp lazyjournal lazysql
             calcure mermaid-cli bitwarden-cli pi-coding-agent vscode
             exercism codecrafters-cli opencode herdr
+            # digital: hneemann's digital circuit simulator. Not in Arch's
+            # official repos, so nix is the first tier that can provide it.
+            digital
             # espanso-wayland: text expander, Wayland build. Not in Arch's
             # official repos, and upstream's only Linux Wayland asset is a Debian
             # .deb, so tier 2 cannot serve Arch at all. AUR does carry
