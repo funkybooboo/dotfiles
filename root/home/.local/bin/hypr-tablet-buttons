@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""hypr-tablet-buttons -- Wacom ExpressKeys as Xournal++ shortcuts.
+
+Hyprland 0.56.2 has no tablet-button binds -- verified against the binary:
+the only tablet config keys are output, region_*, active_area_*,
+relative_input and left_handed -- so the CTL-4100's four ExpressKeys are
+dead without help. This daemon reads ONLY the pad evdev node (matched by
+name, so the stylus node is never touched -- that is why keyd was rejected:
+stylus and pad share one USB id, and keyd would grab both) and injects
+key macros through uinput, the same half of the input path espanso uses
+(000325's udev rule grants the input group /dev/uinput; /dev/input/event*
+is 0660 root:input).
+
+Button order (top to bottom) still needs one live verification after a
+reboot into a kernel whose modules still exist: press each ExpressKey and
+read `journalctl --user --grep hypr-tablet-buttons` for the reported
+codes, then fix BUTTONS below if the order is off.
+
+Started by autostart.lua (`uwsm app --`, the espanso pattern) so the
+daemon dies with the uwsm scope. See migrations/000586-wacom-tablet.sh.
+"""
+
+import re
+import sys
+import time
+
+try:
+    from evdev import InputDevice, UInput, ecodes, list_devices
+except ImportError as err:
+    print(f"hypr-tablet-buttons: {err} -- run migrations/000586-wacom-tablet.sh", file=sys.stderr)
+    sys.exit(1)
+
+# The pad node, by evdev name (hid-wacom names it e.g. "Wacom Intuos S Pad
+# pad"). Never touch the stylus/eraser nodes -- see module docstring.
+PAD_NAME_RE = re.compile(r"wacom.*\bpad\b", re.IGNORECASE)
+
+# Key macros injected per pad button, expected top-to-bottom. Adjust after
+# the first live verification (see module docstring).
+BUTTONS = {
+    ecodes.BTN_0: "undo",
+    ecodes.BTN_1: "redo",
+    ecodes.BTN_2: "save",
+    ecodes.BTN_3: "eraser",
+}
+COMBOS = {
+    "undo":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_Z),
+    "redo":   ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_Z),
+    "save":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_S),
+    "eraser": ([], ecodes.KEY_E),
+}
+
+# Keyboard-only uinput device, with exactly the keys the macros use.
+UI_CAPS = {
+    ecodes.EV_KEY: sorted(
+        {ecodes.KEY_Z, ecodes.KEY_S, ecodes.KEY_E,
+         ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT}
+    )
+}
+
+RESCAN_SECONDS = 2  # tablet absent / driver not yet bound: rescan interval
+HOLD_SECONDS = 0.04  # injected press+release hold
+
+
+def find_pad():
+    """The pad evdev node by name; None while the tablet is absent."""
+    for path in list_devices():
+        try:
+            dev = InputDevice(path)
+        except OSError:
+            continue
+        if PAD_NAME_RE.search(dev.name):
+            return dev
+        dev.close()
+    return None
+
+
+def inject(ui, action):
+    """Send one macro: modifiers down, key tap, modifiers up."""
+    mods, key = COMBOS[action]
+    for m in mods:
+        ui.write(ecodes.EV_KEY, m, 1)
+    ui.write(ecodes.EV_KEY, key, 1)
+    ui.syn()
+    time.sleep(HOLD_SECONDS)
+    ui.write(ecodes.EV_KEY, key, 0)
+    for m in reversed(mods):
+        ui.write(ecodes.EV_KEY, m, 0)
+    ui.syn()
+
+
+def main():
+    # Fail loudly, not silently: a missing uinput permission looks exactly
+    # like a dead daemon otherwise (the espanso trap).
+    try:
+        ui = UInput(UI_CAPS, name="hypr-tablet-buttons")
+    except OSError as err:
+        print(f"hypr-tablet-buttons: cannot open /dev/uinput: {err}", file=sys.stderr)
+        return 1
+
+    dev = None
+    while True:
+        if dev is None:
+            dev = find_pad()
+            if dev is None:
+                time.sleep(RESCAN_SECONDS)
+                continue
+            print(f"hypr-tablet-buttons: pad = {dev.name} ({dev.path})", file=sys.stderr)
+        try:
+            for event in dev.read_loop():
+                if event.type != ecodes.EV_KEY or event.value != 1:
+                    continue  # presses only
+                action = BUTTONS.get(event.code)
+                if action is None:
+                    print(f"hypr-tablet-buttons: unmapped button code {event.code}"
+                          " -- add to BUTTONS", file=sys.stderr)
+                    continue
+                print(f"hypr-tablet-buttons: {action} "
+                          f"({'+'.join(_name(action))})", file=sys.stderr)
+                inject(ui, action)
+        except OSError as err:
+            # Replug or suspend: the node vanished; rescan.
+            print(f"hypr-tablet-buttons: pad gone ({err}), rescanning", file=sys.stderr)
+            try:
+                dev.close()
+            except OSError:
+                pass
+            dev = None
+
+
+def _name(action):
+    """Human form of a combo for the log line."""
+    mods, key = COMBOS[action]
+    parts = ["ctrl" if m == ecodes.KEY_LEFTCTRL else "shift" for m in mods]
+    parts.append(ecodes.KEY[key].replace("KEY_", "").lower())
+    return parts
+
+
+if __name__ == "__main__":
+    sys.exit(main())

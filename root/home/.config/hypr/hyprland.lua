@@ -16,6 +16,10 @@ require("./monitors.lua")
 require("./env.lua")
 require("./autostart.lua")
 require("./input.lua")
+-- tablet.lua is machine-local (rewritten by hypr-tablet-follow, see
+-- migrations/000586), gitignored, and required directly so it always
+-- resolves, like monitors.lua above.
+require("./tablet.lua")
 require("./looknfeel.lua")
 require("./windows.lua")
 require("./bindings.lua")

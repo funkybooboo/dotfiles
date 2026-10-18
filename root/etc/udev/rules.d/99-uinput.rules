@@ -5,6 +5,8 @@
 # of the input path: it reads typed triggers from /dev/input/event* (already
 # 0660 root:input, so `input` group membership covers it) and injects the
 # expansion back through uinput, which nothing but root can open by default.
+# Since 000586, hypr-tablet-buttons injects the Wacom ExpressKey macros
+# through the same node.
 #
 # Upstream instead documents `setcap cap_dac_override+p` on the espanso binary.
 # That is deliberately not used here: capabilities live on the inode, so any
