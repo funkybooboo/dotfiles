@@ -29,11 +29,15 @@
 #       daemon reads ONLY the pad evdev node (by name -- stylus and pad share
 #       one USB id, which is why keyd was rejected: it grabs by id and would
 #       break the pen) and injects ExpressKey macros through uinput via the
-#       000325 udev rule: undo, redo, save, eraser for Xournal++. The
-#       button-to-code ORDER needs one live verification after the reboot
-#       (press each ExpressKey, read journalctl --user --grep
-#       hypr-tablet-buttons, fix BUTTONS in the script). input-remapper would
-#       be the off-the-shelf tool but it is AUR-only, excluded by policy.
+#       000325 udev rule: undo, redo, save, eraser for Xournal++. Its shebang
+#       is pinned to /usr/bin/python3, the interpreter pacman installs
+#       python-evdev for -- `env python3` may resolve to a mise python without
+#       it and die silently, and `uwsm app` does not journal daemon stderr, so
+#       that death would be invisible. To see pad button codes, run
+#       ~/.local/bin/hypr-tablet-buttons in a terminal (stderr is not
+#       journaled) and fix BUTTONS in the script if the order is off.
+#       input-remapper would be the off-the-shelf tool but it is AUR-only,
+#       excluded by policy.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

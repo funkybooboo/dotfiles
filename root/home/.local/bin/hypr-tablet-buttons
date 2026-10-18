@@ -1,5 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """hypr-tablet-buttons -- Wacom ExpressKeys as Xournal++ shortcuts.
+
+The shebang is pinned to /usr/bin/python3 (not `env python3`): Arch installs
+python-evdev into the system python, while `env python3` may resolve to a
+mise python that lacks it -- which would kill this daemon silently (see the
+stderr note below).
 
 Hyprland 0.56.2 has no tablet-button binds -- verified against the binary:
 the only tablet config keys are output, region_*, active_area_*,
@@ -11,10 +16,11 @@ key macros through uinput, the same half of the input path espanso uses
 (000325's udev rule grants the input group /dev/uinput; /dev/input/event*
 is 0660 root:input).
 
-Button order (top to bottom) still needs one live verification after a
-reboot into a kernel whose modules still exist: press each ExpressKey and
-read `journalctl --user --grep hypr-tablet-buttons` for the reported
-codes, then fix BUTTONS below if the order is off.
+Button order (top to bottom) still needs one live confirmation: presses log
+to stderr, and `uwsm app` does NOT journal daemon stderr (verified live:
+only systemd's own Started lines appear), so run
+`~/.local/bin/hypr-tablet-buttons` in a terminal to see the reported codes
+and fix BUTTONS below if the order is off.
 
 Started by autostart.lua (`uwsm app --`, the espanso pattern) so the
 daemon dies with the uwsm scope. See migrations/000586-wacom-tablet.sh.
