@@ -26,7 +26,9 @@ Started by autostart.lua (`uwsm app --`, the espanso pattern) so the
 daemon dies with the uwsm scope. See migrations/000586-wacom-tablet.sh.
 """
 
+import json
 import re
+import subprocess
 import sys
 import time
 
@@ -40,8 +42,9 @@ except ImportError as err:
 # pad"). Never touch the stylus/eraser nodes -- see module docstring.
 PAD_NAME_RE = re.compile(r"wacom.*\bpad\b", re.IGNORECASE)
 
-# Key macros injected per pad button, expected top-to-bottom. Adjust after
-# the first live verification (see module docstring).
+# Key macros injected per pad button, expected top-to-bottom. The eraser
+# tool in Xournal++ 1.3.8 is Ctrl+Shift+E (verified against
+# /usr/share/xournalpp/ui/mainmenubar.xml) -- a bare "e" is bound to nothing.
 BUTTONS = {
     ecodes.BTN_0: "undo",
     ecodes.BTN_1: "redo",
@@ -52,8 +55,16 @@ COMBOS = {
     "undo":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_Z),
     "redo":   ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_Z),
     "save":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_S),
-    "eraser": ([], ecodes.KEY_E),
+    "eraser": ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_E),
 }
+
+# FOCUS GUARD: these macros are Xournal++ shortcuts, and injected keys land
+# in whatever window holds focus. Injecting them globally proved destructive:
+# pressing an ExpressKey while a terminal had focus sent ctrl+z into it, which
+# suspended (and effectively killed) the coding-agent session running there,
+# and ctrl+s froze the terminal with XOFF. So: only inject while the focused
+# window is Xournal++ itself; every other focus target gets a logged skip.
+TARGET_CLASS = "xournalpp"
 
 # Keyboard-only uinput device, with exactly the keys the macros use.
 UI_CAPS = {
@@ -78,6 +89,18 @@ def find_pad():
             return dev
         dev.close()
     return None
+
+
+def xournal_focused():
+    """True only while the focused window is Xournal++ (see FOCUS GUARD)."""
+    try:
+        out = subprocess.run(
+            ["hyprctl", "activewindow", "-j"], capture_output=True, text=True
+        ).stdout
+        cls = json.loads(out).get("class", "")
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return False
+    return TARGET_CLASS in cls.lower()
 
 
 def inject(ui, action):
@@ -119,6 +142,10 @@ def main():
                 if action is None:
                     print(f"hypr-tablet-buttons: unmapped button code {event.code}"
                           " -- add to BUTTONS", file=sys.stderr)
+                    continue
+                if not xournal_focused():
+                    print(f"hypr-tablet-buttons: skip {action}"
+                          " (focus is not Xournal++)", file=sys.stderr)
                     continue
                 print(f"hypr-tablet-buttons: {action} "
                           f"({'+'.join(_name(action))})", file=sys.stderr)
