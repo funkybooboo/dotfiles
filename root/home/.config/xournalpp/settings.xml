@@ -19,7 +19,7 @@
   <property name="maximized" value="true"/>
   <property name="showToolbar" value="true"/>
   <property name="showSidebar" value="false"/>
-  <property name="sidebarWidth" value="151"/>
+  <property name="sidebarWidth" value="50"/>
   <property name="sidebarNumberingStyle" value="1"/>
   <property name="sidebarOnRight" value="false"/>
   <property name="scrollbarOnLeft" value="false"/>
@@ -215,7 +215,7 @@
     <attribute name="count" type="int" value="9"/>
   </data>
   <data name="tools">
-    <attribute name="current" type="string" value="eraser"/>
+    <attribute name="current" type="string" value="pen"/>
     <data name="drawArrow"/>
     <data name="drawCoordinateSystem"/>
     <data name="drawDoubleArrow"/>
