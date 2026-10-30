@@ -1,44 +1,126 @@
 #!/bin/bash
+# Toggle screen recording, bound to Super+R in bindings.lua.
+#
+# Start: slurp a region (fallback: the focused output), route system audio and
+# the microphone into a temporary combine sink, record with wf-recorder.
+# Stop: kill wf-recorder, unload the pactl modules, open the file in
+# losslesscut.
+#
+# Two invariants, learned the hard way:
+# - State must live in files, not shell variables: every keypress is a new
+#   process, so anything held only in a variable is lost between start and
+#   stop. The old version stored the pactl module indexes in variables and so
+#   never unloaded them; the leftover loopbacks route the microphone into the
+#   speakers, which sounds like static.
+# - The whole start (including the slurp selection window) must hold a lock:
+#   the pidfile only appears after slurp returns, so an unlocked second press
+#   during selection sees "not recording" and starts a second recorder.
+
+set -u
 
 _pidfile=/tmp/screencast.pid
-_audio_combined=""
-_audio_loopback=""
-_file=""
+_statefile=/tmp/screencast.state   # line 1: output file; lines 2+: pactl module indexes
+_lockfile=/tmp/screencast.lock
+
+notify() {
+    notify-send "Screencast" "$1" \
+        -h string:x-canonical-private-synchronous:screencast
+}
+
+# Unload every module this script may have loaded: the indexes recorded in the
+# state file, plus any screencastCombined sink or loopback left behind by a
+# crashed or pre-fix version of this script.
+unload_audio() {
+    local modules
+    modules=$(sed -n '2,$p' "$_statefile" 2>/dev/null)
+    modules="$modules
+$(pactl list short modules 2>/dev/null \
+    | awk '$2 == "module-combine-sink" || $2 == "module-loopback"' \
+    | grep screencastCombined | awk '{print $1}')"
+    for m in $modules; do
+        [[ "$m" =~ ^[0-9]+$ ]] && pactl unload-module "$m" 2>/dev/null
+    done
+}
 
 stop_recording() {
-    wf_pid=$(cat "$_pidfile" 2>/dev/null)
-    [[ -n "$wf_pid" ]] && kill "$wf_pid" 2>/dev/null
+    local file
+    file=$(sed -n '1p' "$_statefile" 2>/dev/null)
+    kill "$(cat "$_pidfile" 2>/dev/null)" 2>/dev/null
     rm -f "$_pidfile"
-
-    [[ -n "$_audio_loopback" ]] && pactl unload-module "$_audio_loopback" 2>/dev/null
-    [[ -n "$_audio_combined" ]] && pactl unload-module "$_audio_combined" 2>/dev/null
-
-    sleep 0.5
-    [[ -n "$_file" && -f "$_file" ]] && losslesscut "$_file" &
+    unload_audio
+    rm -f "$_statefile"
+    sleep 1   # let wf-recorder finalize the container
+    if [[ -n "$file" && -f "$file" ]]; then
+        notify "Stopped: $(basename "$file")"
+        losslesscut "$file" >/dev/null 2>&1 9>&- &
+    else
+        notify "Stopped"
+    fi
 }
 
 start_recording() {
-    region=$(slurp -b '#cba6f780' -c '#cba6f7' -s '#00000060' -w 2 2>/dev/null)
+    # A crashed session leaves modules behind; never stack a new sink on top.
+    unload_audio
+    rm -f "$_statefile" "$_pidfile"
 
+    local region
+    if command -v slurp >/dev/null 2>&1; then
+        # ESC in slurp means cancel, not "record the whole output": the old
+        # fallback silently started a full-screen recording on cancel, which
+        # with no other feedback looked like the keypress did nothing and
+        # invited another press (and another stacked recording).
+        if ! region=$(slurp -b '#cba6f780' -c '#cba6f7' -s '#00000060' -w 2 2>/dev/null); then
+            notify "Cancelled"
+            exit 0
+        fi
+    else
+        region=""
+    fi
     if [[ -z "$region" ]]; then
         region=$(hyprctl monitors -j | python3 -c "import json,sys; m=json.load(sys.stdin); f=[x for x in m if x.get('focused')]; print(f'{m[0][\"x\"]},{m[0][\"y\"]} {m[0][\"width\"]}x{m[0][\"height\"]}') if not f else f'{f[0][\"x\"]},{f[0][\"y\"]} {f[0][\"width\"]}x{f[0][\"height\"]}')")
     fi
 
+    local output_sink input_source output
     output_sink=$(pactl get-default-sink)
+    # If a leftover screencastCombined sink is the default, chain onto it.
+    if [[ "$output_sink" == *screencast* ]]; then
+        output_sink=$(pactl list short sinks | awk '$2 !~ /screencast/ {print $2; exit}')
+    fi
     input_source=$(pactl list sources short | grep -v "\.monitor" | head -1 | awk '{print $2}')
     output=$(hyprctl monitors -j | python3 -c "import json,sys; ms=json.load(sys.stdin); focused=[m for m in ms if m.get('focused')]; print(focused[0]['name'] if focused else ms[0]['name'])")
 
-    _audio_combined=$(pactl load-module module-combine-sink sink_name=screencastCombined sink_properties=device.description="ScreencastCombined" slaves="$output_sink" 2>/dev/null | awk '{print $NF}')
-    _audio_loopback=$(pactl load-module module-loopback source="$input_source" sink=screencastCombined 2>/dev/null | awk '{print $NF}')
+    local combined loopback
+    combined=$(pactl load-module module-combine-sink sink_name=screencastCombined \
+        sink_properties=device.description="ScreencastCombined" \
+        slaves="$output_sink" 2>/dev/null | awk '{print $NF}')
+    loopback=$(pactl load-module module-loopback \
+        source="$input_source" sink=screencastCombined 2>/dev/null | awk '{print $NF}')
 
-    _file="/tmp/screencast-$(date +%Y-%m-%d_%H-%M-%S).mp4"
-
-    wf-recorder -o "$output" -g "$region" -a --audio-source=screencastCombined.monitor -f "$_file" &
+    local file="/tmp/screencast-$(date +%Y-%m-%d_%H-%M-%S).mp4"
+    # 9>&- keeps the background child from inheriting the lock fd: a child
+    # holding it would keep the lock alive for the whole recording and every
+    # later keypress would silently fail flock and do nothing.
+    wf-recorder -o "$output" -g "$region" --audio=screencastCombined.monitor \
+        -f "$file" 9>&- &
     echo $! > "$_pidfile"
+    printf '%s\n%s\n%s\n' "$file" "$combined" "$loopback" > "$_statefile"
+
+    sleep 0.5
+    if kill -0 "$(cat "$_pidfile")" 2>/dev/null; then
+        notify "Recording"
+    else
+        notify "wf-recorder failed to start"
+        stop_recording
+    fi
 }
 
+# One keypress at a time. A press that arrives while another is still busy
+# (typically during slurp selection) is dropped: the alternative would be to
+# misread it as "not recording" and stack a second recorder.
+exec 9>"$_lockfile"
+flock -n 9 || exit 0
+
 if [[ -f "$_pidfile" ]] && kill -0 "$(cat "$_pidfile")" 2>/dev/null; then
-    _file=$(ls -t /tmp/screencast-*.mp4 2>/dev/null | head -1)
     stop_recording
 else
     start_recording
