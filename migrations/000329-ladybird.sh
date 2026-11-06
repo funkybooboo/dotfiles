@@ -53,6 +53,20 @@
 #       (ccache + the vcpkg binary cache + the shallow tree). Delete the
 #       stamp or ~/.local/bin/Ladybird to force a rebuild.
 #
+#       vcpkg runtime libs: the vcpkg release triplet builds third-party
+#       deps as SHARED libraries (VCPKG_LIBRARY_LINKAGE dynamic), but
+#       cmake's install rules install only ladybird's own lagom libs -- the
+#       vcpkg .so files stay behind in the build tree while the installed
+#       binaries' rpath is $ORIGIN:$ORIGIN/../lib. Upstream bridges that gap
+#       with the packaging environment (the flatpak runtime injects /app/lib
+#       into LD_LIBRARY_PATH); a plain ~/.local install has no such env, and
+#       without this step the launcher appears dead -- the loader fails on
+#       libskia.so, libjpeg.so.62 and friends before any window opens. The
+#       migration therefore copies the vcpkg shared libs into ~/.local/lib,
+#       exactly where the rpath looks, and then ldd-checks the installed
+#       binary so a future upstream change cannot reintroduce the gap
+#       silently.
+#
 #       Memory: compile jobs are capped at 16 and link jobs at 2
 #       (LAGOM_LINK_POOL_SIZE, upstream's documented remedy for limited RAM)
 #       so a 30 GiB machine with the desktop session resident cannot OOM at
@@ -291,6 +305,37 @@ if [[ ! -x "$LADYBIRD_BIN" ]]; then
   warn "install finished but ${LADYBIRD_BIN/$HOME/\~} is missing"
   _add_error "ladybird: install completed without bin/Ladybird"
   return 0 2>/dev/null || exit 0
+fi
+
+# --- vcpkg runtime libs into the rpath's search dir (see header) ----------------
+vcpkg_triplet=""
+case "$(uname -m)" in
+  x86_64)  vcpkg_triplet="x64-linux-dynamic" ;;
+  aarch64) vcpkg_triplet="arm64-linux-dynamic" ;;
+esac
+vcpkg_libdir="$LADYBIRD_SRC/Build/release/vcpkg_installed/${vcpkg_triplet}/lib"
+if [[ -n "$vcpkg_triplet" && -d "$vcpkg_libdir" ]] \
+   && compgen -G "$vcpkg_libdir/*.so*" >/dev/null; then
+  mkdir -p "$HOME/.local/lib"
+  cp -af "$vcpkg_libdir"/*.so* "$HOME/.local/lib/"
+  ok "vcpkg runtime libs -> ${HOME}/.local/lib"
+else
+  warn "vcpkg shared libs not found under ${vcpkg_libdir/$HOME/\~}"
+  _add_warning "ladybird: vcpkg shared libs missing; installed browser may fail to launch"
+fi
+
+# Post-install sanity: every library must resolve, or the launcher will
+# silently do nothing -- the loader error is only visible from a terminal.
+unresolved="$(ldd "$LADYBIRD_BIN" 2>/dev/null | grep -c "not found" || true)"
+if (( unresolved > 0 )); then
+  warn "installed Ladybird still has $unresolved unresolved libs (see: ldd ${LADYBIRD_BIN/$HOME/\~})"
+  _add_warning "ladybird: $unresolved libs unresolved after install"
+fi
+
+# Refresh the desktop database so the new .desktop + icon register for
+# launchers and mimetype handlers.
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 fi
 
 mkdir -p "$(dirname "$LADYBIRD_STAMP")"
