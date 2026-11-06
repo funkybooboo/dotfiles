@@ -8,7 +8,8 @@
 # espanso implements them only through kdotool, which is KDE-only, so under
 # Hyprland every match is global. espanso auto-loads every .yml in this
 # directory, so matches are split by topic: base.yml (dates, signature,
-# general text), markdown.yml (clipboard wrappers).
+# general text), markdown.yml (markdown and clipboard wrappers), code.yml
+# (dev markers and fenced blocks).
 
 matches:
   - trigger: ":date"

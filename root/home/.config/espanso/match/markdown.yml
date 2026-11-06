@@ -3,7 +3,10 @@
 # Clipboard wrappers: the workflow is copy-first, then type the trigger.
 # The clipboard extension is read BEFORE the expansion is written, and
 # preserve_clipboard (default on) restores the original content after the
-# paste, so the source text stays on the clipboard either way.
+# paste, so the source text stays on the clipboard either way. Edge case:
+# with an EMPTY clipboard, espanso's Wayland fallback (wl-paste) fails and
+# the match expands to nothing (a "rendering error" in the log) -- copy
+# first.
 
 matches:
   # Fenced code block around whatever is on the clipboard -- the PR-review /
@@ -26,3 +29,57 @@ matches:
     vars:
       - name: clip
         type: clipboard
+
+  # Inline styles. $|$ drops the cursor between the marker pair (single-line,
+  # so the autoindent caveat for cursor hints does not apply).
+  - trigger: ":bold"
+    label: "Bold text"
+    replace: "**$|$**"
+
+  - trigger: ":italic"
+    label: "Italic text"
+    replace: "*$|$*"
+
+  - trigger: ":strike"
+    label: "Strikethrough"
+    replace: "~~$|$~~"
+
+  - trigger: ":inline"
+    label: "Inline code"
+    replace: "`$|$`"
+
+  # Discord/Reddit-style spoiler tags.
+  - trigger: ":spoiler"
+    label: "Spoiler text"
+    replace: "||$|$||"
+
+  # :link's image sibling: copy the image URL first.
+  - trigger: ":img"
+    label: "Markdown image from clipboard URL"
+    replace: "![$|$]({{clip}})"
+    vars:
+      - name: clip
+        type: clipboard
+
+  # Two-column table skeleton, cursor in the first header cell. Multiline
+  # with a cursor hint: fine in browsers and notes, skip inside editors with
+  # autoindent (the hint counts backspaces blindly).
+  - trigger: ":table"
+    label: "Markdown table skeleton"
+    replace: "| $|$ |   |\n|---|---|\n|   |   |"
+
+  # GitHub collapsible section, cursor on the summary text.
+  - trigger: ":details"
+    label: "Collapsible section (GitHub)"
+    replace: "<details><summary>$|$</summary>\n\n</details>"
+
+  # Blockquote the clipboard. The clipboard extension can only include text
+  # verbatim, so prefixing each line goes through wl-paste + sed.
+  - trigger: ":quote"
+    label: "Blockquote the clipboard"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "wl-paste | sed 's/^/> /'"

@@ -1,0 +1,68 @@
+# espanso dev matches -- linked by migration 000325-espanso.sh.
+#
+# Cross-app dev text: language-tagged fenced blocks, code markers, and small
+# generators. Code SNIPPETS (for writing actual code) still belong in the
+# editor -- this file is for the places the editor cannot help: browsers,
+# issues, chat, terminals.
+#
+# Trigger-prefix trap kept in mind: typing a longer trigger fires any shorter
+# trigger that is its prefix, so language blocks do NOT use :code* triggers
+# (":code" would fire first). Instead, :lang pops a language picker.
+
+matches:
+  # Fenced block around the clipboard, asking for the language first (the
+  # choice extension opens the same picker UI as the search bar). Values are
+  # the languages this machine actually writes.
+  - trigger: ":lang"
+    label: "Fenced code block from clipboard, with language picker"
+    replace: "```{{lang}}\n{{clip}}\n```"
+    vars:
+      - name: lang
+        type: choice
+        params:
+          values:
+            - python
+            - zig
+            - lua
+            - fish
+            - sh
+            - nix
+            - json
+            - yaml
+            - toml
+      - name: clip
+        type: clipboard
+
+  # Markers for notes and code comments; cursor after the colon.
+  - trigger: ":todo"
+    label: "TODO marker"
+    replace: "TODO(nate): $|$"
+
+  - trigger: ":fixme"
+    label: "FIXME marker"
+    replace: "FIXME(nate): $|$"
+
+  # For quick script snippets posted in chat or notes.
+  - trigger: ":shebang"
+    label: "Interpreter line"
+    replace: "#!/usr/bin/env $|$"
+
+  # Kernel-provided UUID, no uuidgen dependency.
+  - trigger: ":uuid"
+    label: "Random UUID"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "cat /proc/sys/kernel/random/uuid"
+
+  # Unix epoch seconds, for timestamps in logs and notes.
+  - trigger: ":epoch"
+    label: "Unix timestamp (seconds)"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "date +%s"
