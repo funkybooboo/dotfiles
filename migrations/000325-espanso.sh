@@ -26,6 +26,12 @@
 #       autostart.lua runs: `uwsm app -- espanso daemon` (from an agent context,
 #       `hyprctl eval "hl.exec_cmd('uwsm app -- espanso daemon')"`).
 #
+#       Config hot-reload has a symlinked-tree gotcha (observed live
+#       2026-11-06): the watcher fires on directory events under
+#       ~/.config/espanso, so editing a tracked file in the repo (a symlink
+#       target) triggers NO reload. Relink a live file (ln -sfn) or relaunch
+#       the daemon after config edits.
+#
 #       This REVERSES the note in 000400-power-management.sh, which recorded that
 #       the `input` group was not being re-added after swayosd went away. espanso
 #       needs it: its EVDEV backend reads typed triggers straight from

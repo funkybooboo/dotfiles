@@ -1,0 +1,16 @@
+# espanso work matches (Domo / Jira) -- linked by migration 000325-espanso.sh.
+#
+# Split out of base.yml: espanso auto-loads every .yml in this directory, so
+# matches are grouped by topic instead of one growing file. See base.yml for
+# the general conventions (":" trigger prefix, global-only under Wayland).
+
+matches:
+  # Jira keys are written DOMO-nnnnnn constantly; this expands to the browse
+  # URL prefix so only the number has to be typed.
+  - trigger: ":jira"
+    replace: "https://domoinc.atlassian.net/browse/DOMO-"
+
+  # Required trailer on anything a person reads as a message from Nate
+  # (Jira comments, PR review replies) -- see CLAUDE.md attribution rule.
+  - trigger: ":botsig"
+    replace: "-- By Nates Bot"

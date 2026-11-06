@@ -1,14 +1,18 @@
 # espanso matches -- linked by migration 000325-espanso.sh.
 #
 # `trigger` is the typed text, `replace` what lands. Triggers are prefixed with
-# `:` so they cannot fire inside ordinary prose.
+# `:` so they cannot fire inside ordinary prose. `label` is what the search bar
+# (ALT+Space or `:find`) shows instead of the raw replacement.
 #
 # App-specific matches (filter_class / filter_title) are NOT usable here:
 # espanso implements them only through kdotool, which is KDE-only, so under
-# Hyprland every match is global.
+# Hyprland every match is global. espanso auto-loads every .yml in this
+# directory, so matches are split by topic: base.yml (dates and general
+# text), markdown.yml (clipboard wrappers), work.yml (Domo/Jira).
 
 matches:
   - trigger: ":date"
+    label: "Today's date, such as 2026-11-06"
     replace: "{{today}}"
     vars:
       - name: today
@@ -17,6 +21,7 @@ matches:
           format: "%Y-%m-%d"
 
   - trigger: ":now"
+    label: "Date and time, such as 2026-11-06 08:44"
     replace: "{{stamp}}"
     vars:
       - name: stamp
@@ -24,15 +29,33 @@ matches:
         params:
           format: "%Y-%m-%d %H:%M"
 
-  # Jira keys are written DOMO-nnnnnn constantly; this expands to the browse
-  # URL prefix so only the number has to be typed.
-  - trigger: ":jira"
-    replace: "https://domoinc.atlassian.net/browse/DOMO-"
+  # Timezone-pinned variant for log-style notes; the date extension's tz
+  # parameter needs espanso 2.3+.
+  - trigger: ":utc"
+    label: "UTC date and time, such as 2026-11-06 15:44 UTC"
+    replace: "{{stamp}}"
+    vars:
+      - name: stamp
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M UTC"
+          tz: "UTC"
 
-  # Required trailer on anything a person reads as a message from Nate
-  # (Jira comments, PR review replies) -- see CLAUDE.md attribution rule.
-  - trigger: ":botsig"
-    replace: "-- By Nates Bot"
+  # Public IP via ipify, the docs' canonical shell-extension example -- for
+  # VPN/homelab conversations. Shell output is trimmed by default.
+  - trigger: ":ip"
+    label: "Public IP address"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "curl -s https://api.ipify.org"
+
+  # The classic. Unicode escapes keep this file pure ASCII; espanso decodes
+  # \uXXXX sequences in double-quoted strings.
+  - trigger: ":shrug"
+    replace: "\u00af\\_(\u30c4)_/\u00af"
 
   # Steam launch options for Proton games (validated on AOE2DE 813780 and
   # Civ V 8930 with GE-Proton11-6). Launch options do NOT sync between

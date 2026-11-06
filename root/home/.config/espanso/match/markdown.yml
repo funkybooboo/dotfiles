@@ -1,0 +1,28 @@
+# espanso markdown matches -- linked by migration 000325-espanso.sh.
+#
+# Clipboard wrappers: the workflow is copy-first, then type the trigger.
+# The clipboard extension is read BEFORE the expansion is written, and
+# preserve_clipboard (default on) restores the original content after the
+# paste, so the source text stays on the clipboard either way.
+
+matches:
+  # Fenced code block around whatever is on the clipboard -- the PR-review /
+  # Jira-comment workhorse. Multi-line, so real code will exceed
+  # clipboard_threshold (100 chars) and paste via the configured
+  # paste_shortcut (see config/default.yml for why that is CTRL+SHIFT+V).
+  - trigger: ":code"
+    label: "Wrap clipboard in a fenced code block"
+    replace: "```\n{{clip}}\n```"
+    vars:
+      - name: clip
+        type: clipboard
+
+  # Markdown link: copy the URL first, type :a, the cursor lands between the
+  # brackets for the label text ($|$ cursor hint; single-line, so the
+  # autoindent caveat for cursor hints does not apply).
+  - trigger: ":a"
+    label: "Markdown link from clipboard URL"
+    replace: "[$|$]({{clip}})"
+    vars:
+      - name: clip
+        type: clipboard

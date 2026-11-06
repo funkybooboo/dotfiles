@@ -7,3 +7,24 @@
 keyboard_layout:
   layout: us
   options: compose:caps
+
+# Replacements longer than clipboard_threshold (default 100 chars) switch to
+# the clipboard backend: espanso copies the expansion, then simulates the
+# paste shortcut. The default CTRL+V pastes nothing in ghostty, which binds
+# CTRL+SHIFT+V and shift+insert instead (verified in ghostty's Config.zig),
+# so long matches would silently fail in the terminal. Browsers treat
+# CTRL+SHIFT+V as paste-as-plain-text, which is exactly what an expansion
+# is, so this is safe everywhere.
+paste_shortcut: CTRL+SHIFT+V
+
+# No notification daemon runs in this Hyprland setup, so every reload's
+# "config reloaded" notification fails with a DBus ServiceUnknown ERROR in
+# the log -- noise that can mask real errors. Disable it; revisit if a
+# daemon (mako/dunst/swaync) is ever added.
+show_notifications: false
+
+# Typed trigger that opens the search bar, as a fallback for the default
+# ALT+Space hotkey (free here: Hyprland's launcher is SUPER+Space). The bar
+# is a GTK window on Wayland; confirm ALT+Space opens and refocuses it
+# correctly on Hyprland the first time it is used.
+search_trigger: ":find"
