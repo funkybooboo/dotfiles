@@ -78,6 +78,17 @@ description: >
   the load dies with "X is not a type". QML's JS engine (V4) rejects OBJECT
   spread `{...obj}` outright (array spread `[...a, b]` is fine) and quickshell
   has no QtQuick.Controls in this config by design.
+- RESTART MEANS KILL FIRST: quickshell is NOT single-instance. A plain
+  relaunch leaves the old instance running beside the new one, both
+  rendering the bar/panels, and the orphan grows (2026-11-06: a 09:09
+  instance survived two relaunches, peaked 3.1G RSS + 600M swap over 2.5h
+  -- repeated config-reload churn does not return QML memory -- until
+  earlyoom shot it; its replacement idled at 83M). Restarting is
+  desktop-visible (bar blinks off/on) and needs the user's go-ahead; then
+  `pkill -x quickshell` (exact name -- no self-match trap), wait a beat,
+  then the hyprctl dispatch exec_cmd above. Orphan check: `pgrep -a
+  quickshell` (also check RSS: an instance far above ~100M after a
+  dev-heavy session needs a restart).
 - Debug probes: temp IpcHandler function in shell.qml callable via
   `quickshell ipc call shell <name>` gives a fully remote test loop (state +
   dispatch + returns) without touching the mouse.

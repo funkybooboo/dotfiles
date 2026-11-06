@@ -1,0 +1,36 @@
+# Default settings for earlyoom. This file is sourced by systemd from
+# earlyoom.service (EnvironmentFile). Deployed from ~/dotfiles by
+# 000411-earlyoom-tuning.sh -- edits belong in the repo, not here.
+#
+# Why not the stock Arch args (2026-11-06): under heavy test-stack builds
+# (podman image builds + containers + headless chromium) the machine hit the
+# SIGTERM/SIGKILL thresholds (mem avail AND swap free below 10%/5%), and
+# earlyoom then killed by oom_score one process at a time until the whole
+# session was executed: terminal windows, bar, audio, portals, gpg/ssh
+# agents, dbus-broker -- 68 kills at 11:43, and 139 and 169 in the two days
+# prior, each wave ending in a reboot. Once zram is 100% full, every
+# swapped-out daemon's oom_score balloons, so tiny session services die
+# alongside the real hogs.
+#
+# What changed:
+#   --avoid the session shell. Subtracts 300 from oom_score -- it does NOT
+#     exempt: if only session processes remain as candidates they still
+#     die, so a true OOM always resolves. The build/test hogs keep their
+#     natural score (podman already sets oom_score_adj 200-300 on container
+#     processes, so the test stack dies first regardless).
+#   --ignore-root-user: system daemons (systemd, journald, udev) stay off
+#     the kill list. The hogs on this box are user-owned (rootless podman,
+#     browsers, editors); the kernel OOM killer remains the backstop for a
+#     root-owned runaway.
+#
+# Matching notes: earlyoom matches the kernel's comm name, which is
+# truncated to 15 chars ("xdg-desktop-por" for xdg-desktop-portal-hyprland),
+# so the regexes use prefix + .* forms. -n keeps OOM events flowing over
+# D-Bus so quickshell toasts show every kill as it happens. -m/-s are
+# earlyoom's own defaults, spelled out so the thresholds are visible here.
+
+EARLYOOM_ARGS="-r 3600 -n -m 10,5 -s 10,5 --ignore-root-user --avoid '(^|/)(init|systemd|Xorg|sshd|Hyprland|uwsm|quickshell|ghostty.*|waybar|wireplumber|pipewire.*|xdg-.*|gpg-agent|scdaemon|keyboxd|ssh-agent|dconf.*|dbus.*|gvfs.*|at-spi.*|herdr|espanso.*)$'"
+
+# Examples from the stock file, kept for reference:
+# EARLYOOM_ARGS="-r 60"          # memory report every minute
+# EARLYOOM_ARGS="-m 15 -s 5"     # available mem 15%, free swap 5%
