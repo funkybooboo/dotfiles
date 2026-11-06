@@ -45,6 +45,25 @@ deploy_etc_file \
   "/etc/systemd/zram-generator.conf" \
   644
 
+# Grow zram0 live, BEFORE the earlyoom restart below so earlyoom's startup
+# read sees the settled size (on 2026-11-06 the restart landed mid-resize
+# and the startup banner printed a transient 244 MiB swap total; the poll
+# loop self-corrects, but the banner misleads). The setup unit is a oneshot
+# that cannot reset a device with active swap, so swapoff first (returns
+# whatever zram holds back to RAM; the migration is run at the desktop,
+# never mid-build, so there is headroom). 8192 MiB = 8589934592 bytes.
+if [[ "$(cat /sys/block/zram0/disksize 2>/dev/null || echo 0)" == "8589934592" ]]; then
+  skip "zram0 already 8G"
+else
+  sudo swapoff /dev/zram0 2>/dev/null || true
+  if sudo systemctl restart systemd-zram-setup@zram0.service 2>/dev/null; then
+    ok "zram0 re-created at 8G"
+  else
+    warn "could not re-create zram0 live -- 8G applies at next boot"
+    _add_warning "zram0 not resized live; 8G applies at next boot"
+  fi
+fi
+
 # Reload EARLYOOM_ARGS into the running earlyoom (same direct-sudo shape
 # as 000011's nix-daemon restart; a restart is safe -- earlyoom holds no
 # state). Skip when the running instance already has the tuned args.
@@ -56,22 +75,6 @@ elif sudo systemctl restart earlyoom.service 2>/dev/null; then
 else
   warn "could not restart earlyoom -- tuned args apply after reboot"
   _add_warning "earlyoom not restarted; tuned args apply after reboot"
-fi
-
-# Grow zram0 live. The setup unit is a oneshot that cannot reset a device
-# with active swap, so swapoff first (returns whatever zram holds back to
-# RAM; the migration is run at the desktop, never mid-build, so there is
-# headroom). 8192 MiB = 8589934592 bytes.
-if [[ "$(cat /sys/block/zram0/disksize 2>/dev/null || echo 0)" == "8589934592" ]]; then
-  skip "zram0 already 8G"
-else
-  sudo swapoff /dev/zram0 2>/dev/null || true
-  if sudo systemctl restart systemd-zram-setup@zram0.service 2>/dev/null; then
-    ok "zram0 re-created at 8G"
-  else
-    warn "could not re-create zram0 live -- 8G applies at next boot"
-    _add_warning "zram0 not resized live; 8G applies at next boot"
-  fi
 fi
 
 ok "earlyoom: session shell avoided, root ignored; zram 4G -> 8G"
