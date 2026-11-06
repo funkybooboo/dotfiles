@@ -15,6 +15,17 @@
 #       makes `systemctl --user is-active hypridle` report inactive while the
 #       daemon runs, and ~/.local/bin/toggle-lock is broken as a result.
 #
+#       Because espanso is deliberately NOT registered, `espanso restart` is a
+#       trap (verified live 2026-11-06): it stops espanso first, then fails on
+#       the start half with "not registered as a service", leaving espanso
+#       dead until re-login. The daemon and worker are also a death pact -- if
+#       the worker dies abnormally the daemon logs "received unexpected exit
+#       code from worker 90, exiting" and quits (the worker watches the daemon
+#       back, see --monitor-daemon), so there is no in-place worker restart
+#       either. The mid-session recovery for both is to relaunch exactly what
+#       autostart.lua runs: `uwsm app -- espanso daemon` (from an agent context,
+#       `hyprctl eval "hl.exec_cmd('uwsm app -- espanso daemon')"`).
+#
 #       This REVERSES the note in 000400-power-management.sh, which recorded that
 #       the `input` group was not being re-added after swayosd went away. espanso
 #       needs it: its EVDEV backend reads typed triggers straight from
@@ -25,8 +36,14 @@
 #       knowing before debugging: app-specific config (filter_class /
 #       filter_title) does not work under Hyprland, because espanso implements it
 #       only via kdotool, which is KDE-only; and espanso opens /dev/input devices
-#       once at startup, so a keyboard plugged in later is ignored until
-#       `espanso restart`.
+#       once at worker start, so a keyboard plugged in later is invisible until
+#       the daemon is relaunched (NOT `espanso restart`, which kills it -- see
+#       above). Injection itself is healthy on this setup (verified 2026-11-06):
+#       /dev/uinput injection works at the kernel level, Hyprland hotplugs a new
+#       uinput keyboard within ~2s, and the worker watches every EV_KEY device it
+#       can see at startup, including uinput-created ones (hypr-tablet-buttons'
+#       node is among them). `espanso match exec -t ':date'` injects into the
+#       focused window and is the fast CLI smoke test for the injection half.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
