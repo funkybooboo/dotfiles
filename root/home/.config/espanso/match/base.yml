@@ -7,8 +7,8 @@
 # App-specific matches (filter_class / filter_title) are NOT usable here:
 # espanso implements them only through kdotool, which is KDE-only, so under
 # Hyprland every match is global. espanso auto-loads every .yml in this
-# directory, so matches are split by topic: base.yml (dates and general
-# text), markdown.yml (clipboard wrappers), work.yml (Domo/Jira).
+# directory, so matches are split by topic: base.yml (dates, signature,
+# general text), markdown.yml (clipboard wrappers).
 
 matches:
   - trigger: ":date"
@@ -64,3 +64,8 @@ matches:
   # this also works inside Steam's own UI.
   - trigger: ":steamopts"
     replace: "gamescope -W 1920 -H 1080 -f -- gamemoderun %command%"
+
+  # Required trailer on anything a person reads as a message from Nate
+  # (Jira comments, PR review replies) -- see CLAUDE.md attribution rule.
+  - trigger: ":botsig"
+    replace: "-- By Nates Bot"

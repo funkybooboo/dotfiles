@@ -17,10 +17,10 @@ matches:
       - name: clip
         type: clipboard
 
-  # Markdown link: copy the URL first, type :a, the cursor lands between the
-  # brackets for the label text ($|$ cursor hint; single-line, so the
+  # Markdown link: copy the URL first, type :link, the cursor lands between
+  # the brackets for the label text ($|$ cursor hint; single-line, so the
   # autoindent caveat for cursor hints does not apply).
-  - trigger: ":a"
+  - trigger: ":link"
     label: "Markdown link from clipboard URL"
     replace: "[$|$]({{clip}})"
     vars:
