@@ -1,5 +1,4 @@
 import Quickshell.Services.Notifications
-import Quickshell.Widgets
 import QtQuick
 
 // One toast, geometry straight from the mako config this replaced: 350 wide, square
@@ -8,18 +7,19 @@ import QtQuick
 // Height follows its content, which the fixed 110px did not. mako's `height` was a
 // MAXIMUM -- notifications shrank to fit -- so a hardcoded height was the
 // infidelity, and a body-less notification rendered as a two-thirds empty box.
+//
+// Closing (X button, right-click or timeout) hides the toast; the notification
+// stays in the panel's history. Only the panel deletes.
 Rectangle {
   id: root
 
   required property var notification
 
   readonly property bool urgent: root.notification.urgency === NotificationUrgency.Critical
-  readonly property var extraActions:
-    root.notification.actions.filter(a => a.identifier !== "default")
 
   implicitWidth: Theme.notificationWidth
   implicitHeight: Math.max(Theme.notificationMinHeight,
-    content.implicitHeight + Theme.notificationPadding * 2)
+    body.implicitHeight + Theme.notificationPadding * 2)
 
   color: Theme.base
   border.width: root.urgent ? Theme.notificationUrgentBorder : 0
@@ -46,112 +46,49 @@ Rectangle {
     id: hover
   }
 
-  Row {
-    id: content
+  NotificationContent {
+    id: body
 
+    notification: root.notification
     anchors {
       left: parent.left
       right: parent.right
       top: parent.top
       margins: Theme.notificationPadding
     }
+  }
 
-    spacing: Theme.notificationPadding
+  // The visible close target the right-click already offered. NotificationContent
+  // reserves the corner, so the app name never runs underneath it.
+  Item {
+    id: closeButton
 
-    IconImage {
-      id: icon
-
-      implicitSize: Theme.notificationIconSize
-      visible: root.notification.image !== "" || root.notification.appIcon !== ""
-      source: root.notification.image !== "" ? root.notification.image : root.notification.appIcon
+    anchors {
+      top: parent.top
+      right: parent.right
+      topMargin: 4
+      rightMargin: 4
     }
 
-    Column {
-      width: parent.width
-        - (icon.visible ? Theme.notificationIconSize + Theme.notificationPadding : 0)
+    width: 16
+    height: 16
 
-      spacing: Theme.notificationTextSpacing
+    Text {
+      anchors.centerIn: parent
+      text: String.fromCodePoint(0xf00d)
+      color: closeHover.hovered ? Theme.red : Theme.overlay0
+      font.family: Theme.fontFamily
+      font.pixelSize: Theme.fontSize - 2
+    }
 
-      Text {
-        width: parent.width
-        text: root.notification.appName
-        color: Theme.mauve
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize - 1
-        elide: Text.ElideRight
-      }
+    HoverHandler {
+      id: closeHover
+    }
 
-      Text {
-        width: parent.width
-        text: root.notification.summary
-        // Matches the body's StyledText rather than defaulting to AutoText, which
-        // guessed per-string and could render one toast's summary as markup.
-        textFormat: Text.StyledText
-        color: Theme.text
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize
-        font.bold: true
-        elide: Text.ElideRight
-      }
-
-      Text {
-        width: parent.width
-        visible: root.notification.body !== ""
-        text: root.notification.body
-        textFormat: Text.StyledText
-        color: Theme.subtext0
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize
-        wrapMode: Text.WordWrap
-        maximumLineCount: 3
-        elide: Text.ElideRight
-      }
-
-      // Anything beyond the default action had no UI at all, even though the server
-      // advertises actionsSupported -- so a "Reply / Mark read" notification
-      // silently offered neither.
-      Row {
-        visible: root.extraActions.length > 0
-        spacing: Theme.notificationTextSpacing
-        topPadding: Theme.notificationTextSpacing
-
-        Repeater {
-          model: root.extraActions
-
-          Rectangle {
-            required property var modelData
-
-            implicitWidth: actionLabel.implicitWidth + Theme.notificationPadding
-            implicitHeight: actionLabel.implicitHeight + Theme.notificationTextSpacing * 2
-
-            radius: Theme.roundingSmall
-            color: actionHover.hovered ? Theme.surface1 : Theme.surface0
-
-            HoverHandler {
-              id: actionHover
-            }
-
-            Text {
-              id: actionLabel
-
-              anchors.centerIn: parent
-              text: modelData.text
-              color: Theme.text
-              font.family: Theme.fontFamily
-              font.pixelSize: Theme.fontSize - 1
-            }
-
-            MouseArea {
-              anchors.fill: parent
-              cursorShape: Qt.PointingHandCursor
-              onClicked: {
-                modelData.invoke();
-                Notifications.close(root.notification);
-              }
-            }
-          }
-        }
-      }
+    MouseArea {
+      anchors.fill: parent
+      cursorShape: Qt.PointingHandCursor
+      onClicked: Notifications.close(root.notification)
     }
   }
 
@@ -159,20 +96,16 @@ Rectangle {
     anchors.fill: parent
     cursorShape: Qt.PointingHandCursor
     acceptedButtons: Qt.LeftButton | Qt.RightButton
-    // Sits under the action buttons so their own handlers win.
+    // Sits under the close button and the action buttons so their own handlers
+    // win.
     z: -1
 
-    // Left click activates and dismisses; right click only dismisses. Previously
-    // the close ran unconditionally, so there was no way to dismiss a notification
-    // without also firing whatever its default action was.
+    // Left click activates and dismisses; right click and the X only dismiss.
+    // Previously the close ran unconditionally, so there was no way to dismiss a
+    // notification without also firing whatever its default action was.
     onClicked: mouse => {
-      if (mouse.button === Qt.LeftButton) {
-        const action = root.notification.actions.find(a => a.identifier === "default");
-        if (action)
-          action.invoke();
-        else
-          Compositor.focusWindowFor(root.notification);
-      }
+      if (mouse.button === Qt.LeftButton)
+        Notifications.activate(root.notification);
 
       Notifications.close(root.notification);
     }
