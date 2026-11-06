@@ -68,8 +68,16 @@ description: >
 - HOT-RELOAD DOES NOT FIRE on link_tree'd QML files replaced by sed -i / editors
   that rename-replace (the watcher holds the replaced inode; verified live:
   edits sat unapplied through three reload attempts). After editing the repo's
-  QML: `pkill -x quickshell && uwsm app -- quickshell` from a session terminal
-  (uwsm app from agent bash lands in a proper app-graphical.slice scope).
+  QML, restart quickshell. From agent bash, launch via the compositor so the
+  process is not a child of the tool call (a foreground `uwsm app -- quickshell`
+  from the bash tool BLOCKS the call and dies when it aborts):
+  `hyprctl dispatch 'hl.dsp.exec_cmd("uwsm app -- quickshell")'`. stderr goes to
+  quickshell's own log at /run/user/1000/quickshell/by-id/<id>/log.qslog (binary
+  framing; grep --text). A new .qml file in the repo is NOT visible to a running
+  shell until it is symlinked into the live ~/.config/quickshell/ -- otherwise
+  the load dies with "X is not a type". QML's JS engine (V4) rejects OBJECT
+  spread `{...obj}` outright (array spread `[...a, b]` is fine) and quickshell
+  has no QtQuick.Controls in this config by design.
 - Debug probes: temp IpcHandler function in shell.qml callable via
   `quickshell ipc call shell <name>` gives a fully remote test loop (state +
   dispatch + returns) without touching the mouse.
@@ -124,3 +132,22 @@ description: >
 
 - hypr-window-switcher-inner uses jq `@tsv` (NOT @csv) -- fzf --delimiter='\t'
   and cut -f1/-f2 expect real tabs or Enter dispatches garbage.
+
+## Notifications (quickshell, commits 4490f8e + fbe8491)
+
+- Model: toasts and the super+N panel are two views of one in-memory list
+  (server.trackedNotifications, cap 50, arrival-order). close() hides from the
+  toast stack only (it stays in history); remove()/removeAll() (dismiss()) are
+  the only deleting paths; activate() = default action else
+  Compositor.focusWindowFor(). Toast: click activate, right-click/X close only,
+  X top-right with appName reserving Theme.notificationCloseReserve (24).
+  Panel: newest first, relative ages from Notifications.received (Notification
+  has no time property), Clear + same DND toggle as the bell. NO cross-reboot
+  persistence (quickshell persistenceSupported is a spec advertisement,
+  keepOnReload covers config reloads only).
+- Bar bell: click toggles silent mode (doNotDisturb -- suppresses toasts, never
+  tracking), right-click opens the panel; ipc notificationPanel() + history count
+  in status(). Keybind family: super+comma dismiss, +SHIFT all, +SHIFT+ALT
+  restore, +ALT restore+invoke, +CTRL+SHIFT dnd, super+N panel.
+- NotificationContent.qml is the shared body renderer for toast + panel row
+  (metaText = the panel's age label).
