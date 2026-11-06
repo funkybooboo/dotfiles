@@ -159,32 +159,44 @@ Overlay {
         verticalAlignment: Text.AlignVCenter
       }
 
-      delegate: Row {
+      delegate: Rectangle {
         required property var modelData
 
         width: list.width
         height: Theme.pickerRowHeight
 
-        spacing: Theme.notificationPadding
+        // Read-only sheet, so the pointer gets a tint only: an interactive
+        // highlight or cursor shape would promise a click that does nothing.
+        color: rowHover.hovered ? Theme.workspaceHover : "transparent"
 
-        Text {
-          width: Theme.cheatsheetComboWidth
-
-          text: modelData.combo
-          color: Theme.peach
-          font.family: Theme.fontFamily
-          font.pixelSize: Theme.pickerFontSize
-          verticalAlignment: Text.AlignVCenter
-          elide: Text.ElideRight
+        HoverHandler {
+          id: rowHover
         }
 
-        Text {
-          text: modelData.action
-          color: Theme.text
-          font.family: Theme.fontFamily
-          font.pixelSize: Theme.pickerFontSize
-          verticalAlignment: Text.AlignVCenter
-          elide: Text.ElideRight
+        Row {
+          anchors.fill: parent
+
+          spacing: Theme.notificationPadding
+
+          Text {
+            width: Theme.cheatsheetComboWidth
+
+            text: modelData.combo
+            color: Theme.peach
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.pickerFontSize
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+          }
+
+          Text {
+            text: modelData.action
+            color: Theme.text
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.pickerFontSize
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+          }
         }
       }
     }

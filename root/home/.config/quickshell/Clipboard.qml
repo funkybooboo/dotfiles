@@ -166,7 +166,13 @@ Overlay {
 
         MouseArea {
           anchors.fill: parent
+          hoverEnabled: true
           cursorShape: Qt.PointingHandCursor
+
+          // Hover carries the selection with the pointer so the mouse and the
+          // arrow keys both drive the same highlight.
+          onEntered: list.currentIndex = index
+
           onClicked: {
             list.currentIndex = index;
             clipboard.copy();
