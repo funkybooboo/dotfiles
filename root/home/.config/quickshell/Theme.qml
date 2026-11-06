@@ -85,6 +85,10 @@ Singleton {
   readonly property int notificationTextSpacing: 2
   readonly property int notificationMaxVisible: 5
 
+  // The corner every notification surface keeps clear of text for its close or
+  // delete button.
+  readonly property int notificationCloseReserve: 24
+
   // Shared metrics for the summoned pickers, taken from hyprlauncher.conf and the
   // hyprtoolkit.conf palette it read: an 820x720 window, 15px rows, and a row
   // height of font_size * 2 + 4 with icons at 0.7 of the row.

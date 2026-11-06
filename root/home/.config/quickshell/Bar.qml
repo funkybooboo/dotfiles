@@ -93,6 +93,23 @@ PanelWindow {
       anchors.verticalCenter: parent.verticalCenter
     }
 
+    // Silent mode's switch: click toggles, right-click opens the review drawer.
+    // The glyph itself carries the state -- bell, or bell-slash dimmed -- the
+    // same convention as the display and night-mode buttons.
+    BarButton {
+      text: Notifications.doNotDisturb
+        ? String.fromCodePoint(0xf1f6)
+        : String.fromCodePoint(0xf0f3)
+      // Dimmed rather than a state colour: silent mode is a choice, not a fault.
+      textColor: Notifications.doNotDisturb ? Theme.subtext0 : Theme.text
+      tooltip: (Notifications.doNotDisturb ? "Silent mode on" : "Notifications on")
+        + "<br>" + Notifications.history.length + " kept for review"
+        + "<br>Click: toggle silent mode"
+        + "<br>Right-click: notification panel"
+      onClicked: Notifications.doNotDisturb = !Notifications.doNotDisturb
+      onRightClicked: Overlays.toggle(Overlays.notificationPanel)
+    }
+
     BarButton {
       text: String.fromCodePoint(0xf059)
       tooltip: "Keybindings"

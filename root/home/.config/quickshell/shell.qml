@@ -55,6 +55,8 @@ ShellRoot {
 
   Cheatsheet {}
 
+  NotificationPanel {}
+
   // One process now owns what nine daemons used to, and none of the old probes
   // reach it: `pgrep mako`, `makoctl`, `brightnessctl -m` and friends said whether
   // each daemon was alive and what it thought. This is the replacement, and it is
@@ -67,6 +69,7 @@ ShellRoot {
     function status(): string {
       return "screens=" + Quickshell.screens.length
         + " notifications=" + Notifications.visible.length
+        + " history=" + Notifications.history.length
         + " retained=" + Notifications.closedIds.length
         + " dnd=" + Notifications.doNotDisturb
         + " cpu=" + SystemMetrics.cpuPercent + "%"
@@ -149,6 +152,11 @@ ShellRoot {
     function cheatsheet(): string {
       Overlays.toggle(Overlays.cheatsheet);
       return Overlays.current === Overlays.cheatsheet ? "opened" : "closed";
+    }
+
+    function notificationPanel(): string {
+      Overlays.toggle(Overlays.notificationPanel);
+      return Overlays.current === Overlays.notificationPanel ? "opened" : "closed";
     }
 
     function dnd(): string {

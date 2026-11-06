@@ -19,6 +19,7 @@ Singleton {
   readonly property string powerMenu: "powerMenu"
   readonly property string powerMode: "powerMode"
   readonly property string cheatsheet: "cheatsheet"
+  readonly property string notificationPanel: "notificationPanel"
 
   property string current: ""
 

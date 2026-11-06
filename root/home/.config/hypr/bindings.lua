@@ -88,6 +88,10 @@ hl.bind(mainMod .. " + ALT + comma",
     { description = "Shell: Restore and activate the last notification" })
 hl.bind(mainMod .. " + CTRL + SHIFT + comma", hl.dsp.exec_cmd("quickshell ipc call shell dnd"),
     { description = "Shell: Toggle do not disturb" })
+-- The review surface for everything the daemon has tracked, including what
+-- silent mode saved: newest first, click to jump to the sender, X to delete.
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("quickshell ipc call shell notificationPanel"),
+    { description = "Shell: Notification history panel" })
 
 -- Window management
 hl.bind(mainMod .. " + W", hl.dsp.window.close(),
