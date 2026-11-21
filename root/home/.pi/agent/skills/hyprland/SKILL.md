@@ -22,6 +22,34 @@ description: >
   (hyprland.lua is ignored while a hyprland.conf exists), git rm --cached's
   monitors.lua.
 
+## Config writes auto-reload, and a reload kills drags (2026-11-21)
+
+- Hyprland inotify-watches the config (ConfigWatcher, already in 0.56.2): every
+  write under ~/.config/hypr/ is a FULL config reload, and a reload KILLS any
+  active window drag. hypr-tablet-follow's original 000586 mechanism (rewrite
+  tablet.lua on every focusedmon) made every cross-monitor super+drag die at
+  the boundary from 2026-10-17: crossing fires focusedmon -> file write ->
+  mid-drag reload -> drag dead, often TWICE per crossing (the drag's end
+  refocuses the dragged window, bouncing focusedmon again). NEVER let a
+  daemon/watcher rewrite config files at runtime; nwg-displays regenerating
+  monitors files also reloads -- fine manually, never automate it.
+- Runtime config set WITHOUT a reload (the Lua-era `hyprctl keyword`
+  replacement): `hyprctl eval 'hl.config({ input = { tablet = { output =
+  "DP-6" } } })'` -- verified live: option applies, no configreloaded event,
+  drags survive monitor crossings. hypr-tablet-follow now uses this +
+  re-syncs on configreloaded (manual reloads re-apply tablet.lua's stale
+  value; tablet.lua stays as the login-time default).
+- Drag pickup geometry: 0.57 added binds:drag_center_window (default true =
+  grabbing a tiled window teleports it so its CENTER hits the cursor at press;
+  0.56.2 hardcoded the same behavior). This setup sets false in looknfeel.lua:
+  the grab point keeps its relative position; the shrink to 84.89% of the
+  tile size is hardcoded in DragController.cpp. binds:drag_threshold defaults
+  0 (instant pickup on press).
+- Debug recipe that caught the reload storm: systemd-run --user + socat on the
+  socket2 event socket with a timestamp loop + a hyprctl cursorpos/activewindow
+  sampler; configreloaded events + config-dir mtimes name the culprit in one
+  pass.
+
 ## Lua API facts (verified against Hyprland 0.56.2 source)
 
 - require uses explicit relative path WITH extension:
@@ -47,7 +75,9 @@ description: >
   errors are easy to miss because every caller silences output. Workspace
   switch: `hyprctl dispatch 'hl.dsp.focus({workspace=N})'`. `hyprctl eval
   '<lua>'` for top-level (hl.monitor etc.). `hyprctl keyword` is GONE in Lua
-  mode.
+  mode; runtime config sets go through `hyprctl eval 'hl.config({ section =
+  { key = value } })'` -- applies with NO reload (see the config-writes
+  section).
 - Quickshell 0.3.1's Hyprland.dispatch sends the dead legacy frame too --
   Workspaces.qml's click therefore shells out via
   Quickshell.execDetached(["hyprctl","dispatch","hl.dsp.focus({workspace=N})"])
@@ -128,9 +158,10 @@ description: >
   code, kept only for revival if the overlay is dropped.
 - Workspace switching by mouse: 3-finger horizontal touchpad gesture (native
   `hl.gesture({fingers=3, direction="horizontal", action="workspace"})`, no
-  plugin) -- super+scroll AND super+drag are dead on multi-device machines
-  (upstream PR #14633 aggregates modifier state across keyboard-like devices;
-  modifier-less devices overwrite SUPER on focus-enter; no config workaround).
+  plugin). The 0.55+ PR #14633 regression (empty-mod devices overwrote held
+  SUPER on focus-enter, killing super+scroll/drag on multi-device machines) is
+  FIXED in 0.57.1: mods are OR-aggregated across keyboards (shareModsFromAllKBs,
+  verified in source + super+drag live 2026-11-21).
 - waybar hyprland/workspaces on-scroll does NOT fire for touchpad scroll
   (gdk_event_get_pointer_emulated first-line check); external mouse wheel OK.
 - PATTERN (daemon work): setsid -f + bash event loops are INCOMPATIBLE (fork

@@ -153,9 +153,13 @@ hl.config({
 hl.config({
     binds = {
         hide_special_on_workspace_change = true,
+        -- 0.57 defaults drag_center_window to true: picking up a tiled window
+        -- teleports it so its CENTER is under the cursor, leaping half a window
+        -- the instant you press. False keeps the grab point's relative position,
+        -- so the window shrinks in place under the cursor instead of snapping.
+        drag_center_window = false,
         -- Debounce on scroll-triggered binds. The 300ms default swallows fast
-        -- wheel flicks; 0 lets one flick skip several workspaces at once. Moot
-        -- while the 0.55+ Super+mouse regression stands, correct regardless.
+        -- wheel flicks; 0 lets one flick skip several workspaces at once.
         scroll_event_delay = 50,
     },
 })

@@ -17,11 +17,20 @@
 #
 #       hypr-tablet-follow: Hyprland's tablet output (input:tablet:output) is
 #       static config, so the daemon watches the event socket for focusedmon
-#       events and rewrites the machine-local tablet.lua so the pen maps to
-#       whatever monitor the mouse is active on; Hyprland's config file-watcher
-#       reloads on each rewrite. Verified live on Hyprland 0.56.2: atomic
-#       temp+rename rewrites are picked up by the watcher (rm+cp would stick
-#       it -- the nwg-displays trap), hyprctl reload does NOT refire
+#       events and applies the focused monitor AT RUNTIME via
+#       `hyprctl eval 'hl.config({ input = { tablet = { output = "NAME" } } })'`.
+#       The original mechanism rewrote the machine-local tablet.lua and leaned
+#       on the config file-watcher's auto-reload -- replaced 2026-11-21 because
+#       a config reload KILLS any active window drag: every super+drag across
+#       a monitor boundary died at the boundary (one focusedmon, one write, one
+#       mid-drag reload, and the focus churn often made it fire twice). Verified
+#       live on Hyprland 0.57.1: the eval path changes input:tablet:output with
+#       NO configreloaded event and drags survive crossings. tablet.lua remains
+#       as the login-time default, and the daemon re-syncs after every
+#       configreloaded event so a manual reload cannot leave the pen stale.
+#       The old file-write version was verified on 0.56.2 if ever needed again:
+#       atomic temp+rename rewrites are picked up by the watcher (rm+cp would
+#       stick it -- the nwg-displays trap), hyprctl reload does NOT refire
 #       hyprland.start handlers, and focusedmon carries the monitor name as
 #       its first comma field.
 #

@@ -68,9 +68,12 @@ hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- wl-paste --watch cli
 -- it and it exits with the session. See migrations/000325-espanso.sh for why
 -- espanso's own `service register` is not used.
 hl.on("hyprland.start", function() hl.exec_cmd("uwsm app -- espanso daemon") end)
--- hypr-tablet-follow: maps the Wacom pen to the focused monitor by rewriting
--- the machine-local tablet.lua (see migrations/000586). Foreground Python so
--- the uwsm scope tracks it and it dies with the session, like espanso above.
+-- hypr-tablet-follow: maps the Wacom pen to the focused monitor at runtime
+-- via hyprctl eval (see migrations/000586). It must NOT rewrite tablet.lua:
+-- every config write triggers Hyprland's auto-reload, and a reload kills any
+-- active window drag (the rewrite version died at every monitor crossing).
+-- Foreground Python so the uwsm scope tracks it and it dies with the session,
+-- like espanso above.
 hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- ~/.local/bin/hypr-tablet-follow")
 end)

@@ -250,16 +250,17 @@ hl.bind(mainMod .. " + SHIFT + ALT + down", hl.dsp.workspace.move({ monitor = "d
     { description = "Workspace: Move to the monitor below" })
 
 -- Scroll workspaces (mouse wheel; NOT a mouse drag bind, so no { mouse = true }).
--- NOTE: SUPER+mouse binds are broken by a Hyprland 0.55+ regression (PR #14633
--- aggregates modifier state across all keyboard devices on focus-enter, so SUPER
--- held on the real keyboard is overwritten by empty-mod devices). The 3-finger
--- touchpad swipe below is the primary mouse/touch path instead.
+-- NOTE: the 0.55+ PR #14633 regression (empty-mod devices overwrote held SUPER,
+-- breaking every SUPER+mouse bind) is FIXED in 0.57.1: modifier state is now
+-- OR-aggregated across keyboards (shareModsFromAllKBs), so SUPER held on the
+-- real keyboard survives focus churn from other devices -- super+drag verified
+-- live 2026-11-21. The 3-finger touchpad swipe below stays the primary touch
+-- path.
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }), { description = "Workspace: Next" })
 hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }), { description = "Workspace: Previous" })
 
 -- 1:1 swipe like GNOME/KDE. Native, no plugin. This is the robust touchpad path:
--- it bypasses both the SUPER+mouse mod-aggregation regression and the bar's
--- touchpad-emulated-scroll guard.
+-- it bypasses the bar's touchpad-emulated-scroll guard.
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 
 -- Mouse drag/resize
