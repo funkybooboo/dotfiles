@@ -131,6 +131,22 @@ description: >
   reconstruction; the hypr-keybinds cheatsheet parses bindings.lua source.
 - Float-at-creation: window rule on initial_title="^(hypr-float.*)$" +
   hypr-float-launch -- no tile-then-float flash.
+- TRAY DRAWER (Tray.qml, 2026-11-21): opens on 120ms hover dwell (Timer;
+  HoverHandler covers the whole row so chevron->icons stays open), 100ms
+  close grace, 200ms OutCubic width reveal; leadGap 8/trailGap 10 keep the
+  17px inter-icon rhythm. Right-click menus go through a QsMenuAnchor (NOT
+  modelData.display()) so anchor.visible can pin the drawer open for the
+  menu's lifetime; close() the anchor BEFORE swapping menus (setMenu mid-open
+  leaves mOpen set and open() then refuses -- latch-shut). Platform menus
+  are QtWidgets: the UseQApplication pragma in shell.qml is load-bearing.
+- QUICKSHELL RESTART COST: every StatusNotifierItem registration is dropped
+  (apps re-register only when they next launch -- Steam was the only one, so
+  the tray reads empty after a restart even though nothing is broken). Keep
+  the chevron visible on an empty tray; hiding it reads as "the drawer
+  vanished".
+- The stock qmllint cannot parse `pragma ComponentBehavior: Bound` (exit 255,
+  no diagnostics -- meaningless result). Strip that line to syntax-check:
+  grep -v '^pragma ComponentBehavior' file.qml > /tmp/x.qml && qmllint /tmp/x.qml.
 - Do NOT live-test destructive scripts (hypr-kill-workspace closes ALL windows
   on the ACTIVE workspace; a switch that hasn't landed kills your own terminal).
 
