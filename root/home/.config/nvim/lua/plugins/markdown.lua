@@ -42,16 +42,16 @@ return {
 
   -- Live browser preview that renders mermaid code blocks as diagrams
   -- (docs/network.md, docs/backups.md). First :MarkdownPreview opens a
-  -- local server + the default browser. The build (mkdp#util#install)
-  -- runs inside the plugin dir via lazy.nvim; node/npm presence is
+  -- local server + the default browser. Build = the plugin's own
+  -- install.sh (prebuilt server binary download, npm fallback); the
+  -- mkdp#util#install form fails on FRESH installs because the plugin's
+  -- autoload is not sourced during build. node/npm presence is
   -- migration-guaranteed (000208-neovim-node-host.sh), so no runtime
   -- step is owed on any machine.
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreview", "MarkdownPreviewToggle", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
+    build = "cd app && sh install.sh",
   },
 }
