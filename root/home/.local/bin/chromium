@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# chromium -- exec wrapper for nix's ungoogled-chromium (dotfiles 000309).
+#
+# WHY: Arch's chromium wrapper read ~/.config/chromium-flags.conf; nixpkgs'
+# chromium wrapper does NOT (its only built-in flag injection is the
+# NIXOS_OZONE_WL wayland set). This wrapper keeps the tracked flags file as
+# the single source of truth: every non-comment line in
+# ~/.config/chromium-flags.conf becomes a command-line flag.
+#
+# PATH position: ~/.local/bin precedes the nix profile bin, so `chromium` in a
+# terminal, desktop entries' Exec=chromium, and gpauth --browser chromium all
+# resolve here. Everything is handed to the real binary verbatim.
+#
+# No sudo: the real binary lives in the user's nix profile.
+
+set -euo pipefail
+
+FLAGS_FILE="$HOME/.config/chromium-flags.conf"
+REAL="$HOME/.nix-profile/bin/chromium"
+
+if [[ ! -x "$REAL" ]]; then
+  echo "[x] $REAL missing -- run 'nix profile add .#ungoogled-chromium' (or the dotfiles 000309 migration)" >&2
+  exit 1
+fi
+
+flags=()
+if [[ -r "$FLAGS_FILE" ]]; then
+  while IFS= read -r line; do
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    flags+=("$line")
+  done < "$FLAGS_FILE"
+fi
+
+exec "$REAL" "${flags[@]}" "$@"

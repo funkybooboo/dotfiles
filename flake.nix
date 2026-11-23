@@ -22,6 +22,16 @@
             # digital: hneemann's digital circuit simulator. Not in Arch's
             # official repos, so nix is the first tier that can provide it.
             digital
+            # ungoogled-chromium: privacy-hardened chromium (Google
+            # integration/updater/telemetry stripped). Arch's official repos
+            # don't carry it (AUR only, excluded by policy), Flathub doesn't
+            # carry it, and upstream's portable-linux assets run weeks stale
+            # with no published checksums -- so nix is the first tier that
+            # can serve it. Binary-cache hit dry-run-verified (166 MiB
+            # fetched, nothing built); free, so hydra builds it continuously,
+            # unlike unfree brave which every nix install compiles locally.
+            # Same upstream release as Arch's chromium (000309).
+            ungoogled-chromium
             # espanso-wayland: text expander, Wayland build. Not in Arch's
             # official repos, and upstream's only Linux Wayland asset is a Debian
             # .deb, so tier 2 cannot serve Arch at all. AUR does carry

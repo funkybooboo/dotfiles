@@ -20,11 +20,13 @@
 #       Why still from source (tier 4) with the alpha out (2026.47.7,
 #       2026-11-23): upstream's prebuilt channels are an apt repo (Ubuntu),
 #       an rpm repo (Fedora), a flatpak, and a macOS dmg -- nothing Arch can
-#       consume (same shape as espanso's Debian-only .deb); nixpkgs carries
-#       ladybird but it is NOT binary-cached at our pinned nixpkgs revision
-#       (verified 2026-11-23), so nix would be a sandboxed local build of the
-#       same source with extra steps; flatpak was declined by the operator.
-#       From source it remains.
+#       consume (same shape as espanso's Debian-only .deb); flatpak was
+#       declined by the operator; and nix cannot host this workflow even
+#       though nixpkgs carries ladybird and binary-cache-hits at our pin
+#       ('nix build --dry-run': 137 MiB fetched, nothing built, verified
+#       2026-11-23) -- a sandboxed derivation rebuilt from scratch on every
+#       change is the opposite of a fix-and-drive dev loop. From source it
+#       remains, driven by the loop below.
 #
 #       MODEL (the homelab pattern): ~/Projects/ladybird is an OPERATOR-OWNED
 #       dev tree. Migrations never clone, fetch, reset, or build it -- the
