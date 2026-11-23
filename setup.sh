@@ -424,7 +424,8 @@ done
 # live in the retired standalone `update` script; they were moved here when
 # `update` became a shim over migrate.sh. Three concerns:
 #   10a. Sync GitHub forks with upstream (needs `gh` auth from step 1+).
-#   10b. Update + rebuild ~/sources (personal built-from-source repos).
+#   10b. Roll sources/* submodules to upstream-latest (no rebuild --
+#       migrations own builds; see the 10b notes).
 #   10c. Refresh running-container images (Docker/Podman).
 # All idempotent and best-effort.
 
@@ -451,12 +452,18 @@ else
     skip "GitHub fork sync (gh not installed)"
 fi
 
-# -- 10b. Update + rebuild git submodule sources (sources/*) ---------------
-# The built-from-source repos live as git submodules of the dotfiles repo
-# (sources/<name>), initialized by migrate.sh preflight. Roll them forward to
-# upstream-latest with `git submodule update --init --remote`, then run
-# an incremental build in each working tree (ninja/cmake/go/cargo/meson/
-# make/autotools). `sudo make install` re-runs for the install-target branches.
+# -- 10b. Roll sources/* submodules to upstream-latest --------------------------
+# The from-source repos live as git submodules of the dotfiles repo
+# (sources/<name>), initialized by migrate.sh preflight. This step ONLY rolls
+# the submodule pointers forward. There is deliberately NO build step here:
+# every consumer is either loaded in place from the checkout (99 by nvim,
+# lazymusic by its .desktop -- both fresh the moment the pointer rolls) or
+# installed by its migration, which stamps the built commit under
+# ~/.cache/dotfiles-sources (000540 lazycsv; see source_built_current /
+# source_mark_built in _common.sh) and rebuilds on the next migrate.sh run
+# once the pointer moves. Install logic must live in exactly one place -- the
+# migration -- or the two drift; the retired generic rebuild loop built lazycsv
+# in-tree with `cargo build --release`, which installed nothing.
 # NOTE: --remote checks each submodule out at its remote-tracking branch tip,
 # which updates the submodule pointer recorded in the dotfiles repo (so
 # `git status` in ~/dotfiles will show updated submodule SHAs as an uncommitted
@@ -464,172 +471,16 @@ fi
 # across machines. No --merge: preflight clones these --depth 1 with a detached
 # HEAD, and --merge needs a branch to merge into. --quiet rather than a stderr
 # redirect, so a failure still says why.
-_setup_build_repo() {
-    local repo="$1" name
-    name=$(basename "$repo")
-
-    local ninja_dir=""
-    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-        [[ -f "$d/build.ninja" ]] && {
-            ninja_dir="$d"
-            break
-        }
-    done
-    if [[ -n "$ninja_dir" ]]; then
-        if ninja -C "$ninja_dir" 2>/dev/null; then
-            ok "$name (ninja)"
-            return 0
-        else
-            warn "$name (ninja) failed"
-            return 1
-        fi
-    fi
-
-    local cmake_make_dir=""
-    for d in "$repo"/Build/release "$repo"/build "$repo"/Build; do
-        [[ -f "$d/Makefile" ]] && [[ -f "$repo/CMakeLists.txt" ]] && {
-            cmake_make_dir="$d"
-            break
-        }
-    done
-    if [[ -n "$cmake_make_dir" ]]; then
-        if make -C "$cmake_make_dir" 2>/dev/null; then
-            ok "$name (cmake+make)"
-            return 0
-        else
-            warn "$name (cmake+make) failed"
-            return 1
-        fi
-    fi
-
-    if [[ -f "$repo/configure" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-        if [[ ! -f "$repo/build/Makefile" ]]; then
-            info "$name (configure: bootstrapping build/Makefile)"
-            (cd "$repo" && ./configure --launch-jobs="$(nproc)" --launch) >/dev/null 2>&1 || true
-        fi
-        if [[ -f "$repo/build/Makefile" ]]; then
-            # WARNING: sudo make install runs arbitrary install targets from source repos.
-            if make -C "$repo/build" 2>/dev/null && sudo make -C "$repo/build" install 2>/dev/null; then
-                ok "$name (make -C build)"
-                return 0
-            else
-                warn "$name (make -C build) failed"
-                return 1
-            fi
-        fi
-    fi
-
-    if [[ -f "$repo/go.mod" ]]; then
-        if (cd "$repo" && go install ./... 2>/dev/null); then
-            ok "$name (go install)"
-            return 0
-        else
-            warn "$name (go install) failed"
-            return 1
-        fi
-    fi
-    if [[ -f "$repo/Cargo.toml" ]]; then
-        if (cd "$repo" && cargo build --release 2>/dev/null); then
-            ok "$name (cargo build)"
-            return 0
-        else
-            warn "$name (cargo build) failed"
-            return 1
-        fi
-    fi
-    if [[ -f "$repo/meson.build" ]]; then
-        if [[ -f "$repo/builddir/build.ninja" ]] && ninja -C "$repo/builddir" 2>/dev/null; then
-            ok "$name (meson+ninja)"
-            return 0
-        else
-            warn "$name (meson+ninja) failed"
-            return 1
-        fi
-    fi
-    if [[ -f "$repo/Makefile" || -f "$repo/makefile" ]] && [[ ! -f "$repo/CMakeLists.txt" ]]; then
-        # Two Makefile shapes need special handling (stderr is NOT swallowed
-        # here -- seeing the actual make error beats a bare "failed"):
-        #   1. No `install` target (e.g. 99: only lint/format/test targets) --
-        #      nothing to install, and running the default target would only
-        #      MUTATE the checkout (stylua format). Skip with a note instead.
-        #   2. Install-only Makefile (e.g. lazymusic: the default target IS
-        #      install) -- a user-level `make` fails on /usr/local, so the
-        #      whole thing must run under sudo.
-        if ! make -C "$repo" -n install >/dev/null 2>&1; then
-            skip "$name (make; no install target)"
-            return 0
-        fi
-        # Tamed against set -e: a failing dry-run (or head closing the pipe)
-        # must not abort setup. --no-print-directory is REQUIRED: make -C
-        # auto-prints an "Entering directory" banner that would otherwise be
-        # captured as the first line and break the install-only detection
-        # below.
-        _default_first_cmd=$(make -C "$repo" -n --no-print-directory 2>/dev/null | head -1 || true)
-        if [[ "${_default_first_cmd#install }" != "${_default_first_cmd}" ]]; then
-            if sudo make -C "$repo" install; then
-                ok "$name (make install)"
-                return 0
-            else
-                warn "$name (make install) failed"
-                return 1
-            fi
-        fi
-        if make -C "$repo" && sudo make -C "$repo" install; then
-            ok "$name (make)"
-            return 0
-        else
-            warn "$name (make) failed"
-            return 1
-        fi
-    fi
-    if [[ -f "$repo/Gemfile" ]]; then
-        if (cd "$repo" && bundle install 2>/dev/null); then
-            ok "$name (bundle)"
-            return 0
-        else
-            warn "$name (bundle) failed"
-            return 1
-        fi
-    fi
-    if [[ -f "$repo/package.json" ]]; then
-        if (cd "$repo" && npm install 2>/dev/null && npm run build 2>/dev/null); then
-            ok "$name (npm)"
-            return 0
-        else
-            warn "$name (npm) failed"
-            return 1
-        fi
-    fi
-
-    return 2
-}
-
 if [[ -f "$REPO_ROOT/.gitmodules" ]]; then
-    info "Updating git submodule sources (sources/*) to upstream-latest"
+    info "Rolling sources/* submodules to upstream-latest"
     if git -C "$REPO_ROOT" submodule update --init --remote --quiet; then
-        ok "submodule sources rolled forward"
+        ok "submodule pointers rolled forward"
     else
         warn "submodule update reported an error (non-fatal; some sources may be stale)"
         _add_warning "git submodule update --remote failed; one or more sources/* not rolled forward"
     fi
-
-    info "Rebuilding source submodule trees"
-    # Some sources install to /usr/local via `sudo make install`. Prime sudo
-    # here so the password prompt (if any) appears with context instead of
-    # mid-build.
-    if ! sudo -n true 2>/dev/null; then
-        info "sources may install via 'sudo make install' -- sudo password may be prompted"
-    fi
-    sudo -v || true
-    for _repo in "$REPO_ROOT"/sources/*/; do
-        # Submodule checkouts have a `.git` FILE (gitlink), not a dir -- use -e.
-        [[ -e "$_repo/.git" ]] || continue
-        _rc=0
-        _setup_build_repo "$_repo" || _rc=$?
-        ((_rc == 2)) && skip "$(basename "$_repo") (no recognized build system)"
-    done
 else
-    skip "source submodule update (no .gitmodules present)"
+    skip "source submodule roll (no .gitmodules present)"
 fi
 
 # -- 10c. Refresh running-container images (Docker/Podman) --------------------
