@@ -11,7 +11,7 @@ dotfiles/
 |-- migrate.sh        # preflight -> run migrations in order -> summary
 |-- setup.sh          # post-reboot: secrets, repos, NAS, project clone/refresh
 |-- migrations/       # NNNNNN-name.sh, idempotent, each owns one concern
-|-- sources/          # git submodules built from source
+|-- sources/          # git submodules: consumed in place or built from source
 \-- root/
     |-- home/         # -> $HOME (symlinked)
     |-- etc/          # -> /etc (copied with sudo)

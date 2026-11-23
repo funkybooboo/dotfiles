@@ -15,6 +15,13 @@ provide it. Each install is recorded in the migration that owns it.
 | 4 | **from source** | Clone the repo (or download a source tarball from the releases page) and build it. Used when no prebuilt binary is published.
 | 5 | **flatpak** | Flathub. Proton Pass GUI (Proton's official Linux dist), Bottles, OrcaSlicer. |
 
+Tier 4 sources live in one of two places: personal repos are pinned as git
+submodules under `sources/` (rolled forward by `setup.sh`, pointer-committed
+like `flake.lock`, builds stamp-skipped via `~/.cache/dotfiles-sources`),
+while moving-master third-party code (Ladybird, 000329) is a migration-owned
+clone under `~/.local/share` -- a submodule pins a commit, the opposite of
+following upstream master.
+
 **No AUR or yay.** Packages not in Arch official repos come from the
 upstream release assets, then nix, then from source. Language runtimes
 (rust, python, go, node, zig, bun) are managed globally by mise;

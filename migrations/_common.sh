@@ -875,11 +875,11 @@ preflight() {
 
   # ---------------------------------------------------------------------------
   # Initialize git submodules (sources/*). A plain `git clone` of the dotfiles
-  # repo does NOT populate submodule working trees, so several migrations that
-  # build from source (000108 99-plugin, 000305 lazymusic, 000540 lazycsv,
-  # 000552 HandBrake) would find empty directories. This --init --recursive
-  # is a fast no-op when submodules are already checked out at the recorded
-  # SHA; --depth 1 limits the cost for the large HandBrake history. Non-fatal:
+  # repo does NOT populate submodule working trees, so the migrations that
+  # consume them (000108 99-plugin, 000305 lazymusic, 000540 lazycsv) would
+  # find empty directories. This --init --recursive is a fast no-op when
+  # submodules are already checked out at the recorded SHA; --depth 1 keeps
+  # the clone cost down. Non-fatal:
   # a failure is recorded as a warning so the rest of the run continues and
   # the affected migration reports its own missing-source warning.
   # ---------------------------------------------------------------------------

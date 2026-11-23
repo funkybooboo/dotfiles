@@ -3,8 +3,10 @@
 # Links:    --
 # Enables:  --
 # Note: System updates are pacman-only (pacman -Syu). Packages not in Arch
-#       official repos come from nix (tier 2), sources/ (tier 3), or flatpak
-#       pacman -> nix -> sources -> flatpak.
+#       official repos come from upstream release assets (tier 2), nix
+#       (tier 3), from source (tier 4), or flatpak (tier 5):
+#       pacman -> upstream assets -> nix -> source -> flatpak
+#       (see docs/packages.md).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 

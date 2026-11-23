@@ -3,9 +3,10 @@
 #           NOT the Arch extra/nix pacman package.
 # Links:    /etc/nix/nix.conf (deploy_etc_file -- flakes + nix-command)
 # Enables:  nix-daemon.service (started by the installer; restarted here)
-# Note: Nix is the second-tier package source per the install priority
-#       (pacman -> nix -> sources -> flatpak). We install nix ITSELF from the
-#       UPSTREAM installer (tier 2: upstream release asset) rather than the Arch
+# Note: Nix is the tier-3 package source per the install priority
+#       (pacman -> upstream release assets -> nix -> source -> flatpak).
+#       We install nix ITSELF from the UPSTREAM installer (tier 2: upstream
+#       release asset) rather than the Arch
 #       extra/nix pacman package, because the Arch package links libmimalloc as
 #       a hard NEEDED lib and crashes (SIGSEGV in mimalloc's operator delete[]
 #       during glibc locale-facet init) on every glibc ABI bump where Arch

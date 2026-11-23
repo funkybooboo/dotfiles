@@ -27,9 +27,9 @@
 #       x86_64-unknown-linux-gnu asset, but falls back to `cargo build --release`
 #       if the download fails and cargo is on PATH. It is: ~/.local/share/mise/
 #       shims/cargo. So a transient GitHub failure does not error -- it silently
-#       compiles through a mise shim, the PATH-shadowing trap the update-sources
-#       notes already record. The tell is a target/ directory inside herdr's clone
-#       of the plugin; a prebuilt fetch leaves none.
+#       compiles through a mise shim (mise shims sit on PATH, so a cargo there
+#       is not evidence of a real toolchain). The tell is a target/ directory
+#       inside herdr's clone of the plugin; a prebuilt fetch leaves none.
 # Note: do NOT use `herdr plugin update`, on the same grounds as the existing
 #       "do not use `herdr update`" note in 000237-herdr: a version bump is an
 #       edit to _HERDR_NVIM_VERSION below, so that the installed revision is

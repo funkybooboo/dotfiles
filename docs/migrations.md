@@ -136,11 +136,16 @@ deployed by migrations.
 
 ### Sources as git submodules
 
-Repos built from source (`lazycsv`, `lazymusic`, the `99` nvim plugin) live
-as git submodules under `sources/`. Clone with `--recurse-submodules` or rely
+Repos consumed from source live as git submodules under `sources/`:
+`lazymusic` and the `99` nvim plugin are loaded in place from the checkout
+(000305's .desktop and nvim's `dir`, respectively); `lazycsv` is built and
+installed by its migration (000540). Clone with `--recurse-submodules` or rely
 on `migrate.sh` preflight (`git submodule update --init --recursive --depth 1`).
-Re-running `setup.sh` rolls submodules to upstream-latest and rebuilds them;
-commit the resulting pointer bumps to pin new versions across machines.
+Re-running `setup.sh` rolls the submodules to upstream-latest -- it builds
+nothing; trees consumed in place are fresh immediately, and installed binaries
+converge on the next `migrate.sh` run, which rebuilds whenever the submodule
+commit moved (stamps under `~/.cache/dotfiles-sources`). Commit the resulting
+pointer bumps to pin new versions across machines.
 
 Ladybird (000329) is the deliberate exception: it must follow upstream master's
 moving tip -- every `migrate.sh` run fetches, and rebuilds only when that tip
