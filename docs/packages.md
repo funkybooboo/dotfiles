@@ -18,9 +18,10 @@ provide it. Each install is recorded in the migration that owns it.
 Tier 4 sources live in one of two places: personal repos are pinned as git
 submodules under `sources/` (rolled forward by `setup.sh`, pointer-committed
 like `flake.lock`, builds stamp-skipped via `~/.cache/dotfiles-sources`),
-while moving-master third-party code (Ladybird, 000329) is a migration-owned
-clone under `~/.local/share` -- a submodule pins a commit, the opposite of
-following upstream master.
+while dev-driven projects (Ladybird, 000329) live as operator-owned trees
+under `~/Projects` and are built by their own helper (`ladybird-dev`): the
+fix -> daily-drive -> PR workflow means there is no pin at all, and
+migrations provide only deps + the helper, never touching the tree.
 
 **No AUR or yay.** Packages not in Arch official repos come from the
 upstream release assets, then nix, then from source. Language runtimes

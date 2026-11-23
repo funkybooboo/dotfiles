@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+#
+# ladybird-dev -- build + install ladybird from the ~/Projects/ladybird dev
+# tree. The dotfiles migration 000329 links this into ~/.local/bin and owns
+# the pacman build deps; this script owns the build itself.
+#
+# WHY this exists: ladybird is daily-driven from source (fix -> drive -> PR).
+# The installed browser must run the operator's own patches before they are
+# upstreamed, so the binary is always the local build and the tree is a real
+# dev repo -- never auto-reset, never built by migrations (the retired
+# migration-owned clone hard-reset the tree on every migrate run, which
+# destroyed local edits and made the fix-and-drive loop impossible).
+#
+# WORKFLOW:
+#   git switch -c fix/foo        # fix things
+#   ladybird-dev                 # incremental build + install (~minutes)
+#   ...daily-drive the fix...
+#   git push fork fix/foo && gh pr create
+#   git fetch origin && git rebase origin/master   # if master moved
+#   ladybird-dev                 # drive the rebased fix
+#   # after merge: git switch master && git pull && ladybird-dev
+#   ladybird-dev update          # when NOT mid-fix: ff master + rebuild
+#
+# TRAPS baked in (inherited from the retired migration-era build; do not
+# remove without checking each):
+#   - RUSTUP_TOOLCHAIN pin: rust_crate.cmake hard-codes -Dwarnings, so any API
+#     the current stable deprecates is fatal. 1.98.0 is the newest rust that
+#     compiles today's master clean; bump the pin when master stops building
+#     under it (rustc "no method" errors mean master adopted newer-rust APIs).
+#     The rustup-shim env selects it over both the global mise default and
+#     the repo's versionless rust-toolchain.toml; the version-match check
+#     also catches a cargo that is NOT a rustup shim (it would silently
+#     ignore the pin).
+#   - rust_crate.cmake JOB_POOLS clobber (upstream bug):
+#     `set_property(GLOBAL PROPERTY JOB_POOLS "${JOB_POOLS};cargo=1")` reads a
+#     nonexistent variable and REPLACES the global property, erasing the
+#     link_pool definition while every link edge keeps its pool reference --
+#     ninja dies at parse time with "unknown pool name 'link_pool'". The fix
+#     is the one-line APPEND form, guarded by an exact-match grep so it
+#     self-removes when upstream fixes it.
+#   - vcpkg runtime libs: cmake's install rules install only ladybird's own
+#     lagom libs; the installed binary's rpath is $ORIGIN:$ORIGIN/../lib but
+#     the vcpkg-built .so files stay behind in the build tree -- without the
+#     copy below the launcher appears dead (the loader fails on libskia.so
+#     and friends before any window opens).
+#   - link jobs capped at 2 (LAGOM_LINK_POOL_SIZE), compile jobs at 16, so a
+#     30 GiB machine with the desktop session resident cannot OOM at link
+#     time.
+#
+# No sudo anywhere: everything lands under ~/.local or the repo itself.
+
+set -euo pipefail
+
+REPO="$HOME/Projects/ladybird"
+BUILD="$REPO/Build/release"
+BIN="$HOME/.local/bin/Ladybird"
+RUST_PIN="1.98.0"
+
+info() { echo "  [i] $*"; }
+ok()   { echo "  [+] $*"; }
+warn() { echo "  [!] $*"; }
+die()  { echo "  [x] $*" >&2; exit 1; }
+
+jobs_cap() {
+  local n
+  n="$(nproc)"
+  if (( n > 16 )); then n=16; fi
+  echo "$n"
+}
+JOBS="$(jobs_cap)"
+
+# --- toolchain gate (fail loud: a dev loop must not skip silently) --------------
+toolchain_gate() {
+  local missing=()
+  local t
+  for t in cmake ninja nasm ccache cc c++; do
+    command -v "$t" >/dev/null 2>&1 || missing+=("$t")
+  done
+  command -v cargo >/dev/null 2>&1 || missing+=("cargo (mise? migration 000202)")
+  if (( ${#missing[@]} > 0 )); then
+    die "build toolchain incomplete (missing: ${missing[*]}) -- run the dotfiles ladybird migration (000329)"
+  fi
+  if [[ ! -f /usr/include/vulkan/vulkan.h ]]; then
+    die "vulkan-headers missing (/usr/include/vulkan/vulkan.h) -- the Compositor target compiles <vulkan/vulkan.h> without linking Vulkan::Headers"
+  fi
+}
+
+# --- rust pin (see header trap) ---------------------------------------------------
+pin_rust() {
+  if ! RUSTUP_TOOLCHAIN="$RUST_PIN" rustc --version 2>/dev/null | grep -q "rustc $RUST_PIN"; then
+    die "rust $RUST_PIN not available -- run: mise install rust@$RUST_PIN"
+  fi
+  export RUSTUP_TOOLCHAIN="$RUST_PIN"
+}
+
+# --- the JOB_POOLS patch (see header trap) ------------------------------------------
+patch_job_pools() {
+  if grep -q 'set_property(GLOBAL PROPERTY JOB_POOLS "${JOB_POOLS};cargo=1")' \
+       "$REPO/Meta/CMake/rust_crate.cmake"; then
+    info "applying the rust_crate.cmake JOB_POOLS fix (upstream bug; self-removes when fixed)"
+    sed -i \
+      's|set_property(GLOBAL PROPERTY JOB_POOLS "${JOB_POOLS};cargo=1")|set_property(GLOBAL APPEND PROPERTY JOB_POOLS "cargo=1")|' \
+      "$REPO/Meta/CMake/rust_crate.cmake"
+  fi
+}
+
+# --- configure (first run, or after the tree moved) ----------------------------------
+configure() {
+  info "no build tree at Build/release -- configuring (Release preset, prefix ~/.local)"
+  export LADYBIRD_SOURCE_DIR="$REPO"
+  export VCPKG_ROOT="$REPO/Build/vcpkg-release"
+  export VCPKG_MAX_CONCURRENCY="$JOBS"
+  export PATH="$VCPKG_ROOT:$PATH"
+
+  info "vcpkg dependency step (fast verify if already built; long on a fresh tree)"
+  ./Meta/ladybird.py vcpkg --jobs "$JOBS"
+
+  cmake --preset Release -B Build/release \
+    -DCMAKE_C_COMPILER="$(command -v cc)" \
+    -DCMAKE_CXX_COMPILER="$(command -v c++)" \
+    -DCMAKE_INSTALL_PREFIX="$HOME/.local" \
+    -DENABLE_INSTALL_FREEDESKTOP_FILES=ON \
+    -DENABLE_INSTALL_HEADERS=OFF \
+    -DBUILD_TESTING=OFF \
+    -DLAGOM_LINK_POOL_SIZE=2
+
+  # The link pool must be defined or ninja dies at parse time. If the patch
+  # above missed (upstream rewrote the line), degrade: drop the cap and
+  # continue uncapped rather than failing the build.
+  if ! grep -q "^pool link_pool" "$BUILD/CMakeFiles/rules.ninja" 2>/dev/null; then
+    warn "link pool missing after configure -- upstream changed rust_crate.cmake? dropping the link-job cap"
+    cmake --preset Release -B Build/release \
+      -DLAGOM_LINK_POOL_SIZE:STRING= -DCMAKE_JOB_POOL_LINK:STRING= >/dev/null 2>&1 || true
+  fi
+}
+
+# --- vcpkg runtime libs to where the installed rpath looks (see header trap) ----------
+copy_vcpkg_libs() {
+  local triplet libdir
+  case "$(uname -m)" in
+    x86_64)  triplet="x64-linux-dynamic" ;;
+    aarch64) triplet="arm64-linux-dynamic" ;;
+    *) warn "unknown arch $(uname -m) -- skipping the vcpkg lib copy"; return 0 ;;
+  esac
+  libdir="$BUILD/vcpkg_installed/$triplet/lib"
+  if [[ -d "$libdir" ]] && compgen -G "$libdir/*.so*" >/dev/null; then
+    mkdir -p "$HOME/.local/lib"
+    cp -af "$libdir"/*.so* "$HOME/.local/lib/"
+    ok "vcpkg runtime libs -> ~/.local/lib (the \$ORIGIN/../lib rpath)"
+  else
+    warn "vcpkg shared libs not found under $libdir -- the installed browser may fail to launch"
+    return 1
+  fi
+}
+
+ldd_check() {
+  local unresolved
+  unresolved="$(ldd "$BIN" 2>/dev/null | grep -c "not found" || true)"
+  if (( unresolved > 0 )); then
+    warn "$unresolved libs still unresolved (see: ldd $BIN)"
+  fi
+}
+
+cmd_install() {
+  cd "$REPO"
+  toolchain_gate
+  pin_rust
+  patch_job_pools
+  # A tree moved after a build keeps build.ninja with the OLD absolute paths:
+  # cmake would refuse and ninja would run stale commands. Detect via the
+  # cached source dir and wipe the path-poisoned state -- the cmake/ninja files
+  # AND the cargo dir (stale fingerprints make cmake's Rust FFI-header sync
+  # fail with 'Failed to find RustFFI.h in Cargo build output'; the crates
+  # rebuild in minutes). vcpkg_installed and the compiled C++ objects survive
+  # (objects recompile anyway: their logged command strings embed paths, and
+  # ccache misses follow from the same).
+  if [[ -f "$BUILD/build.ninja" && -f "$BUILD/CMakeCache.txt" ]] \
+     && ! grep -q "^CMAKE_HOME_DIRECTORY:INTERNAL=$REPO$" "$BUILD/CMakeCache.txt"; then
+    info "build tree was configured for a different source path -- resetting cmake/ninja + cargo state (vcpkg deps + objects stay)"
+    rm -rf "$BUILD/CMakeCache.txt" "$BUILD/CMakeFiles" "$BUILD/build.ninja" "$BUILD/cargo"
+  fi
+  if [[ ! -f "$BUILD/build.ninja" ]]; then
+    configure
+  fi
+  info "building + installing $(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD) (-j$JOBS)"
+  ./Meta/ladybird.py install --jobs "$JOBS"
+  copy_vcpkg_libs || true
+  ldd_check
+  if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+  fi
+  ok "installed $BIN ($(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD))"
+}
+
+cmd_update() {
+  cd "$REPO"
+  local branch
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  [[ "$branch" == "master" ]] || die "update: only on master (you are on '$branch'; drive a fix branch with plain 'ladybird-dev')"
+  # The JOB_POOLS patch leaves rust_crate.cmake permanently dirty; it is
+  # re-applied by install, so it is the ONE file update may discard. Any other
+  # local change means you are mid-fix: refuse.
+  if ! git diff --quiet -- . ':(exclude)Meta/CMake/rust_crate.cmake' \
+     || ! git diff --cached --quiet -- . ':(exclude)Meta/CMake/rust_crate.cmake'; then
+    die "update: tree has local changes -- commit or stash them first"
+  fi
+  git fetch origin master
+  if git merge --ff-only FETCH_HEAD; then
+    info "master rolled to $(git rev-parse --short HEAD)"
+  else
+    # Almost always the patched rust_crate.cmake blocking the ff (upstream
+    # touched the file). Discard the patch, retry; install re-applies it if
+    # the bug is still there.
+    warn "ff merge refused -- discarding the JOB_POOLS patch and retrying"
+    git checkout -- Meta/CMake/rust_crate.cmake
+    git merge --ff-only FETCH_HEAD || die "update: ff merge failed -- resolve manually"
+  fi
+  cmd_install
+}
+
+cmd_run() {
+  cd "$REPO"
+  exec ./Meta/ladybird.py run "$@"
+}
+
+usage() {
+  cat <<'EOF'
+ladybird-dev -- build + install ladybird from ~/Projects/ladybird
+
+  ladybird-dev [install]   incremental build + install into ~/.local (default)
+  ladybird-dev update      ff-only master roll + rebuild (refuses on fix branches)
+  ladybird-dev run [...]   run from the build tree without installing
+EOF
+}
+
+case "${1:-install}" in
+  install|"") cmd_install ;;
+  update)    cmd_update ;;
+  run)       shift; cmd_run "$@" ;;
+  -h|--help|help) usage ;;
+  *)         usage; exit 1 ;;
+esac

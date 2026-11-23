@@ -34,6 +34,10 @@ Migrations link scripts into `~/.local/bin/` and `~/.local/lib/`:
   `~/.local/state/update-firmware.log`
 - `clean-disk` -- orphans, caches, unused flatpaks
 - `secretmgr` -- Proton Pass wrapper
+- `ladybird-dev` -- ladybird build helper: incremental install from the
+  ~/Projects/ladybird dev tree, `update` = ff-only master roll + rebuild,
+  `run` = uninstalled test run (000329 provides deps; the tree is
+  operator-owned)
 - `sync-*` -- NAS sync (documents, music, photos, audiobooks, books)
 - `vpn` -- VPN management
 
