@@ -1,10 +1,13 @@
 #!/bin/bash
 # homelab-watch -- off-cluster fleet watcher -> ntfy (LEAN tier).
-# Four check families, all deduped by state files (only CHANGES push):
-#   1. node pings        (the 4 x86 nodes -- vanish class)
+# Five check families, all deduped by state files (only CHANGES push):
+#   1. node pings        (the 4 x86 nodes + the Pi witness)
 #   2. scrape targets    (any node/guest exporter down, via prometheus)
 #   3. https fronts      (the serve-front bookmarks must answer)
 #   4. disk / memory     (< 10% free / < 10% available, via prometheus)
+#   5. daily heartbeat   (one low-priority ping per day -- so TOTAL
+#      silence on the topic means debbie/the watcher itself died;
+#      nobody watches the watcher, but its absence becomes visible)
 # Fronts are READ FROM THE MANIFESTS (~/Projects/homelab/guests/*.yaml
 # via the system python -- the repo is the source of truth; a new
 # service with tailnet_serve gets watched on the next cycle).
@@ -36,7 +39,8 @@ dedup() {
 
 # --- 1. node pings
 for line in "pve-thermaltake 192.168.1.3" "pve-framework 192.168.1.4" \
-            "pve-aspiree15 192.168.1.5" "pve-aspires 192.168.1.6"; do
+            "pve-aspiree15 192.168.1.5" "pve-aspires 192.168.1.6" \
+            "raspberrypi 192.168.1.11"; do
     name="${line%% *}"; ip="${line##* }"
     if ping -c1 -W3 "$ip" >/dev/null 2>&1; then s=up; else s=down; fi
     dedup "node-$name" "$s" urgent "node $name $s" \
@@ -98,3 +102,12 @@ MEM="$(PCT_QUERY '100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTot
 dedup "disk-low" "$s" urgent "disk ${DISK}% full" "Root filesystem usage is critical on some node (${DISK}% full)."
 [ "$MEM" != "err" ] && [ "$MEM" -gt 90 ] 2>/dev/null && s="high-$MEM%" || s=ok
 dedup "mem-high" "$s" high "memory ${MEM}% used" "Memory is above 90% on some node (${MEM}%)."
+
+# --- 5. daily heartbeat (watch-the-watcher): one ping per calendar day
+# at the first cycle after midnight; its ABSENCE is the signal
+today="$(date +%Y-%m-%d)"
+prev_heartbeat="$(cat "$STATE/heartbeat" 2>/dev/null || true)"
+if [ "$today" != "$prev_heartbeat" ]; then
+    echo "$today" > "$STATE/heartbeat"
+    notify min "watcher alive" "daily heartbeat: debbie watcher ran $today. No heartbeat on a day = debbie or the watcher died."
+fi

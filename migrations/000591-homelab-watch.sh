@@ -1,8 +1,12 @@
 # 000591-homelab-watch.sh -- off-cluster node-down watcher (-> ntfy)
-# Installs: the systemd USER timer (every 5 min) + user lingering
-# Links:    the script + units ride root/home/ (link_tree:
-#           .local/bin/homelab-watch.sh, .config/systemd/user/)
-# Enables:  homelab-watch.timer (user), linger for the operator
+# Links:    the script + both units, EXPLICITLY (link_file x3 -- the
+#           original header claimed a wholesale link_tree covers
+#           .local/bin and .config/systemd/user, which does not
+#           exist; the units ran only because they were hand-linked
+#           during the build session, the script link was never
+#           made, and the watcher silently 203/EXEC'd every 5 min
+#           for its first 14 hours. Migrations own their links.)
+# Enables:   homelab-watch.timer (user), linger for the operator
 # Note: born from framework vanish event #3 (2026-11-22): a node
 #       died silently; nothing noticed for 40 min until a converge
 #       failed. Debbie (always-on, off-cluster) now pings the four
@@ -18,6 +22,13 @@
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "homelab watch"
+
+link_file "$DOTFILES_HOME/.local/bin/homelab-watch.sh" \
+    "$HOME/.local/bin/homelab-watch.sh"
+link_file "$DOTFILES_HOME/.config/systemd/user/homelab-watch.service" \
+    "$HOME/.config/systemd/user/homelab-watch.service"
+link_file "$DOTFILES_HOME/.config/systemd/user/homelab-watch.timer" \
+    "$HOME/.config/systemd/user/homelab-watch.timer"
 
 if ! loginctl show-user "$USER" 2>/dev/null | grep -q "Linger=yes"; then
     if loginctl enable-linger "$USER" 2>/dev/null; then
