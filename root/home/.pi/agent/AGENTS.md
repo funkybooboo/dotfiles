@@ -29,6 +29,7 @@
 ## Security & Safety
 
 - Never commit secrets, API keys, credentials
+- NEVER run sudo -- not directly, and not by executing a script/migration that invokes sudo. A failed agent-side sudo attempt (even a no-TTY failure) increments pam_faillock and LOCKS THE OPERATOR OUT of their own machine. The operator runs every privileged command themselves -- hand them the exact command instead. Before executing any script standalone (migrations included), grep it for sudo first and defer to the operator if present
 - Validate/sanitize all inputs; use parameterized queries
 - Proper error handling - fail fast with clear messages
 - Principle of least privilege
