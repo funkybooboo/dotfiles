@@ -12,8 +12,8 @@ gui:
       - "#45475a"
     selectedRangeBgColor:
       - "#45475a"
-  authorColors:
-    coAuthored: "#a6e3a1"
+    authorColors:
+      coAuthored: "#a6e3a1"
 git:
   diffRenderers:
     - colorArg: always
