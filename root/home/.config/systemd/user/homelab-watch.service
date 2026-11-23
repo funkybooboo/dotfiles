@@ -1,0 +1,6 @@
+[Unit]
+Description=homelab-watch -- node reachability -> ntfy
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/homelab-watch.sh
