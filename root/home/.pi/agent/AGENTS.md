@@ -55,6 +55,23 @@
 - Prefer specialized tools over bash when available
 - Verify tool outputs before proceeding
 
+**SSH BatchMode + the passphrase key (the 2026-11-25 incident):**
+
+- This machine's `~/.ssh/id_ed25519` has a PASSPHRASE. Key-only (BatchMode)
+  ssh to the fleet works ONLY because the user ssh-agent holds the unlocked
+  identity (`/run/user/1000/ssh-agent.socket`).
+- Fleet-wide `Permission denied (publickey)` appearing suddenly, with clean
+  host-side evidence (no config/key changes, task history empty): check the
+  CLIENT first, before any host forensics -- `ssh-add -l` ("The agent has no
+  identities" = the agent lost the key; a session/update restart can do it).
+- Verbose red herrings to ignore: `Server accepts key` (that is the
+  no-signature query), the `publickey-hostbound-v00` line (just the
+  would-be algorithm), PerSourcePenalties deferrals (a consequence, not a
+  cause).
+- Fix: the operator runs `ssh-add ~/.ssh/id_ed25519` once (or any interactive
+  ssh -- `AddKeysToAgent yes` is in the ssh config). One command restores all
+  hosts. NEVER multi-hour rabbit-hole the fleet before this check.
+
 ## Best Practices
 
 - Measure before optimizing (premature optimization is evil)
