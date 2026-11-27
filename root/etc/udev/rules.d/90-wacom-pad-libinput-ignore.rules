@@ -22,5 +22,11 @@
 # hypr-tablet-buttons exists -- it reads the raw evdev node directly, and
 # a libinput-ignore does not affect raw evdev access. Removing this rule
 # once a fixed gtk4 is current makes the pad visible to Wayland again.
+#
+# Syntax note: udev match keys are GLOBS, not regexes -- `=~` is not a
+# valid operator on this systemd and udev silently ignores the whole line
+# (udevadm verify: "Invalid key/value pair"), so the name is matched with
+# `==` and a shell glob. Verify rule edits with `udevadm verify` before
+# replugging: a matching-line typo fails silently.
 
-SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=~"Wacom .* Pad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="Wacom * Pad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
