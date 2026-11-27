@@ -3,23 +3,20 @@
 # Installs: gst-libav
 # Links:    --
 # Enables:  --
-# Note: Firefox-family browsers on Linux decode H.264 + AAC through
-#       GStreamer, not through the ffmpeg CLI. debbie has ffmpeg but
-#       lacked gst-libav, so LibreWolf truthfully reported
-#       canPlayType(H.264/AAC) = unsupported -- which made every
-#       H.264/AAC stream in the homelab media fleet unplayable in
-#       the browser (jellyfin: the web client asked for a
-#       VideoCodecNotSupported transcode and the player's own HLS
-#       engine then rejected the fallback manifest;
-#       audiobookshelf: AAC HLS segments undecodable), while MP3 and
-#       FLAC services (navidrome) played fine because those codecs
-#       are built into the browser itself. Diagnosed live
-#       2026-11-27 via the jellyfin web client's console log.
-#       gst-plugins-good (containers, common formats) is already
-#       installed by the desktop migration set; gst-libav carries
-#       the ffmpeg-based codecs the browsers load. After install:
-#       fully restart the browser and verify about:support -> Media
-#       shows H.264.
+# Note: Firefox-family browsers on Linux can reach H.264 + AAC
+#       decode through the system GStreamer codec set, which is
+#       incomplete without gst-libav. Install closes that gap for
+#       every Firefox-family browser on the machine.
+#       LIBREWOLF CAVEAT (found in the same hunt): LibreWolf upstream
+#       builds are compiled WITHOUT the patented codec decoders
+#       (H264/HEVC/AAC) -- deliberate upstream policy. No package
+#       or pref adds back a decoder the build lacks; about:support
+#       -> Media shows H264/AAC "Unsupported" forever. Media
+#       playback on this machine belongs to the pacman Firefox;
+#       gst-libav still serves it and every other GStreamer
+#       consumer. Diagnosed live 2026-11-27 via the jellyfin web
+#       client console (VideoCodecNotSupported +
+#       manifestIncompatibleCodecsError).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -27,4 +24,4 @@ section "browser media codecs (gst-libav)"
 
 install_pacman gst-libav
 
-ok "librewolf/firefox can decode H.264 + AAC after a full browser restart"
+ok "system GStreamer codec set complete (H.264 + AAC reachable)"
