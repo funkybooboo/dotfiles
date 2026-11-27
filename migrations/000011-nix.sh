@@ -60,20 +60,43 @@ if [[ -x "$NIX_BIN" ]] && "$NIX_BIN" --version &>/dev/null; then
     skip "nix ${_nix_inst} (upstream latest)"
   else
     info "nix ${_nix_inst} -> ${NIX_VERSION} (re-running the upstream installer)"
-    _nix_tmp="$(mktemp)"
-    if curl --fail --proto '=https' --tlsv1.2 -fsSL "$NIX_INSTALL_URL" -o "$_nix_tmp"; then
-      if sh "$_nix_tmp" --daemon --yes --no-channel-add >/dev/null 2>&1; then
-        sudo systemctl restart nix-daemon 2>/dev/null || true
-        ok "nix upgraded to $($($NIX_BIN --version 2>/dev/null | awk '{print $3}'))"
-      else
-        warn "nix upgrade installer failed (non-fatal; keeping ${_nix_inst})"
-        _add_warning "nix: upgrade installer exited non-zero; still at ${_nix_inst}"
+    # The installer REFUSES to run when its own scratch backups from a
+    # previous install still exist ("I need to back up /etc/bash.bashrc to
+    # /etc/bash.bashrc.backup-before-nix, but the latter already exists").
+    # Those files are copies of the pre-nix rc files -- the live files still
+    # exist, so removing them loses nothing. Guard mirrors the installer's
+    # own sanity: if a backup CONTAINS nix lines, it may be a nixified rc
+    # file mis-saved -- warn + skip the upgrade for a human look.
+    _nix_backups=(/etc/bash.bashrc.backup-before-nix /etc/bashrc.backup-before-nix
+                  /etc/zshrc.backup-before-nix /etc/profile.d/nix.sh.backup-before-nix)
+    _nix_can_upgrade=true
+    for _bk in "${_nix_backups[@]}"; do
+      if [[ -f "$_bk" ]] && grep -qi nix "$_bk"; then
+        warn "${_bk} contains nix lines -- not removing it; upgrade skipped"
+        _add_warning "nix: ${_bk} looks nixified (installer backup sanity); upgrade skipped"
+        _nix_can_upgrade=false
       fi
-    else
-      warn "could not download the nix ${NIX_VERSION} installer (non-fatal)"
-      _add_warning "nix: installer download failed; still at ${_nix_inst}"
+    done
+    if [[ "${_nix_can_upgrade}" == "true" ]]; then
+      for _bk in "${_nix_backups[@]}"; do
+        [[ -f "$_bk" ]] && sudo rm -f "$_bk" && ok "removed stale installer backup ${_bk}"
+      done
+      _nix_tmp="$(mktemp)"; _nix_log="$(mktemp)"
+      if curl --fail --proto '=https' --tlsv1.2 -fsSL "$NIX_INSTALL_URL" -o "$_nix_tmp"; then
+        if sh "$_nix_tmp" --daemon --yes --no-channel-add >"$_nix_log" 2>&1; then
+          sudo systemctl restart nix-daemon 2>/dev/null || true
+          ok "nix upgraded to $("$NIX_BIN" --version 2>/dev/null | awk '{print $3}')"
+        else
+          warn "nix upgrade installer failed (non-fatal; keeping ${_nix_inst}) -- last output:"
+          tail -6 "$_nix_log" 2>/dev/null | sed 's/^/    /' >&2
+          _add_warning "nix: upgrade installer exited non-zero; still at ${_nix_inst}"
+        fi
+      else
+        warn "could not download the nix ${NIX_VERSION} installer (non-fatal)"
+        _add_warning "nix: installer download failed; still at ${_nix_inst}"
+      fi
+      rm -f "$_nix_tmp" "$_nix_log"
     fi
-    rm -f "$_nix_tmp"
   fi
   deploy_etc_file "$DOTFILES_ROOT_ETC/nix/nix.conf" "/etc/nix/nix.conf" 644
   exit 0
