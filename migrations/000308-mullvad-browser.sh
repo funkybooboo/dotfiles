@@ -16,8 +16,12 @@
 #
 # LATEST-TRACKING (2026-11-27, was a pinned 15.0.18): every migrate run asks
 #   the GitHub releases API for the newest tag and installs it when it
-#   differs from /opt/mullvad-browser/Browser/application.ini -- the
-#   librewolf/GE-Proton roll-forward pattern. Installed == latest -> skip;
+#   differs from the install stamp. THE STAMP IS THE ONLY VERSION SOURCE:
+#   Browser/application.ini reports the FIREFOX ESR base (153.8.0esr),
+#   never the Mullvad release tag, so an ini-based skip never matches and
+#   silently reinstalls every run. The stamp (.installed-release in the
+#   prefix) is written at install time; a pre-stamp tree reinstalls ONCE
+#   and stamps. Installed == latest -> skip;
 #   API unreachable -> warn + skip (never touches the install). gh first
 #   (authenticated, 5000 req/hr), curl fallback (60 req/hr per IP).
 #
@@ -26,8 +30,8 @@
 #         self-contained tree (run-in-place, like Tor Browser). Installing to
 #         /opt/mullvad-browser + symlink launcher mirrors the librewolf pattern.
 #
-# Idempotent: skips install if /opt/mullvad-browser/Browser/application.ini
-#             reports the pinned version. Non-fatal.
+# Idempotent: skips install when the install stamp equals the resolved
+#             latest release. Non-fatal.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -83,6 +87,8 @@ _mb_import_key() {
 }
 
 _mb_version() {
+  # UNUSED for skipping (the ini reports the Firefox ESR base, not the tag);
+  # kept only as a handy human probe of the running browser's engine base.
   if [[ -f "$MB_PREFIX/Browser/application.ini" ]]; then
     awk -F= '/^Version=/{print $2; exit}' "$MB_PREFIX/Browser/application.ini"
   fi
@@ -105,8 +111,11 @@ if [[ ! -f "$MB_MARKER" ]]; then
   fi
 fi
 
-# --- 2. already installed at the latest version? skip -------------------------
-if [[ "$(_mb_version)" == "$MB_VERSION" ]]; then
+# --- 2. already installed at the latest version? skip (stamp comparison) -----
+# The stamp, not application.ini: the ini reports the Firefox ESR base, not
+# the Mullvad release tag (see header). A pre-stamp tree reinstalls once.
+if [[ -f "${MB_PREFIX}/.installed-release" ]] \
+   && [[ "$(<"${MB_PREFIX}/.installed-release")" == "$MB_VERSION" ]]; then
   skip "mullvad-browser ${MB_VERSION} (installed at ${MB_PREFIX})"
   ok "mullvad-browser (github release)"
   return 0 2>/dev/null || exit 0
@@ -207,7 +216,8 @@ if tar xJf "$DL" -C "$tmp" 2>/dev/null; then
     fi
     sudo mv "${MB_PREFIX}.new" "$MB_PREFIX"
     sudo rm -rf "${MB_PREFIX}.old" 2>/dev/null || true
-    ok "installed -> ${MB_PREFIX}"
+    echo "$MB_VERSION" | sudo tee "${MB_PREFIX}/.installed-release" >/dev/null
+    ok "installed -> ${MB_PREFIX} (release ${MB_VERSION})"
     sudo mkdir -p "$(dirname "$MB_BIN_SYMLINK")"
     sudo ln -sfn "${MB_PREFIX}/Browser/start-mullvad-browser" "$MB_BIN_SYMLINK"
     ok "symlink ${MB_BIN_SYMLINK} -> ${MB_PREFIX}/Browser/start-mullvad-browser"

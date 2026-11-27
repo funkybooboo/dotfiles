@@ -58,5 +58,20 @@ if groups "$USER" | grep -qw adbusers; then
 else
   skip "adbusers membership (not a member)"
 fi
+# The package's sysusers hook leaves the (now memberless) adbusers group
+# behind; remove it when empty so /etc/group carries no orphans. Kept if
+# occupied -- a member means another install still owns it.
+if getent group adbusers >/dev/null 2>&1; then
+  if [[ -z "$(getent group adbusers | cut -d: -f4)" ]]; then
+    if sudo groupdel adbusers >/dev/null 2>&1; then
+      ok "removed empty adbusers group"
+    else
+      warn "failed to remove the empty adbusers group"
+      _add_warning "android-udev: groupdel adbusers failed"
+    fi
+  else
+    skip "adbusers group (still has members)"
+  fi
+fi
 
 ok "retired software removed"

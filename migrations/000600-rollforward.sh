@@ -75,12 +75,14 @@ fi
 # latest stable; a no-op when current. Guarded by the wrapper existing.
 if command -v nix >/dev/null 2>&1; then
   info "nix itself"
-  if nix upgrade-nix >/dev/null 2>&1; then
+  if nix upgrade-nix >/tmp/nix_upg.log 2>&1; then
     ok "nix up to date ($(nix --version 2>/dev/null | head -1))"
   else
-    warn "nix upgrade-nix failed (non-fatal)"
-    _add_warning "nix: self-upgrade failed; check 'nix upgrade-nix' output"
+    warn "nix upgrade-nix failed (non-fatal):"
+    tail -3 /tmp/nix_upg.log 2>/dev/null | sed 's/^/    /' >&2
+    _add_warning "nix: self-upgrade failed (transient daemon state is common; re-run)"
   fi
+  rm -f /tmp/nix_upg.log
 fi
 
 # --- tldr cache refresh (cache, not a package install) --------------------------

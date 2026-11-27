@@ -8,7 +8,7 @@
 #       proton.me (dynamically linked, needs only glibc). It is a fetched,
 #       verified artifact placed as a real file at ~/.local/bin/proton-drive
 #       (NOT a repo symlink -- it is a downloaded blob, not tracked source),
-#       mirroring the minecraft-launcher approach. The URL embeds the version
+#       mirroring the pinned-sha rolling-URL approach. The URL embeds the version
 #       so we pin the sha256 to detect an upstream swap. The interactive
 #       `auth login` is deferred to setup.sh (needs a browser). No shell
 #       completions ship with the CLI (the `completions` subcommand is absent),
