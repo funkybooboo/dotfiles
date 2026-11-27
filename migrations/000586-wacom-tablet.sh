@@ -1,6 +1,7 @@
 # 000586-wacom-tablet.sh -- Wacom Intuos S: pen follows focus, ExpressKeys work
 # Installs: python-evdev
 # Links:    ~/.local/bin/hypr-tablet-follow, ~/.local/bin/hypr-tablet-buttons
+# Deploys:  /etc/udev/rules.d/90-wacom-pad-libinput-ignore.rules
 # Creates:  ~/.config/hypr/tablet.lua placeholder (machine-local, gitignored)
 # Sets:     adds $USER to the input group (if missing)
 # Enables:  --
@@ -37,16 +38,28 @@
 #       hypr-tablet-buttons: Hyprland has no tablet-button binds, so this
 #       daemon reads ONLY the pad evdev node (by name -- stylus and pad share
 #       one USB id, which is why keyd was rejected: it grabs by id and would
-#       break the pen) and injects ExpressKey macros through uinput via the
-#       000325 udev rule: undo, redo, save, eraser for Xournal++. Its shebang
-#       is pinned to /usr/bin/python3, the interpreter pacman installs
-#       python-evdev for -- `env python3` may resolve to a mise python without
-#       it and die silently, and `uwsm app` does not journal daemon stderr, so
-#       that death would be invisible. To see pad button codes, run
+#       break the pen) and injects macros through uinput via the 000325 udev
+#       rule. The focus guard is a per-app map (FOCUS_MAP in the script),
+#       Xournal++ (undo/redo/save/eraser) and LibreWolf (Excalidraw undo/
+#       redo/hold-space-pan/pencil, since the hosted excalidraw instance is
+#       a taskbar tab inside LibreWolf): injected keys land in the focused
+#       window, and a global guard once sent ctrl+z into a coding-agent
+#       terminal and killed the session. Its shebang is pinned to
+#       /usr/bin/python3, the interpreter pacman installs python-evdev for
+#       -- `env python3` may resolve to a mise python without it and die
+#       silently, and `uwsm app` does not journal daemon stderr, so that
+#       death would be invisible. To see pad button codes, run
 #       ~/.local/bin/hypr-tablet-buttons in a terminal (stderr is not
-#       journaled) and fix BUTTONS in the script if the order is off.
+#       journaled) and fix FOCUS_MAP in the script if the order is off.
 #       input-remapper would be the off-the-shelf tool but it is AUR-only,
 #       excluded by policy.
+#
+#       The pad is also hidden from libinput by the deployed udev rule:
+#       Wayland tablet-pad events crash every unfocused GTK4 app (GTK #8298,
+#       the 2026-11-27 ghostty incident -- see the rule file for the trail).
+#       The rule needs the tablet REPLUGGED (or a reboot) to take effect on
+#       a compositor that already enumerated the pad; the daemon is
+#       unaffected either way, it reads the raw evdev node.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
@@ -73,6 +86,18 @@ link_file "$DOTFILES_HOME/.local/bin/hypr-tablet-follow" \
   "$HOME/.local/bin/hypr-tablet-follow"
 link_file "$DOTFILES_HOME/.local/bin/hypr-tablet-buttons" \
   "$HOME/.local/bin/hypr-tablet-buttons"
+
+# Hide the pad from libinput: Wayland tablet-pad events crash every
+# unfocused GTK4 app (see the rule's header comment). Idempotent deploys
+# plus a rules reload; a live compositor only drops an already-enumerated
+# pad on replug/reboot, warned below.
+deploy_etc_file "$DOTFILES_ROOT_ETC/udev/rules.d/90-wacom-pad-libinput-ignore.rules" \
+  "/etc/udev/rules.d/90-wacom-pad-libinput-ignore.rules" 644
+if sudo udevadm control --reload-rules 2>/dev/null; then
+  ok "udev rules reloaded"
+else
+  _add_warning "udevadm control --reload-rules failed -- reboot to pick up the pad rule"
+fi
 
 # Machine-local tablet.lua placeholder (real file, NOT a symlink) so the
 # require("./tablet.lua") call in hyprland.lua resolves on a fresh deploy.

@@ -1,0 +1,26 @@
+# Deployed by migration 000586-wacom-tablet.sh -- do not edit by hand.
+#
+# Hides the Wacom PAD device (the ExpressKey buttons on the tablet body)
+# from libinput -- and therefore from the Wayland session entirely. The pen
+# and eraser nodes are untouched: only devices whose name ends in " Pad" are
+# matched, and hid-wacom registers stylus and pad as separate input nodes
+# with one USB id.
+#
+# Why: the compositor exposes every tablet pad to its Wayland clients as a
+# zwp_tablet_pad_v2, and GTK 4 then delivers a GDK_PAD_BUTTON_PRESS to every
+# GTK4 app in the session -- built with the app's keyboard-focus surface,
+# which is NULL in any app without focus. gdk_surface_handle_event()
+# dereferences it unguarded (gdksurface.c:2881), so one pad-button press
+# segfaults every unfocused GTK4 app (GTK #8298; ghostty 2026-11-27, one
+# process hosting all terminals). GTK 4.24.2 ships the bug and no release
+# fixes it. GTK3 apps only warn (the matching 'GDK_IS_DEVICE (device)'
+# assertion spam in xdg-desktop-portal-gtk logs).
+#
+# Nothing of value is lost: no Wayland client ever consumed pad events
+# usefully (Hyprland has no tablet-button binds, verified against the
+# binary, and Xournal++/browsers ignore them), which is exactly why
+# hypr-tablet-buttons exists -- it reads the raw evdev node directly, and
+# a libinput-ignore does not affect raw evdev access. Removing this rule
+# once a fixed gtk4 is current makes the pad visible to Wayland again.
+
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=~"Wacom .* Pad", ENV{LIBINPUT_IGNORE_DEVICE}="1"

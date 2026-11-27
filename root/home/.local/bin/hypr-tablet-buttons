@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""hypr-tablet-buttons -- Wacom ExpressKeys as Xournal++ shortcuts.
+"""hypr-tablet-buttons -- Wacom ExpressKeys as per-app shortcuts.
 
 The shebang is pinned to /usr/bin/python3 (not `env python3`): Arch installs
 python-evdev into the system python, while `env python3` may resolve to a
@@ -16,11 +16,32 @@ key macros through uinput, the same half of the input path espanso uses
 (000325's udev rule grants the input group /dev/uinput; /dev/input/event*
 is 0660 root:input).
 
-Button order (top to bottom) still needs one live confirmation: presses log
-to stderr, and `uwsm app` does NOT journal daemon stderr (verified live:
-only systemd's own Started lines appear), so run
+FOCUS MAP, not a single guard: injected keys land in whatever window holds
+focus, and injecting them globally proved destructive: pressing an ExpressKey
+while a terminal had focus sent ctrl+z into it, which suspended (and
+effectively killed) the coding-agent session running there, and ctrl+s froze
+the terminal with XOFF. So macros only fire while the focused window's class
+appears in FOCUS_MAP below, and each class gets its own button table:
+Xournal++ (undo/redo/save/eraser) and LibreWolf (Excalidraw: undo/redo,
+hold-to-pan, pencil tool -- the hosted excalidraw instance is a taskbar tab
+inside LibreWolf, so the class is the browser's, not the tab's; undo in a
+non-Excalidraw tab at worst reverts typed text). Every other focus target
+gets a logged skip.
+
+Note the pad node is also hidden from libinput by the 000586 udev rule
+(/etc/udev/rules.d/90-wacom-pad-libinput-ignore.rules). That rule exists
+because GTK 4 delivers Wayland tablet-pad events to every GTK4 app in the
+session and crashes any that lack keyboard focus (GTK #8298: a
+GDK_PAD_BUTTON_PRESS with surface NULL kills ghostty -- one process hosting
+all terminals, so one press nuked every terminal at once, 2026-11-27).
+Hiding the pad from libinput removes the Wayland pad path entirely; this
+daemon does not depend on it, since it reads the raw evdev node.
+
+Button order (top to bottom) still needs one live confirmation per tablet:
+presses log to stderr, and `uwsm app` does NOT journal daemon stderr
+(verified live: only systemd's own Started lines appear), so run
 `~/.local/bin/hypr-tablet-buttons` in a terminal to see the reported codes
-and fix BUTTONS below if the order is off.
+and fix FOCUS_MAP below if the order is off.
 
 Started by autostart.lua (`uwsm app --`, the espanso pattern) so the
 daemon dies with the uwsm scope. See migrations/000586-wacom-tablet.sh.
@@ -42,34 +63,46 @@ except ImportError as err:
 # pad"). Never touch the stylus/eraser nodes -- see module docstring.
 PAD_NAME_RE = re.compile(r"wacom.*\bpad\b", re.IGNORECASE)
 
-# Key macros injected per pad button, expected top-to-bottom. The eraser
-# tool in Xournal++ 1.3.8 is Ctrl+Shift+E (verified against
-# /usr/share/xournalpp/ui/mainmenubar.xml) -- a bare "e" is bound to nothing.
-BUTTONS = {
-    ecodes.BTN_0: "undo",
-    ecodes.BTN_1: "redo",
-    ecodes.BTN_2: "save",
-    ecodes.BTN_3: "eraser",
-}
+# Tapped combos: mods down, key tap, mods up. The eraser tool in Xournal++
+# 1.3.8 is Ctrl+Shift+E (verified against /usr/share/xournalpp/ui/
+# mainmenubar.xml) -- a bare "e" is bound to nothing. "freedraw" is the
+# Excalidraw pencil-tool shortcut P (Excalidraw also accepts 7).
 COMBOS = {
-    "undo":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_Z),
-    "redo":   ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_Z),
-    "save":   ([ecodes.KEY_LEFTCTRL], ecodes.KEY_S),
-    "eraser": ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_E),
+    "undo":     ([ecodes.KEY_LEFTCTRL], ecodes.KEY_Z),
+    "redo":     ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_Z),
+    "save":     ([ecodes.KEY_LEFTCTRL], ecodes.KEY_S),
+    "eraser":   ([ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT], ecodes.KEY_E),
+    "freedraw": ([], ecodes.KEY_P),
 }
 
-# FOCUS GUARD: these macros are Xournal++ shortcuts, and injected keys land
-# in whatever window holds focus. Injecting them globally proved destructive:
-# pressing an ExpressKey while a terminal had focus sent ctrl+z into it, which
-# suspended (and effectively killed) the coding-agent session running there,
-# and ctrl+s froze the terminal with XOFF. So: only inject while the focused
-# window is Xournal++ itself; every other focus target gets a logged skip.
-TARGET_CLASS = "xournalpp"
+# Press-and-hold passthrough: key down on pad press, key up on pad release.
+# "hold:space" is Excalidraw's pan -- hold the button, drag with the pen.
+HOLD_PREFIX = "hold:"
+HOLDS = {"space": ([], ecodes.KEY_SPACE)}
+
+# Per-focus-class button maps, expected top to bottom. A value is either a
+# COMBOS name or a HOLD_PREFIX + HOLDS name. The class match is substring,
+# case-insensitive, against hyprctl activewindow -> class.
+FOCUS_MAP = {
+    "xournalpp": {
+        ecodes.BTN_0: "undo",
+        ecodes.BTN_1: "redo",
+        ecodes.BTN_2: "save",
+        ecodes.BTN_3: "eraser",
+    },
+    "librewolf": {
+        ecodes.BTN_0: "undo",
+        ecodes.BTN_1: "redo",
+        ecodes.BTN_2: "hold:space",
+        ecodes.BTN_3: "freedraw",
+    },
+}
 
 # Keyboard-only uinput device, with exactly the keys the macros use.
 UI_CAPS = {
     ecodes.EV_KEY: sorted(
-        {ecodes.KEY_Z, ecodes.KEY_S, ecodes.KEY_E,
+        {ecodes.KEY_Z, ecodes.KEY_S, ecodes.KEY_E, ecodes.KEY_P,
+         ecodes.KEY_SPACE,
          ecodes.KEY_LEFTCTRL, ecodes.KEY_LEFTSHIFT}
     )
 }
@@ -91,21 +124,24 @@ def find_pad():
     return None
 
 
-def xournal_focused():
-    """True only while the focused window is Xournal++ (see FOCUS GUARD)."""
+def focus_target():
+    """The FOCUS_MAP key for the focused window's class, or None."""
     try:
         out = subprocess.run(
             ["hyprctl", "activewindow", "-j"], capture_output=True, text=True
         ).stdout
         cls = json.loads(out).get("class", "")
     except (OSError, ValueError, subprocess.CalledProcessError):
-        return False
-    return TARGET_CLASS in cls.lower()
+        return None
+    cls = cls.lower()
+    for target in FOCUS_MAP:
+        if target in cls:
+            return target
+    return None
 
 
-def inject(ui, action):
-    """Send one macro: modifiers down, key tap, modifiers up."""
-    mods, key = COMBOS[action]
+def inject_tap(ui, mods, key):
+    """Mods down, key tap, mods up."""
     for m in mods:
         ui.write(ecodes.EV_KEY, m, 1)
     ui.write(ecodes.EV_KEY, key, 1)
@@ -117,6 +153,22 @@ def inject(ui, action):
     ui.syn()
 
 
+def resolve(action):
+    """A FOCUS_MAP value -> ("tap", mods, key) / ("hold", mods, key) / None."""
+    if action in COMBOS:
+        mods, key = COMBOS[action]
+        return ("tap", mods, key)
+    if action.startswith(HOLD_PREFIX):
+        hold = action[len(HOLD_PREFIX):]
+        if hold in HOLDS:
+            mods, key = HOLDS[hold]
+            return ("hold", mods, key)
+        print(f"hypr-tablet-buttons: unknown hold action {action!r}", file=sys.stderr)
+    else:
+        print(f"hypr-tablet-buttons: unknown action {action!r}", file=sys.stderr)
+    return None
+
+
 def main():
     # Fail loudly, not silently: a missing uinput permission looks exactly
     # like a dead daemon otherwise (the espanso trap).
@@ -126,6 +178,7 @@ def main():
         print(f"hypr-tablet-buttons: cannot open /dev/uinput: {err}", file=sys.stderr)
         return 1
 
+    held = {}  # pad button code -> hold spec currently held down
     dev = None
     while True:
         if dev is None:
@@ -136,20 +189,48 @@ def main():
             print(f"hypr-tablet-buttons: pad = {dev.name} ({dev.path})", file=sys.stderr)
         try:
             for event in dev.read_loop():
-                if event.type != ecodes.EV_KEY or event.value != 1:
-                    continue  # presses only
-                action = BUTTONS.get(event.code)
+                if event.type != ecodes.EV_KEY or event.value not in (0, 1):
+                    continue  # presses and releases only
+
+                # A held action ends on the release of the button that
+                # started it, regardless of what now holds focus.
+                if event.value == 0:
+                    spec = held.pop(event.code, None)
+                    if spec is not None:
+                        _, mods, key = spec
+                        for m in reversed(mods):
+                            ui.write(ecodes.EV_KEY, m, 0)
+                        ui.write(ecodes.EV_KEY, key, 0)
+                        ui.syn()
+                        print(f"hypr-tablet-buttons: release {ecodes.BTN.get(event.code, event.code)}"
+                              f" ({'+'.join(_names(spec))})", file=sys.stderr)
+                    continue
+
+                target = focus_target()
+                if target is None:
+                    print(f"hypr-tablet-buttons: skip {ecodes.BTN.get(event.code, event.code)}"
+                          " (focus not mapped)", file=sys.stderr)
+                    continue
+                action = FOCUS_MAP[target].get(event.code)
                 if action is None:
                     print(f"hypr-tablet-buttons: unmapped button code {event.code}"
-                          " -- add to BUTTONS", file=sys.stderr)
+                          " -- add to FOCUS_MAP", file=sys.stderr)
                     continue
-                if not xournal_focused():
-                    print(f"hypr-tablet-buttons: skip {action}"
-                          " (focus is not Xournal++)", file=sys.stderr)
+                spec = resolve(action)
+                if spec is None:
                     continue
-                print(f"hypr-tablet-buttons: {action} "
-                          f"({'+'.join(_name(action))})", file=sys.stderr)
-                inject(ui, action)
+
+                kind, mods, key = spec
+                print(f"hypr-tablet-buttons: {action} ({'+'.join(_names(spec))})"
+                      f" -> {target}", file=sys.stderr)
+                if kind == "tap":
+                    inject_tap(ui, mods, key)
+                else:  # hold: down now, up on the matching release
+                    for m in mods:
+                        ui.write(ecodes.EV_KEY, m, 1)
+                    ui.write(ecodes.EV_KEY, key, 1)
+                    ui.syn()
+                    held[event.code] = spec
         except OSError as err:
             # Replug or suspend: the node vanished; rescan.
             print(f"hypr-tablet-buttons: pad gone ({err}), rescanning", file=sys.stderr)
@@ -160,10 +241,11 @@ def main():
             dev = None
 
 
-def _name(action):
-    """Human form of a combo for the log line."""
-    mods, key = COMBOS[action]
-    parts = ["ctrl" if m == ecodes.KEY_LEFTCTRL else "shift" for m in mods]
+def _names(spec):
+    """Human form of a spec's mods+key for the log line."""
+    _, mods, key = spec
+    parts = ["ctrl" if m == ecodes.KEY_LEFTCTRL
+             else "shift" if m == ecodes.KEY_LEFTSHIFT else "?" for m in mods]
     parts.append(ecodes.KEY[key].replace("KEY_", "").lower())
     return parts
 
