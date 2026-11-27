@@ -23,20 +23,57 @@
 
 section "nix"
 
-# Pinned upstream installer. The wrapper script embeds the per-arch tarball
-# sha256 and verifies it before unpacking. To bump nix itself, change
-# NIX_VERSION and re-run; the installer upgrades the default nix profile in
-# place. After the initial install, prefer `nix upgrade-nix` for routine
-# updates. Dual-arch: the wrapper selects x86_64 or aarch64 by uname.
-NIX_VERSION="2.34.8"
-NIX_INSTALL_URL="https://releases.nixos.org/nix/nix-${NIX_VERSION}/install"
+# LATEST-TRACKING (2026-11-27, was pinned 2.34.8): the release version
+# comes from nixos.org's canonical install redirect (the Location header
+# points at the newest release's installer, e.g. .../nix/nix-2.36.0/install).
+# The upstream installer upgrades the default nix profile in place when
+# already installed (multi-user --daemon reuses /nix/store + the nixbld set),
+# so the roll-forward re-runs the same installer path as the fresh install.
+# `nix upgrade-nix` is NOT the mechanism here: the profile at
+# /nix/var/nix/profiles/default is root-owned, an unprivileged run dies at
+# "default.lock: Permission denied", and under root the install-detection
+# heuristics fail outright ("couldn't figure out how Nix is installed") --
+# both observed live. Resolution failure falls back to the pinned version
+# for fresh installs and skips the upgrade path on installed systems.
+# Dual-arch: the wrapper selects x86_64 or aarch64 by uname.
+NIX_PIN="2.34.8"   # fallback when the redirect cannot be resolved
 NIX_BIN="/nix/var/nix/profiles/default/bin/nix"
 
-# Idempotent: official nix already installed and functional -> done. Still
+# Resolve the latest release from the canonical redirect (fail-soft).
+_nix_latest="$(curl -sI --max-time 15 https://nixos.org/nix/install 2>/dev/null \
+  | tr -d '\r' \
+  | sed -n 's/^[Ll]ocation:.*\/nix\/nix-\([0-9.]*\)\/install.*/\1/p' | head -1)"
+NIX_VERSION="${_nix_latest:-$NIX_PIN}"
+NIX_INSTALL_URL="https://releases.nixos.org/nix/nix-${NIX_VERSION}/install"
+
+# Idempotent + roll-forward: installed and functional at the resolved
+# latest -> done; older -> re-run the upstream installer at latest. Still
 # re-deploy our nix.conf (cheap cmp skip when unchanged) so a hand-installed
-# nix still gets the dotfiles config on the next migrate run.
+# nix gets the dotfiles config on the next migrate run.
 if [[ -x "$NIX_BIN" ]] && "$NIX_BIN" --version &>/dev/null; then
-  ok "nix (upstream installer, $("$NIX_BIN" --version 2>/dev/null | head -1))"
+  _nix_inst="$($"NIX_BIN" --version 2>/dev/null | awk '{print $3}')"
+  if [[ -z "$_nix_latest" ]]; then
+    warn "could not resolve the latest nix release (offline?) -- keeping ${_nix_inst}"
+    _add_warning "nix: latest-release resolution failed; no upgrade attempted"
+  elif [[ "$_nix_inst" == "$NIX_VERSION" ]]; then
+    skip "nix ${_nix_inst} (upstream latest)"
+  else
+    info "nix ${_nix_inst} -> ${NIX_VERSION} (re-running the upstream installer)"
+    _nix_tmp="$(mktemp)"
+    if curl --fail --proto '=https' --tlsv1.2 -fsSL "$NIX_INSTALL_URL" -o "$_nix_tmp"; then
+      if sh "$_nix_tmp" --daemon --yes --no-channel-add >/dev/null 2>&1; then
+        sudo systemctl restart nix-daemon 2>/dev/null || true
+        ok "nix upgraded to $($"NIX_BIN" --version 2>/dev/null | awk '{print $3}')"
+      else
+        warn "nix upgrade installer failed (non-fatal; keeping ${_nix_inst})"
+        _add_warning "nix: upgrade installer exited non-zero; still at ${_nix_inst}"
+      fi
+    else
+      warn "could not download the nix ${NIX_VERSION} installer (non-fatal)"
+      _add_warning "nix: installer download failed; still at ${_nix_inst}"
+    fi
+    rm -f "$_nix_tmp"
+  fi
   deploy_etc_file "$DOTFILES_ROOT_ETC/nix/nix.conf" "/etc/nix/nix.conf" 644
   exit 0
 fi
