@@ -8,9 +8,10 @@
 #                  primary 662E3CDD6FE329002D0CA5BB4039DD82B12EF16)
 # sha256 verifies: yes (against upstream-published .sha256sum sidecar)
 #
-# Source: codeberg.org/librewolf/bsys6 releases download 153.0-3 (latest as of
-#         2026-07-24). The bsys6 release download URLs 303-redirect to
-#         dl.librewolf.net (LibreWolf's own CDN). Assets per release:
+# Source: codeberg.org/librewolf/bsys6 releases (bsys6 release download
+#         URLs 303-redirect to dl.librewolf.net, LibreWolf's own CDN; the
+#         Gitea API also publishes dl.librewolf.net asset URLs directly).
+#         Assets per release:
 #           librewolf-<ver>-linux-x86_64-package.tar.xz        (~100 MB)
 #           librewolf-<ver>-linux-x86_64-package.tar.xz.sha256sum
 #           librewolf-<ver>-linux-x86_64-package.tar.xz.sig    (GPG detached)
@@ -22,24 +23,44 @@
 #         /opt/librewolf (matches Mozilla's own /opt convention + the AUR
 #         layout (/usr/lib/librewolf) so librewolf behaves identically).
 #
-# Idempotent: skips install if /opt/librewolf/application.ini reports the
-#             pinned version. Re-running with a newer pinned version replaces
-#             the tree. Non-fatal: warnings/errors surface in the summary.
-#
-# Roll-forward: detects the latest codeberg bsys6 release via the Gitea API,
-#               downloads + sha256-verifies against the upstream .sha256sum +
-#               GPG-verifies the .sig, and replaces /opt/librewolf if newer.
-#               Mirrors the gcx/proton-drive roll-forward pattern but uses
-#               the per-release .sha256sum sidecar (not a hardcoded pin).
+# LATEST-TRACKING (2026-11-27, was a pinned 153.0-3): every migrate run asks
+#         the Gitea API for the newest bsys6 release and installs it when it
+#         differs from /opt/librewolf/application.ini -- the GE-Proton
+#         roll-forward pattern (000578), so the browser advances with the
+#         rest of the stack instead of sitting months stale on security
+#         fixes (153 vs upstream 161 when this changed). Installed == latest
+#         -> skip; API unreachable -> warn + skip (never touches the install);
+#         a resolved tag OLDER than installed (upstream yank) still installs,
+#         trusting upstream's latest as the truth. Profiles land in the
+#         per-user home dir, so the /opt swap never touches profiles.
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "librewolf (codeberg release)"
 
-# --- pinned version + upstream release URL ------------------------------------
-LW_VERSION="153.0-3"
-LW_REPO="librewolf/bsys6"
-LW_REL="https://codeberg.org/${LW_REPO}/releases/download/${LW_VERSION}"
+# --- resolve the latest upstream release (Gitea API) --------------------------
+# Capture the JSON to a temp file FIRST: piping curl straight into grep races
+# under pipefail (grep -m closes early -> curl gets SIGPIPE). Same fix as the
+# GE-Proton + gcx roll-forward blocks.
+LW_REPO_API="https://codeberg.org/api/v1/repos/librewolf/bsys6/releases?limit=1"
+_json="$(mktemp)"
+if ! curl -fsSL --connect-timeout 15 "$LW_REPO_API" -o "$_json" 2>/dev/null; then
+  warn "could not reach the bsys6 release API (offline?) -- skipping"
+  _add_warning "librewolf: latest-release fetch failed (skipped)"
+  rm -f "$_json"
+  return 0 2>/dev/null || exit 0
+fi
+# The API may serve the payload pretty-printed or compact; splitting on
+# commas first puts every "tag_name":"..." pair on its own line in both
+# shapes (a version tag never contains a comma). Fails closed on surprises.
+LW_VERSION="$(tr ',' '\n' <"$_json" | sed -n 's/.*"tag_name":"\([^"]*\)".*/\1/p' | head -1)"
+rm -f "$_json"
+if [[ -z "$LW_VERSION" ]]; then
+  warn "latest-release payload had no tag_name -- skipping"
+  _add_warning "librewolf: latest-release payload unparsable (skipped)"
+  return 0 2>/dev/null || exit 0
+fi
+LW_REL="https://codeberg.org/librewolf/bsys6/releases/download/${LW_VERSION}"
 LW_ARCH="x86_64"   # only x86_64 profiled here (workstation). arm64 exists upstream.
 
 # LibreWolf release signing key (GPG). Imported once into the user keyring so
@@ -193,7 +214,7 @@ EOF
   ok "wrote ${LW_DESKTOP/$HOME/\~}"
 }
 
-# --- 1. already installed at the pinned version? skip -------------------------
+# --- 1. already installed at the latest version? skip -------------------------
 _lw_version() {
   if [[ -f "$LW_PREFIX/application.ini" ]]; then
     awk -F= '/^Version=/{print $2; exit}' "$LW_PREFIX/application.ini"
