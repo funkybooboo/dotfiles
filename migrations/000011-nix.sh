@@ -12,8 +12,9 @@
 #       during glibc locale-facet init) on every glibc ABI bump where Arch
 #       doesn't rebuild nix+mimalloc in lockstep -- see 2026-07-26 (glibc
 #       2.43->2.44). The upstream installer ships its own tested binary
-#       decoupled from the system glibc; nix updates come via `nix upgrade-nix`,
-#       not pacman. /nix/store + nixbld users from a prior pacman nix install
+#       decoupled from the system glibc; nix updates come from re-running
+#       the installer (latest-tracking below), not pacman.
+#       /nix/store + nixbld users from a prior pacman nix install
 #       are REUSED (the installer guards on existence), so already-installed
 #       flake packages survive the swap with no re-download.
 #       Idempotent: skips when /nix/var/nix/profiles/default/bin/nix works.
@@ -51,7 +52,7 @@ NIX_INSTALL_URL="https://releases.nixos.org/nix/nix-${NIX_VERSION}/install"
 # re-deploy our nix.conf (cheap cmp skip when unchanged) so a hand-installed
 # nix gets the dotfiles config on the next migrate run.
 if [[ -x "$NIX_BIN" ]] && "$NIX_BIN" --version &>/dev/null; then
-  _nix_inst="$($"NIX_BIN" --version 2>/dev/null | awk '{print $3}')"
+  _nix_inst="$($NIX_BIN --version 2>/dev/null | awk '{print $3}')"
   if [[ -z "$_nix_latest" ]]; then
     warn "could not resolve the latest nix release (offline?) -- keeping ${_nix_inst}"
     _add_warning "nix: latest-release resolution failed; no upgrade attempted"
@@ -63,7 +64,7 @@ if [[ -x "$NIX_BIN" ]] && "$NIX_BIN" --version &>/dev/null; then
     if curl --fail --proto '=https' --tlsv1.2 -fsSL "$NIX_INSTALL_URL" -o "$_nix_tmp"; then
       if sh "$_nix_tmp" --daemon --yes --no-channel-add >/dev/null 2>&1; then
         sudo systemctl restart nix-daemon 2>/dev/null || true
-        ok "nix upgraded to $($"NIX_BIN" --version 2>/dev/null | awk '{print $3}')"
+        ok "nix upgraded to $($($NIX_BIN --version 2>/dev/null | awk '{print $3}'))"
       else
         warn "nix upgrade installer failed (non-fatal; keeping ${_nix_inst})"
         _add_warning "nix: upgrade installer exited non-zero; still at ${_nix_inst}"
