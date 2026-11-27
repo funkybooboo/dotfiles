@@ -3,15 +3,25 @@
 # Links:    --
 # Enables:  tailscaled
 # Note: The interactive 'tailscale up' authentication is deferred to
-#       setup.sh (run after reboot into Hyprland). This migration only
-#       installs and enables the daemon.
+#       setup.sh (run after reboot into Hyprland). This migration installs
+#       and enables the daemon, and ROLLS IT FORWARD on every migrate run
+#       via the built-in `tailscale update` self-updater (2026-11-27
+#       roll-forward policy).
 
 [[ -n "${_COMMON_LOADED:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_common.sh"
 
 section "tailscale"
 
 if command -v tailscale &>/dev/null; then
-  skip "Tailscale already installed ($(tailscale version 2>/dev/null | head -1))"
+  # Built-in self-updater (downloads the latest stable and swaps the
+  # binary; a no-op when already current). Part of the roll-forward
+  # policy: every migrate run brings installed software forward.
+  if tailscale update --yes >/dev/null 2>&1; then
+    ok "tailscale up to date ($(tailscale version 2>/dev/null | head -1))"
+  else
+    warn "tailscale update failed (non-fatal)"
+    _add_warning "tailscale: self-update failed; check 'tailscale update' output"
+  fi
 else
   info "installing Tailscale..."
   _ts_installer=$(mktemp)

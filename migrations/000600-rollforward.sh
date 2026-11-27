@@ -30,6 +30,23 @@
 
 section "runtime roll-forward (update)"
 
+# --- pacman system packages (the fleet's largest layer) ---------------------
+# The roll-forward policy (operator directive 2026-11-27): every migrate
+# run upgrades everything, and pacman-managed software is most of it.
+# install_pacman only installs-missing (--needed never upgrades), so the
+# system upgrade lives here alongside the other roll-forward steps.
+if command -v pacman >/dev/null 2>&1; then
+  info "pacman system upgrade (arch packages)"
+  if sudo pacman -Syu --noconfirm >/tmp/pacman_syu.log 2>&1; then
+    ok "pacman packages up to date"
+  else
+    warn "pacman system upgrade reported an error (non-fatal):"
+    tail -5 /tmp/pacman_syu.log 2>/dev/null | sed 's/^/    /' >&2
+    _add_warning "pacman -Syu failed; system packages may be stale"
+  fi
+  rm -f /tmp/pacman_syu.log
+fi
+
 # --- mise-managed runtimes (rust, go, node, python, zig, bun) -------------------
 # mise manages ALL language runtimes. mise upgrade updates each to the version
 # pinned in ~/.config/mise/config.toml (global defaults) or the project's
@@ -50,6 +67,20 @@ if command -v nix >/dev/null 2>&1; then
   fi
   info "nix profile packages"
   if nix profile upgrade --all 2>/dev/null; then ok "nix packages upgraded"; else warn "nix profile upgrade failed (non-fatal)"; fi
+fi
+
+# --- nix itself (the installer-managed daemon/profile) -------------------------
+# 000011 installs nix at a pinned release; routine updates run HERE per its
+# own header note. `nix upgrade-nix` swaps the default profile's nix to the
+# latest stable; a no-op when current. Guarded by the wrapper existing.
+if command -v nix >/dev/null 2>&1; then
+  info "nix itself"
+  if nix upgrade-nix >/dev/null 2>&1; then
+    ok "nix up to date ($(nix --version 2>/dev/null | head -1))"
+  else
+    warn "nix upgrade-nix failed (non-fatal)"
+    _add_warning "nix: self-upgrade failed; check 'nix upgrade-nix' output"
+  fi
 fi
 
 # --- tldr cache refresh (cache, not a package install) --------------------------

@@ -53,7 +53,24 @@
 
 section "herdr-nvim"
 
-_HERDR_NVIM_VERSION="1.0.1"
+# --- resolve the latest upstream tag (GitHub API; gh first, curl fallback) ----
+# Roll-forward policy (2026-11-27): installs track upstream latest, not a
+# hardcoded ref. The plugin stays version-coupled to the herdr SERVER (see
+# the compatibility note above) -- the API fetch failing leaves any present
+# install untouched and skips the install branch.
+_hn_json="$(mktemp)"
+if ! gh api "repos/ChmaraX/herdr-nvim/releases/latest" >"$_hn_json" 2>/dev/null; then
+  curl -fsSL --connect-timeout 15 "https://api.github.com/repos/ChmaraX/herdr-nvim/releases/latest" \
+    >"$_hn_json" 2>/dev/null || true
+fi
+_HERDR_NVIM_TAG="$(tr ',' '\n' <"$_hn_json" | sed -n 's/.*"tag_name":"\([^"]*\)".*/\1/p' | head -1)"
+rm -f "$_hn_json"
+if [[ -z "$_HERDR_NVIM_TAG" ]]; then
+  warn "could not resolve the latest herdr-nvim release (offline/rate-limit?) -- skipping"
+  _add_warning "herdr-nvim: latest-release fetch failed (skipped)"
+  return 0 2>/dev/null || exit 0
+fi
+_HERDR_NVIM_VERSION="${_HERDR_NVIM_TAG#v}"   # strip the leading v for --ref v<ver>
 
 if ! command -v herdr &>/dev/null; then
   warn "herdr not on PATH"

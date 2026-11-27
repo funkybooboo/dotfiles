@@ -8,11 +8,18 @@
 #                  primary EF6E286DDA85EA2A4BA7DE684E2C6E8793298290)
 # sha256 verifies: yes (against upstream-published sha256sums-signed-build.txt)
 #
-# Source: github.com/mullvad/mullvad-browser releases download 15.0.18 (latest).
-#   Assets per release (linux):
+# Source: github.com/mullvad/mullvad-browser releases (latest). Assets per
+#   release (linux):
 #     mullvad-browser-linux-x86_64-<ver>.tar.xz        (~112 MB)
 #     mullvad-browser-linux-x86_64-<ver>.tar.xz.asc    (GPG detached)
 #     sha256sums-signed-build.txt                       (signed checksums for ALL assets)
+#
+# LATEST-TRACKING (2026-11-27, was a pinned 15.0.18): every migrate run asks
+#   the GitHub releases API for the newest tag and installs it when it
+#   differs from /opt/mullvad-browser/Browser/application.ini -- the
+#   librewolf/GE-Proton roll-forward pattern. Installed == latest -> skip;
+#   API unreachable -> warn + skip (never touches the install). gh first
+#   (authenticated, 5000 req/hr), curl fallback (60 req/hr per IP).
 #
 # Policy: TIER 2 (upstream release asset). NO AUR, NO nix. Mullvad Browser is
 #         a Tor-project-built, privacy-hardened Firefox that ships as a portable
@@ -26,10 +33,25 @@
 
 section "mullvad-browser (github release)"
 
-MB_VERSION="15.0.18"
 MB_REPO="mullvad/mullvad-browser"
-MB_REL="https://github.com/${MB_REPO}/releases/download/${MB_VERSION}"
 MB_ARCH="x86_64"
+
+# --- resolve the latest upstream release (GitHub API; gh first, curl fallback) --
+# JSON to a temp file FIRST (pipefail/SIGPIPE race -- see 000578), comma-split
+# for the compact-or-pretty payload shapes. Fails closed: no tag -> skip.
+_mb_json="$(mktemp)"
+if ! gh api "repos/${MB_REPO}/releases/latest" >"$_mb_json" 2>/dev/null; then
+  curl -fsSL --connect-timeout 15 "https://api.github.com/repos/${MB_REPO}/releases/latest" \
+    >"$_mb_json" 2>/dev/null || true
+fi
+MB_VERSION="$(tr ',' '\n' <"$_mb_json" | sed -n 's/.*"tag_name":"\([^"]*\)".*/\1/p' | head -1)"
+rm -f "$_mb_json"
+if [[ -z "$MB_VERSION" ]]; then
+  warn "could not resolve the latest mullvad-browser release (offline/rate-limit?) -- skipping"
+  _add_warning "mullvad: latest-release fetch failed (skipped)"
+  return 0 2>/dev/null || exit 0
+fi
+MB_REL="https://github.com/${MB_REPO}/releases/download/${MB_VERSION}"
 
 # Tor Project release signing key (signs mullvad-browser builds).
 MB_GPG_KEY="EF6E286DDA85EA2A4BA7DE684E2C6E8793298290"
@@ -83,7 +105,7 @@ if [[ ! -f "$MB_MARKER" ]]; then
   fi
 fi
 
-# --- 2. already installed at the pinned version? skip -------------------------
+# --- 2. already installed at the latest version? skip -------------------------
 if [[ "$(_mb_version)" == "$MB_VERSION" ]]; then
   skip "mullvad-browser ${MB_VERSION} (installed at ${MB_PREFIX})"
   ok "mullvad-browser (github release)"
