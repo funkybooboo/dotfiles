@@ -71,16 +71,21 @@ fi
 
 # --- nix itself (the installer-managed daemon/profile) -------------------------
 # 000011 installs nix at a pinned release; routine updates run HERE per its
-# own header note. `nix upgrade-nix` swaps the default profile's nix to the
-# latest stable; a no-op when current. Guarded by the wrapper existing.
-if command -v nix >/dev/null 2>&1; then
+# own header note. PRIVILEGE REQUIRED: the default profile lives at
+# /nix/var/nix/profiles/default, which is ROOT-OWNED on a multi-user install
+# -- an unprivileged `nix upgrade-nix` downloads + verifies, then dies at
+# `default.lock: Permission denied`. Run it via sudo against the
+# default-profile binary (upgrade-nix derives the profile from its own
+# location, so the system profile's binary is the one to sudo). No-op when
+# current.
+if [[ -x /nix/var/nix/profiles/default/bin/nix ]]; then
   info "nix itself"
-  if nix upgrade-nix >/tmp/nix_upg.log 2>&1; then
+  if sudo /nix/var/nix/profiles/default/bin/nix upgrade-nix >/tmp/nix_upg.log 2>&1; then
     ok "nix up to date ($(nix --version 2>/dev/null | head -1))"
   else
     warn "nix upgrade-nix failed (non-fatal):"
     tail -3 /tmp/nix_upg.log 2>/dev/null | sed 's/^/    /' >&2
-    _add_warning "nix: self-upgrade failed (transient daemon state is common; re-run)"
+    _add_warning "nix: self-upgrade failed (see output above)"
   fi
   rm -f /tmp/nix_upg.log
 fi
