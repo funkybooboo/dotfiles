@@ -16,3 +16,11 @@
 // pinned taskbar entry. Both are off by default in LibreWolf 153.
 user_pref("browser.taskbarTabs.enabled", true);
 user_pref("browser.taskbar.previews.enable", true);
+
+// Firefox sync -> the homelab, not Mozilla's servers (USER-5). The
+// tokenserver validates your FxA login token and mints storage
+// credentials for OUR syncstorage-rs; the data (client-side
+// encrypted before upload) lands in the mysql guest on
+// pve-thermaltake. Revert = remove these two lines and relaunch
+// (the old Mozilla sync state is untouched either way).
+user_pref("identity.sync.tokenserver.uri", "https://sync.tail54538d.ts.net/1.0/sync/1.5");
